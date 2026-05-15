@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme } from '../../theme/Theme';
 import { Bell, Wrench, FileText, ChevronLeft, CalendarClock } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
@@ -35,7 +36,7 @@ export default function NotificationScreen({ navigation }) {
   });
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
         <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
           <ChevronLeft color={Theme.colors.text} size={24} />
@@ -87,13 +88,13 @@ export default function NotificationScreen({ navigation }) {
           ))
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Theme.colors.background },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: Theme.spacing.md, marginTop: Theme.spacing.xl, marginBottom: Theme.spacing.md },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: Theme.spacing.md, marginTop: 10, marginBottom: Theme.spacing.md },
   backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { color: Theme.colors.text, fontSize: 20, fontWeight: 'bold' },
   markReadText: { color: Theme.colors.primary, fontSize: 14, fontWeight: 'bold' },

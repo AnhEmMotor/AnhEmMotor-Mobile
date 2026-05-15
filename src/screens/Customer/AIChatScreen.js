@@ -27,7 +27,7 @@ const BOT_REPLIES = {
   'trả góp': 'Để mua xe trả góp tại AnhEmMotor, bạn cần: CMND/CCCD, hộ khẩu, 3 tháng sao kê lương. Lãi suất từ 0% cho kỳ hạn 6 tháng. 😊',
   'nhớt': 'Xe mới nên thay nhớt lần đầu sau 500-1000km để xả nhớt chạy roda. Sau đó mỗi 3.000km hoặc 3 tháng thay 1 lần nhé!',
   'bảo hành': 'Phụ tùng chính hãng tại AnhEmMotor được bảo hành 6 tháng hoặc 5.000km. Chỉ áp dụng với lỗi sản xuất, không bao gồm hao mòn tự nhiên.',
-  'tắt máy': 'Khi xe tắt máy đột ngột: 1) Dắt xe vào lề, 2) Tắt công tắc ON/OFF 30 giây rồi khởi động lại, 3) Nếu không được hãy gọi SOS cho chúng tôi ngay!',
+  'tắt máy': 'Khi xe tắt máy đột ngột: 1) Dắt xe vào lề, 2) Tắt công tắc ON/OFF 30 giây rồi khởi động lại, 3) Nếu không được hãy liên hệ hotline để được hỗ trợ kỹ thuật!',
 };
 
 function getBotReply(input) {

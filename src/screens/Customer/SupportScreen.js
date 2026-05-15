@@ -1,45 +1,62 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Linking, TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme } from '../../theme/Theme';
-import { LifeBuoy, MessageSquare, PhoneCall, Zap, ShieldAlert, ChevronRight, PenLine, Camera } from 'lucide-react-native';
+import { ChevronLeft, LifeBuoy, MessageSquare, PhoneCall, Zap, ShieldAlert, ChevronRight, PenLine, Camera } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import ScalePress from '../../components/ScalePress';
 
 export default function SupportScreen({ navigation }) {
-  const [feedbackType, setFeedbackType] = React.useState('Service');
-  const [sosSent, setSosSent] = React.useState(false);
+  const [feedback, setFeedback] = React.useState('');
+  const [feedbackType, setFeedbackType] = React.useState('Dịch vụ');
 
-  const callEmergency = () => {
-    setSosSent(true);
-    setTimeout(() => {
-      setSosSent(false);
-      alert('Tín hiệu SOS đã được gửi! Kỹ thuật viên sẽ liên hệ bạn ngay lập tức.');
-    }, 2000);
+  const handleCall = async () => {
+    const url = 'tel:0912345678';
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        alert('Thiết bị không hỗ trợ chức năng gọi điện trực tiếp. Vui lòng gọi số: 0912 345 678');
+      }
+    } catch (error) {
+      alert('Có lỗi xảy ra khi thực hiện cuộc gọi.');
+    }
+  };
+
+  const handleZalo = async () => {
+    const url = 'https://zalo.me/0912345678';
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      alert('Không thể mở Zalo. Vui lòng kiểm tra ứng dụng Zalo trên máy.');
+    }
+  };
+
+  const handleCamera = () => {
+    alert('Đã mở Camera để chụp ảnh đính kèm!');
+  };
+
+  const handleSubmitFeedback = () => {
+    if (!feedback.trim()) {
+      alert('Vui lòng nhập nội dung phản hồi!');
+      return;
+    }
+    alert(`Cảm ơn bạn! Ý kiến về ${feedbackType} đã được gửi trực tiếp đến bộ phận chăm sóc khách hàng.`);
+    setFeedback('');
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* I.6 SOS SIGNAL (RAPID RESPONSE) */}
-      <Animated.View entering={FadeInUp.duration(600).delay(100)}>
-        <Text style={styles.title}>Hỗ trợ & Cứu hộ 🚨</Text>
-      </Animated.View>
-
-      <Animated.View entering={FadeInUp.duration(800).delay(200)}>
-        <ScalePress onPress={callEmergency}>
-          <LinearGradient
-            colors={sosSent ? ['#10B981', '#064E3B'] : [Theme.colors.secondary, '#7F1D1D']}
-            style={styles.sosGradient}
-          >
-            <View style={styles.sosInner}>
-              <ShieldAlert color="#fff" size={48} />
-              <Text style={styles.sosText}>{sosSent ? 'ĐANG GỬI...' : 'YÊU CẦU CỨU HỘ'}</Text>
-              <Text style={styles.sosDesc}>Tọa độ của bạn sẽ được gửi tới showroom</Text>
-            </View>
-          </LinearGradient>
-        </ScalePress>
-      </Animated.View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+        <ChevronLeft color="#fff" size={28} />
+      </TouchableOpacity>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <Animated.View entering={FadeInUp.duration(600)}>
+          <Text style={styles.title}>Hỗ trợ & Ý kiến 🚨</Text>
+        </Animated.View>
 
       <View style={styles.actionGrid}>
         <Animated.View entering={FadeInDown.duration(800).delay(400)} style={styles.halfWidth}>
@@ -51,7 +68,7 @@ export default function SupportScreen({ navigation }) {
           </ScalePress>
         </Animated.View>
         <Animated.View entering={FadeInDown.duration(800).delay(500)} style={styles.halfWidth}>
-          <ScalePress style={{ width: '100%' }}>
+          <ScalePress style={{ width: '100%' }} onPress={handleCall}>
             <GlassCard style={styles.actionCard} intensity={15}>
               <PhoneCall color={Theme.colors.primary} size={28} />
               <Text style={styles.actionTitle}>Gọi Cố vấn</Text>
@@ -82,35 +99,42 @@ export default function SupportScreen({ navigation }) {
               placeholderTextColor="rgba(255,255,255,0.3)"
               multiline
               style={styles.textInput}
+              value={feedback}
+              onChangeText={setFeedback}
             />
           </View>
           
           <View style={styles.feedbackActions}>
-            <TouchableOpacity style={styles.mediaBtn}>
+            <TouchableOpacity style={styles.mediaBtn} onPress={handleCamera}>
               <Camera color={Theme.colors.subtext} size={20} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.submitBtn} onPress={() => alert('Cảm ơn bạn đã phản hồi!')}>
+            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmitFeedback}>
               <Text style={styles.submitText}>Gửi phản hồi</Text>
             </TouchableOpacity>
           </View>
         </GlassCard>
       </Animated.View>
       
+      <View style={styles.directContact}>
+        <Text style={styles.directLabel}>Hoặc trao đổi trực tiếp với nhân viên qua Zalo:</Text>
+        <ScalePress style={styles.contactBtn} onPress={handleZalo}>
+          <Text style={styles.contactBtnText}>Vào khung Chat Zalo</Text>
+        </ScalePress>
+      </View>
+      
       <View style={{ height: 100 }} />
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background, paddingHorizontal: 20 },
-  title: { color: Theme.colors.text, fontSize: 28, fontWeight: 'bold', marginTop: Theme.spacing.xl + 20, marginBottom: 20 },
+  container: { flex: 1, backgroundColor: Theme.colors.background },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 100, flexGrow: 1 },
+  backBtn: { padding: 20, width: 60 },
+  title: { color: Theme.colors.text, fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
   
-  sosGradient: { borderRadius: 25, padding: 30, elevation: 15, boxShadow: `0 10px 20px rgba(220, 38, 38, 0.5)` },
-  sosInner: { alignItems: 'center' },
-  sosText: { color: '#fff', fontSize: 22, fontWeight: '900', marginTop: 15, letterSpacing: 1.5 },
-  sosDesc: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 5, textAlign: 'center' },
-  
-  actionGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 },
+  actionGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
   halfWidth: { width: '48%' },
   actionCard: { padding: 20, alignItems: 'center', justifyContent: 'center', height: 120 },
   actionTitle: { color: Theme.colors.text, fontWeight: 'bold', marginTop: 12 },
@@ -128,5 +152,10 @@ const styles = StyleSheet.create({
   feedbackActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   mediaBtn: { width: 50, height: 50, borderRadius: 15, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
   submitBtn: { flex: 1, marginLeft: 15, height: 50, borderRadius: 15, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center' },
-  submitText: { color: '#fff', fontWeight: 'bold', fontSize: 15 }
+  submitText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
+  
+  directContact: { marginTop: 40, alignItems: 'center' },
+  directLabel: { color: Theme.colors.subtext, fontSize: 14, marginBottom: 15 },
+  contactBtn: { backgroundColor: 'rgba(255,255,255,0.05)', paddingHorizontal: 30, paddingVertical: 15, borderRadius: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+  contactBtnText: { color: Theme.colors.primary, fontWeight: 'bold' }
 });

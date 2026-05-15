@@ -21,7 +21,6 @@ export default function AdminProfileScreen({ navigation }) {
   const adminMenuItems = [
     { icon: <User color={Theme.colors.primary} size={22} />, label: 'Thông tin tài khoản Admin', sub: 'Quản lý thông cá nhân & Avatar' },
     { icon: <Database color={Theme.colors.success} size={22} />, label: 'Đồng bộ dữ liệu hệ thống', sub: 'Kiểm tra trạng thái API & DB' },
-    { icon: <Bell color={Theme.colors.warning} size={22} />, label: 'Cấu hình thông báo khẩn', sub: 'Bật/Tắt SSE & SOS Alerts' },
     { icon: <Smartphone color={Theme.colors.info} size={22} />, label: 'Quản lý thiết bị POS', sub: 'Kết nối máy in bill & quẹt thẻ' },
     { icon: <Settings color={Theme.colors.subtext} size={22} />, label: 'Cài đặt bảo mật', sub: 'Đổi mật khẩu & 2FA' },
   ];

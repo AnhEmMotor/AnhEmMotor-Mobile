@@ -18,9 +18,13 @@ import ScalePress from '../../components/ScalePress';
 export default function CatalogScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [quoteModal, setQuoteModal] = useState(false);
+  const [filterModal, setFilterModal] = useState(false);
   const [selectedMotor, setSelectedMotor] = useState(null);
   const [quotePhone, setQuotePhone] = useState('');
   const [aiScanning, setAiScanning] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('Tất cả');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('Newest');
 
   const scanPos = useSharedValue(0);
   
@@ -42,6 +46,13 @@ export default function CatalogScreen({ navigation }) {
     setTimeout(() => setAiScanning(false), 3000);
   };
 
+  const filteredMotors = MOCK_MOTORS.filter(motor => {
+    const matchesCategory = activeCategory === 'Tất cả' || motor.category === activeCategory;
+    const matchesSearch = motor.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         motor.price.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <View style={styles.container}>
       {/* I.3 SEARCH BAR WITH AI (IMAGE/TEXT) */}
@@ -52,12 +63,14 @@ export default function CatalogScreen({ navigation }) {
             placeholder="Tìm phụ tùng, đồ chơi xe..." 
             placeholderTextColor={Theme.colors.subtext}
             style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
           <TouchableOpacity style={styles.aiBtn} onPress={handleAiSearch}>
             <Camera color={Theme.colors.primary} size={18} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.filterBtn}>
+        <TouchableOpacity style={styles.filterBtn} onPress={() => setFilterModal(true)}>
           <Filter color="#fff" size={20} />
         </TouchableOpacity>
       </Animated.View>
@@ -74,15 +87,22 @@ export default function CatalogScreen({ navigation }) {
       <Animated.View entering={FadeInUp.duration(600).delay(200)} style={styles.chipContainerWrapper}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
           {['Tất cả', 'Xe mới', 'Phụ tùng', 'Phụ kiện', 'Đồ bảo hộ'].map((cat, i) => (
-            <ScalePress key={i} style={[styles.chip, i === 0 && styles.activeChip]}>
-              <Text style={[styles.chipText, i === 0 && styles.activeChipText]}>{cat}</Text>
+            <ScalePress 
+              key={i} 
+              style={[styles.chip, activeCategory === cat && styles.activeChip]}
+              onPress={() => setActiveCategory(cat)}
+            >
+              <Text style={[styles.chipText, activeCategory === cat && styles.activeChipText]}>{cat}</Text>
             </ScalePress>
           ))}
         </ScrollView>
       </Animated.View>
 
       {/* I.3 CATALOG GRID (COMPATIBILITY MATRIX) */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.grid}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.grid}
+      >
         {loading ? (
           [1, 2, 3, 4].map((i) => (
             <View key={i} style={styles.motorCardWrapper}>
@@ -98,7 +118,7 @@ export default function CatalogScreen({ navigation }) {
             </View>
           ))
         ) : (
-          MOCK_MOTORS.map((item, index) => (
+          filteredMotors.map((item, index) => (
             <Animated.View 
               key={item.id} 
               entering={FadeInDown.duration(600).delay(index * 100)}
@@ -172,6 +192,34 @@ export default function CatalogScreen({ navigation }) {
           </Animated.View>
         </View>
       </Modal>
+
+      {/* FILTER MODAL */}
+      <Modal visible={filterModal} transparent animationType="slide" onRequestClose={() => setFilterModal(false)}>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setFilterModal(false)} />
+          <View style={styles.modalSheet}>
+            <View style={styles.modalHandle} />
+            <Text style={styles.modalTitle}>Bộ lọc sản phẩm 🛠️</Text>
+            
+            <Text style={styles.modalLabel}>Sắp xếp theo</Text>
+            <View style={styles.filterOptions}>
+              {['Mới nhất', 'Giá thấp - cao', 'Giá cao - thấp'].map((opt) => (
+                <TouchableOpacity 
+                  key={opt} 
+                  style={[styles.filterOpt, sortBy === opt && styles.activeFilterOpt]}
+                  onPress={() => setSortBy(opt)}
+                >
+                  <Text style={[styles.filterOptText, sortBy === opt && styles.activeFilterOptText]}>{opt}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity style={styles.applyBtn} onPress={() => setFilterModal(false)}>
+              <Text style={styles.applyBtnText}>Áp dụng</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -194,7 +242,7 @@ const styles = StyleSheet.create({
   chipText: { color: Theme.colors.subtext, fontWeight: '600', fontSize: 13 },
   activeChipText: { color: '#fff' },
   
-  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingBottom: 100 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingBottom: 150, flexGrow: 1 },
   motorCardWrapper: { width: '48%', marginBottom: Theme.spacing.md },
   motorCard: { padding: Theme.spacing.sm, borderRadius: 20, overflow: 'hidden' },
   imageWrapper: { position: 'relative', width: '100%', height: 130, borderRadius: 12, overflow: 'hidden', marginBottom: Theme.spacing.sm, backgroundColor: '#fff' },
@@ -224,5 +272,13 @@ const styles = StyleSheet.create({
   modalTextInput: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold' },
   modalHint: { color: Theme.colors.subtext, fontSize: 13, lineHeight: 20, marginBottom: 30 },
   modalSendBtn: { backgroundColor: Theme.colors.primary, height: 60, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-  modalSendText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
+  modalSendText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+
+  filterOptions: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 30 },
+  filterOpt: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.03)', marginRight: 10, marginBottom: 10, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+  activeFilterOpt: { backgroundColor: Theme.colors.primary, borderColor: Theme.colors.primary },
+  filterOptText: { color: Theme.colors.subtext, fontSize: 14, fontWeight: '600' },
+  activeFilterOptText: { color: '#fff' },
+  applyBtn: { backgroundColor: Theme.colors.primary, height: 55, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  applyBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
 });

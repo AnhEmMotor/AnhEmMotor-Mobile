@@ -24,6 +24,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Ứng dụng cần truy cập thư viện ảnh để bạn có thể cập nhật ảnh đại diện.",
+          "cameraPermission": "Ứng dụng cần truy cập camera để bạn có thể chụp ảnh đại diện mới."
+        }
+      ]
+    ]
   }
 }

@@ -24,9 +24,7 @@ import Animated, { FadeInDown, FadeInUp, FadeInRight, Layout } from 'react-nativ
 const screenWidth = Dimensions.get('window').width;
 
 export default function DashboardScreen({ navigation }) {
-  const [sosVisible, setSosVisible] = useState(false);
   const [urgentAlerts, setUrgentAlerts] = useState([
-    { id: '1', type: 'SOS', title: 'Hỗ trợ cứu hộ khẩn cấp', detail: 'Hầm Thủ Thiêm - Honda SH', time: 'Vừa xong', color: Theme.colors.error },
     { id: '2', type: 'HOT', title: 'Khách "Siêu nóng"', detail: 'Anh Khôi chốt Panigale V4', time: '5p trước', color: Theme.colors.warning },
   ]);
 
@@ -36,11 +34,7 @@ export default function DashboardScreen({ navigation }) {
     { id: '3', name: 'Quốc Bảo', status: 'Lái thử', avatar: 'https://i.pravatar.cc/150?u=3', active: false },
   ];
 
-  // Simulate SOS Incoming
-  useEffect(() => {
-    const timer = setTimeout(() => setSosVisible(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+  // Urgent alerts management
 
   const resolveAlert = (id) => {
     setUrgentAlerts(prev => prev.filter(a => a.id !== id));
@@ -108,7 +102,7 @@ export default function DashboardScreen({ navigation }) {
                   <GlassCard style={styles.alertCard} intensity={20}>
                     <View style={[styles.alertIndicator, { backgroundColor: alert.color }]} />
                     <View style={styles.alertIcon}>
-                      {alert.type === 'SOS' ? <AlertCircle color={alert.color} size={24} /> : <Zap color={alert.color} size={24} />}
+                      <Zap color={alert.color} size={24} />
                     </View>
                     <View style={{ flex: 1, marginLeft: 12 }}>
                       <View style={styles.alertHeader}>
@@ -190,32 +184,6 @@ export default function DashboardScreen({ navigation }) {
         <View style={{ height: 120 }} />
       </ScrollView>
 
-      {/* II.1 SOS OVERLAY MODAL */}
-      <Modal visible={sosVisible} transparent animationType="fade">
-        <View style={styles.sosOverlay}>
-          <Animated.View entering={FadeInUp} style={styles.sosModal}>
-            <PulseView pulseScale={1.1}>
-              <View style={styles.sosIconCircle}>
-                <ShieldAlert color="#fff" size={48} />
-              </View>
-            </PulseView>
-            <Text style={styles.sosTitle}>YÊU CẦU SOS!</Text>
-            <Text style={styles.sosDetail}>Khách hàng: Anh Minh Quân</Text>
-            <Text style={styles.sosLocation}>Vị trí: Hầm Thủ Thiêm - Q.2</Text>
-            
-            <View style={styles.sosActions}>
-              <Pressable style={styles.sosCloseBtn} onPress={() => setSosVisible(false)}>
-                <Text style={styles.sosCloseText}>Bỏ qua</Text>
-              </Pressable>
-              <Pressable style={styles.sosCallBtn}>
-                <Phone color="#fff" size={20} />
-                <Text style={styles.sosCallText}>Gọi cứu hộ</Text>
-              </Pressable>
-            </View>
-          </Animated.View>
-        </View>
-      </Modal>
-
       {/* FAB - QUICK CREATE */}
       <Animated.View entering={FadeInDown.delay(1000)} style={styles.fabContainer}>
         <Pressable style={({ pressed }) => [styles.fab, pressed && { transform: [{ scale: 0.9 }] }]}>
@@ -285,18 +253,6 @@ const styles = StyleSheet.create({
   shortcutBtn: { alignItems: 'center' },
   shortcutIcon: { width: 56, height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginBottom: 8 },
   shortcutLabel: { color: Theme.colors.text, fontSize: 12, fontWeight: '500', textAlign: 'center' },
-
-  sosOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', alignItems: 'center', padding: 24 },
-  sosModal: { width: '100%', backgroundColor: Theme.colors.card, borderRadius: 30, padding: 32, alignItems: 'center', borderWidth: 2, borderColor: Theme.colors.error },
-  sosIconCircle: { width: 100, height: 100, borderRadius: 50, backgroundColor: Theme.colors.error, justifyContent: 'center', alignItems: 'center', marginBottom: 24, elevation: 20, boxShadow: `0 10px 20px rgba(220, 38, 38, 0.5)` },
-  sosTitle: { color: Theme.colors.error, fontSize: 28, fontWeight: '900', letterSpacing: 2 },
-  sosDetail: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold', marginTop: 16 },
-  sosLocation: { color: Theme.colors.subtext, fontSize: 14, marginTop: 8 },
-  sosActions: { flexDirection: 'row', marginTop: 32, width: '100%' },
-  sosCloseBtn: { flex: 1, height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 12, backgroundColor: 'rgba(255,255,255,0.05)' },
-  sosCloseText: { color: Theme.colors.subtext, fontWeight: 'bold' },
-  sosCallBtn: { flex: 2, height: 56, borderRadius: 16, flexDirection: 'row', backgroundColor: Theme.colors.error, justifyContent: 'center', alignItems: 'center' },
-  sosCallText: { color: '#fff', fontWeight: 'bold', marginLeft: 8, fontSize: 16 },
 
   fabContainer: { position: 'absolute', bottom: 30, right: 24, alignItems: 'center' },
   fab: { width: 64, height: 64, borderRadius: 32, elevation: 8, boxShadow: `0 4px 8px rgba(220, 38, 38, 0.3)` },

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet, Text, View, ScrollView, TextInput, KeyboardAvoidingView, Platform
+  StyleSheet, Text, View, ScrollView, TextInput, KeyboardAvoidingView, Platform, Image, Alert
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme } from '../../theme/Theme';
 import { ChevronLeft, User, Phone, Mail, MapPin, Camera, Save } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
@@ -14,8 +16,8 @@ export default function ProfileEditScreen({ navigation }) {
     phone: '0912 345 678',
     email: 'nguyenkhoi.ae@gmail.com',
     address: '123 Lê Văn Việt, Quận 9, TP.HCM',
-    rescueAddress: '123 Lê Văn Việt, Quận 9, TP.HCM',
   });
+  const [image, setImage] = useState('https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080');
 
   const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
@@ -24,41 +26,88 @@ export default function ProfileEditScreen({ navigation }) {
     { key: 'phone', label: 'Số điện thoại', icon: <Phone color={Theme.colors.success} size={18} />, placeholder: 'Nhập SĐT...', keyboardType: 'phone-pad' },
     { key: 'email', label: 'Email', icon: <Mail color={Theme.colors.info} size={18} />, placeholder: 'Nhập email...', keyboardType: 'email-address' },
     { key: 'address', label: 'Địa chỉ thường trú', icon: <MapPin color={Theme.colors.warning} size={18} />, placeholder: 'Nhập địa chỉ...' },
-    { key: 'rescueAddress', label: 'Địa chỉ cứu hộ (mặc định)', icon: <MapPin color={Theme.colors.secondary} size={18} />, placeholder: 'Địa chỉ nhân viên đến cứu hộ...', hint: 'Địa chỉ này sẽ được dùng khi bạn kích hoạt SOS.' },
   ];
 
   const handleSave = () => {
     navigation.goBack();
   };
 
+  const pickImage = async () => {
+    Alert.alert(
+        'Đổi ảnh đại diện',
+        'Chọn phương thức',
+        [
+            { text: 'Chụp ảnh mới', onPress: handleCamera },
+            { text: 'Chọn từ thư viện', onPress: handleLibrary },
+            { text: 'Hủy', style: 'cancel' }
+        ]
+    );
+  };
+
+  const handleCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Xin lỗi, chúng tôi cần quyền truy cập camera!');
+      return;
+    }
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) setImage(result.assets[0].uri);
+  };
+
+  const handleLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Xin lỗi, chúng tôi cần quyền truy cập thư viện ảnh!');
+      return;
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) setImage(result.assets[0].uri);
+  };
+
   return (
-    <KeyboardAvoidingView
+    <SafeAreaView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      edges={['top']}
     >
-      {/* Header */}
-      <Animated.View entering={FadeInUp.duration(500)} style={styles.header}>
-        <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={Theme.colors.text} size={24} />
-        </ScalePress>
-        <Text style={styles.headerTitle}>Thông tin cá nhân</Text>
-        <ScalePress style={styles.saveBtn} onPress={handleSave}>
-          <Save color={Theme.colors.primary} size={20} />
-        </ScalePress>
-      </Animated.View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        {/* Header */}
+        <Animated.View entering={FadeInUp.duration(500)} style={styles.header}>
+          <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <ChevronLeft color={Theme.colors.text} size={24} />
+          </ScalePress>
+          <Text style={styles.headerTitle}>Thông tin cá nhân</Text>
+          <ScalePress style={styles.saveBtn} onPress={handleSave}>
+            <Save color={Theme.colors.primary} size={20} />
+          </ScalePress>
+        </Animated.View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
 
         {/* Avatar */}
         <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.avatarSection}>
-          <View style={styles.avatarWrapper}>
-            <View style={styles.avatarPlaceholder}>
-              <User color="rgba(255,255,255,0.4)" size={48} />
-            </View>
-            <ScalePress style={styles.cameraBtn}>
+          <ScalePress style={styles.avatarWrapper} onPress={pickImage}>
+            {image ? (
+                <Image source={{ uri: image }} style={styles.avatarImage} />
+            ) : (
+                <View style={styles.avatarPlaceholder}>
+                    <User color="rgba(255,255,255,0.4)" size={48} />
+                </View>
+            )}
+            <View style={styles.cameraBtn}>
               <Camera color="#fff" size={14} />
-            </ScalePress>
-          </View>
+            </View>
+          </ScalePress>
           <Text style={styles.changePhotoText}>Đổi ảnh đại diện</Text>
         </Animated.View>
 
@@ -89,9 +138,10 @@ export default function ProfileEditScreen({ navigation }) {
           </ScalePress>
         </Animated.View>
 
-        <View style={{ height: 80 }} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <View style={{ height: 80 }} />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -106,8 +156,9 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: Theme.spacing.md },
 
   avatarSection: { alignItems: 'center', marginVertical: Theme.spacing.xl },
-  avatarWrapper: { position: 'relative' },
+  avatarWrapper: { position: 'relative', width: 100, height: 100 },
   avatarPlaceholder: { width: 100, height: 100, borderRadius: 50, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: Theme.colors.border },
+  avatarImage: { width: 100, height: 100, borderRadius: 50, borderWidth: 2, borderColor: Theme.colors.primary },
   cameraBtn: { position: 'absolute', bottom: 0, right: 0, width: 30, height: 30, borderRadius: 15, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: Theme.colors.background },
   changePhotoText: { color: Theme.colors.primary, fontSize: 13, marginTop: Theme.spacing.sm, fontWeight: '600' },
 

@@ -1,56 +1,36 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { 
-  LayoutGrid, 
-  Car, 
-  User, 
-  ShieldCheck, 
-  BarChart3, 
-  Users, 
-  PackageSearch,
-  LifeBuoy,
-  CalendarCheck
-} from 'lucide-react-native';
-
-// --- IMPORT THEME ---
+import { LayoutGrid, Car, User, ShieldCheck, LifeBuoy } from 'lucide-react-native';
 import { Theme } from '../theme/Theme';
 
-
-// --- IMPORT SCREENS ---
 import LoginScreen from '../screens/LoginScreen';
-
-// Khách hàng (Customer)
 import HomeScreen from '../screens/Customer/HomeScreen';
 import CatalogScreen from '../screens/Customer/CatalogScreen';
-import MyVehiclesScreen from '../screens/Customer/MyVehiclesScreen';
-import ProfileScreen from '../screens/Customer/ProfileScreen';
 import BookingScreen from '../screens/Customer/BookingScreen';
-import LegalProgressScreen from '../screens/Customer/LegalProgressScreen';
+import MyVehiclesScreen from '../screens/Customer/MyVehiclesScreen';
 import SupportScreen from '../screens/Customer/SupportScreen';
-import VehicleDetailScreen from '../screens/Customer/VehicleDetailScreen';
+import ProfileScreen from '../screens/Customer/ProfileScreen';
 import NotificationScreen from '../screens/Customer/NotificationScreen';
-import InvoiceScreen from '../screens/Customer/InvoiceScreen';
-import ServiceHistoryScreen from '../screens/Customer/ServiceHistoryScreen';
-import AIChatScreen from '../screens/Customer/AIChatScreen';
-import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
 import ProfileEditScreen from '../screens/Customer/ProfileEditScreen';
-import SuccessScreen from '../screens/Shared/SuccessScreen';
+import VehicleDetailScreen from '../screens/Customer/VehicleDetailScreen';
+import AIChatScreen from '../screens/Customer/AIChatScreen';
+import QRScanScreen from '../screens/Customer/QRScanScreen';
+import SavedNewsScreen from '../screens/Customer/SavedNewsScreen';
 
-// Quản trị (Admin)
+// Admin Screens
 import DashboardScreen from '../screens/Admin/DashboardScreen';
-import LeadScreen from '../screens/Admin/LeadScreen';
-import InventoryScreen from '../screens/Admin/InventoryScreen';
-import AppointmentManageScreen from '../screens/Admin/AppointmentManageScreen';
-import CashFlowScreen from '../screens/Admin/CashFlowScreen';
-import SupportHubScreen from '../screens/Admin/SupportHubScreen';
 import AdminProfileScreen from '../screens/Admin/AdminProfileScreen';
+import AppointmentManageScreen from '../screens/Admin/AppointmentManageScreen';
+import InventoryScreen from '../screens/Admin/InventoryScreen';
+import CashFlowScreen from '../screens/Admin/CashFlowScreen';
+import LeadScreen from '../screens/Admin/LeadScreen';
+import SupportHubScreen from '../screens/Admin/SupportHubScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// --- 1. LUỒNG TABS KHÁCH HÀNG (CUSTOMER TABS) ---
 function CustomerTabs() {
   return (
     <Tab.Navigator screenOptions={{
@@ -58,10 +38,14 @@ function CustomerTabs() {
       tabBarStyle: { 
         backgroundColor: Theme.colors.card, 
         borderTopWidth: 0, 
-        height: 75, 
-        paddingBottom: 15,
+        height: 85, 
+        paddingBottom: 25,
         paddingTop: 10,
         elevation: 0,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
       },
       tabBarActiveTintColor: Theme.colors.primary,
       tabBarInactiveTintColor: Theme.colors.subtext,
@@ -74,9 +58,9 @@ function CustomerTabs() {
         tabBarIcon: ({color}) => <Car color={color} size={24} />,
         tabBarLabel: 'Catalog'
       }} />
-      <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{
+      <Tab.Screen name="Booking" component={BookingScreen} options={{
         tabBarIcon: ({color}) => <ShieldCheck color={color} size={24} />,
-        tabBarLabel: 'Xe của tôi'
+        tabBarLabel: 'Đặt lịch'
       }} />
       <Tab.Screen name="Support" component={SupportScreen} options={{
         tabBarIcon: ({color}) => <LifeBuoy color={color} size={24} />,
@@ -90,143 +74,30 @@ function CustomerTabs() {
   );
 }
 
-// --- 2. LUỒNG TABS QUẢN TRỊ (ADMIN TABS) ---
-function AdminTabs() {
-  return (
-    <Tab.Navigator screenOptions={{
-      headerShown: false,
-      tabBarStyle: { 
-        backgroundColor: Theme.colors.card, 
-        borderTopWidth: 1,
-        borderTopColor: 'rgba(255,255,255,0.06)',
-        height: 75,
-        paddingBottom: 15,
-        paddingTop: 10,
-        elevation: 0,
-      },
-      tabBarActiveTintColor: Theme.colors.secondary,
-      tabBarInactiveTintColor: Theme.colors.subtext,
-    }}>
-      <Tab.Screen name="AdminDash" component={DashboardScreen} options={{
-        tabBarIcon: ({color}) => <BarChart3 color={color} size={24} />,
-        tabBarLabel: 'Dashboard'
-      }} />
-      <Tab.Screen name="AdminLeads" component={LeadScreen} options={{
-        tabBarIcon: ({color}) => <Users color={color} size={24} />,
-        tabBarLabel: 'Khách hàng'
-      }} />
-      <Tab.Screen name="AdminAppointments" component={AppointmentManageScreen} options={{
-        tabBarIcon: ({color}) => <CalendarCheck color={color} size={24} />,
-        tabBarLabel: 'Lịch hẹn'
-      }} />
-      <Tab.Screen name="AdminInventory" component={InventoryScreen} options={{
-        tabBarIcon: ({color}) => <PackageSearch color={color} size={24} />,
-        tabBarLabel: 'Kho xe'
-      }} />
-    </Tab.Navigator>
-  );
-}
-
-// --- 3. ĐIỀU HƯỚNG TỔNG (ROOT NAVIGATOR) ---
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ 
-        headerShown: false,
-        animation: 'slide_from_right' 
-      }}>
-        {/* Màn hình Đăng nhập */}
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
-
-        {/* Các luồng chính sau Login */}
         <Stack.Screen name="CustomerHome" component={CustomerTabs} />
-        <Stack.Screen name="AdminHome" component={AdminTabs} />
-
-        {/* Màn hình tác vụ phụ Admin */}
-        <Stack.Screen 
-          name="SupportHub" 
-          component={SupportHubScreen} 
-          options={{ 
-            headerShown: true, 
-            title: 'Hỗ trợ & Phản hồi', 
-            headerTintColor: '#fff', 
-            headerStyle: { backgroundColor: Theme.colors.background },
-            headerTitleStyle: { fontWeight: 'bold' }
-          }} 
-        />
-        <Stack.Screen 
-          name="CashFlow" 
-          component={CashFlowScreen} 
-          options={{ 
-            headerShown: true, 
-            title: 'Dòng tiền hệ thống', 
-            headerTintColor: '#fff', 
-            headerStyle: { backgroundColor: Theme.colors.background },
-            headerTitleStyle: { fontWeight: 'bold' }
-          }} 
-        />
-        <Stack.Screen name="AdminProfile" component={AdminProfileScreen} />
+        <Stack.Screen name="Booking" component={BookingScreen} />
+        <Stack.Screen name="MyVehicles" component={MyVehiclesScreen} />
+        <Stack.Screen name="Support" component={SupportScreen} />
+        <Stack.Screen name="Notification" component={NotificationScreen} />
+        <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+        <Stack.Screen name="VehicleDetail" component={VehicleDetailScreen} />
+        <Stack.Screen name="AIChat" component={AIChatScreen} />
+        <Stack.Screen name="QRScan" component={QRScanScreen} />
+        <Stack.Screen name="SavedNews" component={SavedNewsScreen} />
         
-        {/* Màn hình tác vụ phụ Khách hàng (Sẽ ẩn thanh Tabs khi mở) */}
-        <Stack.Screen 
-          name="Booking" 
-          component={BookingScreen} 
-          options={{ 
-            headerShown: true, 
-            title: 'Đặt lịch bảo trì', 
-            headerTintColor: '#fff', 
-            headerStyle: { backgroundColor: Theme.colors.background },
-            headerTitleStyle: { fontWeight: 'bold' }
-          }} 
-        />
-
-        <Stack.Screen 
-          name="LegalProgress" 
-          component={LegalProgressScreen} 
-          options={{ 
-            headerShown: true, 
-            title: 'Tiến độ pháp lý', 
-            headerTintColor: '#fff', 
-            headerStyle: { backgroundColor: Theme.colors.background },
-            headerTitleStyle: { fontWeight: 'bold' }
-          }} 
-        />
-        <Stack.Screen 
-          name="VehicleDetail" 
-          component={VehicleDetailScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="Notification" 
-          component={NotificationScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="Invoice" 
-          component={InvoiceScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="ServiceHistory" 
-          component={ServiceHistoryScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="AIChat" 
-          component={AIChatScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="ContactStaff" 
-          component={ContactStaffScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="ProfileEdit" 
-          component={ProfileEditScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen name="Success" component={SuccessScreen} />
+        {/* Admin Stack */}
+        <Stack.Screen name="AdminHome" component={DashboardScreen} />
+        <Stack.Screen name="AdminProfile" component={AdminProfileScreen} />
+        <Stack.Screen name="AdminAppointments" component={AppointmentManageScreen} />
+        <Stack.Screen name="AdminInventory" component={InventoryScreen} />
+        <Stack.Screen name="CashFlow" component={CashFlowScreen} />
+        <Stack.Screen name="AdminLeads" component={LeadScreen} />
+        <Stack.Screen name="SupportHub" component={SupportHubScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
