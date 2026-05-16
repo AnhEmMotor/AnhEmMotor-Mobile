@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Platform } from 'react-native';
 import { Theme } from '../../theme/Theme';
 import { 
   Award, ShieldCheck, CreditCard, Settings, LogOut, 
@@ -42,13 +42,33 @@ export default function ProfileScreen({ navigation }) {
   const tiltY = useSharedValue(0);
 
   useEffect(() => {
-    const subscription = Accelerometer.addListener(data => {
-      setData(data);
-      tiltX.value = withSpring(data.x * 10); // Reduced tilt to avoid gesture interference
-      tiltY.value = withSpring(data.y * 10);
-    });
-    Accelerometer.setUpdateInterval(50);
-    return () => subscription.remove();
+    let subscription = null;
+
+    async function subscribe() {
+      if (Platform.OS === 'web') {
+        return;
+      }
+
+      const available = await Accelerometer.isAvailableAsync().catch(() => false);
+      if (!available) {
+        return;
+      }
+
+      subscription = Accelerometer.addListener(data => {
+        setData(data);
+        tiltX.value = withSpring(data.x * 10); // Reduced tilt to avoid gesture interference
+        tiltY.value = withSpring(data.y * 10);
+      });
+      Accelerometer.setUpdateInterval(50);
+    }
+
+    subscribe();
+
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
   }, []);
 
   const animatedCardStyle = useAnimatedStyle(() => {
@@ -286,4 +306,4 @@ const styles = StyleSheet.create({
   avatarOption: { width: '30%', aspectRatio: 1, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.03)', padding: 10, marginBottom: 15, borderWidth: 2, borderColor: 'transparent' },
   selectedAvatarOption: { borderColor: Theme.colors.primary, backgroundColor: 'rgba(0,122,255,0.1)' },
   avatarOptionImg: { width: '100%', height: '100%', borderRadius: 15 }
-});
+});
