@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { 
   Text, 
   View, 
@@ -67,7 +67,7 @@ import { useProfileController, MOCK_REGIONS } from '../../../features/profile/pr
  * @framework React Native (Clean Architecture - Presentation Layer)
  * @description Beautiful customer profile screen with high-fidelity click-to-edit bottom sheets.
  */
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen({ navigation, route }) {
   const bottomSheetRef = useRef(null);
   
   const {
@@ -96,6 +96,13 @@ export default function ProfileScreen({ navigation }) {
 
   // New Shopee-style interactive state modals
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (route?.params?.openSettings) {
+      setSettingsModalVisible(true);
+      navigation.setParams({ openSettings: undefined });
+    }
+  }, [route?.params?.openSettings]);
   const [privilegesModalVisible, setPrivilegesModalVisible] = useState(false);
   const [liveWorkshopModalVisible, setLiveWorkshopModalVisible] = useState(false);
   const [mapTrackingModalVisible, setMapTrackingModalVisible] = useState(false);

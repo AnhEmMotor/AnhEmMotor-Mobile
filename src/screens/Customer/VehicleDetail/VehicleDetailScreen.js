@@ -8,7 +8,7 @@ import {
   StatusBar,
   StyleSheet
 } from 'react-native';
-import { Theme } from '../../../theme/Theme';
+import { Theme, useActiveColors } from '../../../theme/Theme';
 import {
   ChevronLeft,
   RotateCcw,
@@ -38,6 +38,7 @@ import { moderateScale } from '../../../utils/responsive';
 export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};
   const logic = useVehicleDetail(motor);
+  const activeColors = useActiveColors();
 
   const renderOverview = () => (
     <Animated.View entering={FadeInDown.duration(600)}>
@@ -46,52 +47,52 @@ export default function VehicleDetailScreen({ navigation, route }) {
         <View style={styles.statusDot} />
         <Text style={styles.statusText}>Còn hàng tại Biên Hòa (Giao ngay)</Text>
       </View>
-
+ 
       {/* Loyalty Reward */}
       <View style={styles.rewardCard}>
-        <Ticket color={Theme.colors.primary} size={24} />
-        <Text style={styles.rewardText}>
-          Bạn có <Text style={styles.rewardHighlight}>1 Voucher giảm 2.000.000đ</Text> đổi xe mới (Hạn dùng: 3 ngày)
+        <Ticket color={activeColors.primary} size={24} />
+        <Text style={[styles.rewardText, { color: activeColors.text }]}>
+          Bạn có <Text style={[styles.rewardHighlight, { color: activeColors.primary }]}>1 Voucher giảm 2.000.000đ</Text> đổi xe mới (Hạn dùng: 3 ngày)
         </Text>
       </View>
-
+ 
       {/* Key Highlights */}
-      <Text style={styles.sectionTitle}>Tính năng đột phá</Text>
+      <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tính năng đột phá</Text>
       <View style={styles.featureGrid}>
         {[
-          { icon: <ShieldCheck color={Theme.colors.primary} size={20} />, title: 'Phanh ABS', desc: 'Khống chế lực phanh an toàn.' },
-          { icon: <Key color={Theme.colors.warning} size={20} />, title: 'Smartkey', desc: 'Chống trộm thông minh.' },
+          { icon: <ShieldCheck color={activeColors.primary} size={20} />, title: 'Phanh ABS', desc: 'Khống chế lực phanh an toàn.' },
+          { icon: <Key color={activeColors.warning} size={20} />, title: 'Smartkey', desc: 'Chống trộm thông minh.' },
           { icon: <Droplet color="#3B82F6" size={20} />, title: 'Động cơ eSP+', desc: 'Tiết kiệm xăng tối đa.' },
           { icon: <Usb color="#A855F7" size={20} />, title: 'Sạc USB', desc: 'Sạc điện thoại ngay trong cốp.' },
         ].map((f, i) => (
-          <View key={i} style={styles.featureCard}>
+          <View key={i} style={[styles.featureCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
             <View style={styles.featureIcon}>{f.icon}</View>
-            <Text style={styles.featureTitle}>{f.title}</Text>
-            <Text style={styles.featureDesc}>{f.desc}</Text>
+            <Text style={[styles.featureTitle, { color: activeColors.text }]}>{f.title}</Text>
+            <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>{f.desc}</Text>
           </View>
         ))}
       </View>
-
+ 
       {/* Finance Teaser */}
-      <TouchableOpacity style={styles.financeTeaser} onPress={() => logic.setActiveTab('finance')}>
-        <Text style={styles.teaserTitle}>Gợi ý tài chính nhanh 💰</Text>
-        <Text style={styles.teaserDesc}>Sở hữu xe chỉ với 15.000.000đ trả trước - Hỗ trợ lãi suất ưu đãi từ 1.200.000đ/tháng.</Text>
-        <Text style={styles.teaserLink}>Tính chi phí trả góp chi tiết ➔</Text>
+      <TouchableOpacity style={[styles.financeTeaser, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }]} onPress={() => logic.setActiveTab('finance')}>
+        <Text style={[styles.teaserTitle, { color: activeColors.text }]}>Gợi ý tài chính nhanh 💰</Text>
+        <Text style={[styles.teaserDesc, { color: activeColors.subtext }]}>Sở hữu xe chỉ với 15.000.000đ trả trước - Hỗ trợ lãi suất ưu đãi từ 1.200.000đ/tháng.</Text>
+        <Text style={[styles.teaserLink, { color: activeColors.primary }]}>Tính chi phí trả góp chi tiết ➔</Text>
       </TouchableOpacity>
       <View style={styles.specGroup}>
-        <Text style={styles.specGroupTitle}>Khung sườn, Phuộc & An toàn</Text>
-        <SpecRow label="Phanh trước" value="Phanh đĩa tích hợp ABS" />
-        <SpecRow label="Phanh sau" value="Phanh đĩa" />
-        <SpecRow label="Phuộc trước" value="Ống lồng, giảm chấn thủy lực" />
-        <SpecRow label="Lốp sau" value="120/80-16 Lốp không săm" />
+        <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Khung sườn, Phuộc & An toàn</Text>
+        <SpecRow label="Phanh trước" value="Phanh đĩa tích hợp ABS" activeColors={activeColors} />
+        <SpecRow label="Phanh sau" value="Phanh đĩa" activeColors={activeColors} />
+        <SpecRow label="Phuộc trước" value="Ống lồng, giảm chấn thủy lực" activeColors={activeColors} />
+        <SpecRow label="Lốp sau" value="120/80-16 Lốp không săm" activeColors={activeColors} />
       </View>
-
+ 
       <View style={styles.specGroup}>
-        <Text style={styles.specGroupTitle}>Tiện ích & Công nghệ</Text>
-        <SpecRow label="Hệ thống đèn" value="Toàn bộ LED" />
-        <SpecRow label="Hệ thống khóa" value="Smartkey thông minh" />
-        <SpecRow label="Cốp xe" value="28 Lít (Vừa 2 mũ bảo hiểm)" />
-        <SpecRow label="Cổng sạc" value="USB trong cốp xe" />
+        <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Tiện ích & Công nghệ</Text>
+        <SpecRow label="Hệ thống đèn" value="Toàn bộ LED" activeColors={activeColors} />
+        <SpecRow label="Hệ thống khóa" value="Smartkey thông minh" activeColors={activeColors} />
+        <SpecRow label="Cốp xe" value="28 Lít (Vừa 2 mũ bảo hiểm)" activeColors={activeColors} />
+        <SpecRow label="Cổng sạc" value="USB trong cốp xe" activeColors={activeColors} />
       </View>
     </Animated.View>
   );
@@ -99,29 +100,29 @@ export default function VehicleDetailScreen({ navigation, route }) {
   const renderSpecs = () => (
     <Animated.View entering={FadeInDown.duration(600)}>
       <View style={styles.specGroup}>
-        <Text style={styles.specGroupTitle}>Động cơ & Vận hành</Text>
-        <SpecRow label="Loại động cơ" value="eSP+, 4 van, SOHC" />
-        <SpecRow label="Dung tích xy-lanh" value="156.9cc" />
-        <SpecRow label="Công suất tối đa" value="12.4 kW / 8.500 v/p" />
-        <SpecRow label="Mức tiêu thụ" value="2.24 lít/100km" />
+        <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Động cơ & Vận hành</Text>
+        <SpecRow label="Loại động cơ" value="eSP+, 4 van, SOHC" activeColors={activeColors} />
+        <SpecRow label="Dung tích xy-lanh" value="156.9cc" activeColors={activeColors} />
+        <SpecRow label="Công suất tối đa" value="12.4 kW / 8.500 v/p" activeColors={activeColors} />
+        <SpecRow label="Mức tiêu thụ" value="2.24 lít/100km" activeColors={activeColors} />
       </View>
-
+ 
       <View style={styles.specGroup}>
-        <Text style={styles.specGroupTitle}>Kích thước & Trọng lượng</Text>
-        <SpecRow label="Khối lượng" value="133kg" />
-        <SpecRow label="Dài x Rộng x Cao" value="2.090 x 739 x 1.129 mm" />
-        <SpecRow label="Độ cao yên" value="799mm" />
-        <SpecRow label="Dung tích bình xăng" value="7.8 lít" />
+        <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Kích thước & Trọng lượng</Text>
+        <SpecRow label="Khối lượng" value="133kg" activeColors={activeColors} />
+        <SpecRow label="Dài x Rộng x Cao" value="2.090 x 739 x 1.129 mm" activeColors={activeColors} />
+        <SpecRow label="Độ cao yên" value="799mm" activeColors={activeColors} />
+        <SpecRow label="Dung tích bình xăng" value="7.8 lít" activeColors={activeColors} />
       </View>
     </Animated.View>
   );
 
   const renderFinance = () => (
     <Animated.View entering={FadeInDown.duration(600)} style={styles.calculator}>
-      <Text style={styles.sectionTitle}>Tính toán tài chính 📊</Text>
-
+      <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tính toán tài chính 📊</Text>
+ 
       <View style={{ marginBottom: 25 }}>
-        <Text style={styles.calcLabel}>Trả trước: <Text style={styles.calcValue}>{logic.downPaymentPercent}% ({logic.financeResults.downPayment.toLocaleString()}đ)</Text></Text>
+        <Text style={[styles.calcLabel, { color: activeColors.subtext }]}>Trả trước: <Text style={[styles.calcValue, { color: activeColors.primary }]}>{logic.downPaymentPercent}% ({logic.financeResults.downPayment.toLocaleString()}đ)</Text></Text>
         <Slider
           style={styles.slider}
           minimumValue={20}
@@ -129,14 +130,14 @@ export default function VehicleDetailScreen({ navigation, route }) {
           step={10}
           value={logic.downPaymentPercent}
           onValueChange={logic.setDownPaymentPercent}
-          minimumTrackTintColor="#2E5BFF"
-          maximumTrackTintColor="rgba(255,255,255,0.1)"
+          minimumTrackTintColor={activeColors.primary}
+          maximumTrackTintColor={activeColors.border}
           thumbTintColor="#fff"
         />
       </View>
-
+ 
       <View style={{ marginBottom: 25 }}>
-        <Text style={styles.calcLabel}>Kỳ hạn vay: <Text style={styles.calcValue}>{logic.loanTerm} tháng</Text></Text>
+        <Text style={[styles.calcLabel, { color: activeColors.subtext }]}>Kỳ hạn vay: <Text style={[styles.calcValue, { color: activeColors.primary }]}>{logic.loanTerm} tháng</Text></Text>
         <Slider
           style={styles.slider}
           minimumValue={6}
@@ -144,38 +145,38 @@ export default function VehicleDetailScreen({ navigation, route }) {
           step={6}
           value={logic.loanTerm}
           onValueChange={logic.setLoanTerm}
-          minimumTrackTintColor="#2E5BFF"
-          maximumTrackTintColor="rgba(255,255,255,0.1)"
+          minimumTrackTintColor={activeColors.primary}
+          maximumTrackTintColor={activeColors.border}
           thumbTintColor="#fff"
         />
       </View>
-
-      <View style={styles.resultCard}>
+ 
+      <View style={[styles.resultCard, { backgroundColor: activeColors.card }]}>
         <View style={styles.resultRow}>
-          <Text style={styles.resultLabel}>Góp mỗi tháng (Dự tính)</Text>
+          <Text style={[styles.resultLabel, { color: activeColors.subtext }]}>Góp mỗi tháng (Dự tính)</Text>
           <Text style={styles.monthlyPayment}>{logic.financeResults.monthlyPayment.toLocaleString()} đ/tháng</Text>
         </View>
         <View style={styles.resultRow}>
-          <Text style={styles.resultLabel}>Khoản vay giải ngân</Text>
-          <Text style={{ color: '#fff', fontWeight: 'bold' }}>{logic.financeResults.loanAmount.toLocaleString()} đ</Text>
+          <Text style={[styles.resultLabel, { color: activeColors.subtext }]}>Khoản vay giải ngân</Text>
+          <Text style={{ color: activeColors.text, fontWeight: 'bold' }}>{logic.financeResults.loanAmount.toLocaleString()} đ</Text>
         </View>
         <View style={styles.resultRow}>
-          <Text style={styles.resultLabel}>Chênh lệch tổng chi phí</Text>
-          <Text style={{ color: Theme.colors.warning, fontSize: 12 }}>+ 12.500.000đ so với trả thẳng</Text>
+          <Text style={[styles.resultLabel, { color: activeColors.subtext }]}>Chênh lệch tổng chi phí</Text>
+          <Text style={{ color: activeColors.warning, fontSize: 12 }}>+ 12.500.000đ so với trả thẳng</Text>
         </View>
       </View>
-
-      <Text style={styles.specGroupTitle}>Hồ sơ chuẩn bị (Checklist)</Text>
-      <View style={styles.checklist}>
-        <Text style={styles.checkItem}>• Khách hàng từ 18 tuổi trở lên.</Text>
-        <Text style={styles.checkItem}>• Chỉ cần CCCD gắn chíp.</Text>
-        <Text style={styles.checkItem}>• Duyệt hồ sơ 15-30 phút tại Showroom.</Text>
+ 
+      <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Hồ sơ chuẩn bị (Checklist)</Text>
+      <View style={[styles.checklist, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderLeftColor: activeColors.primary }]}>
+        <Text style={[styles.checkItem, { color: activeColors.subtext }]}>• Khách hàng từ 18 tuổi trở lên.</Text>
+        <Text style={[styles.checkItem, { color: activeColors.subtext }]}>• Chỉ cần CCCD gắn chíp.</Text>
+        <Text style={[styles.checkItem, { color: activeColors.subtext }]}>• Duyệt hồ sơ 15-30 phút tại Showroom.</Text>
       </View>
-
-      <Text style={[styles.specGroupTitle, { marginTop: 20 }]}>Đối tác liên kết</Text>
+ 
+      <Text style={[styles.specGroupTitle, { color: activeColors.primary, marginTop: 20 }]}>Đối tác liên kết</Text>
       <View style={styles.partners}>
         {/* Placeholder for logos */}
-        <Text style={{ color: Theme.colors.subtext }}>HD Saison • Home Credit • FE Credit</Text>
+        <Text style={{ color: activeColors.subtext }}>HD Saison • Home Credit • FE Credit</Text>
       </View>
     </Animated.View>
   );
@@ -183,39 +184,39 @@ export default function VehicleDetailScreen({ navigation, route }) {
   const renderReviews = () => (
     <Animated.View entering={FadeInDown.duration(600)}>
       <View style={styles.ratingSummary}>
-        <Text style={styles.avgScore}>4.9</Text>
+        <Text style={[styles.avgScore, { color: activeColors.text }]}>4.9</Text>
         <View>
           <View style={{ flexDirection: 'row' }}>
             {[1, 2, 3, 4, 5].map(s => <Star key={s} color="#FFB800" fill="#FFB800" size={16} />)}
           </View>
-          <Text style={{ color: Theme.colors.subtext, fontSize: 12, marginTop: 4 }}>128 đánh giá xác thực</Text>
+          <Text style={{ color: activeColors.subtext, fontSize: 12, marginTop: 4 }}>128 đánh giá xác thực</Text>
         </View>
       </View>
-
+ 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
         {['Tất cả (128)', 'Có ảnh (45)', '5 ★ (112)', 'Dịch vụ (18)'].map((f, i) => (
-          <View key={i} style={styles.filterTag}>
-            <Text style={styles.filterTagText}>{f}</Text>
+          <View key={i} style={[styles.filterTag, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
+            <Text style={[styles.filterTagText, { color: activeColors.text }]}>{f}</Text>
           </View>
         ))}
       </ScrollView>
-
+ 
       {[1, 2].map(i => (
-        <View key={i} style={styles.reviewItem}>
+        <View key={i} style={[styles.reviewItem, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }]}>
           <View style={styles.reviewHeader}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.reviewerName}>Nguyễn Hoàng L.</Text>
+              <Text style={[styles.reviewerName, { color: activeColors.text }]}>Nguyễn Hoàng L.</Text>
               <View style={[styles.verifiedBadge, { marginLeft: 8 }]}>
                 <Text style={styles.verifiedText}>✓ ĐÃ MUA XE</Text>
               </View>
             </View>
-            <Text style={{ color: Theme.colors.subtext, fontSize: 10 }}>15/04/2026</Text>
+            <Text style={{ color: activeColors.subtext, fontSize: 10 }}>15/04/2026</Text>
           </View>
-          <Text style={styles.reviewContent}>Xe chạy rất đằm, nhân viên Biên Hòa hỗ trợ làm biển số cực nhanh, giao xe đúng hẹn. Rất hài lòng!</Text>
-
-          <View style={styles.showroomReply}>
-            <Text style={styles.replyTitle}>AnhEmMotor phản hồi:</Text>
-            <Text style={styles.replyContent}>Cảm ơn anh L. đã tin tưởng lựa chọn cửa hàng, chúc anh có những trải nghiệm tuyệt vời...</Text>
+          <Text style={[styles.reviewContent, { color: activeColors.subtext }]}>Xe chạy rất đằm, nhân viên Biên Hòa hỗ trợ làm biển số cực nhanh, giao xe đúng hẹn. Rất hài lòng!</Text>
+ 
+          <View style={[styles.showroomReply, { backgroundColor: activeColors.isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.05)' }]}>
+            <Text style={[styles.replyTitle, { color: activeColors.primary }]}>AnhEmMotor phản hồi:</Text>
+            <Text style={[styles.replyContent, { color: activeColors.subtext }]}>Cảm ơn anh L. đã tin tưởng lựa chọn cửa hàng, chúc anh có những trải nghiệm tuyệt vời...</Text>
           </View>
         </View>
       ))}
@@ -264,16 +265,16 @@ export default function VehicleDetailScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-
+    <View style={[styles.container, { backgroundColor: activeColors.background }]}>
+      <StatusBar barStyle={activeColors.isDark ? "light-content" : "dark-content"} />
+ 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* HERO SECTION */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: activeColors.isDark ? '#1E293B' : '#FFFFFF' }]}>
           <View
             style={styles.imageWrapper}
             onMoveShouldSetResponder={(evt) => {
@@ -296,21 +297,24 @@ export default function VehicleDetailScreen({ navigation, route }) {
               </View>
             )}
           </View>
-
-          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-            <ChevronLeft color="#333" size={24} />
+ 
+          <TouchableOpacity 
+            style={[styles.backBtn, { backgroundColor: activeColors.isDark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.8)' }]} 
+            onPress={() => navigation.goBack()}
+          >
+            <ChevronLeft color={activeColors.text} size={24} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.content}>
           <View style={styles.titleRow}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{motor?.name || 'Motorcycle'}</Text>
-              <Text style={styles.category}>{motor?.brand} • Phiên bản Thể thao</Text>
+              <Text style={[styles.name, { color: activeColors.text }]}>{motor?.name || 'Motorcycle'}</Text>
+              <Text style={[styles.category, { color: activeColors.subtext }]}>{motor?.brand} • Phiên bản Thể thao</Text>
             </View>
             <View style={styles.priceContainer}>
-              <Text style={styles.price}>{motor?.price}</Text>
-              <Text style={styles.msrp}>105.000.000đ</Text>
+              <Text style={[styles.price, { color: activeColors.primary }]}>{motor?.price}</Text>
+              <Text style={[styles.msrp, { color: activeColors.subtext }]}>105.000.000đ</Text>
             </View>
           </View>
 
@@ -335,7 +339,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
             style={styles.tabBarScroll}
-            contentContainerStyle={styles.tabBarContent}
+            contentContainerStyle={[styles.tabBarContent, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }]}
           >
             {[
               { id: 'overview', label: 'Tổng quan' },
@@ -346,10 +350,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
             ].map(tab => (
               <TouchableOpacity
                 key={tab.id}
-                style={[styles.tab, logic.activeTab === tab.id && styles.activeTab]}
+                style={[styles.tab, logic.activeTab === tab.id && [styles.activeTab, { backgroundColor: activeColors.card }]]}
                 onPress={() => logic.setActiveTab(tab.id)}
               >
-                <Text style={[styles.tabText, logic.activeTab === tab.id && styles.activeTabText]}>{tab.label}</Text>
+                <Text style={[styles.tabText, { color: activeColors.subtext }, logic.activeTab === tab.id && [styles.activeTabText, { color: activeColors.primary }]]}>{tab.label}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -366,12 +370,12 @@ export default function VehicleDetailScreen({ navigation, route }) {
       </ScrollView>
 
       {/* Sticky CTA Buttons */}
-      <View style={styles.stickyActions}>
-        <ScalePress style={styles.secondaryBtn} onPress={() => navigation.navigate('Booking')}>
-          <Text style={[styles.btnText, { color: Theme.colors.text }]}>Lái thử</Text>
+      <View style={[styles.stickyActions, { backgroundColor: activeColors.background, borderTopColor: activeColors.border }]}>
+        <ScalePress style={[styles.secondaryBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]} onPress={() => navigation.navigate('Booking')}>
+          <Text style={[styles.btnText, { color: activeColors.text }]}>Lái thử</Text>
         </ScalePress>
         <ScalePress style={styles.primaryBtn} onPress={() => { }}>
-          <LinearGradient colors={[Theme.colors.primary, '#1E3A8A']} style={styles.gradient}>
+          <LinearGradient colors={[activeColors.primary, '#1E3A8A']} style={styles.gradient}>
             <Text style={styles.btnText}>Tư Vấn</Text>
           </LinearGradient>
         </ScalePress>
@@ -380,9 +384,9 @@ export default function VehicleDetailScreen({ navigation, route }) {
   );
 }
 
-const SpecRow = ({ label, value }) => (
-  <View style={styles.specRow}>
-    <Text style={styles.specLabel}>{label}</Text>
-    <Text style={styles.specValue}>{value}</Text>
+const SpecRow = ({ label, value, activeColors }) => (
+  <View style={[styles.specRow, { borderBottomColor: activeColors.border }]}>
+    <Text style={[styles.specLabel, { color: activeColors.subtext }]}>{label}</Text>
+    <Text style={[styles.specValue, { color: activeColors.text }]}>{value}</Text>
   </View>
 );

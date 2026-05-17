@@ -9,8 +9,9 @@ import {
 import {
   QrCode,
   ArrowLeft,
+  Settings,
 } from 'lucide-react-native';
-import { Theme } from '../../../theme/Theme';
+import { Theme, useActiveColors } from '../../../theme/Theme';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { styles } from './styles';
@@ -26,25 +27,38 @@ import { TimelineItem } from './components/TimelineItem';
  * @framework React Native (Clean Architecture - Presentation Layer)
  */
 export default function MyVehiclesScreen({ navigation }) {
-  const { activeBike, showQR, openQR, closeQR } = useMyVehicles();
+  const { activeBike, showQR, openQR, closeQR, handleNavigateToDetail } = useMyVehicles();
+  const activeColors = useActiveColors();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: activeColors.background }]}>
       <ScrollView 
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <ArrowLeft color="#fff" size={24} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.title}>Nhà xe của bạn</Text>
-            <Text style={styles.subtitle}>Quản lý thông tin & lịch sử xe</Text>
+        <View style={[styles.header, { justifyContent: 'space-between' }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+              <ArrowLeft color={activeColors.text} size={24} />
+            </TouchableOpacity>
+            <View>
+              <Text style={[styles.title, { color: activeColors.text }]}>Nhà xe của bạn</Text>
+              <Text style={[styles.subtitle, { color: activeColors.subtext }]}>Quản lý thông tin & lịch sử xe</Text>
+            </View>
           </View>
+          <TouchableOpacity 
+            style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }} 
+            onPress={() => navigation.navigate('Profile', { openSettings: true })}
+          >
+            <Settings color={activeColors.text} size={24} />
+          </TouchableOpacity>
         </View>
         
-        <VehicleProfile bike={activeBike} onShowQR={openQR} />
+        <VehicleProfile 
+          bike={activeBike} 
+          onShowQR={openQR} 
+          onPress={() => handleNavigateToDetail(navigation)}
+        />
         
         <WarrantySection bike={activeBike} />
         
@@ -53,7 +67,7 @@ export default function MyVehiclesScreen({ navigation }) {
         <PredictionSection prediction={activeBike.nextService} />
 
         <View style={styles.openSection}>
-          <Text style={styles.sectionTitle}>Nhật ký bảo trì 📅</Text>
+          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Nhật ký bảo trì 📅</Text>
           {activeBike.timeline.map((item, idx) => (
             <TimelineItem 
               key={item.id} 
@@ -69,12 +83,12 @@ export default function MyVehiclesScreen({ navigation }) {
       {/* QR MODAL */}
       <Modal visible={showQR} transparent animationType="fade">
         <BlurView intensity={80} tint="dark" style={styles.modalOverlay}>
-          <Animated.View entering={FadeInDown} style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Mã định danh xe</Text>
+          <Animated.View entering={FadeInDown} style={[styles.modalContent, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
+            <Text style={[styles.modalTitle, { color: activeColors.text }]}>Mã định danh xe</Text>
             <View style={styles.qrContainer}>
-              <QrCode color={Theme.colors.primary} size={200} strokeWidth={1.5} />
+              <QrCode color={activeColors.primary} size={200} strokeWidth={1.5} />
             </View>
-            <Text style={styles.qrDesc}>Dùng mã này để check-in nhanh tại các showroom AnhEmMotor</Text>
+            <Text style={[styles.qrDesc, { color: activeColors.subtext }]}>Dùng mã này để check-in nhanh tại các showroom AnhEmMotor</Text>
             <TouchableOpacity style={styles.closeBtn} onPress={closeQR}>
               <Text style={styles.closeBtnText}>Đóng</Text>
             </TouchableOpacity>

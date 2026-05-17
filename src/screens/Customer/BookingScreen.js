@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme } from '../../theme/Theme';
 import { 
   CheckCircle2, Calendar as CalendarIcon, Clock, ChevronRight, 
-  Wrench, ShieldAlert, Sparkles, Bike, MapPin, Search, ChevronLeft
+  Wrench, ShieldAlert, Sparkles, Bike, MapPin, Search, ChevronLeft, Settings
 } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInRight, FadeOutLeft, Layout } from 'react-native-reanimated';
@@ -155,9 +155,14 @@ export default function BookingScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-            <ChevronLeft color="#fff" size={28} />
-        </ScalePress>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 }}>
+          <ScalePress style={{ width: 44, height: 44, justifyContent: 'center' }} onPress={() => navigation.goBack()}>
+              <ChevronLeft color="#fff" size={28} />
+          </ScalePress>
+          <ScalePress style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+              <Settings color="#fff" size={22} />
+          </ScalePress>
+        </View>
         <View style={styles.tabSwitcher}>
             <TouchableOpacity onPress={() => setActiveView('booking')} style={[styles.tab, activeView === 'booking' && styles.activeTab]}>
                 <Text style={[styles.tabText, activeView === 'booking' && styles.activeTabText]}>Đặt lịch</Text>

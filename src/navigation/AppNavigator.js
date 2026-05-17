@@ -17,11 +17,13 @@ import ProfileScreen from '../screens/Customer/ProfileScreen';
 import NotificationScreen from '../screens/Customer/NotificationScreen';
 import ProfileEditScreen from '../screens/Customer/ProfileEditScreen';
 import VehicleDetailScreen from '../screens/Customer/VehicleDetail/VehicleDetailScreen';
+import MyVehicleDetailScreen from '../screens/Customer/MyVehicles/MyVehicleDetailScreen';
 import AIChatScreen from '../screens/Customer/AIChatScreen';
 import QRScanScreen from '../screens/Customer/QRScanScreen';
 import SavedNewsScreen from '../screens/Customer/SavedNewsScreen';
 import ProductListScreen from '../screens/Customer/ProductList/ProductListScreen';
 import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
+import HomeDetailScreen from '../screens/Customer/HomeDetailScreen';
 
 
 // Admin Screens
@@ -106,11 +108,13 @@ export default function AppNavigator() {
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
         <Stack.Screen name="VehicleDetail" component={VehicleDetailScreen} />
+        <Stack.Screen name="MyVehicleDetail" component={MyVehicleDetailScreen} />
         <Stack.Screen name="AIChat" component={AIChatScreen} />
         <Stack.Screen name="QRScan" component={QRScanScreen} />
         <Stack.Screen name="SavedNews" component={SavedNewsScreen} />
         <Stack.Screen name="ProductList" component={ProductListScreen} />
         <Stack.Screen name="ContactStaff" component={ContactStaffScreen} />
+        <Stack.Screen name="HomeDetail" component={HomeDetailScreen} />
         
         {/* Admin Stack */}
         <Stack.Screen name="AdminHome" component={DashboardScreen} />

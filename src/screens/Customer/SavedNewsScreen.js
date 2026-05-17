@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft, Trash2, Bookmark } from 'lucide-react-native';
+import { ChevronLeft, Trash2, Bookmark, Settings } from 'lucide-react-native';
 import { Theme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -43,7 +43,9 @@ export default function SavedNewsScreen({ navigation }) {
           <ChevronLeft color="#fff" size={28} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Tin đã lưu</Text>
-        <View style={{ width: 44 }} />
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+          <Settings color="#fff" size={22} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView 

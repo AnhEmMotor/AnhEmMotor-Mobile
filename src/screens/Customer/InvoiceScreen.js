@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { Theme } from '../../theme/Theme';
-import { FileText, Download, ChevronLeft, Receipt } from 'lucide-react-native';
+import { FileText, Download, ChevronLeft, Receipt, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import EmptyState from '../../components/EmptyState';
@@ -71,7 +71,9 @@ export default function InvoiceScreen({ navigation }) {
           <ChevronLeft color={Theme.colors.text} size={24} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Hóa đơn & Chi tiêu 🧾</Text>
-        <View style={{ width: 40 }} />
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+          <Settings color={Theme.colors.text} size={24} />
+        </TouchableOpacity>
       </Animated.View>
 
       <View style={styles.tabs}>

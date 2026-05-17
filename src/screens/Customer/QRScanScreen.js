@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft, QrCode, Zap } from 'lucide-react-native';
+import { ChevronLeft, QrCode, Zap, Settings } from 'lucide-react-native';
 import { Theme } from '../../theme/Theme';
 import Animated, { FadeIn, FadeInDown, useSharedValue, useAnimatedStyle, withRepeat, withTiming } from 'react-native-reanimated';
 import ScalePress from '../../components/ScalePress';
@@ -26,7 +26,9 @@ export default function QRScanScreen({ navigation }) {
           <ChevronLeft color="#fff" size={28} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Quét mã QR</Text>
-        <View style={{ width: 44 }} />
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+          <Settings color="#fff" size={22} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.content}>

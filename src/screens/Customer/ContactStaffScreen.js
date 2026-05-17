@@ -4,7 +4,7 @@ import {
   KeyboardAvoidingView, Platform, Alert, Linking
 } from 'react-native';
 import { Theme } from '../../theme/Theme';
-import { ChevronLeft, Send, Mail, Phone, Clock, CheckCircle } from 'lucide-react-native';
+import { ChevronLeft, Send, Mail, Phone, Clock, CheckCircle, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -77,9 +77,17 @@ export default function ContactStaffScreen({ navigation }) {
             <Text style={styles.onlineText}>Đang hoạt động</Text>
           </View>
         </View>
-        <ScalePress style={styles.callBtn} onPress={() => Linking.openURL('tel:19001234')}>
-          <Phone color={Theme.colors.primary} size={20} />
-        </ScalePress>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <ScalePress style={styles.callBtn} onPress={() => Linking.openURL('tel:19001234')}>
+            <Phone color={Theme.colors.primary} size={20} />
+          </ScalePress>
+          <ScalePress 
+            style={[styles.callBtn, { backgroundColor: Theme.colors.card, borderColor: Theme.colors.border }]} 
+            onPress={() => navigation.navigate('Profile', { openSettings: true })}
+          >
+            <Settings color={Theme.colors.text} size={20} />
+          </ScalePress>
+        </View>
       </Animated.View>
 
       {/* Tabs */}

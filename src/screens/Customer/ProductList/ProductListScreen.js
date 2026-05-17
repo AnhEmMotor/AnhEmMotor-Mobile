@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Filter, ShoppingCart } from 'lucide-react-native';
-import { Theme } from '../../../theme/Theme';
+import { ArrowLeft, Filter, ShoppingCart, Settings } from 'lucide-react-native';
+import { Theme, useActiveColors } from '../../../theme/Theme';
 import { moderateScale } from '../../../utils/responsive';
 import ScalePress from '../../../components/ScalePress';
 import GlassCard from '../../../components/GlassCard';
@@ -16,28 +16,37 @@ import { useProductList } from './useProductList';
  */
 export default function ProductListScreen({ route, navigation }) {
   const { brand, type, filteredProducts } = useProductList(route);
+  const activeColors = useActiveColors();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <ArrowLeft color="#fff" size={24} />
+    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
+      <View style={[styles.header, { borderBottomColor: activeColors.border }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+          <ArrowLeft color={activeColors.text} size={24} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>{type !== 'Tất cả' ? type : 'Sản phẩm'}</Text>
-          <Text style={styles.headerSubtitle}>{brand !== 'Tất cả' ? brand : 'Tất cả thương hiệu'}</Text>
+          <Text style={[styles.headerTitle, { color: activeColors.text }]}>{type !== 'Tất cả' ? type : 'Sản phẩm'}</Text>
+          <Text style={[styles.headerSubtitle, { color: activeColors.subtext }]}>{brand !== 'Tất cả' ? brand : 'Tất cả thương hiệu'}</Text>
         </View>
-        <TouchableOpacity style={styles.cartBtn}>
-          <ShoppingCart color="#fff" size={24} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <TouchableOpacity style={[styles.cartBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+            <ShoppingCart color={activeColors.text} size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.cartBtn, { padding: 8, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }]} 
+            onPress={() => navigation.navigate('Profile', { openSettings: true })}
+          >
+            <Settings color={activeColors.text} size={24} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.resultsCount}>
-          <Text style={styles.countText}>Tìm thấy {filteredProducts.length} sản phẩm</Text>
-          <TouchableOpacity style={styles.filterBtn}>
-            <Filter color={Theme.colors.primary} size={18} />
-            <Text style={styles.filterText}>Lọc thêm</Text>
+          <Text style={[styles.countText, { color: activeColors.subtext }]}>Tìm thấy {filteredProducts.length} sản phẩm</Text>
+          <TouchableOpacity style={[styles.filterBtn, { backgroundColor: activeColors.isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.08)' }]}>
+            <Filter color={activeColors.primary} size={18} />
+            <Text style={[styles.filterText, { color: activeColors.primary }]}>Lọc thêm</Text>
           </TouchableOpacity>
         </View>
 
@@ -48,14 +57,27 @@ export default function ProductListScreen({ route, navigation }) {
               entering={FadeInDown.duration(600).delay(index * 100)}
               style={styles.cardWrapper}
             >
-              <ScalePress onPress={() => navigation.navigate('VehicleDetail', { motor: item })} style={styles.productItemOpen}>
+              <ScalePress 
+                onPress={() => navigation.navigate('VehicleDetail', { motor: item })} 
+                style={[
+                  styles.productItemOpen, 
+                  { 
+                    backgroundColor: activeColors.card, 
+                    borderRadius: 12, 
+                    borderWidth: 1, 
+                    borderColor: activeColors.border, 
+                    overflow: 'hidden',
+                    padding: 8
+                  }
+                ]}
+              >
                 <Image 
                   source={item.img ? (typeof item.img === 'string' ? { uri: item.img } : item.img) : { uri: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070' }} 
-                  style={styles.productImageOpen} 
+                  style={[styles.productImageOpen, { borderRadius: 8 }]} 
                 />
                 <View style={styles.productInfoOpen}>
-                  <Text style={styles.productNameOpen} numberOfLines={2}>{item.name}</Text>
-                  <Text style={styles.productPriceOpen}>{item.price || 'Liên hệ'}</Text>
+                  <Text style={[styles.productNameOpen, { color: activeColors.text }]} numberOfLines={2}>{item.name}</Text>
+                  <Text style={[styles.productPriceOpen, { color: activeColors.primary }]}>{item.price || 'Liên hệ'}</Text>
                 </View>
               </ScalePress>
             </Animated.View>
@@ -64,7 +86,7 @@ export default function ProductListScreen({ route, navigation }) {
 
         {filteredProducts.length === 0 && (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Chưa có sản phẩm nào cho mục này.</Text>
+            <Text style={[styles.emptyText, { color: activeColors.subtext }]}>Chưa có sản phẩm nào cho mục này.</Text>
           </View>
         )}
 

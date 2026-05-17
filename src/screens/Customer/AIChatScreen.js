@@ -4,7 +4,7 @@ import {
   KeyboardAvoidingView, Platform
 } from 'react-native';
 import { Theme } from '../../theme/Theme';
-import { ChevronLeft, Send, Bot, Zap } from 'lucide-react-native';
+import { ChevronLeft, Send, Bot, Zap, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -64,22 +64,30 @@ export default function AIChatScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
-      <Animated.View entering={FadeInUp.duration(500)} style={styles.header}>
-        <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={Theme.colors.text} size={24} />
-        </ScalePress>
-        <View style={styles.botInfo}>
-          <View style={styles.botAvatar}>
-            <Bot color="#fff" size={18} />
-          </View>
-          <View>
-            <Text style={styles.botName}>Trợ lý AnhEmMotor AI</Text>
-            <View style={styles.onlineRow}>
-              <View style={styles.onlineDot} />
-              <Text style={styles.onlineText}>Trả lời ngay lập tức</Text>
+      <Animated.View entering={FadeInUp.duration(500)} style={[styles.header, { justifyContent: 'space-between', width: '100%', paddingRight: Theme.spacing.md }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <ChevronLeft color={Theme.colors.text} size={24} />
+          </ScalePress>
+          <View style={styles.botInfo}>
+            <View style={styles.botAvatar}>
+              <Bot color="#fff" size={18} />
+            </View>
+            <View>
+              <Text style={styles.botName}>Trợ lý AnhEmMotor AI</Text>
+              <View style={styles.onlineRow}>
+                <View style={styles.onlineDot} />
+                <Text style={styles.onlineText}>Trả lời ngay lập tức</Text>
+              </View>
             </View>
           </View>
         </View>
+        <ScalePress 
+          style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center' }} 
+          onPress={() => navigation.navigate('Profile', { openSettings: true })}
+        >
+          <Settings color={Theme.colors.text} size={22} />
+        </ScalePress>
       </Animated.View>
 
       {/* Gợi ý nhanh */}
