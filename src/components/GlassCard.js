@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, ViewProps } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Theme } from '../theme/Theme';
 
-export default function GlassCard({ children, style, intensity = 20, tint = 'dark' }) {
+export default function GlassCard({ children, style, contentStyle, intensity = 20, tint = 'dark' }) {
   return (
     <View style={[styles.container, style]}>
       <BlurView intensity={intensity} tint={tint} style={StyleSheet.absoluteFill} />
@@ -14,7 +14,7 @@ export default function GlassCard({ children, style, intensity = 20, tint = 'dar
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFill}
       />
-      <View style={styles.content}>
+      <View style={[styles.content, contentStyle]}>
         {children}
       </View>
     </View>
@@ -33,3 +33,4 @@ const styles = StyleSheet.create({
     padding: Theme.spacing.md,
   },
 });
+

@@ -68,37 +68,10 @@ export default function FinancialHubScreen({ navigation }) {
           </Animated.View>
         ))}
 
-        {/* MARKET CHART */}
-        <Text style={styles.sectionTitle}>Biến động giá trị xe 📈</Text>
-        <GlassCard style={styles.chartCard}>
-            <LineChart
-                data={{
-                    labels: ["T1", "T2", "T3", "T4", "T5", "T6"],
-                    datasets: [{
-                        data: [450, 445, 440, 435, 430, 420]
-                    }]
-                }}
-                width={screenWidth - 80}
-                height={200}
-                chartConfig={{
-                    backgroundColor: "#1e293b",
-                    backgroundGradientFrom: "#1e293b",
-                    backgroundGradientTo: "#0f172a",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    style: { borderRadius: 16 },
-                    propsForDots: { r: "6", strokeWidth: "2", stroke: "#007aff" }
-                }}
-                bezier
-                style={{ marginVertical: 8, borderRadius: 16 }}
-            />
-            <Text style={styles.chartHint}>Số liệu ước tính dựa trên thị trường xe cũ (Đơn vị: Triệu VNĐ)</Text>
-        </GlassCard>
-
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>
+
   );
 }
 

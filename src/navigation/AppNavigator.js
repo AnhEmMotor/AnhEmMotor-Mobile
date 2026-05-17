@@ -1,9 +1,11 @@
 import React from 'react';
+import { useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { LayoutGrid, Car, User, ShieldCheck, LifeBuoy } from 'lucide-react-native';
+import { LayoutGrid, Car, User, LifeBuoy, Bike, Bell } from 'lucide-react-native';
 import { Theme } from '../theme/Theme';
+import { useGlobalState } from '../context/GlobalState';
 
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/Customer/HomeScreen';
@@ -14,10 +16,13 @@ import SupportScreen from '../screens/Customer/SupportScreen';
 import ProfileScreen from '../screens/Customer/ProfileScreen';
 import NotificationScreen from '../screens/Customer/NotificationScreen';
 import ProfileEditScreen from '../screens/Customer/ProfileEditScreen';
-import VehicleDetailScreen from '../screens/Customer/VehicleDetailScreen';
+import VehicleDetailScreen from '../screens/Customer/VehicleDetail/VehicleDetailScreen';
 import AIChatScreen from '../screens/Customer/AIChatScreen';
 import QRScanScreen from '../screens/Customer/QRScanScreen';
 import SavedNewsScreen from '../screens/Customer/SavedNewsScreen';
+import ProductListScreen from '../screens/Customer/ProductList/ProductListScreen';
+import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
+
 
 // Admin Screens
 import DashboardScreen from '../screens/Admin/DashboardScreen';
@@ -32,12 +37,22 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function CustomerTabs() {
+  const { themeMode } = useGlobalState();
+  const systemScheme = useColorScheme();
+  const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
+
+  const tabBg = isDark ? '#111827' : '#FFFFFF';
+  const tabActiveText = Theme.colors.primary;
+  const tabInactiveText = isDark ? '#64748B' : '#94A3B8';
+  const tabBorderTop = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+
   return (
     <Tab.Navigator screenOptions={{
       headerShown: false,
       tabBarStyle: { 
-        backgroundColor: Theme.colors.card, 
-        borderTopWidth: 0, 
+        backgroundColor: tabBg, 
+        borderTopWidth: 1, 
+        borderTopColor: tabBorderTop,
         height: 85, 
         paddingBottom: 25,
         paddingTop: 10,
@@ -47,27 +62,32 @@ function CustomerTabs() {
         left: 0,
         right: 0,
       },
-      tabBarActiveTintColor: Theme.colors.primary,
-      tabBarInactiveTintColor: Theme.colors.subtext,
+      tabBarActiveTintColor: tabActiveText,
+      tabBarInactiveTintColor: tabInactiveText,
     }}>
       <Tab.Screen name="Hub" component={HomeScreen} options={{
-        tabBarIcon: ({color}) => <LayoutGrid color={color} size={24} />,
+        tabBarIcon: ({color}) => <LayoutGrid color={color} size={22} />,
         tabBarLabel: 'The Hub'
       }} />
       <Tab.Screen name="Catalog" component={CatalogScreen} options={{
-        tabBarIcon: ({color}) => <Car color={color} size={24} />,
+        tabBarIcon: ({color}) => <Bike color={color} size={22} />,
         tabBarLabel: 'Catalog'
       }} />
-      <Tab.Screen name="Booking" component={BookingScreen} options={{
-        tabBarIcon: ({color}) => <ShieldCheck color={color} size={24} />,
-        tabBarLabel: 'Đặt lịch'
+      <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{
+        tabBarIcon: ({color}) => <Car color={color} size={22} />,
+        tabBarLabel: 'Xe của tôi'
+      }} />
+
+      <Tab.Screen name="Notification" component={NotificationScreen} options={{
+        tabBarIcon: ({color}) => <Bell color={color} size={22} />,
+        tabBarLabel: 'Thông báo'
       }} />
       <Tab.Screen name="Support" component={SupportScreen} options={{
-        tabBarIcon: ({color}) => <LifeBuoy color={color} size={24} />,
+        tabBarIcon: ({color}) => <LifeBuoy color={color} size={22} />,
         tabBarLabel: 'Hỗ trợ'
       }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{
-        tabBarIcon: ({color}) => <User color={color} size={24} />,
+        tabBarIcon: ({color}) => <User color={color} size={22} />,
         tabBarLabel: 'Cá nhân'
       }} />
     </Tab.Navigator>
@@ -89,6 +109,8 @@ export default function AppNavigator() {
         <Stack.Screen name="AIChat" component={AIChatScreen} />
         <Stack.Screen name="QRScan" component={QRScanScreen} />
         <Stack.Screen name="SavedNews" component={SavedNewsScreen} />
+        <Stack.Screen name="ProductList" component={ProductListScreen} />
+        <Stack.Screen name="ContactStaff" component={ContactStaffScreen} />
         
         {/* Admin Stack */}
         <Stack.Screen name="AdminHome" component={DashboardScreen} />

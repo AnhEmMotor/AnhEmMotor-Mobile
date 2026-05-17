@@ -23,15 +23,15 @@ const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
   const calculateFinance = () => {
     const downPayment = (vehiclePrice * downPaymentPercent) / 100;
     const principal = vehiclePrice - downPayment;
-    
+
     // Monthly interest rate
     const i = interestRate / 12;
     // Number of months
     const n = months;
-    
+
     // Standard Amortization Formula: M = P * [ i * (1 + i)^n ] / [ (1 + i)^n – 1 ]
     const monthlyPayment = principal * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
-    
+
     setMonthlyInstallment(Math.round(monthlyPayment));
   };
 
@@ -92,19 +92,19 @@ const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
         </LinearGradient>
 
         <View style={styles.actionRow}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.actionBtn, styles.secondaryBtn]}
             onPress={() => onAction?.('chat')}
           >
             <MessageSquare color={Theme.colors.primary} size={20} />
             <Text style={styles.secondaryBtnText}>Tư vấn</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[styles.actionBtn, styles.primaryBtn]}
             onPress={() => onAction?.('deposit')}
           >
-            <Text style={styles.primaryBtnText}>Đặt cọc ngay</Text>
+            <Text style={styles.primaryBtnText}>Tư Vấn</Text>
             <ArrowRight color="#fff" size={20} />
           </TouchableOpacity>
         </View>

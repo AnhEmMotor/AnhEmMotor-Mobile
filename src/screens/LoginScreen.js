@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Mail, Lock, Eye, EyeOff, ChevronRight, Shield } from 'lucide-react-native';
 import { Theme } from '../theme/Theme';
+import { horizontalScale, verticalScale, moderateScale } from '../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 const { height } = Dimensions.get('window');
@@ -62,7 +63,7 @@ export default function LoginScreen({ navigation }) {
 
               {/* Email Input */}
               <View style={[styles.inputWrapper, activeInput === 'email' && styles.inputActive]}>
-                <Mail size={18} color={activeInput === 'email' ? Theme.colors.primary : Theme.colors.subtext} />
+                <Mail size={moderateScale(18)} color={activeInput === 'email' ? Theme.colors.primary : Theme.colors.subtext} />
                 <TextInput
                   style={styles.input}
                   placeholder="Email của bạn"
@@ -78,7 +79,7 @@ export default function LoginScreen({ navigation }) {
 
               {/* Password Input */}
               <View style={[styles.inputWrapper, activeInput === 'password' && styles.inputActive]}>
-                <Lock size={18} color={activeInput === 'password' ? Theme.colors.primary : Theme.colors.subtext} />
+                <Lock size={moderateScale(18)} color={activeInput === 'password' ? Theme.colors.primary : Theme.colors.subtext} />
                 <TextInput
                   style={styles.input}
                   placeholder="Mật khẩu"
@@ -91,8 +92,8 @@ export default function LoginScreen({ navigation }) {
                 />
                 <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
                   {showPassword
-                    ? <EyeOff size={18} color={Theme.colors.subtext} />
-                    : <Eye size={18} color={Theme.colors.subtext} />
+                    ? <EyeOff size={moderateScale(18)} color={Theme.colors.subtext} />
+                    : <Eye size={moderateScale(18)} color={Theme.colors.subtext} />
                   }
                 </Pressable>
               </View>
@@ -112,7 +113,7 @@ export default function LoginScreen({ navigation }) {
                   style={styles.btnGradient}
                 >
                   <Text style={styles.btnText}>Đăng nhập Khách Hàng</Text>
-                  <ChevronRight size={18} color="#fff" />
+                  <ChevronRight size={moderateScale(18)} color="#fff" />
                 </LinearGradient>
               </Pressable>
 
@@ -127,7 +128,7 @@ export default function LoginScreen({ navigation }) {
                 style={({ pressed }) => [styles.btnAdmin, pressed && styles.btnPressed]}
                 onPress={() => navigation.navigate('AdminHome')}
               >
-                <Shield size={16} color={Theme.colors.subtext} style={{ marginRight: 8 }} />
+                <Shield size={moderateScale(16)} color={Theme.colors.subtext} style={{ marginRight: horizontalScale(8) }} />
                 <Text style={styles.btnAdminText}>Vào với quyền Quản Trị</Text>
               </Pressable>
             </View>
@@ -150,13 +151,13 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0A0F1E' },
 
   glowTop: {
-    position: 'absolute', top: -100, left: '30%',
-    width: 300, height: 300, borderRadius: 150,
+    position: 'absolute', top: verticalScale(-100), left: '30%',
+    width: horizontalScale(300), height: horizontalScale(300), borderRadius: horizontalScale(150),
     backgroundColor: 'rgba(0,82,212,0.12)',
   },
   glowBottom: {
-    position: 'absolute', bottom: -80, right: '20%',
-    width: 250, height: 250, borderRadius: 125,
+    position: 'absolute', bottom: verticalScale(-80), right: '20%',
+    width: horizontalScale(250), height: horizontalScale(250), borderRadius: horizontalScale(125),
     backgroundColor: 'rgba(227,27,35,0.08)',
   },
 
@@ -164,65 +165,66 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 60,
+    paddingHorizontal: horizontalScale(24),
+    paddingVertical: verticalScale(60),
   },
 
-  header: { alignItems: 'center', marginBottom: 32 },
+  header: { alignItems: 'center', marginBottom: verticalScale(32) },
   logoCircle: {
-    width: 72, height: 72, borderRadius: 36,
+    width: horizontalScale(72), height: horizontalScale(72), borderRadius: horizontalScale(36),
     justifyContent: 'center', alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: verticalScale(16),
   },
-  logoText: { color: '#fff', fontSize: 28, fontWeight: '900', letterSpacing: 1 },
-  title: { color: '#F1F5F9', fontSize: 26, fontWeight: '700', marginBottom: 6 },
-  subtitle: { color: Theme.colors.subtext, fontSize: 14 },
+  logoText: { color: '#fff', fontSize: moderateScale(28), fontWeight: '900', letterSpacing: 1 },
+  title: { color: '#F1F5F9', fontSize: moderateScale(26), fontWeight: '700', marginBottom: verticalScale(6) },
+  subtitle: { color: Theme.colors.subtext, fontSize: moderateScale(14) },
 
   card: {
-    borderRadius: 24, overflow: 'hidden',
+    borderRadius: Theme.radius.lg, overflow: 'hidden',
     borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
-  cardInner: { padding: 24 },
+  cardInner: { padding: moderateScale(24) },
 
-  formTitle: { color: '#F1F5F9', fontSize: 20, fontWeight: '700', marginBottom: 4 },
-  formSubtitle: { color: Theme.colors.subtext, fontSize: 13, marginBottom: 24 },
+  formTitle: { color: '#F1F5F9', fontSize: moderateScale(20), fontWeight: '700', marginBottom: verticalScale(4) },
+  formSubtitle: { color: Theme.colors.subtext, fontSize: moderateScale(13), marginBottom: verticalScale(24) },
 
   inputWrapper: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: 'rgba(15,23,42,0.7)',
-    borderRadius: 12, marginBottom: 14,
-    paddingHorizontal: 14, height: 52,
+    borderRadius: Theme.radius.md, marginBottom: verticalScale(14),
+    paddingHorizontal: horizontalScale(14), height: verticalScale(52),
     borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
   },
   inputActive: { borderColor: 'rgba(26,110,255,0.5)', backgroundColor: 'rgba(26,110,255,0.06)' },
-  input: { flex: 1, color: '#F1F5F9', fontSize: 15, marginLeft: 10 },
-  eyeBtn: { padding: 4 },
+  input: { flex: 1, color: '#F1F5F9', fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
+  eyeBtn: { padding: moderateScale(4) },
 
-  forgotPassword: { alignSelf: 'flex-end', marginBottom: 20 },
-  forgotText: { color: Theme.colors.primary, fontSize: 13 },
+  forgotPassword: { alignSelf: 'flex-end', marginBottom: verticalScale(20) },
+  forgotText: { color: Theme.colors.primary, fontSize: moderateScale(13) },
 
-  btnPrimary: { borderRadius: 14, overflow: 'hidden', marginBottom: 16 },
+  btnPrimary: { borderRadius: Theme.radius.md, overflow: 'hidden', marginBottom: verticalScale(16) },
   btnPressed: { opacity: 0.85 },
   btnGradient: {
-    height: 52, flexDirection: 'row',
+    height: verticalScale(52), flexDirection: 'row',
     justifyContent: 'center', alignItems: 'center',
   },
-  btnText: { color: '#fff', fontSize: 15, fontWeight: '600', marginRight: 6 },
+  btnText: { color: '#fff', fontSize: moderateScale(15), fontWeight: '600', marginRight: horizontalScale(6) },
 
-  divider: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  divider: { flexDirection: 'row', alignItems: 'center', marginBottom: verticalScale(16) },
   dividerLine: { flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.07)' },
-  dividerText: { color: Theme.colors.subtext, fontSize: 12, paddingHorizontal: 12 },
+  dividerText: { color: Theme.colors.subtext, fontSize: moderateScale(12), paddingHorizontal: horizontalScale(12) },
 
   btnAdmin: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    height: 50, borderRadius: 14,
+    height: verticalScale(50), borderRadius: Theme.radius.md,
     borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
     backgroundColor: 'rgba(255,255,255,0.04)',
   },
-  btnAdminText: { color: Theme.colors.subtext, fontSize: 14, fontWeight: '500' },
+  btnAdminText: { color: Theme.colors.subtext, fontSize: moderateScale(14), fontWeight: '500' },
 
   footer: { flexDirection: 'row', justifyContent: 'center' },
-  footerText: { color: Theme.colors.subtext, fontSize: 14 },
-  signupText: { color: Theme.colors.primary, fontSize: 14, fontWeight: '600' },
+  footerText: { color: Theme.colors.subtext, fontSize: moderateScale(14) },
+  signupText: { color: Theme.colors.primary, fontSize: moderateScale(14), fontWeight: '600' },
 });
+

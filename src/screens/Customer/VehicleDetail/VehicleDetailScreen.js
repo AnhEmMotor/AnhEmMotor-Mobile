@@ -1,0 +1,388 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  StatusBar,
+  StyleSheet
+} from 'react-native';
+import { Theme } from '../../../theme/Theme';
+import {
+  ChevronLeft,
+  RotateCcw,
+  Ticket,
+  Zap,
+  ShieldCheck,
+  Key,
+  Usb,
+  Droplet,
+  ChevronRight,
+  Star
+} from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
+import Slider from '@react-native-community/slider';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import ScalePress from '../../../components/ScalePress';
+import { styles } from './styles';
+import { useVehicleDetail } from './useVehicleDetail';
+import { moderateScale } from '../../../utils/responsive';
+
+/**
+ * @file VehicleDetailScreen.js
+ * @framework React Native (Clean Architecture - Presentation Layer)
+ * @description Modernized vehicle detail screen following product-details.md
+ */
+export default function VehicleDetailScreen({ navigation, route }) {
+  const { motor, isOwned } = route.params || {};
+  const logic = useVehicleDetail(motor);
+
+  const renderOverview = () => (
+    <Animated.View entering={FadeInDown.duration(600)}>
+      {/* Stock Status */}
+      <View style={styles.statusBadge}>
+        <View style={styles.statusDot} />
+        <Text style={styles.statusText}>Còn hàng tại Biên Hòa (Giao ngay)</Text>
+      </View>
+
+      {/* Loyalty Reward */}
+      <View style={styles.rewardCard}>
+        <Ticket color={Theme.colors.primary} size={24} />
+        <Text style={styles.rewardText}>
+          Bạn có <Text style={styles.rewardHighlight}>1 Voucher giảm 2.000.000đ</Text> đổi xe mới (Hạn dùng: 3 ngày)
+        </Text>
+      </View>
+
+      {/* Key Highlights */}
+      <Text style={styles.sectionTitle}>Tính năng đột phá</Text>
+      <View style={styles.featureGrid}>
+        {[
+          { icon: <ShieldCheck color={Theme.colors.primary} size={20} />, title: 'Phanh ABS', desc: 'Khống chế lực phanh an toàn.' },
+          { icon: <Key color={Theme.colors.warning} size={20} />, title: 'Smartkey', desc: 'Chống trộm thông minh.' },
+          { icon: <Droplet color="#3B82F6" size={20} />, title: 'Động cơ eSP+', desc: 'Tiết kiệm xăng tối đa.' },
+          { icon: <Usb color="#A855F7" size={20} />, title: 'Sạc USB', desc: 'Sạc điện thoại ngay trong cốp.' },
+        ].map((f, i) => (
+          <View key={i} style={styles.featureCard}>
+            <View style={styles.featureIcon}>{f.icon}</View>
+            <Text style={styles.featureTitle}>{f.title}</Text>
+            <Text style={styles.featureDesc}>{f.desc}</Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Finance Teaser */}
+      <TouchableOpacity style={styles.financeTeaser} onPress={() => logic.setActiveTab('finance')}>
+        <Text style={styles.teaserTitle}>Gợi ý tài chính nhanh 💰</Text>
+        <Text style={styles.teaserDesc}>Sở hữu xe chỉ với 15.000.000đ trả trước - Hỗ trợ lãi suất ưu đãi từ 1.200.000đ/tháng.</Text>
+        <Text style={styles.teaserLink}>Tính chi phí trả góp chi tiết ➔</Text>
+      </TouchableOpacity>
+      <View style={styles.specGroup}>
+        <Text style={styles.specGroupTitle}>Khung sườn, Phuộc & An toàn</Text>
+        <SpecRow label="Phanh trước" value="Phanh đĩa tích hợp ABS" />
+        <SpecRow label="Phanh sau" value="Phanh đĩa" />
+        <SpecRow label="Phuộc trước" value="Ống lồng, giảm chấn thủy lực" />
+        <SpecRow label="Lốp sau" value="120/80-16 Lốp không săm" />
+      </View>
+
+      <View style={styles.specGroup}>
+        <Text style={styles.specGroupTitle}>Tiện ích & Công nghệ</Text>
+        <SpecRow label="Hệ thống đèn" value="Toàn bộ LED" />
+        <SpecRow label="Hệ thống khóa" value="Smartkey thông minh" />
+        <SpecRow label="Cốp xe" value="28 Lít (Vừa 2 mũ bảo hiểm)" />
+        <SpecRow label="Cổng sạc" value="USB trong cốp xe" />
+      </View>
+    </Animated.View>
+  );
+
+  const renderSpecs = () => (
+    <Animated.View entering={FadeInDown.duration(600)}>
+      <View style={styles.specGroup}>
+        <Text style={styles.specGroupTitle}>Động cơ & Vận hành</Text>
+        <SpecRow label="Loại động cơ" value="eSP+, 4 van, SOHC" />
+        <SpecRow label="Dung tích xy-lanh" value="156.9cc" />
+        <SpecRow label="Công suất tối đa" value="12.4 kW / 8.500 v/p" />
+        <SpecRow label="Mức tiêu thụ" value="2.24 lít/100km" />
+      </View>
+
+      <View style={styles.specGroup}>
+        <Text style={styles.specGroupTitle}>Kích thước & Trọng lượng</Text>
+        <SpecRow label="Khối lượng" value="133kg" />
+        <SpecRow label="Dài x Rộng x Cao" value="2.090 x 739 x 1.129 mm" />
+        <SpecRow label="Độ cao yên" value="799mm" />
+        <SpecRow label="Dung tích bình xăng" value="7.8 lít" />
+      </View>
+    </Animated.View>
+  );
+
+  const renderFinance = () => (
+    <Animated.View entering={FadeInDown.duration(600)} style={styles.calculator}>
+      <Text style={styles.sectionTitle}>Tính toán tài chính 📊</Text>
+
+      <View style={{ marginBottom: 25 }}>
+        <Text style={styles.calcLabel}>Trả trước: <Text style={styles.calcValue}>{logic.downPaymentPercent}% ({logic.financeResults.downPayment.toLocaleString()}đ)</Text></Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={20}
+          maximumValue={70}
+          step={10}
+          value={logic.downPaymentPercent}
+          onValueChange={logic.setDownPaymentPercent}
+          minimumTrackTintColor="#2E5BFF"
+          maximumTrackTintColor="rgba(255,255,255,0.1)"
+          thumbTintColor="#fff"
+        />
+      </View>
+
+      <View style={{ marginBottom: 25 }}>
+        <Text style={styles.calcLabel}>Kỳ hạn vay: <Text style={styles.calcValue}>{logic.loanTerm} tháng</Text></Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={6}
+          maximumValue={24}
+          step={6}
+          value={logic.loanTerm}
+          onValueChange={logic.setLoanTerm}
+          minimumTrackTintColor="#2E5BFF"
+          maximumTrackTintColor="rgba(255,255,255,0.1)"
+          thumbTintColor="#fff"
+        />
+      </View>
+
+      <View style={styles.resultCard}>
+        <View style={styles.resultRow}>
+          <Text style={styles.resultLabel}>Góp mỗi tháng (Dự tính)</Text>
+          <Text style={styles.monthlyPayment}>{logic.financeResults.monthlyPayment.toLocaleString()} đ/tháng</Text>
+        </View>
+        <View style={styles.resultRow}>
+          <Text style={styles.resultLabel}>Khoản vay giải ngân</Text>
+          <Text style={{ color: '#fff', fontWeight: 'bold' }}>{logic.financeResults.loanAmount.toLocaleString()} đ</Text>
+        </View>
+        <View style={styles.resultRow}>
+          <Text style={styles.resultLabel}>Chênh lệch tổng chi phí</Text>
+          <Text style={{ color: Theme.colors.warning, fontSize: 12 }}>+ 12.500.000đ so với trả thẳng</Text>
+        </View>
+      </View>
+
+      <Text style={styles.specGroupTitle}>Hồ sơ chuẩn bị (Checklist)</Text>
+      <View style={styles.checklist}>
+        <Text style={styles.checkItem}>• Khách hàng từ 18 tuổi trở lên.</Text>
+        <Text style={styles.checkItem}>• Chỉ cần CCCD gắn chíp.</Text>
+        <Text style={styles.checkItem}>• Duyệt hồ sơ 15-30 phút tại Showroom.</Text>
+      </View>
+
+      <Text style={[styles.specGroupTitle, { marginTop: 20 }]}>Đối tác liên kết</Text>
+      <View style={styles.partners}>
+        {/* Placeholder for logos */}
+        <Text style={{ color: Theme.colors.subtext }}>HD Saison • Home Credit • FE Credit</Text>
+      </View>
+    </Animated.View>
+  );
+
+  const renderReviews = () => (
+    <Animated.View entering={FadeInDown.duration(600)}>
+      <View style={styles.ratingSummary}>
+        <Text style={styles.avgScore}>4.9</Text>
+        <View>
+          <View style={{ flexDirection: 'row' }}>
+            {[1, 2, 3, 4, 5].map(s => <Star key={s} color="#FFB800" fill="#FFB800" size={16} />)}
+          </View>
+          <Text style={{ color: Theme.colors.subtext, fontSize: 12, marginTop: 4 }}>128 đánh giá xác thực</Text>
+        </View>
+      </View>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
+        {['Tất cả (128)', 'Có ảnh (45)', '5 ★ (112)', 'Dịch vụ (18)'].map((f, i) => (
+          <View key={i} style={styles.filterTag}>
+            <Text style={styles.filterTagText}>{f}</Text>
+          </View>
+        ))}
+      </ScrollView>
+
+      {[1, 2].map(i => (
+        <View key={i} style={styles.reviewItem}>
+          <View style={styles.reviewHeader}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.reviewerName}>Nguyễn Hoàng L.</Text>
+              <View style={[styles.verifiedBadge, { marginLeft: 8 }]}>
+                <Text style={styles.verifiedText}>✓ ĐÃ MUA XE</Text>
+              </View>
+            </View>
+            <Text style={{ color: Theme.colors.subtext, fontSize: 10 }}>15/04/2026</Text>
+          </View>
+          <Text style={styles.reviewContent}>Xe chạy rất đằm, nhân viên Biên Hòa hỗ trợ làm biển số cực nhanh, giao xe đúng hẹn. Rất hài lòng!</Text>
+
+          <View style={styles.showroomReply}>
+            <Text style={styles.replyTitle}>AnhEmMotor phản hồi:</Text>
+            <Text style={styles.replyContent}>Cảm ơn anh L. đã tin tưởng lựa chọn cửa hàng, chúc anh có những trải nghiệm tuyệt vời...</Text>
+          </View>
+        </View>
+      ))}
+    </Animated.View>
+  );
+
+  const renderGallery = () => {
+    const defaultGalleryImages = [
+      motor?.img || 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1000',
+      'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=1000',
+      'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?q=80&w=1000',
+      'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?q=80&w=1000',
+      'https://images.unsplash.com/photo-1558981359-219d6364c9c8?q=80&w=1000',
+      'https://images.unsplash.com/photo-1609630875171-b1321377ee65?q=80&w=1000',
+    ];
+
+    const frames = motor?.frames || [];
+    const colors = motor?.colors?.map(c => c.img).filter(Boolean) || [];
+    const galleryImages = Array.from(new Set([...colors, ...frames, ...defaultGalleryImages])).slice(0, 6);
+
+    return (
+      <Animated.View entering={FadeInDown.duration(600)} style={styles.galleryContainer}>
+        <Text style={styles.sectionTitle}>Thư viện hình ảnh 📸</Text>
+        <Text style={styles.teaserDesc}>Khám phá cận cảnh từng đường nét thiết kế thể thao, động cơ mạnh mẽ và các chi tiết tinh tế của dòng xe.</Text>
+        
+        <View style={styles.galleryGrid}>
+          {galleryImages.map((imgUrl, idx) => (
+            <View 
+              key={idx} 
+              style={[
+                styles.galleryItem, 
+                idx === 0 && styles.galleryItemLarge
+              ]}
+            >
+              <Image source={{ uri: imgUrl }} style={styles.galleryImage} resizeMode="cover" />
+              <View style={styles.galleryOverlay}>
+                <Text style={styles.galleryTag}>
+                  {idx === 0 ? 'Tổng quan góc 3/4' : idx === 1 ? 'Mặt trước thể thao' : idx === 2 ? 'Phanh đĩa & Mâm đúc' : idx === 3 ? 'Cụm động cơ' : idx === 4 ? 'Đèn LED cao cấp' : 'Chi tiết ống xả'}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </Animated.View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* HERO SECTION */}
+        <View style={styles.header}>
+          <View
+            style={styles.imageWrapper}
+            onMoveShouldSetResponder={(evt) => {
+              const { dx, dy } = evt.nativeEvent;
+              return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10;
+            }}
+            onResponderGrant={logic.handleTouchStart}
+            onResponderMove={logic.handleTouchMove}
+          >
+            <Animated.Image
+              entering={FadeIn.duration(800)}
+              source={logic.currentImage}
+              style={styles.mainImage}
+              resizeMode="contain"
+            />
+            {motor?.frames && (
+              <View style={styles.rotationBadge}>
+                <RotateCcw color="#fff" size={14} />
+                <Text style={styles.rotationText}>Vuốt ngang để xoay 360°</Text>
+              </View>
+            )}
+          </View>
+
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <ChevronLeft color="#333" size={24} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.content}>
+          <View style={styles.titleRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.name}>{motor?.name || 'Motorcycle'}</Text>
+              <Text style={styles.category}>{motor?.brand} • Phiên bản Thể thao</Text>
+            </View>
+            <View style={styles.priceContainer}>
+              <Text style={styles.price}>{motor?.price}</Text>
+              <Text style={styles.msrp}>105.000.000đ</Text>
+            </View>
+          </View>
+
+          {/* Color Picker */}
+          <View style={styles.colorSection}>
+            <View style={styles.colorGrid}>
+              {motor?.colors?.map(c => (
+                <TouchableOpacity
+                  key={c.id}
+                  style={[styles.colorCircle, logic.selectedColor === c.id && styles.activeColorCircle]}
+                  onPress={() => logic.setSelectedColor(c.id)}
+                >
+                  <View style={[styles.colorInner, { backgroundColor: c.hex }]} />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Tab Switcher */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled={true}
+            style={styles.tabBarScroll}
+            contentContainerStyle={styles.tabBarContent}
+          >
+            {[
+              { id: 'overview', label: 'Tổng quan' },
+              { id: 'specs', label: 'Thông số' },
+              { id: 'gallery', label: 'Thư viện' },
+              { id: 'finance', label: 'Trả góp' },
+              { id: 'reviews', label: 'Đánh giá' },
+            ].map(tab => (
+              <TouchableOpacity
+                key={tab.id}
+                style={[styles.tab, logic.activeTab === tab.id && styles.activeTab]}
+                onPress={() => logic.setActiveTab(tab.id)}
+              >
+                <Text style={[styles.tabText, logic.activeTab === tab.id && styles.activeTabText]}>{tab.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {/* Render Active Tab */}
+          {logic.activeTab === 'overview' && renderOverview()}
+          {logic.activeTab === 'specs' && renderSpecs()}
+          {logic.activeTab === 'gallery' && renderGallery()}
+          {logic.activeTab === 'finance' && renderFinance()}
+          {logic.activeTab === 'reviews' && renderReviews()}
+
+          <View style={{ height: 15 }} />
+        </View>
+      </ScrollView>
+
+      {/* Sticky CTA Buttons */}
+      <View style={styles.stickyActions}>
+        <ScalePress style={styles.secondaryBtn} onPress={() => navigation.navigate('Booking')}>
+          <Text style={[styles.btnText, { color: Theme.colors.text }]}>Lái thử</Text>
+        </ScalePress>
+        <ScalePress style={styles.primaryBtn} onPress={() => { }}>
+          <LinearGradient colors={[Theme.colors.primary, '#1E3A8A']} style={styles.gradient}>
+            <Text style={styles.btnText}>Tư Vấn</Text>
+          </LinearGradient>
+        </ScalePress>
+      </View>
+    </View>
+  );
+}
+
+const SpecRow = ({ label, value }) => (
+  <View style={styles.specRow}>
+    <Text style={styles.specLabel}>{label}</Text>
+    <Text style={styles.specValue}>{value}</Text>
+  </View>
+);

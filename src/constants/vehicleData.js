@@ -1,0 +1,46 @@
+export const MY_VEHICLES = [
+  {
+    id: '1',
+    name: 'Honda SH 125i',
+    plate: '60-A1 555.55',
+    vin: 'SH125-2024-VNBK888',
+    engine: 'ESP-PLUS-9999',
+    color: 'Trắng Ngọc Trai',
+    type: 'Scooter',
+    version: 'Cao cấp (ABS)',
+    capacity: '124.8 cc',
+    regDate: '15/05/2024',
+    status: 'Hoạt động tốt',
+    odo: '12,500 km',
+    warrantyUntil: '2028-05-15',
+    warrantyFrom: '2026-05-15',
+    insuranceUntil: '2027-05-20',
+    operatingSpecs: {
+      oil: '10W-30 Full Synthetic',
+      tirePressure: '2.0 bar (Trước) / 2.25 bar (Sau)',
+    },
+    nextService: {
+      odo: '18,200 km',
+      date: '15/08/2026',
+      items: ['Thay nhớt máy', 'Kiểm tra nước làm mát', 'Vệ sinh nồi'],
+    },
+    timeline: [
+      {
+        id: 't1',
+        date: '10/01/2026',
+        type: 'Bảo trì định kỳ',
+        desc: 'Thay nhớt Motul, lọc gió, kiểm tra phanh và vệ sinh nhông sên dĩa.',
+        km: '12,500 km',
+        price: '1.250.000đ',
+      },
+      {
+        id: 't2',
+        date: '15/08/2025',
+        type: 'Sửa chữa',
+        desc: 'Thay lốp sau Michelin City Grip 2 do bị vật nhọn đâm thủng.',
+        km: '8,200 km',
+        price: '1.850.000đ',
+      },
+    ],
+  },
+];

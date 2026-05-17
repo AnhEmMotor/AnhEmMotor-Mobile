@@ -77,7 +77,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
         <View style={styles.header}>
           <View 
             style={styles.imageWrapper}
-            onStartShouldSetResponder={() => true}
+            onMoveShouldSetResponder={(evt) => {
+              const { dx, dy } = evt.nativeEvent;
+              return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10;
+            }}
             onResponderGrant={handleTouchStart}
             onResponderMove={handleTouchMove}
           >
@@ -108,7 +111,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
         {/* CONTENT AREA */}
         <View style={styles.content}>
           <View style={styles.titleRow}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.name}>{motor?.name || 'Motorcycle'}</Text>
               <Text style={styles.category}>{motor?.brand} • High Performance</Text>
             </View>
@@ -222,10 +225,10 @@ const styles = StyleSheet.create({
   backBtn: { position: 'absolute', top: 50, left: 20, width: 44, height: 44, borderRadius: 22, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' },
   
   content: { padding: 20, backgroundColor: Theme.colors.background, borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: -30 },
-  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 25 },
-  name: { color: Theme.colors.text, fontSize: 28, fontWeight: 'bold' },
-  category: { color: Theme.colors.subtext, fontSize: 14, marginTop: 4 },
-  price: { color: Theme.colors.primary, fontSize: 22, fontWeight: 'bold' },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+  name: { color: Theme.colors.text, fontSize: 24, fontWeight: 'bold', flex: 1, marginRight: 15 },
+  category: { color: Theme.colors.subtext, fontSize: 13, marginTop: 4 },
+  price: { color: Theme.colors.primary, fontSize: 20, fontWeight: 'bold' },
 
   section: { marginBottom: 25 },
   sectionTitle: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
