@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
   
   profileHeader: { alignItems: 'center', marginBottom: Theme.spacing.xl },
   avatarWrapper: { position: 'relative', marginBottom: Theme.spacing.md },
-  avatar: { width: 110, height: 110, borderRadius: 55, borderWidth: 3, borderColor: Theme.colors.secondary },
-  badge: { position: 'absolute', bottom: 5, right: 5, width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Theme.colors.background },
+  avatar: { width: 110, height: 110, borderRadius: 0, borderWidth: 3, borderColor: Theme.colors.secondary },
+  badge: { position: 'absolute', bottom: 5, right: 5, width: 32, height: 32, borderRadius: 0, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Theme.colors.background },
   userNameHeader: { color: Theme.colors.text, fontSize: 24, fontWeight: 'bold' },
   userRole: { color: Theme.colors.subtext, fontSize: 14, marginTop: 4 },
   
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
   statusCard: { width: '48%', padding: 16, alignItems: 'center' },
   statusLabel: { color: Theme.colors.subtext, fontSize: 11, marginBottom: 4 },
   statusValue: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold' },
-
+ 
   menuGroup: { marginTop: Theme.spacing.md },
   menuItemWrapper: { marginBottom: Theme.spacing.sm },
   menuItem: { flexDirection: 'row', alignItems: 'center', padding: Theme.spacing.md },
-  menuIcon: { width: 44, height: 44, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.md },
+  menuIcon: { width: 44, height: 44, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.md },
   menuLabel: { color: Theme.colors.text, fontSize: 16, fontWeight: 'bold' },
   menuSub: { color: Theme.colors.subtext, fontSize: 11, marginTop: 2 },
   
-  logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: Theme.spacing.xl, padding: Theme.spacing.md, borderRadius: Theme.radius.lg, borderWidth: 1, borderColor: 'rgba(239,68,68,0.3)' },
+  logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: Theme.spacing.xl, padding: Theme.spacing.md, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(239,68,68,0.3)' },
   logoutText: { color: Theme.colors.secondary, fontWeight: 'bold', fontSize: 16, marginLeft: 10 }
 });

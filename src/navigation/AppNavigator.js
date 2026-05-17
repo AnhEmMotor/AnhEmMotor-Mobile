@@ -3,9 +3,10 @@ import { useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { LayoutGrid, Car, User, LifeBuoy, Bike, Bell } from 'lucide-react-native';
+import { LayoutGrid, Car, User, LifeBuoy, Bike, Bell, BarChart2, Calendar, Users, Truck, MessageSquare } from 'lucide-react-native';
 import { Theme } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/Customer/HomeScreen';
@@ -25,7 +26,6 @@ import ProductListScreen from '../screens/Customer/ProductList/ProductListScreen
 import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
 import HomeDetailScreen from '../screens/Customer/HomeDetailScreen';
 
-
 // Admin Screens
 import DashboardScreen from '../screens/Admin/DashboardScreen';
 import AdminProfileScreen from '../screens/Admin/AdminProfileScreen';
@@ -34,6 +34,8 @@ import InventoryScreen from '../screens/Admin/InventoryScreen';
 import CashFlowScreen from '../screens/Admin/CashFlowScreen';
 import LeadScreen from '../screens/Admin/LeadScreen';
 import SupportHubScreen from '../screens/Admin/SupportHubScreen';
+import OrderManageScreen from '../screens/Admin/OrderManageScreen';
+import HubScreen from '../screens/Admin/HubScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,6 +44,10 @@ function CustomerTabs() {
   const { themeMode } = useGlobalState();
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
+  const insets = useSafeAreaInsets();
+  const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
+  const barHeight = 55 + bottomInset;
+  const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
 
   const tabBg = isDark ? '#111827' : '#FFFFFF';
   const tabActiveText = Theme.colors.primary;
@@ -55,8 +61,8 @@ function CustomerTabs() {
         backgroundColor: tabBg, 
         borderTopWidth: 1, 
         borderTopColor: tabBorderTop,
-        height: 85, 
-        paddingBottom: 25,
+        height: barHeight, 
+        paddingBottom: paddingBottom,
         paddingTop: 10,
         elevation: 0,
         position: 'absolute',
@@ -96,6 +102,61 @@ function CustomerTabs() {
   );
 }
 
+function AdminTabs() {
+  const insets = useSafeAreaInsets();
+  const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
+  const barHeight = 55 + bottomInset;
+  const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
+
+  return (
+    <Tab.Navigator screenOptions={{
+      headerShown: false,
+      tabBarStyle: { 
+        backgroundColor: '#0B0F19', 
+        borderTopWidth: 1, 
+        borderTopColor: '#1E293B', 
+        height: barHeight, 
+        paddingBottom: paddingBottom,
+        paddingTop: 8,
+        elevation: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      tabBarActiveTintColor: '#3B82F6', // Electric Blue
+      tabBarInactiveTintColor: '#64748B', // Inactive Slate Gray
+    }}>
+      <Tab.Screen name="AdminDashboard" component={DashboardScreen} options={{
+        tabBarIcon: ({color}) => <BarChart2 color={color} size={24} />,
+        tabBarLabel: 'Tổng quan'
+      }} />
+      <Tab.Screen name="AdminAppointments" component={AppointmentManageScreen} options={{
+        tabBarIcon: ({color}) => <Calendar color={color} size={24} />,
+        tabBarLabel: 'Lịch hẹn',
+        tabBarBadge: 2, // Red notification badge
+        tabBarBadgeStyle: { backgroundColor: '#DC2626', color: '#fff', fontSize: 10, fontWeight: 'bold' }
+      }} />
+      <Tab.Screen name="AdminOrders" component={OrderManageScreen} options={{
+        tabBarIcon: ({color}) => <Truck color={color} size={24} />,
+        tabBarLabel: 'Đơn hàng'
+      }} />
+      <Tab.Screen name="AdminLeads" component={LeadScreen} options={{
+        tabBarIcon: ({color}) => <Users color={color} size={24} />,
+        tabBarLabel: 'Khách hàng'
+      }} />
+      <Tab.Screen name="AdminHub" component={HubScreen} options={{
+        tabBarIcon: ({color}) => <LayoutGrid color={color} size={24} />,
+        tabBarLabel: 'Tiện ích'
+      }} />
+    </Tab.Navigator>
+  );
+}
+
 export default function AppNavigator() {
   return (
     <NavigationContainer>
@@ -117,13 +178,14 @@ export default function AppNavigator() {
         <Stack.Screen name="HomeDetail" component={HomeDetailScreen} />
         
         {/* Admin Stack */}
-        <Stack.Screen name="AdminHome" component={DashboardScreen} />
+        <Stack.Screen name="AdminHome" component={AdminTabs} />
         <Stack.Screen name="AdminProfile" component={AdminProfileScreen} />
         <Stack.Screen name="AdminAppointments" component={AppointmentManageScreen} />
         <Stack.Screen name="AdminInventory" component={InventoryScreen} />
         <Stack.Screen name="CashFlow" component={CashFlowScreen} />
         <Stack.Screen name="AdminLeads" component={LeadScreen} />
         <Stack.Screen name="SupportHub" component={SupportHubScreen} />
+        <Stack.Screen name="AdminOrders" component={OrderManageScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

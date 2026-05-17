@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Pressable, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Pressable, Dimensions, TouchableOpacity } from 'react-native';
 import { Theme } from '../../theme/Theme';
 import { 
   ArrowDownLeft, 
@@ -17,7 +17,8 @@ import {
   ChevronRight,
   Check,
   X,
-  RefreshCcw
+  RefreshCcw,
+  ChevronLeft
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassCard from '../../components/GlassCard';
@@ -42,8 +43,15 @@ export default function CashFlowScreen() {
     <View style={styles.container}>
       {/* II.5 HEADER (STRATEGY: CORPORATE WALLET) */}
       <Animated.View entering={FadeInUp.duration(800)} style={styles.header}>
-        <Text style={styles.title}>Dòng Tiền Hệ Thống 💰</Text>
-        <Text style={styles.subtitle}>Quản trị minh bạch & phê duyệt tức thời</Text>
+        {navigation && navigation.canGoBack && navigation.canGoBack() && (
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <ChevronLeft color={Theme.colors.text} size={20} />
+          </TouchableOpacity>
+        )}
+        <View style={{ flex: 1, marginLeft: (navigation && navigation.canGoBack && navigation.canGoBack()) ? 12 : 0 }}>
+          <Text style={styles.title}>Dòng Tiền Hệ Thống 💰</Text>
+          <Text style={styles.subtitle}>Quản trị minh bạch & phê duyệt tức thời</Text>
+        </View>
       </Animated.View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
@@ -112,12 +120,12 @@ export default function CashFlowScreen() {
           
           <GlassCard style={styles.approvalCard}>
             <View style={styles.pendingAction}>
-              <View style={[styles.actionIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+              <View style={[styles.actionIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.25)', borderColor: 'rgba(16, 185, 129, 0.55)' }]}>
                 <ShieldCheck color={Theme.colors.success} size={24} />
               </View>
               <View style={{ flex: 1, marginLeft: 16 }}>
-                <Text style={styles.actionMain}>Xác nhận cọc: Winner X</Text>
-                <Text style={styles.actionSub}>Khách: Anh Quân • 2.000.000đ</Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.actionMain}>Xác nhận cọc: Winner X</Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.actionSub}>Khách: Anh Quân • 2.000.000đ</Text>
               </View>
               <View style={styles.actionButtons}>
                 <Pressable style={styles.approveSmall} onPress={handleApprove}>
@@ -127,12 +135,12 @@ export default function CashFlowScreen() {
             </View>
             
             <View style={[styles.pendingAction, { borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)' }]}>
-              <View style={styles.actionIconBox}>
+              <View style={[styles.actionIconBox, { backgroundColor: 'rgba(245, 158, 11, 0.25)', borderColor: 'rgba(245, 158, 11, 0.55)' }]}>
                 <Banknote color={Theme.colors.warning} size={24} />
               </View>
               <View style={{ flex: 1, marginLeft: 16 }}>
-                <Text style={styles.actionMain}>Duyệt chi xăng xe giao khách</Text>
-                <Text style={styles.actionSub}>Yêu cầu: NV Nam • 200.000đ</Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.actionMain}>Duyệt chi xăng xe giao khách</Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.actionSub}>Yêu cầu: NV Nam • 200.000đ</Text>
               </View>
               <View style={styles.actionButtons}>
                 <Pressable style={styles.rejectSmall}>
@@ -164,16 +172,16 @@ export default function CashFlowScreen() {
                 </View>
                 <View style={styles.transMain}>
                   <View style={styles.transTop}>
-                    <Text style={styles.transTitle}>{item.title}</Text>
-                    <Text style={[styles.transAmount, { color: item.amount.startsWith('+') ? Theme.colors.success : Theme.colors.error }]}>
+                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.transTitle}>{item.title}</Text>
+                    <Text numberOfLines={1} style={[styles.transAmount, { color: item.amount.startsWith('+') ? Theme.colors.success : Theme.colors.error }]}>
                       {item.amount}
                     </Text>
                   </View>
                   <View style={styles.transBottom}>
-                    <Text style={styles.transMeta}>{item.time} • {item.performer} • {item.method}</Text>
+                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.transMeta}>{item.time} • {item.performer} • {item.method}</Text>
                     {item.status === 'Pending' && (
                       <View style={styles.pendingBadge}>
-                        <Text style={styles.pendingBadgeText}>Đợi duyệt</Text>
+                        <Text numberOfLines={1} style={styles.pendingBadgeText}>Đợi duyệt</Text>
                       </View>
                     )}
                   </View>
@@ -189,19 +197,20 @@ export default function CashFlowScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Theme.colors.background, paddingHorizontal: Theme.spacing.lg },
-  header: { marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
+  header: { flexDirection: 'row', alignItems: 'center', marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
+  backBtn: { width: 38, height: 38, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', backgroundColor: '#111827', justifyContent: 'center', alignItems: 'center', marginRight: 10 },
   title: { color: Theme.colors.text, fontSize: 24, fontWeight: 'bold' },
   subtitle: { color: Theme.colors.subtext, fontSize: 13, marginTop: 4 },
 
   goldenNumbers: { marginBottom: Theme.spacing.lg },
-  mainBalanceCard: { borderRadius: Theme.radius.xl, padding: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+  mainBalanceCard: { borderRadius: 0, padding: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   balanceHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   goldLabel: { color: Theme.colors.subtext, fontSize: 13 },
   goldValue: { color: Theme.colors.text, fontSize: 28, fontWeight: 'bold', marginTop: 8 },
-  growthBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(5, 150, 105, 0.1)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+  growthBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(5, 150, 105, 0.15)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0 },
   growthText: { color: Theme.colors.success, fontSize: 12, fontWeight: 'bold', marginLeft: 4 },
   
-  pendingRow: { flexDirection: 'row', alignItems: 'center', marginTop: 24, backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 16, padding: 16 },
+  pendingRow: { flexDirection: 'row', alignItems: 'center', marginTop: 24, backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)', padding: 16 },
   pendingBox: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   verticalDivider: { width: 1, height: 30, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 16 },
   pendingLabel: { color: Theme.colors.subtext, fontSize: 10 },
@@ -210,7 +219,7 @@ const styles = StyleSheet.create({
   section: { marginTop: Theme.spacing.xl },
   sectionTitle: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold' },
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  badge: { backgroundColor: Theme.colors.error, minWidth: 20, height: 20, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  badge: { backgroundColor: Theme.colors.error, minWidth: 20, height: 20, borderRadius: 0, justifyContent: 'center', alignItems: 'center' },
   badgeText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
 
   categoryGrid: { flexDirection: 'row', justifyContent: 'space-between' },
@@ -220,24 +229,24 @@ const styles = StyleSheet.create({
 
   approvalCard: { padding: 0, overflow: 'hidden' },
   pendingAction: { flexDirection: 'row', alignItems: 'center', padding: 16 },
-  actionIconBox: { width: 48, height: 48, borderRadius: 12, backgroundColor: 'rgba(217, 119, 6, 0.1)', justifyContent: 'center', alignItems: 'center' },
+  actionIconBox: { width: 48, height: 48, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(217, 119, 6, 0.2)', backgroundColor: 'rgba(217, 119, 6, 0.1)', justifyContent: 'center', alignItems: 'center' },
   actionMain: { color: Theme.colors.text, fontSize: 14, fontWeight: '600' },
   actionSub: { color: Theme.colors.subtext, fontSize: 11, marginTop: 2 },
   actionButtons: { flexDirection: 'row' },
-  rejectSmall: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(239, 68, 68, 0.1)', justifyContent: 'center', alignItems: 'center', marginRight: 8 },
-  approveSmall: { width: 36, height: 36, borderRadius: 18, backgroundColor: Theme.colors.success, justifyContent: 'center', alignItems: 'center' },
+  rejectSmall: { width: 36, height: 36, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.2)', backgroundColor: 'rgba(239, 68, 68, 0.1)', justifyContent: 'center', alignItems: 'center', marginRight: 8 },
+  approveSmall: { width: 36, height: 36, borderRadius: 0, backgroundColor: Theme.colors.success, justifyContent: 'center', alignItems: 'center' },
 
-  exportBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(59, 130, 246, 0.1)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
+  exportBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(59, 130, 246, 0.1)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 0 },
   exportText: { color: Theme.colors.primary, fontSize: 12, fontWeight: 'bold', marginLeft: 6 },
 
   transCard: { flexDirection: 'row', alignItems: 'center', padding: 16, marginBottom: 12 },
-  transIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
+  transIconBox: { width: 44, height: 44, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
   transMain: { flex: 1, marginLeft: 16 },
   transTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   transTitle: { color: Theme.colors.text, fontSize: 15, fontWeight: 'bold' },
   transAmount: { fontSize: 15, fontWeight: 'bold' },
   transBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
   transMeta: { color: Theme.colors.subtext, fontSize: 11 },
-  pendingBadge: { backgroundColor: 'rgba(217, 119, 6, 0.1)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+  pendingBadge: { backgroundColor: 'rgba(217, 119, 6, 0.1)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 0 },
   pendingBadgeText: { color: Theme.colors.warning, fontSize: 10, fontWeight: 'bold' }
 });
