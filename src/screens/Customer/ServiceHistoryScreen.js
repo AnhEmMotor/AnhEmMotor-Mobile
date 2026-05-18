@@ -1,12 +1,4 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { Theme } from '../../theme/Theme';
-import { ChevronLeft, Wrench, CheckCircle2, Circle, Clock } from 'lucide-react-native';
-import GlassCard from '../../components/GlassCard';
-import ScalePress from '../../components/ScalePress';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-
-import React from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from 'react-native';
 import { Theme } from '../../theme/Theme';
 import { ChevronLeft, Wrench, CheckCircle2 } from 'lucide-react-native';
@@ -14,6 +6,7 @@ import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useServiceHistoryController } from './hooks/useServiceHistoryController';
+
 
 export default function ServiceHistoryScreen({ navigation, route }) {
   const vehicle = route?.params?.vehicle || { id: '1', name: 'Kawasaki Z1000', plate: '59-A3 123.45' };

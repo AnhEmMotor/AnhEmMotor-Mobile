@@ -1,16 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MockCustomerDataSource } from '../../../data/customer/datasources/MockCustomerDataSource';
-import { CustomerRepositoryImpl } from '../../../data/customer/repositories/CustomerRepositoryImpl';
-import { GetServiceHistory } from '../../../domain/customer/usecases/GetServiceHistory';
-import { GetUpcomingReminders } from '../../../domain/customer/usecases/GetUpcomingReminders';
+import { useDependency } from '../../../di/DependencyContext';
 
-// Instantiate dependencies once
-const dataSource = new MockCustomerDataSource();
-const repository = new CustomerRepositoryImpl(dataSource);
-const getServiceHistoryUseCase = new GetServiceHistory(repository);
-const getUpcomingRemindersUseCase = new GetUpcomingReminders(repository);
 
 export function useServiceHistoryController(vehicleId) {
+  const { getServiceHistoryUseCase, getUpcomingRemindersUseCase } = useDependency();
   const [history, setHistory] = useState([]);
   const [reminders, setReminders] = useState([]);
   const [loading, setLoading] = useState(true);

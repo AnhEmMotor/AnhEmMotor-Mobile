@@ -4,23 +4,25 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GlobalStateProvider } from './src/context/GlobalState';
+import { DependencyProvider } from './src/di/DependencyContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
   const RootContent = (
-    <GlobalStateProvider>
-      <StatusBar style="light" />
-      <AppNavigator />
-    </GlobalStateProvider>
+    <DependencyProvider>
+      <GlobalStateProvider>
+        <StatusBar style="light" />
+        <AppNavigator />
+      </GlobalStateProvider>
+    </DependencyProvider>
   );
+
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {Platform.OS === 'web' ? (
-        <View style={styles.root}>{RootContent}</View>
-      ) : (
-        <SafeAreaProvider>{RootContent}</SafeAreaProvider>
-      )}
+      <SafeAreaProvider>
+        {RootContent}
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

@@ -4,20 +4,10 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 
 // Clean Architecture Layers
-import { ProfileRepositoryImpl } from '../../data/repositories/ProfileRepositoryImpl';
-import { GetProfileUseCase } from '../../domain/usecases/GetProfileUseCase';
-import { UpdateProfileUseCase } from '../../domain/usecases/UpdateProfileUseCase';
-import { UpdateSettingsUseCase } from '../../domain/usecases/UpdateSettingsUseCase';
-import { UploadAvatarUseCase } from '../../domain/usecases/UploadAvatarUseCase';
 import { UserProfile } from '../../domain/entities/UserProfile';
 import { useGlobalState } from '../../../../context/GlobalState';
+import { useDependency } from '../../../../di/DependencyContext';
 
-// Repository and Use Cases instances
-const repository = new ProfileRepositoryImpl();
-const getProfileUseCase = new GetProfileUseCase(repository);
-const updateProfileUseCase = new UpdateProfileUseCase(repository);
-const updateSettingsUseCase = new UpdateSettingsUseCase(repository);
-const uploadAvatarUseCase = new UploadAvatarUseCase(repository);
 
 // Mock Administrative Regions Database for Viet Nam
 export const MOCK_REGIONS = {
@@ -39,6 +29,13 @@ export const MOCK_REGIONS = {
 };
 
 export const useProfileController = (navigation, bottomSheetRef) => {
+  const {
+    getProfileUseCase,
+    updateProfileUseCase,
+    updateSettingsUseCase,
+    uploadAvatarUseCase,
+    profileRepository: repository,
+  } = useDependency();
   const { setThemeMode } = useGlobalState();
   const [profile, setProfile] = useState(new UserProfile());
   const [isLoading, setIsLoading] = useState(true);

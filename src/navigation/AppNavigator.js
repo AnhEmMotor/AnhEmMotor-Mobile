@@ -26,6 +26,10 @@ import ProductListScreen from '../screens/Customer/ProductList/ProductListScreen
 import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
 import HomeDetailScreen from '../screens/Customer/HomeDetailScreen';
 import InvoiceScreen from '../screens/Customer/InvoiceScreen';
+import ServiceHistoryScreen from '../screens/Customer/ServiceHistoryScreen';
+import FinancialHubScreen from '../screens/Customer/FinancialHubScreen';
+import LegalProgressScreen from '../screens/Customer/LegalProgressScreen';
+
 
 // Admin Screens
 import DashboardScreen from '../screens/Admin/DashboardScreen';
@@ -179,6 +183,10 @@ export default function AppNavigator() {
         <Stack.Screen name="ContactStaff" component={ContactStaffScreen} />
         <Stack.Screen name="HomeDetail" component={HomeDetailScreen} />
         <Stack.Screen name="InvoiceScreen" component={InvoiceScreen} />
+        <Stack.Screen name="ServiceHistory" component={ServiceHistoryScreen} />
+        <Stack.Screen name="FinancialHub" component={FinancialHubScreen} />
+        <Stack.Screen name="LegalProgress" component={LegalProgressScreen} />
+
 
         {/* Admin Stack */}
         <Stack.Screen name="AdminHome" component={AdminTabs} />

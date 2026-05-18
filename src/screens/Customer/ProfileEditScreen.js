@@ -20,17 +20,14 @@ import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 // Clean Architecture Layers
-import { ProfileRepositoryImpl } from '../../features/profile/data/repositories/ProfileRepositoryImpl';
-import { GetProfileUseCase } from '../../features/profile/domain/usecases/GetProfileUseCase';
-import { UpdateProfileUseCase } from '../../features/profile/domain/usecases/UpdateProfileUseCase';
-import { UploadAvatarUseCase } from '../../features/profile/domain/usecases/UploadAvatarUseCase';
-
-const repository = new ProfileRepositoryImpl();
-const getProfileUseCase = new GetProfileUseCase(repository);
-const updateProfileUseCase = new UpdateProfileUseCase(repository);
-const uploadAvatarUseCase = new UploadAvatarUseCase(repository);
+import { useDependency } from '../../di/DependencyContext';
 
 export default function ProfileEditScreen({ navigation }) {
+  const {
+    getProfileUseCase,
+    updateProfileUseCase,
+    uploadAvatarUseCase,
+  } = useDependency();
   const [profileEntity, setProfileEntity] = useState(null);
   const [form, setForm] = useState({
     name: '',

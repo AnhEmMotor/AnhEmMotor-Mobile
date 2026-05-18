@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react';
-import { MockCustomerDataSource } from '../../../data/customer/datasources/MockCustomerDataSource';
-import { CustomerRepositoryImpl } from '../../../data/customer/repositories/CustomerRepositoryImpl';
-import { GetCustomerVehicles } from '../../../domain/customer/usecases/GetCustomerVehicles';
-
-// Instantiate dependencies once
-const dataSource = new MockCustomerDataSource();
-const repository = new CustomerRepositoryImpl(dataSource);
-const getCustomerVehiclesUseCase = new GetCustomerVehicles(repository);
+import { useDependency } from '../../../di/DependencyContext';
 
 export const useMyVehicles = () => {
+  const { getCustomerVehiclesUseCase } = useDependency();
+
   const [bikes, setBikes] = useState([]);
   const [activeBike, setActiveBike] = useState(null);
   const [showQR, setShowQR] = useState(false);

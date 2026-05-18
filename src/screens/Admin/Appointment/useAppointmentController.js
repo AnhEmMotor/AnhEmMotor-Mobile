@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDependency } from '../../../di/DependencyContext';
 
+
 export function useAppointmentController() {
   const {
     getAppointmentsUseCase,
