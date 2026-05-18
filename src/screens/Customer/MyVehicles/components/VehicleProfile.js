@@ -6,6 +6,17 @@ import { Theme, useActiveColors } from '../../../../theme/Theme';
 import { copyToClipboard } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
+const getBikeImage = (bikeName) => {
+  const name = bikeName ? bikeName.toLowerCase() : '';
+  if (name.includes('sh') || name.includes('vario') || name.includes('scooter') || name.includes('vespa') || name.includes('vision') || name.includes('lead')) {
+    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' }; // Xe tay ga (Scooter) - 100% Transparent
+  }
+  if (name.includes('exciter') || name.includes('winner') || name.includes('côn tay') || name.includes('underbone') || name.includes('raider')) {
+    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' }; // Xe côn tay (Underbone) - 100% Transparent
+  }
+  return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' }; // Xe phân khối lớn (Superbike) - 100% Transparent
+};
+
 export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
   const activeColors = useActiveColors();
 
@@ -18,7 +29,7 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
       >
         <View style={styles.bikeInfo}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[styles.bikeName, { color: activeColors.text }]}>{bike.name}</Text>
+            <Text style={[styles.bikeName, { color: activeColors.text }]} numberOfLines={1} ellipsizeMode="tail">{bike.name}</Text>
             <Text style={{ fontSize: 14, color: activeColors.primary, marginLeft: 6 }}>➔</Text>
           </View>
           <Text style={styles.bikePlate}>{bike.plate}</Text>
@@ -29,9 +40,9 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
         </View>
         <View style={styles.bikeImageContainer}>
           <Image 
-            source={{ uri: 'https://images.unsplash.com/photo-1620939511593-299312d1666c?q=80&w=2070' }} 
+            source={getBikeImage(bike.name)} 
             style={styles.bikeThumb} 
-            resizeMode="cover"
+            resizeMode="contain"
           />
           <TouchableOpacity onPress={onShowQR} style={[styles.qrBadge, { borderColor: activeColors.background }]}>
             <QrCode color="#fff" size={12} />

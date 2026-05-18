@@ -15,17 +15,17 @@ import {
   Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { 
-  ChevronLeft, 
-  Share2, 
-  Calendar, 
-  User, 
-  Tag, 
-  Bell, 
-  Gift, 
-  ArrowRight, 
-  QrCode, 
-  Copy, 
+import {
+  ChevronLeft,
+  Share2,
+  Calendar,
+  User,
+  Tag,
+  Bell,
+  Gift,
+  ArrowRight,
+  QrCode,
+  Copy,
   Check,
   AlertTriangle,
   Clock,
@@ -38,7 +38,8 @@ import {
   MapPin,
   Map,
   Bike,
-  CalendarClock
+  CalendarClock,
+  ShieldAlert
 } from 'lucide-react-native';
 import { useActiveColors, Theme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
@@ -210,15 +211,15 @@ export default function HomeDetailScreen({ route, navigation }) {
             </View>
           </View>
 
-          {/* Header với Icon Cam */}
+          {/* Header với Icon */}
           <View style={[styles.alertHeader, { borderBottomColor: colors.border }]}>
-            <View style={[styles.iconWrapper, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
-              <AlertTriangle color="#F59E0B" size={moderateScale(32)} />
+            <View style={[styles.iconWrapper, { backgroundColor: isCritical ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)' }]}>
+              {isCritical ? <AlertTriangle color="#EF4444" size={moderateScale(32)} /> : <ShieldAlert color="#F59E0B" size={moderateScale(32)} />}
             </View>
             <Text style={[styles.detailTitle, { color: colors.text }]}>{activeItem.title || 'Bảo dưỡng định kỳ'}</Text>
-            <View style={[styles.badge, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
-              <Text style={{ color: '#F59E0B', fontSize: 11, fontWeight: 'bold', letterSpacing: 1 }}>
-                CẢNH BÁO
+            <View style={[styles.badge, { backgroundColor: isCritical ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)' }]}>
+              <Text style={{ color: isCritical ? '#EF4444' : '#F59E0B', fontSize: 11, fontWeight: 'bold', letterSpacing: 1 }}>
+                {isCritical ? 'KHẨN CẤP' : 'CẢNH BÁO'}
               </Text>
             </View>
           </View>

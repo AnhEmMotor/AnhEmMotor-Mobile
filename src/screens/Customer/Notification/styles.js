@@ -21,13 +21,13 @@ export const styles = StyleSheet.create({
   filterBadgeTextActive: { color: Theme.colors.primary, fontWeight: 'bold' },
 
   // Scrollable horizontal tab bar
-  tabBarScroll: { marginBottom: verticalScale(12), maxHeight: 60 },
-  tabBarContent: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 15, padding: 5, alignItems: 'center', marginHorizontal: horizontalScale(16) },
-  tab: { flexDirection: 'row', paddingHorizontal: horizontalScale(14), paddingVertical: 12, alignItems: 'center', borderRadius: 12, marginHorizontal: 2 },
+  tabBarScroll: { marginBottom: verticalScale(12), height: 58, marginHorizontal: horizontalScale(16) },
+  tabBarContent: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 18, padding: 5, alignItems: 'center', height: '100%' },
+  tab: { flexDirection: 'row', paddingHorizontal: horizontalScale(18), height: '100%', alignItems: 'center', borderRadius: 14, marginHorizontal: 3, flexShrink: 0 },
   activeTab: { backgroundColor: Theme.colors.card },
-  tabText: { color: Theme.colors.subtext, fontWeight: 'bold', fontSize: moderateScale(15), letterSpacing: 0.3 },
+  tabText: { color: Theme.colors.subtext, fontWeight: 'bold', fontSize: moderateScale(14), letterSpacing: 0.3, flexShrink: 0 },
   activeTabText: { color: Theme.colors.primary },
-  tabBadge: { backgroundColor: Theme.colors.primary, borderRadius: 8, paddingHorizontal: 7, paddingVertical: 3, marginLeft: 6 },
+  tabBadge: { backgroundColor: Theme.colors.primary, borderRadius: 10, paddingHorizontal: 8, paddingVertical: 4, marginLeft: 8, flexShrink: 0 },
   tabBadgeText: { color: '#fff', fontSize: moderateScale(10), fontWeight: '900' },
  
   // Notification List
@@ -203,9 +203,9 @@ export const styles = StyleSheet.create({
   historyPartsTitle: { color: Theme.colors.subtext, fontSize: moderateScale(11), fontWeight: 'bold', marginBottom: 4 },
   historyPartsText: { color: '#fff', fontSize: moderateScale(12), lineHeight: 17, marginBottom: 10 },
   
-  historyFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.04)', paddingTop: 10 },
-  historyCost: { color: Theme.colors.subtext, fontSize: moderateScale(12) },
-  historyWarranty: { color: 'rgba(255,255,255,0.3)', fontSize: moderateScale(11) },
+  historyFooter: { flexDirection: 'column', alignItems: 'flex-start', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.04)', paddingTop: 10 },
+  historyCost: { color: Theme.colors.subtext, fontSize: moderateScale(12), marginBottom: 4 },
+  historyWarranty: { color: 'rgba(255,255,255,0.35)', fontSize: moderateScale(11) },
 
   // Booking Modal styling
   bookingSectionTitle: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold', marginTop: 18, marginBottom: 12 },
@@ -231,14 +231,14 @@ export const styles = StyleSheet.create({
   goldBadgeText: { color: '#A855F7', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
   
   memberCardContainer: { paddingVertical: 10, alignItems: 'center', justifyContent: 'center' },
-  virtualMemberCard: { width: '100%', height: 160, borderRadius: 16, padding: 16, justifyContent: 'space-between', backgroundColor: 'rgba(28, 22, 45, 0.75)', borderWidth: 1, borderColor: 'rgba(168, 85, 247, 0.3)' },
+  virtualMemberCard: { width: '100%', height: 160, borderRadius: 16, padding: 18, justifyContent: 'space-between', backgroundColor: '#1A1816', borderWidth: 1.5, borderColor: '#F59E0B' },
   virtualCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   virtualCardBrand: { color: '#fff', fontSize: moderateScale(14), fontWeight: '900', letterSpacing: 0.5 },
-  virtualCardTier: { color: '#E2E8F0', fontSize: moderateScale(18), fontWeight: '900', letterSpacing: 1 },
+  virtualCardTier: { color: '#F59E0B', fontSize: moderateScale(18), fontWeight: '900', letterSpacing: 1 },
   virtualCardName: { color: '#fff', fontSize: moderateScale(16), fontWeight: 'bold', letterSpacing: 1 },
   virtualCardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  virtualCardNumber: { color: Theme.colors.subtext, fontSize: moderateScale(11) },
-  virtualCardPoints: { color: '#A855F7', fontSize: moderateScale(14), fontWeight: 'bold' },
+  virtualCardNumber: { color: 'rgba(255, 255, 255, 0.6)', fontSize: moderateScale(12), fontWeight: '500' },
+  virtualCardPoints: { color: '#F59E0B', fontSize: moderateScale(15), fontWeight: 'bold' },
   
   loyaltyMemberDesc: { color: Theme.colors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
   loyaltyCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#A855F7', justifyContent: 'center', alignItems: 'center', shadowColor: '#A855F7', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 },

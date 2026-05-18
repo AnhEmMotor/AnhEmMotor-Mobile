@@ -84,7 +84,7 @@ export default function AIChatScreen({ navigation }) {
         </View>
         <ScalePress 
           style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center' }} 
-          onPress={() => navigation.navigate('Profile', { openSettings: true })}
+          onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
         >
           <Settings color={Theme.colors.text} size={22} />
         </ScalePress>

@@ -6,44 +6,19 @@ import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
-const SERVICE_HISTORY = [
-  {
-    id: 1,
-    date: '08/05/2026',
-    title: 'Bảo dưỡng định kỳ 15.000km',
-    items: ['Thay nhớt động cơ 10W-40', 'Thay lọc nhớt', 'Thay lọc gió', 'Kiểm tra phanh'],
-    cost: '1.250.000đ',
-    technician: 'Minh Kỹ thuật',
-    status: 'done',
-  },
-  {
-    id: 2,
-    date: '15/02/2026',
-    title: 'Thay lốp & Căng xích',
-    items: ['Thay lốp trước Michelin', 'Căng xích truyền động', 'Bơm lốp chuẩn áp suất'],
-    cost: '2.100.000đ',
-    technician: 'Hùng Kỹ thuật',
-    status: 'done',
-  },
-  {
-    id: 3,
-    date: '10/01/2026',
-    title: 'Kiểm tra khi mua xe',
-    items: ['Kiểm tra tổng thể 24 hạng mục', 'Cân bằng bánh xe', 'Kiểm tra hệ thống điện'],
-    cost: 'Miễn phí',
-    technician: 'Đội kỹ thuật AnhEmMotor',
-    status: 'done',
-  },
-];
-
-const UPCOMING_REMINDERS = [
-  { km: '20.000km', task: 'Thay nhớt & Lọc nhớt', dueDate: 'Dự kiến: Tháng 8/2026' },
-  { km: '25.000km', task: 'Thay bugi', dueDate: 'Dự kiến: Tháng 11/2026' },
-  { km: 'Mỗi năm', task: 'Gia hạn bảo hiểm xe', dueDate: 'Hết hạn: 01/01/2027' },
-];
+import React from 'react';
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from 'react-native';
+import { Theme } from '../../theme/Theme';
+import { ChevronLeft, Wrench, CheckCircle2 } from 'lucide-react-native';
+import GlassCard from '../../components/GlassCard';
+import ScalePress from '../../components/ScalePress';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useServiceHistoryController } from './hooks/useServiceHistoryController';
 
 export default function ServiceHistoryScreen({ navigation, route }) {
-  const vehicle = route?.params?.vehicle || { name: 'Kawasaki Z1000', plate: '59-A3 123.45' };
+  const vehicle = route?.params?.vehicle || { id: '1', name: 'Kawasaki Z1000', plate: '59-A3 123.45' };
+  
+  const { history, reminders, loading } = useServiceHistoryController(vehicle.id || '1');
 
   return (
     <View style={styles.container}>
@@ -58,72 +33,78 @@ export default function ServiceHistoryScreen({ navigation, route }) {
         </View>
       </Animated.View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+      {loading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={Theme.colors.primary} />
+        </View>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
 
-        {/* Nhắc nhở sắp tới */}
-        <Animated.Text entering={FadeInDown.duration(500).delay(100)} style={styles.sectionTitle}>
-          Nhắc nhở sắp tới
-        </Animated.Text>
-        {UPCOMING_REMINDERS.map((item, i) => (
-          <Animated.View key={i} entering={FadeInDown.duration(500).delay(100 + i * 80)}>
-            <GlassCard style={styles.reminderCard}>
-              <View style={styles.kmBadge}>
-                <Text style={styles.kmText}>{item.km}</Text>
-              </View>
-              <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={styles.reminderTask}>{item.task}</Text>
-                <Text style={styles.reminderDue}>{item.dueDate}</Text>
-              </View>
-            </GlassCard>
-          </Animated.View>
-        ))}
-
-        {/* Dòng thời gian lịch sử */}
-        <Animated.Text entering={FadeInDown.duration(500).delay(400)} style={[styles.sectionTitle, { marginTop: Theme.spacing.xl }]}>
-          Lịch sử sửa chữa
-        </Animated.Text>
-
-        <View style={styles.timeline}>
-          {SERVICE_HISTORY.map((entry, index) => (
-            <Animated.View
-              key={entry.id}
-              entering={FadeInDown.duration(500).delay(400 + index * 120)}
-              style={styles.timelineItem}
-            >
-              {/* Đường kẻ + Icon */}
-              <View style={styles.timelineSide}>
-                <View style={styles.timelineDot}>
-                  <CheckCircle2 color={Theme.colors.success} size={20} />
+          {/* Nhắc nhở sắp tới */}
+          <Animated.Text entering={FadeInDown.duration(500).delay(100)} style={styles.sectionTitle}>
+            Nhắc nhở sắp tới
+          </Animated.Text>
+          {reminders.map((item, i) => (
+            <Animated.View key={i} entering={FadeInDown.duration(500).delay(100 + i * 80)}>
+              <GlassCard style={styles.reminderCard}>
+                <View style={styles.kmBadge}>
+                  <Text style={styles.kmText}>{item.km}</Text>
                 </View>
-                {index < SERVICE_HISTORY.length - 1 && <View style={styles.timelineLine} />}
-              </View>
-
-              {/* Nội dung */}
-              <GlassCard style={styles.timelineCard} intensity={12}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardDate}>{entry.date}</Text>
-                  <Text style={styles.cardCost}>{entry.cost}</Text>
-                </View>
-                <Text style={styles.cardTitle}>{entry.title}</Text>
-                <View style={styles.itemList}>
-                  {entry.items.map((item, i) => (
-                    <View key={i} style={styles.itemRow}>
-                      <View style={styles.itemDot} />
-                      <Text style={styles.itemText}>{item}</Text>
-                    </View>
-                  ))}
-                </View>
-                <View style={styles.techRow}>
-                  <Wrench color={Theme.colors.subtext} size={12} />
-                  <Text style={styles.techText}>{entry.technician}</Text>
+                <View style={{ flex: 1, marginLeft: 12 }}>
+                  <Text style={styles.reminderTask}>{item.task}</Text>
+                  <Text style={styles.reminderDue}>{item.dueDate}</Text>
                 </View>
               </GlassCard>
             </Animated.View>
           ))}
-        </View>
 
-        <View style={{ height: 100 }} />
-      </ScrollView>
+          {/* Dòng thời gian lịch sử */}
+          <Animated.Text entering={FadeInDown.duration(500).delay(400)} style={[styles.sectionTitle, { marginTop: Theme.spacing.xl }]}>
+            Lịch sử sửa chữa
+          </Animated.Text>
+
+          <View style={styles.timeline}>
+            {history.map((entry, index) => (
+              <Animated.View
+                key={entry.id}
+                entering={FadeInDown.duration(500).delay(400 + index * 120)}
+                style={styles.timelineItem}
+              >
+                {/* Đường kẻ + Icon */}
+                <View style={styles.timelineSide}>
+                  <View style={styles.timelineDot}>
+                    <CheckCircle2 color={Theme.colors.success} size={20} />
+                  </View>
+                  {index < history.length - 1 && <View style={styles.timelineLine} />}
+                </View>
+
+                {/* Nội dung */}
+                <GlassCard style={styles.timelineCard} intensity={12}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardDate}>{entry.date}</Text>
+                    <Text style={styles.cardCost}>{entry.cost}</Text>
+                  </View>
+                  <Text style={styles.cardTitle}>{entry.title}</Text>
+                  <View style={styles.itemList}>
+                    {entry.items.map((item, i) => (
+                      <View key={i} style={styles.itemRow}>
+                        <View style={styles.itemDot} />
+                        <Text style={styles.itemText}>{item}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  <View style={styles.techRow}>
+                    <Wrench color={Theme.colors.subtext} size={12} />
+                    <Text style={styles.techText}>{entry.technician}</Text>
+                  </View>
+                </GlassCard>
+              </Animated.View>
+            ))}
+          </View>
+
+          <View style={{ height: 100 }} />
+        </ScrollView>
+      )}
     </View>
   );
 }

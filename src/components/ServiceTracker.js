@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { Theme } from '../theme/Theme';
+import { Theme, useActiveColors } from '../theme/Theme';
 import { 
   ClipboardCheck, 
   Wrench, 
@@ -15,6 +15,7 @@ import GlassCard from './GlassCard';
 const { width } = Dimensions.get('window');
 
 const ServiceTracker = ({ currentStep = 2 }) => {
+  const activeColors = useActiveColors();
   const steps = [
     { id: 1, title: 'Đã đặt lịch', icon: CalendarClock },
     { id: 2, title: 'Tiếp nhận', icon: ClipboardCheck },
@@ -25,7 +26,7 @@ const ServiceTracker = ({ currentStep = 2 }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Theo dõi dịch vụ 🛠️</Text>
+      <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Theo dõi dịch vụ 🛠️</Text>
       <GlassCard style={styles.card} intensity={15}>
         <View style={styles.stepsContainer}>
           {steps.map((step, index) => {
@@ -38,19 +39,19 @@ const ServiceTracker = ({ currentStep = 2 }) => {
                 <View style={styles.iconWrapper}>
                   {isActive ? (
                     <PulseView pulseScale={1.2}>
-                      <View style={[styles.iconCircle, styles.activeCircle]}>
+                      <View style={[styles.iconCircle, styles.activeCircle, { backgroundColor: activeColors.primary, shadowColor: activeColors.primary }]}>
                         <Icon color="#fff" size={20} />
                       </View>
                     </PulseView>
                   ) : (
                     <View style={[
                       styles.iconCircle, 
-                      isCompleted ? styles.completedCircle : styles.pendingCircle
+                      isCompleted ? styles.completedCircle : [styles.pendingCircle, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }]
                     ]}>
                       {isCompleted ? (
-                        <CheckCircle2 color={Theme.colors.success} size={20} />
+                        <CheckCircle2 color={activeColors.success} size={20} />
                       ) : (
-                        <Icon color={Theme.colors.subtext} size={20} />
+                        <Icon color={activeColors.subtext} size={20} />
                       )}
                     </View>
                   )}
@@ -58,13 +59,13 @@ const ServiceTracker = ({ currentStep = 2 }) => {
                   {index < steps.length - 1 && (
                     <View style={[
                       styles.connector, 
-                      isCompleted ? styles.completedConnector : styles.pendingConnector
+                      isCompleted ? [styles.completedConnector, { backgroundColor: activeColors.success }] : [styles.pendingConnector, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }]
                     ]} />
                   )}
                 </View>
                 <Text style={[
                   styles.stepTitle, 
-                  isActive ? styles.activeText : styles.pendingText
+                  isActive ? [styles.activeText, { color: activeColors.primary }] : [styles.pendingText, { color: activeColors.subtext }]
                 ]}>
                   {step.title}
                 </Text>
@@ -73,9 +74,9 @@ const ServiceTracker = ({ currentStep = 2 }) => {
           })}
         </View>
         
-        <View style={styles.infoBox}>
-          <Text style={styles.infoLabel}>Trạng thái hiện tại:</Text>
-          <Text style={styles.infoValue}>
+        <View style={[styles.infoBox, { borderTopColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
+          <Text style={[styles.infoLabel, { color: activeColors.subtext }]}>Trạng thái hiện tại:</Text>
+          <Text style={[styles.infoValue, { color: activeColors.text }]}>
             {steps.find(s => s.id === currentStep)?.title} - Kỹ thuật viên đang kiểm tra tổng quát.
           </Text>
         </View>

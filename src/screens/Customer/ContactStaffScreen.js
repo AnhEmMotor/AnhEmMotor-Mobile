@@ -3,7 +3,7 @@ import {
   StyleSheet, Text, View, ScrollView, TextInput,
   KeyboardAvoidingView, Platform, Alert, Linking
 } from 'react-native';
-import { Theme } from '../../theme/Theme';
+import { Theme, useActiveColors } from '../../theme/Theme';
 import { ChevronLeft, Send, Mail, Phone, Clock, CheckCircle, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
@@ -41,6 +41,7 @@ const THREAD_HISTORY = [
 export default function ContactStaffScreen({ navigation }) {
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('thread');
+  const activeColors = useActiveColors();
 
   const handleSendEmail = () => {
     if (!message.trim()) {
@@ -62,30 +63,30 @@ export default function ContactStaffScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: activeColors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
       <Animated.View entering={FadeInUp.duration(500)} style={styles.header}>
-        <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={Theme.colors.text} size={24} />
+        <ScalePress style={[styles.backBtn, { backgroundColor: activeColors.card }]} onPress={() => navigation.goBack()}>
+          <ChevronLeft color={activeColors.text} size={24} />
         </ScalePress>
         <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Liên hệ nhân viên</Text>
+          <Text style={[styles.headerTitle, { color: activeColors.text }]}>Liên hệ nhân viên</Text>
           <View style={styles.onlineDot}>
             <View style={styles.dot} />
             <Text style={styles.onlineText}>Đang hoạt động</Text>
           </View>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <ScalePress style={styles.callBtn} onPress={() => Linking.openURL('tel:19001234')}>
-            <Phone color={Theme.colors.primary} size={20} />
+          <ScalePress style={[styles.callBtn, { borderColor: activeColors.isDark ? 'rgba(59,130,246,0.3)' : 'rgba(59,130,246,0.15)' }]} onPress={() => Linking.openURL('tel:19001234')}>
+            <Phone color={activeColors.primary} size={20} />
           </ScalePress>
           <ScalePress 
-            style={[styles.callBtn, { backgroundColor: Theme.colors.card, borderColor: Theme.colors.border }]} 
-            onPress={() => navigation.navigate('Profile', { openSettings: true })}
+            style={[styles.callBtn, { backgroundColor: activeColors.card, borderColor: activeColors.border }]} 
+            onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
           >
-            <Settings color={Theme.colors.text} size={20} />
+            <Settings color={activeColors.text} size={20} />
           </ScalePress>
         </View>
       </Animated.View>
@@ -93,81 +94,122 @@ export default function ContactStaffScreen({ navigation }) {
       {/* Tabs */}
       <View style={styles.tabs}>
         <ScalePress
-          style={[styles.tab, activeTab === 'thread' && styles.activeTab]}
+          style={[styles.tab, activeTab === 'thread' && { borderBottomColor: activeColors.primary }]}
           onPress={() => setActiveTab('thread')}
         >
-          <Text style={[styles.tabText, activeTab === 'thread' && styles.activeTabText]}>Lịch sử trao đổi</Text>
+          <Text style={[styles.tabText, { color: activeColors.subtext }, activeTab === 'thread' && { color: activeColors.primary }]}>Lịch sử trao đổi</Text>
         </ScalePress>
         <ScalePress
-          style={[styles.tab, activeTab === 'compose' && styles.activeTab]}
+          style={[styles.tab, activeTab === 'compose' && { borderBottomColor: activeColors.primary }]}
           onPress={() => setActiveTab('compose')}
         >
-          <Text style={[styles.tabText, activeTab === 'compose' && styles.activeTabText]}>Gửi Email mới</Text>
+          <Text style={[styles.tabText, { color: activeColors.subtext }, activeTab === 'compose' && { color: activeColors.primary }]}>Gửi Email mới</Text>
         </ScalePress>
       </View>
 
       {activeTab === 'thread' ? (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.threadList}>
-          <Text style={styles.sectionHint}>Trao đổi về: Kawasaki Z1000 - Bảo dưỡng 08/05</Text>
-          {THREAD_HISTORY.map((msg, index) => (
-            <Animated.View
-              key={msg.id}
-              entering={FadeInDown.duration(500).delay(index * 100)}
-              style={[styles.bubbleWrapper, msg.from === 'customer' && styles.bubbleRight]}
-            >
-              {msg.from === 'staff' && (
-                <View style={styles.avatarCircle}>
-                  <Text style={styles.avatarText}>AE</Text>
+          <Text style={[styles.sectionHint, { color: activeColors.subtext }]}>Trao đổi về: Kawasaki Z1000 - Bảo dưỡng 08/05</Text>
+          {THREAD_HISTORY.map((msg, index) => {
+            const isCustomer = msg.from === 'customer';
+            return (
+              <Animated.View
+                key={msg.id}
+                entering={FadeInDown.duration(500).delay(index * 100)}
+                style={[styles.bubbleWrapper, isCustomer && styles.bubbleRight]}
+              >
+                {!isCustomer && (
+                  <View style={[styles.avatarCircle, { backgroundColor: activeColors.primary }]}>
+                    <Text style={styles.avatarText}>AE</Text>
+                  </View>
+                )}
+                <View style={[
+                  styles.bubble, 
+                  isCustomer 
+                    ? [styles.customerBubble, { backgroundColor: activeColors.primary }] 
+                    : [styles.staffBubble, { backgroundColor: activeColors.card }]
+                ]}>
+                  <Text style={[
+                    styles.bubbleName, 
+                    { color: isCustomer ? 'rgba(255,255,255,0.7)' : activeColors.subtext }
+                  ]}>
+                    {msg.name}
+                  </Text>
+                  <Text style={[
+                    styles.bubbleText, 
+                    { color: isCustomer ? '#FFFFFF' : activeColors.text }
+                  ]}>
+                    {msg.message}
+                  </Text>
+                  <View style={styles.bubbleMeta}>
+                    <Clock size={10} color={isCustomer ? 'rgba(255,255,255,0.6)' : activeColors.subtext} />
+                    <Text style={[
+                      styles.bubbleTime, 
+                      { color: isCustomer ? 'rgba(255,255,255,0.5)' : activeColors.subtext }
+                    ]}>
+                      {msg.time}
+                    </Text>
+                    {isCustomer && (
+                      <CheckCircle 
+                        size={10} 
+                        color={msg.isRead ? '#10B981' : 'rgba(255,255,255,0.4)'} 
+                        style={{ marginLeft: 4 }} 
+                      />
+                    )}
+                  </View>
                 </View>
-              )}
-              <View style={[styles.bubble, msg.from === 'customer' ? styles.customerBubble : styles.staffBubble]}>
-                <Text style={styles.bubbleName}>{msg.name}</Text>
-                <Text style={styles.bubbleText}>{msg.message}</Text>
-                <View style={styles.bubbleMeta}>
-                  <Clock size={10} color="rgba(255,255,255,0.5)" />
-                  <Text style={styles.bubbleTime}>{msg.time}</Text>
-                  {msg.from === 'customer' && <CheckCircle size={10} color={msg.isRead ? Theme.colors.success : 'rgba(255,255,255,0.3)'} style={{ marginLeft: 4 }} />}
-                </View>
-              </View>
-            </Animated.View>
-          ))}
+              </Animated.View>
+            );
+          })}
           <View style={{ height: 80 }} />
         </ScrollView>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.composeContainer}>
           <Animated.View entering={FadeInDown.duration(500)}>
-            <GlassCard style={styles.recipientCard}>
-              <Mail color={Theme.colors.primary} size={18} />
+            <GlassCard 
+              style={[styles.recipientCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+              tint={activeColors.isDark ? 'dark' : 'light'}
+            >
+              <Mail color={activeColors.primary} size={18} />
               <View style={{ marginLeft: 12, flex: 1 }}>
-                <Text style={styles.recipientLabel}>Gửi đến</Text>
-                <Text style={styles.recipientEmail}>{STAFF_EMAIL}</Text>
+                <Text style={[styles.recipientLabel, { color: activeColors.subtext }]}>Gửi đến</Text>
+                <Text style={[styles.recipientEmail, { color: activeColors.primary }]}>{STAFF_EMAIL}</Text>
               </View>
             </GlassCard>
 
-            <Text style={styles.composeLabel}>Nội dung</Text>
-            <GlassCard style={styles.textAreaCard}>
+            <Text style={[styles.composeLabel, { color: activeColors.text }]}>Nội dung</Text>
+            <GlassCard 
+              style={[styles.textAreaCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+              tint={activeColors.isDark ? 'dark' : 'light'}
+            >
               <TextInput
-                style={styles.textArea}
+                style={[styles.textArea, { color: activeColors.text }]}
                 value={message}
                 onChangeText={setMessage}
                 placeholder="Nhập nội dung cần trao đổi với nhân viên AnhEmMotor..."
-                placeholderTextColor={Theme.colors.subtext}
+                placeholderTextColor={activeColors.subtext}
                 multiline
                 numberOfLines={6}
                 textAlignVertical="top"
               />
             </GlassCard>
 
-            <Text style={styles.composeLabel}>Mẫu câu hỏi nhanh</Text>
+            <Text style={[styles.composeLabel, { color: activeColors.text }]}>Mẫu câu hỏi nhanh</Text>
             {quickTemplates.map((tmpl, i) => (
               <ScalePress key={i} onPress={() => setMessage(tmpl)}>
-                <GlassCard style={styles.templateCard}>
-                  <Text style={styles.templateText}>{tmpl}</Text>
+                <GlassCard 
+                  style={[styles.templateCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+                  tint={activeColors.isDark ? 'dark' : 'light'}
+                >
+                  <Text style={[styles.templateText, { color: activeColors.subtext }]}>{tmpl}</Text>
                 </GlassCard>
               </ScalePress>
             ))}
 
-            <ScalePress style={styles.sendBtn} onPress={handleSendEmail}>
+            <ScalePress 
+              style={[styles.sendBtn, { backgroundColor: activeColors.primary }]} 
+              onPress={handleSendEmail}
+            >
               <Send color="#fff" size={18} />
               <Text style={styles.sendBtnText}>Mở ứng dụng Email & Gửi</Text>
             </ScalePress>
@@ -180,48 +222,46 @@ export default function ContactStaffScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background },
+  container: { flex: 1 },
 
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: Theme.spacing.md, marginTop: Theme.spacing.xl, marginBottom: Theme.spacing.md },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.md },
+  backBtn: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.md },
   headerCenter: { flex: 1 },
-  headerTitle: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold' },
+  headerTitle: { fontSize: 18, fontWeight: 'bold' },
   onlineDot: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Theme.colors.success, marginRight: 5 },
-  onlineText: { color: Theme.colors.success, fontSize: 11 },
-  callBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(59,130,246,0.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(59,130,246,0.3)' },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#10B981', marginRight: 5 },
+  onlineText: { color: '#10B981', fontSize: 11 },
+  callBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(59,130,246,0.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1 },
 
   tabs: { flexDirection: 'row', paddingHorizontal: Theme.spacing.md, marginBottom: Theme.spacing.md },
   tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },
-  activeTab: { borderBottomColor: Theme.colors.primary },
-  tabText: { color: Theme.colors.subtext, fontSize: 14, fontWeight: '600' },
-  activeTabText: { color: Theme.colors.primary },
+  tabText: { fontSize: 14, fontWeight: '600' },
 
   threadList: { paddingHorizontal: Theme.spacing.md },
-  sectionHint: { color: Theme.colors.subtext, fontSize: 12, textAlign: 'center', marginBottom: Theme.spacing.lg, fontStyle: 'italic' },
+  sectionHint: { fontSize: 12, textAlign: 'center', marginBottom: Theme.spacing.lg, fontStyle: 'italic' },
 
   bubbleWrapper: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: Theme.spacing.md },
   bubbleRight: { flexDirection: 'row-reverse' },
-  avatarCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginRight: 8 },
+  avatarCircle: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 8 },
   avatarText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
 
   bubble: { maxWidth: '78%', borderRadius: 18, padding: Theme.spacing.md },
-  staffBubble: { backgroundColor: Theme.colors.card, borderBottomLeftRadius: 4 },
-  customerBubble: { backgroundColor: Theme.colors.primary, borderBottomRightRadius: 4 },
-  bubbleName: { color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 'bold', marginBottom: 4 },
-  bubbleText: { color: '#fff', fontSize: 14, lineHeight: 20 },
+  staffBubble: { borderBottomLeftRadius: 4 },
+  customerBubble: { borderBottomRightRadius: 4 },
+  bubbleName: { fontSize: 11, fontWeight: 'bold', marginBottom: 4 },
+  bubbleText: { fontSize: 14, lineHeight: 20 },
   bubbleMeta: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
-  bubbleTime: { color: 'rgba(255,255,255,0.4)', fontSize: 10, marginLeft: 4 },
+  bubbleTime: { fontSize: 10, marginLeft: 4 },
 
   composeContainer: { paddingHorizontal: Theme.spacing.md },
   recipientCard: { flexDirection: 'row', alignItems: 'center', padding: Theme.spacing.md, marginBottom: Theme.spacing.md },
-  recipientLabel: { color: Theme.colors.subtext, fontSize: 11 },
-  recipientEmail: { color: Theme.colors.primary, fontSize: 14, fontWeight: 'bold' },
-  composeLabel: { color: Theme.colors.text, fontSize: 16, fontWeight: 'bold', marginVertical: Theme.spacing.sm },
+  recipientLabel: { fontSize: 11 },
+  recipientEmail: { fontSize: 14, fontWeight: 'bold' },
+  composeLabel: { fontSize: 16, fontWeight: 'bold', marginVertical: Theme.spacing.sm },
   textAreaCard: { padding: Theme.spacing.md, marginBottom: Theme.spacing.lg },
-  textArea: { color: Theme.colors.text, fontSize: 14, minHeight: 120, lineHeight: 22 },
+  textArea: { fontSize: 14, minHeight: 120, lineHeight: 22 },
   templateCard: { padding: Theme.spacing.md, marginBottom: Theme.spacing.sm, flexDirection: 'row', alignItems: 'center' },
-  templateText: { color: Theme.colors.subtext, fontSize: 13, flex: 1 },
-  sendBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.colors.primary, padding: 16, borderRadius: Theme.radius.md, marginTop: Theme.spacing.xl },
+  templateText: { fontSize: 13, flex: 1 },
+  sendBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16, borderRadius: Theme.radius.md, marginTop: Theme.spacing.xl },
   sendBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 10 },
 });

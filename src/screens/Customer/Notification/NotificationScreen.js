@@ -46,7 +46,7 @@ import { useNotification } from './useNotification';
 import { styles } from './styles';
 
 export default function NotificationScreen({ navigation }) {
-  const { themeMode } = useGlobalState();
+  const { themeMode, setSettingsOpen } = useGlobalState();
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
 
@@ -424,7 +424,7 @@ export default function NotificationScreen({ navigation }) {
           </TouchableOpacity>
           <ScalePress 
             style={[styles.backBtn, { backgroundColor: activeColors.cardBg, borderColor: activeColors.border, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }]} 
-            onPress={() => navigation.navigate('Profile', { openSettings: true })}
+            onPress={() => setSettingsOpen(true)}
           >
             <Settings color={activeColors.text} size={20} />
           </ScalePress>
@@ -452,10 +452,10 @@ export default function NotificationScreen({ navigation }) {
         contentContainerStyle={[styles.tabBarContent, { backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }]}
       >
         {[
-          { id: 'service', label: '🛠️ Dịch vụ' },
-          { id: 'loyalty', label: '🎟️ Quà tặng' },
-          { id: 'system', label: '🛡️ Hệ thống' },
-          { id: 'feedback', label: '💬 Ý kiến' },
+          { id: 'service', label: '🛠️ Tiến độ & Dịch vụ' },
+          { id: 'loyalty', label: '🎟️ Đặc quyền & Ưu đãi' },
+          { id: 'system', label: '🛡️ Hành chính & Hệ thống' },
+          { id: 'feedback', label: '💬 Ý kiến đóng góp' },
         ].map(tab => {
           const count = logic.tabUnreadCounts[tab.id];
           const isSelected = logic.activeTab === tab.id;
@@ -509,9 +509,9 @@ export default function NotificationScreen({ navigation }) {
             {logic.hasActiveWorkshop && (
               <Animated.View entering={FadeInDown.duration(500)} style={styles.workshopLiveCard}>
                 <View style={styles.workshopLiveHeader}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Wrench color="#10B981" size={18} style={{ marginRight: 6 }} />
-                    <Text style={styles.workshopLiveTitle}>Trạng thái Sửa chữa Trực tuyến</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                    <Wrench color="#10B981" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                    <Text style={[styles.workshopLiveTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Trạng thái Sửa chữa Trực tuyến</Text>
                   </View>
                   <View style={styles.livePulseBadge}>
                     <View style={styles.livePulseDot} />
@@ -598,9 +598,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 2: Nhắc lịch Bảo dưỡng Thông minh */}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.alertCard}>
               <View style={styles.alertHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CalendarClock color={Theme.colors.warning} size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.alertTitle}>Nhắc Lịch Bảo Dưỡng Thông Minh</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <CalendarClock color={Theme.colors.warning} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.alertTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Nhắc Lịch Bảo Dưỡng Thông Minh</Text>
                 </View>
                 <View style={styles.alertBadge}>
                   <Text style={styles.alertBadgeText}>KHUYÊN DÙNG</Text>
@@ -657,7 +657,7 @@ export default function NotificationScreen({ navigation }) {
 
                   <View style={styles.historyFooter}>
                     <Text style={[styles.historyCost, { color: activeColors.subtext }]}>Hóa đơn: <Text style={{fontWeight: 'bold', color: '#10B981'}}>{item.cost}</Text></Text>
-                    <Text style={[styles.historyWarranty, { color: activeColors.subtext }]}>BH phụ tùng: {item.warranty}</Text>
+                    <Text style={[styles.historyWarranty, { color: activeColors.subtext }]}>🛡️ BH phụ tùng: {item.warranty}</Text>
                   </View>
                 </View>
               ))}
@@ -668,9 +668,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 1: Loyalty Member Card */}
             <Animated.View entering={FadeInDown.duration(500)} style={styles.loyaltyMemberCard}>
               <View style={styles.loyaltyMemberHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Gift color="#A855F7" size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.loyaltyMemberTitle}>Hạng Thành Viên Đặc Quyền</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <Gift color="#A855F7" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.loyaltyMemberTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Hạng Thành Viên Đặc Quyền</Text>
                 </View>
                 <View style={styles.goldBadge}>
                   <Text style={styles.goldBadgeText}>GOLD MEMBER</Text>
@@ -692,7 +692,7 @@ export default function NotificationScreen({ navigation }) {
                 </GlassCard>
               </View>
 
-              <Text style={styles.loyaltyMemberDesc}>
+              <Text style={[styles.loyaltyMemberDesc, { color: activeColors.text }]}>
                 Chúc mừng Anh Khôi đã chính thức thăng hạng lên <Text style={{fontWeight: 'bold', color: '#A855F7'}}>GOLD MEMBER</Text> sau kỳ bảo dưỡng vừa qua. Khám phá ngay các đặc quyền mới dành riêng cho bạn!
               </Text>
 
@@ -707,9 +707,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 2: Active Voucher Card */}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.loyaltyVoucherCard}>
               <View style={styles.loyaltyVoucherHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Gift color={Theme.colors.primary} size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.loyaltyVoucherTitle}>Voucher Đang Kích Hoạt</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <Gift color={Theme.colors.primary} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.loyaltyVoucherTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Voucher Đang Kích Hoạt</Text>
                 </View>
                 <View style={styles.voucherUrgentBadge}>
                   <Text style={styles.voucherUrgentBadgeText}>SẮP HẾT HẠN (3 ngày)</Text>
@@ -723,11 +723,11 @@ export default function NotificationScreen({ navigation }) {
                 </View>
                 <View style={styles.dashedVoucherRight}>
                   <Text style={[styles.voucherNameTitle, { color: activeColors.text }]}>Voucher đổi xe SH</Text>
-                  <Text style={styles.voucherCodeLabel}>MÃ: SH-GOLD-2M</Text>
+                  <Text style={[styles.voucherCodeLabel, { color: activeColors.subtext }]}>MÃ: SH-GOLD-2M</Text>
                 </View>
               </View>
 
-              <Text style={styles.loyaltyVoucherDesc}>
+              <Text style={[styles.loyaltyVoucherDesc, { color: activeColors.text }]}>
                 Voucher [Ưu đãi đặc quyền đổi xe SH - Giảm 2 Triệu] của bạn sẽ hết hạn trong 3 ngày nữa. Đừng bỏ lỡ!
               </Text>
 
@@ -742,9 +742,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 3: Birthday Gift Card */}
             <Animated.View entering={FadeInDown.duration(500).delay(200)} style={styles.loyaltyBirthdayCard}>
               <View style={styles.loyaltyBirthdayHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Gift color="#EC4899" size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.loyaltyBirthdayTitle}>Quà Tặng Sinh Nhật</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <Gift color="#EC4899" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.loyaltyBirthdayTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Quà Tặng Sinh Nhật</Text>
                 </View>
                 <View style={styles.birthdayBadge}>
                   <Text style={styles.birthdayBadgeText}>HAPPY BDAY 🎉</Text>
@@ -753,10 +753,10 @@ export default function NotificationScreen({ navigation }) {
 
               <View style={[styles.birthdayGiftBox, { backgroundColor: isDark ? 'rgba(236, 72, 153, 0.08)' : 'rgba(236, 72, 153, 0.04)', borderColor: isDark ? 'rgba(236, 72, 153, 0.1)' : 'rgba(236, 72, 153, 0.2)' }]}>
                 <Text style={[styles.birthdayGiftTitle, { color: activeColors.text }]}>Miễn phí thay nhớt máy tháng sinh nhật 🎂</Text>
-                <Text style={styles.birthdayGiftSub}>Dành riêng cho chủ xe SH 160i</Text>
+                <Text style={[styles.birthdayGiftSub, { color: activeColors.subtext }]}>Dành riêng cho chủ xe SH 160i</Text>
               </View>
 
-              <Text style={styles.loyaltyBirthdayDesc}>
+              <Text style={[styles.loyaltyBirthdayDesc, { color: activeColors.text }]}>
                 AnhEmMotor gửi tặng bạn Voucher thay nhớt hoàn toàn miễn phí trong tháng này.
               </Text>
 
@@ -771,9 +771,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 4: Referral Card */}
             <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.loyaltyReferralCard}>
               <View style={styles.loyaltyReferralHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Gift color="#3B82F6" size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.loyaltyReferralTitle}>Đồng Hành Giới Thiệu Xe</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <Gift color="#3B82F6" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.loyaltyReferralTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Đồng Hành Giới Thiệu Xe</Text>
                 </View>
                 <View style={styles.referralActiveBadge}>
                   <Text style={styles.referralActiveBadgeText}>MÃ CỦA BẠN</Text>
@@ -785,7 +785,7 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={[styles.referralCodeSubText, { color: activeColors.subtext }]}>Nhận 500.000đ dịch vụ khi bạn bè mua xe thành công</Text>
               </View>
 
-              <Text style={styles.loyaltyReferralDesc}>
+              <Text style={[styles.loyaltyReferralDesc, { color: activeColors.text }]}>
                 Gửi mã giới thiệu của bạn cho bạn bè mua xe tại AnhEmMotor để cả hai cùng nhận Voucher 500.000đ dịch vụ.
               </Text>
 
@@ -802,16 +802,16 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 1: Recall safety */}
             <Animated.View entering={FadeInDown.duration(500)} style={styles.systemRecallCard}>
               <View style={styles.systemRecallHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <AlertTriangle color={Theme.colors.error} size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.systemRecallTitle}>Thông báo Triệu hồi Kỹ thuật</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <AlertTriangle color={Theme.colors.error} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.systemRecallTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Thông báo Triệu hồi Kỹ thuật</Text>
                 </View>
                 <View style={styles.recallUrgentBadge}>
                   <Text style={styles.recallUrgentBadgeText}>KHẨN CẤP ⚠️</Text>
                 </View>
               </View>
 
-              <Text style={styles.systemRecallDesc}>
+              <Text style={[styles.systemRecallDesc, { color: activeColors.text }]}>
                 Thông báo từ <Text style={{fontWeight: 'bold', color: activeColors.text}}>Honda Việt Nam</Text>: Triệu hồi và cập nhật miễn phí cụm khóa Smartkey cho các dòng xe SH sản xuất trong giai đoạn đầu năm 2025 để nâng cấp bảo mật. Hãy đặt lịch hẹn sớm nhất tại đại lý gần nhất.
               </Text>
 
@@ -826,16 +826,16 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 2: Insurance expired */}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.systemInsuranceCard}>
               <View style={styles.systemInsuranceHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <ShieldCheck color={Theme.colors.warning} size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.systemInsuranceTitle}>Hạn Bảo Hiểm Dân Sự Xe</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <ShieldCheck color={Theme.colors.warning} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.systemInsuranceTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Hạn Bảo Hiểm Dân Sự Xe</Text>
                 </View>
                 <View style={styles.insuranceWarningBadge}>
                   <Text style={styles.insuranceWarningBadgeText}>SẮP HẾT HẠN</Text>
                 </View>
               </View>
 
-              <Text style={styles.systemInsuranceDesc}>
+              <Text style={[styles.systemInsuranceDesc, { color: activeColors.text }]}>
                 Bảo hiểm dân sự bắt buộc của xe <Text style={{fontWeight: 'bold', color: activeColors.text}}>60-A1 555.55</Text> sẽ hết hạn vào ngày <Text style={{fontWeight: 'bold', color: Theme.colors.warning}}>20/05/2026</Text>. Hãy gia hạn trực tuyến để tránh bị phạt khi lưu thông trên đường.
               </Text>
 
@@ -850,9 +850,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 3: e-Invoice */}
             <Animated.View entering={FadeInDown.duration(500).delay(200)} style={styles.systemInvoiceCard}>
               <View style={styles.systemInvoiceHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <FileText color="#10B981" size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.systemInvoiceTitle}>Hóa đơn e-Invoice sẵn sàng</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <FileText color="#10B981" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.systemInvoiceTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Hóa đơn e-Invoice sẵn sàng</Text>
                 </View>
                 <View style={styles.invoiceGreenBadge}>
                   <Text style={styles.invoiceGreenBadgeText}>ĐÃ XUẤT 🧾</Text>
@@ -861,16 +861,16 @@ export default function NotificationScreen({ navigation }) {
 
               <View style={[styles.invoiceSummaryBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderColor: activeColors.border }]}>
                 <View style={styles.invoiceSummaryRow}>
-                  <Text style={styles.invoiceSummaryLabel}>Mã hóa đơn:</Text>
+                  <Text style={[styles.invoiceSummaryLabel, { color: activeColors.subtext }]}>Mã hóa đơn:</Text>
                   <Text style={[styles.invoiceSummaryVal, { color: activeColors.text }]}>#AEM-9982</Text>
                 </View>
                 <View style={styles.invoiceSummaryRow}>
-                  <Text style={styles.invoiceSummaryLabel}>Tổng thanh toán:</Text>
+                  <Text style={[styles.invoiceSummaryLabel, { color: activeColors.subtext }]}>Tổng thanh toán:</Text>
                   <Text style={[styles.invoiceSummaryVal, { color: '#10B981' }]}>105.000.000đ</Text>
                 </View>
               </View>
 
-              <Text style={styles.systemInvoiceDesc}>
+              <Text style={[styles.systemInvoiceDesc, { color: activeColors.text }]}>
                 Giao dịch thành công! Hóa đơn điện tử (e-Invoice) cho đơn hàng mua xe Honda SH của bạn đã được xuất thành công trên hệ thống của Tổng cục Thuế.
               </Text>
 
@@ -885,16 +885,16 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 5: Security login */}
             <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.systemSecurityCard}>
               <View style={styles.systemSecurityHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Lock color={Theme.colors.error} size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.systemSecurityTitle}>Cảnh báo Đăng nhập lạ</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <Lock color={Theme.colors.error} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.systemSecurityTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Cảnh báo Đăng nhập lạ</Text>
                 </View>
                 <View style={styles.securityAlertBadge}>
                   <Text style={styles.securityAlertBadgeText}>NGUY HIỂM 🔒</Text>
                 </View>
               </View>
 
-              <Text style={styles.systemSecurityDesc}>
+              <Text style={[styles.systemSecurityDesc, { color: activeColors.text }]}>
                 Phát hiện thiết bị lạ đăng nhập tài khoản của bạn tại <Text style={{fontWeight: 'bold', color: Theme.colors.error}}>Biên Hòa lúc 08:30</Text>. Nếu không phải hành động của bạn, hãy khẩn cấp đổi mật khẩu để bảo vệ tài khoản.
               </Text>
 
@@ -911,9 +911,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 1: Feedback resolved */}
             <Animated.View entering={FadeInDown.duration(500)} style={styles.systemFeedbackCard}>
               <View style={styles.systemFeedbackHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <MessageSquare color="#3B82F6" size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.systemFeedbackTitle}>Phản hồi Ý kiến Đóng góp</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <MessageSquare color="#3B82F6" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.systemFeedbackTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Phản hồi Ý kiến Đóng góp</Text>
                 </View>
                 <View style={styles.feedbackBlueBadge}>
                   <Text style={styles.feedbackBlueBadgeText}>ĐÃ GIẢI QUYẾT</Text>
@@ -926,7 +926,7 @@ export default function NotificationScreen({ navigation }) {
                 </Text>
               </View>
 
-              <Text style={styles.systemFeedbackDesc}>
+              <Text style={[styles.systemFeedbackDesc, { color: activeColors.text }]}>
                 Ban quản lý showroom đã chính thức phản hồi về góp ý của bạn ngày 15/05. Nhấn nút để xem toàn bộ nội dung cam kết chất lượng.
               </Text>
 
@@ -941,9 +941,9 @@ export default function NotificationScreen({ navigation }) {
             {/* Block 2: Feedback clean car delay resolved */}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={[styles.systemFeedbackCard, { borderColor: 'rgba(16, 185, 129, 0.15)', backgroundColor: 'rgba(16, 185, 129, 0.03)' }]}>
               <View style={styles.systemFeedbackHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <MessageSquare color="#10B981" size={18} style={{ marginRight: 6 }} />
-                  <Text style={[styles.systemFeedbackTitle, { color: '#10B981' }]}>Góp ý về khu vực rửa xe</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                  <MessageSquare color="#10B981" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Text style={[styles.systemFeedbackTitle, { color: '#10B981', flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Góp ý về khu vực rửa xe</Text>
                 </View>
                 <View style={[styles.feedbackBlueBadge, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
                   <Text style={[styles.feedbackBlueBadgeText, { color: '#10B981' }]}>TẶNG VOUCHER 🧼</Text>
@@ -956,7 +956,7 @@ export default function NotificationScreen({ navigation }) {
                 </Text>
               </View>
 
-              <Text style={styles.systemFeedbackDesc}>
+              <Text style={[styles.systemFeedbackDesc, { color: activeColors.text }]}>
                 Cảm ơn bạn đã đóng góp ý kiến về dịch vụ rửa xe sạch tại chi nhánh Biên Hòa. Đại lý đã ghi nhận và gửi tặng anh mã voucher rửa xe hoàn toàn miễn phí.
               </Text>
 

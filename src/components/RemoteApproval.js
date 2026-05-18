@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { Theme } from '../theme/Theme';
+import { Theme, useActiveColors } from '../theme/Theme';
 import { Check, X, Info, FileText } from 'lucide-react-native';
 import GlassCard from './GlassCard';
 
 const RemoteApproval = ({ items: initialItems, onComplete }) => {
+  const activeColors = useActiveColors();
   const [items, setItems] = useState(initialItems || [
     { id: '1', name: 'Nhớt máy Castrol Power1', price: 450000, status: 'pending', urgent: true },
     { id: '2', name: 'Lọc nhớt chính hãng', price: 150000, status: 'pending', urgent: true },
@@ -29,8 +30,8 @@ const RemoteApproval = ({ items: initialItems, onComplete }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <FileText color={Theme.colors.primary} size={20} />
-        <Text style={styles.title}>Báo giá & Phê duyệt 📝</Text>
+        <FileText color={activeColors.primary} size={20} />
+        <Text style={[styles.title, { color: activeColors.text }]}>Báo giá & Phê duyệt 📝</Text>
       </View>
       
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
@@ -38,44 +39,44 @@ const RemoteApproval = ({ items: initialItems, onComplete }) => {
           <GlassCard key={item.id} style={styles.itemCard} intensity={item.status === 'rejected' ? 5 : 15}>
             <View style={styles.itemInfo}>
               <View style={styles.itemNameRow}>
-                <Text style={[styles.itemName, item.status === 'rejected' && styles.rejectedText]}>{item.name}</Text>
+                <Text style={[styles.itemName, { color: activeColors.text }, item.status === 'rejected' && [styles.rejectedText, { color: activeColors.subtext }]]}>{item.name}</Text>
                 {item.urgent && (
                   <View style={styles.urgentBadge}>
-                    <Text style={styles.urgentText}>CẦN THIẾT</Text>
+                    <Text style={[styles.urgentText, { color: activeColors.secondary }]}>CẦN THIẾT</Text>
                   </View>
                 )}
               </View>
-              <Text style={styles.itemPrice}>{formatCurrency(item.price)}</Text>
+              <Text style={[styles.itemPrice, { color: activeColors.primary }]}>{formatCurrency(item.price)}</Text>
             </View>
             
-            <View style={styles.actionRow}>
+            <View style={[styles.actionRow, { borderTopColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
               <TouchableOpacity 
-                style={[styles.actionBtn, item.status === 'rejected' && styles.activeReject]} 
+                style={[styles.actionBtn, item.status === 'rejected' && [styles.activeReject, { backgroundColor: activeColors.secondary }]]} 
                 onPress={() => toggleStatus(item.id, 'rejected')}
               >
-                <X color={item.status === 'rejected' ? '#fff' : Theme.colors.subtext} size={18} />
-                <Text style={[styles.actionText, item.status === 'rejected' && styles.activeLabel]}>Từ chối</Text>
+                <X color={item.status === 'rejected' ? '#fff' : activeColors.subtext} size={18} />
+                <Text style={[styles.actionText, { color: activeColors.subtext }, item.status === 'rejected' && styles.activeLabel]}>Từ chối</Text>
               </TouchableOpacity>
               
               <TouchableOpacity 
-                style={[styles.actionBtn, item.status === 'approved' && styles.activeApprove]} 
+                style={[styles.actionBtn, item.status === 'approved' && [styles.activeApprove, { backgroundColor: activeColors.success }]]} 
                 onPress={() => toggleStatus(item.id, 'approved')}
               >
-                <Check color={item.status === 'approved' ? '#fff' : Theme.colors.subtext} size={18} />
-                <Text style={[styles.actionText, item.status === 'approved' && styles.activeLabel]}>Đồng ý</Text>
+                <Check color={item.status === 'approved' ? '#fff' : activeColors.subtext} size={18} />
+                <Text style={[styles.actionText, { color: activeColors.subtext }, item.status === 'approved' && styles.activeLabel]}>Đồng ý</Text>
               </TouchableOpacity>
             </View>
           </GlassCard>
         ))}
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { borderTopColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
         <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Tổng cộng dự tính:</Text>
-          <Text style={styles.totalValue}>{formatCurrency(calculateTotal())}</Text>
+          <Text style={[styles.totalLabel, { color: activeColors.subtext }]}>Tổng cộng dự tính:</Text>
+          <Text style={[styles.totalValue, { color: activeColors.text }]}>{formatCurrency(calculateTotal())}</Text>
         </View>
         <TouchableOpacity 
-          style={styles.submitBtn}
+          style={[styles.submitBtn, { backgroundColor: activeColors.primary }]}
           onPress={() => onComplete?.(items)}
         >
           <Text style={styles.submitText}>Xác nhận tất cả</Text>

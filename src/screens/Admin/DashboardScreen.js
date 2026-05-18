@@ -212,7 +212,7 @@ export default function DashboardScreen({ navigation }) {
                   <Circle 
                     cx={size/2} cy={size/2} r={radius} 
                     fill="transparent" stroke="#06B6D4" strokeWidth={strokeWidth}
-                    strokeDasharray={circumference} strokeDashoffset={segment1Offset - segment1Stroke}
+                    strokeDasharray={[segment1Stroke, circumference]} strokeDashoffset={segment1Offset - segment1Stroke}
                     strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`}
                   />
                   
@@ -220,7 +220,7 @@ export default function DashboardScreen({ navigation }) {
                   <Circle 
                     cx={size/2} cy={size/2} r={radius} 
                     fill="transparent" stroke="#F97316" strokeWidth={strokeWidth}
-                    strokeDasharray={circumference} strokeDashoffset={segment2Offset - segment2Stroke}
+                    strokeDasharray={[segment2Stroke, circumference]} strokeDashoffset={segment2Offset - segment2Stroke}
                     strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`}
                   />
                   
@@ -228,7 +228,7 @@ export default function DashboardScreen({ navigation }) {
                   <Circle 
                     cx={size/2} cy={size/2} r={radius} 
                     fill="transparent" stroke="#A855F7" strokeWidth={strokeWidth}
-                    strokeDasharray={circumference} strokeDashoffset={segment3Offset - segment3Stroke}
+                    strokeDasharray={[segment3Stroke, circumference]} strokeDashoffset={segment3Offset - segment3Stroke}
                     strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`}
                   />
 
@@ -236,7 +236,7 @@ export default function DashboardScreen({ navigation }) {
                   <Circle 
                     cx={size/2} cy={size/2} r={radius} 
                     fill="transparent" stroke="#10B981" strokeWidth={strokeWidth}
-                    strokeDasharray={circumference} strokeDashoffset={segment4Offset - segment4Stroke}
+                    strokeDasharray={[segment4Stroke, circumference]} strokeDashoffset={segment4Offset - segment4Stroke}
                     strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`}
                   />
                 </Svg>
@@ -501,12 +501,12 @@ const styles = StyleSheet.create({
   chartContainer: { marginBottom: 16 },
   glassChartCard: { padding: 16 },
   chartTitle: { color: Theme.colors.text, fontSize: 14, fontWeight: '600', marginBottom: 16 },
-  doughnutRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  doughnutRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   doughnutWrapper: { width: 150, height: 150, justifyContent: 'center', alignItems: 'center' },
-  doughnutCenter: { position: 'absolute', width: 90, height: 90, borderRadius: 45, backgroundColor: '#0B0F19', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.03)' },
+  doughnutCenter: { position: 'absolute', top: 30, left: 30, width: 90, height: 90, borderRadius: 45, backgroundColor: '#0B0F19', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.03)' },
   centerValue: { color: Theme.colors.text, fontSize: 16, fontWeight: 'bold' },
   centerLabel: { color: Theme.colors.subtext, fontSize: 8, marginTop: 2, letterSpacing: 0.5 },
-  legendContainer: { flex: 1, marginLeft: 16 },
+  legendContainer: { marginLeft: 32 },
   legendItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
   legendDot: { width: 8, height: 8, borderRadius: 0, marginRight: 8 },
   legendText: { color: Theme.colors.text, fontSize: 11, fontWeight: '500' },

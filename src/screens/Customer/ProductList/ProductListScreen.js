@@ -34,7 +34,7 @@ export default function ProductListScreen({ route, navigation }) {
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.cartBtn, { padding: 8, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }]} 
-            onPress={() => navigation.navigate('Profile', { openSettings: true })}
+            onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
           >
             <Settings color={activeColors.text} size={24} />
           </TouchableOpacity>

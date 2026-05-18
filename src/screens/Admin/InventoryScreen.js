@@ -35,7 +35,12 @@ import Animated, {
 import { useNavigation } from '@react-navigation/native';
 
 export default function InventoryScreen() {
-  const navigation = useNavigation();
+  let navigation;
+  try {
+    navigation = useNavigation();
+  } catch (e) {
+    navigation = null;
+  }
   const [activeSubTab, setActiveSubTab] = useState('bikes'); // 'bikes' or 'parts'
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedBikeId, setExpandedBikeId] = useState('1'); // Default expand first bike matrix
@@ -152,12 +157,12 @@ export default function InventoryScreen() {
       {/* HEADER */}
       <Animated.View entering={FadeInUp.duration(800)} style={styles.header}>
         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-          {navigation.canGoBack && (
+          {navigation && navigation.canGoBack && (
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
               <ChevronLeft color={Theme.colors.text} size={20} />
             </TouchableOpacity>
           )}
-          <View style={{ flex: 1, marginLeft: navigation.canGoBack ? 12 : 0 }}>
+          <View style={{ flex: 1, marginLeft: navigation && navigation.canGoBack ? 12 : 0 }}>
             <Text style={styles.title}>Quản Lý Kho 📦</Text>
             <Pressable style={styles.syncRow} onPress={handleSync}>
               <RefreshCcw color={syncing ? Theme.colors.primary : Theme.colors.success} size={12} />

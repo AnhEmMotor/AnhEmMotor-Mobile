@@ -12,10 +12,12 @@ import { Theme, useActiveColors } from '../../../theme/Theme';
 import { moderateScale } from '../../../utils/responsive';
 import { Search, Filter, Camera, Sparkles, ChevronRight, Settings } from 'lucide-react-native';
 import Skeleton from '../../../components/Skeleton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown, FadeInUp, useAnimatedStyle } from 'react-native-reanimated';
 import ScalePress from '../../../components/ScalePress';
 import { styles } from './styles';
 import { useCatalog } from './useCatalog';
+import { useGlobalState } from '../../../context/GlobalState';
 
 /**
  * @file CatalogScreen.js
@@ -51,13 +53,14 @@ export default function CatalogScreen({ navigation }) {
   } = useCatalog();
 
   const activeColors = useActiveColors();
+  const { setSettingsOpen } = useGlobalState();
 
   const scanStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: scanPos.value }]
   }));
 
   return (
-    <View style={[styles.container, { backgroundColor: activeColors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
       <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
         <View style={[styles.searchContainer, { backgroundColor: activeColors.card }]}>
           <Search color={activeColors.subtext} size={moderateScale(20)} />
@@ -77,19 +80,13 @@ export default function CatalogScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.filterBtn, { marginLeft: moderateScale(8) }]} 
-          onPress={() => navigation.navigate('Profile', { openSettings: true })}
+          onPress={() => setSettingsOpen(true)}
         >
           <Settings color="#fff" size={moderateScale(20)} />
         </TouchableOpacity>
       </Animated.View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-        <Animated.View entering={FadeInUp.duration(600).delay(150)}>
-          <ScalePress style={styles.aiBanner} onPress={handleAiSearch}>
-            <Sparkles color="#F59E0B" size={moderateScale(16)} />
-            <Text style={styles.aiBannerText}>AI đang phân tích phụ tùng tương thích với xe bạn</Text>
-          </ScalePress>
-        </Animated.View>
 
         <View style={styles.filterSection}>
           <Text style={[styles.filterGroupTitle, { color: activeColors.text }]}>Danh mục sản phẩm</Text>
@@ -195,6 +192,6 @@ export default function CatalogScreen({ navigation }) {
           </Animated.View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }

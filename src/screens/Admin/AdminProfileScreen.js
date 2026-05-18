@@ -78,7 +78,7 @@ export default function AdminProfileScreen({ navigation }) {
       </Animated.View>
 
       <Animated.View entering={FadeInDown.duration(800).delay(600)}>
-        <TouchableOpacity style={styles.logoutBtn} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Login' }] })}>
           <LogOut color={Theme.colors.secondary} size={20} />
           <Text style={styles.logoutText}>Đăng xuất khỏi hệ thống</Text>
         </TouchableOpacity>

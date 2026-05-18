@@ -8,17 +8,17 @@ export const styles = StyleSheet.create({
   scrollContent: { padding: Theme.spacing.lg },
   header: { marginTop: Theme.spacing.xl + 20, marginBottom: 30, flexDirection: 'row', alignItems: 'center' },
   backBtn: { marginRight: 15, padding: 8, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 12 },
-  title: { color: Theme.colors.text, fontSize: 32, fontWeight: '900', letterSpacing: -0.5 },
-  subtitle: { color: Theme.colors.subtext, fontSize: 15, marginTop: 6, fontWeight: '500' },
+  title: { color: Theme.colors.text, fontSize: 22, fontWeight: '900', letterSpacing: -0.5 },
+  subtitle: { color: Theme.colors.subtext, fontSize: 13, marginTop: 4, fontWeight: '500' },
   
   profileSection: { marginBottom: 30 },
   bikeHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  bikeInfo: { flex: 1 },
-  bikeName: { color: '#FFFFFF', fontSize: 28, fontWeight: '900', letterSpacing: -0.5 },
-  bikePlate: { color: Theme.colors.primary, fontSize: 18, fontWeight: '600', marginTop: 4 },
+  bikeInfo: { flex: 1, marginRight: 15 },
+  bikeName: { color: '#FFFFFF', fontSize: 20, fontWeight: '900', letterSpacing: -0.5 },
+  bikePlate: { color: Theme.colors.primary, fontSize: 14, fontWeight: '600', marginTop: 2 },
   
   bikeImageContainer: { position: 'relative' },
-  bikeThumb: { width: 110, height: 110, borderRadius: 25, backgroundColor: 'rgba(255,255,255,0.05)' },
+  bikeThumb: { width: 110, height: 110 },
   qrBadge: { position: 'absolute', right: -5, bottom: -5, backgroundColor: Theme.colors.primary, padding: 8, borderRadius: 12, borderWidth: 3, borderColor: Theme.colors.background },
 
   statusBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(16, 185, 129, 0.12)', alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10, marginTop: 15 },

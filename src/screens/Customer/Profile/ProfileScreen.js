@@ -45,7 +45,8 @@ import {
   CheckCircle,
   CreditCard,
   CircleDollarSign,
-  Map
+  Map,
+  PlusCircle
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassCard from '../../../components/GlassCard';
@@ -61,6 +62,7 @@ import CustomBottomSheet from '../../../components/CustomBottomSheet';
 import { styles } from './styles';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 import { useProfileController, MOCK_REGIONS } from '../../../features/profile/presentation/controller/useProfileController';
+import { useGlobalState } from '../../../context/GlobalState';
 
 /**
  * @file ProfileScreen.js
@@ -77,6 +79,7 @@ export default function ProfileScreen({ navigation, route }) {
     avatarModal,
     setAvatarModal,
     activeField,
+    setActiveField,
     tempData,
     setTempData,
     passwordForm,
@@ -99,7 +102,7 @@ export default function ProfileScreen({ navigation, route }) {
 
   useEffect(() => {
     if (route?.params?.openSettings) {
-      setSettingsModalVisible(true);
+      setSettingsOpen(true);
       navigation.setParams({ openSettings: undefined });
     }
   }, [route?.params?.openSettings]);
@@ -111,6 +114,7 @@ export default function ProfileScreen({ navigation, route }) {
   // 🌈 Dynamic Unified System-wide Theme Detection
   const themeColors = useActiveColors();
   const isDark = themeColors.isDark;
+  const { setSettingsOpen } = useGlobalState();
 
   const activeColors = {
     ...themeColors,
@@ -758,7 +762,7 @@ export default function ProfileScreen({ navigation, route }) {
       {/* 📱 1. Phần Đỉnh Trang (Header & Top Bar) */}
       <View style={[styles.topBar, { backgroundColor: activeColors.background, borderBottomColor: activeColors.border }]}>
         <Text style={[styles.topBarTitle, { color: activeColors.text }]}>HỒ SƠ CỦA TÔI</Text>
-        <TouchableOpacity style={[styles.settingsIconWrapper, { backgroundColor: activeColors.settingsIconBg, borderColor: activeColors.settingsIconBorder }]} onPress={() => setSettingsModalVisible(true)}>
+        <TouchableOpacity style={[styles.settingsIconWrapper, { backgroundColor: activeColors.settingsIconBg, borderColor: activeColors.settingsIconBorder }]} onPress={() => setSettingsOpen(true)}>
           <Settings color={activeColors.text} size={22} />
         </TouchableOpacity>
       </View>
@@ -819,7 +823,7 @@ export default function ProfileScreen({ navigation, route }) {
           
           <View style={styles.shopeeRow}>
             {/* Đặt lịch */}
-            <TouchableOpacity style={styles.shopeeCol} onPress={() => navigation.navigate('BookingScreen')}>
+            <TouchableOpacity style={styles.shopeeCol} onPress={() => navigation.navigate('Booking')}>
               <View style={[styles.iconCircle, { backgroundColor: activeColors.settingsIconBg, borderColor: activeColors.settingsIconBorder }]}>
                 <FileText color={Theme.colors.primary} size={22} />
               </View>
@@ -915,14 +919,28 @@ export default function ProfileScreen({ navigation, route }) {
             </TouchableOpacity>
 
             {/* Nhà xe của tôi */}
-            <TouchableOpacity style={[styles.settingRow, { borderBottomColor: activeColors.border }]} onPress={() => Alert.alert('Nhà xe của tôi 🏍️', 'Danh sách xe sở hữu:\n1. Honda SH 160i (Biển số: 60-A1 555.55)\n2. Yamaha Exciter 155 (Biển số: 60-F2 888.88)\n\nBạn có thể thêm xe mới bằng cách đăng ký trực tiếp tại xưởng dịch vụ.')}>
+            <TouchableOpacity style={[styles.settingRow, { borderBottomColor: activeColors.border }]} onPress={() => navigation.navigate('MyVehicles')}>
               <View style={[styles.settingInfo, { flexDirection: 'row', alignItems: 'center' }]}>
                 <View style={[styles.listIconCircle, { backgroundColor: activeColors.listIconBg }]}>
                   <MapPin color="#10B981" size={16} />
                 </View>
                 <View style={{ flex: 1, marginRight: 8 }}>
                   <Text style={[styles.settingTitle, { color: activeColors.text }]}>Nhà xe của tôi (My Garage)</Text>
-                  <Text style={[styles.settingDesc, { color: activeColors.subtext }]} numberOfLines={1} ellipsizeMode="tail">Xe sở hữu: SH 160i • 60-A1 555.55</Text>
+                  <Text style={[styles.settingDesc, { color: activeColors.subtext }]} numberOfLines={1} ellipsizeMode="tail">Quản lý và chuyển đổi nhanh giữa các xe đang sở hữu</Text>
+                </View>
+              </View>
+              <ChevronRight color={activeColors.subtext} size={18} />
+            </TouchableOpacity>
+
+            {/* Đăng ký thêm xe mới */}
+            <TouchableOpacity style={[styles.settingRow, { borderBottomColor: activeColors.border }]} onPress={() => navigation.navigate('MyVehicles', { openAddModal: true })}>
+              <View style={[styles.settingInfo, { flexDirection: 'row', alignItems: 'center' }]}>
+                <View style={[styles.listIconCircle, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
+                  <PlusCircle color="#10B981" size={16} />
+                </View>
+                <View style={{ flex: 1, marginRight: 8 }}>
+                  <Text style={[styles.settingTitle, { color: activeColors.text }]}>Đăng ký thêm xe mới 🏍️</Text>
+                  <Text style={[styles.settingDesc, { color: activeColors.subtext }]} numberOfLines={1} ellipsizeMode="tail">Thêm xe mới vào hệ thống bảo dưỡng thông minh</Text>
                 </View>
               </View>
               <ChevronRight color={activeColors.subtext} size={18} />

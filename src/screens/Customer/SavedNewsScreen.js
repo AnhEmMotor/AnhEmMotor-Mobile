@@ -43,7 +43,7 @@ export default function SavedNewsScreen({ navigation }) {
           <ChevronLeft color="#fff" size={28} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Tin đã lưu</Text>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}>
           <Settings color="#fff" size={22} />
         </TouchableOpacity>
       </View>

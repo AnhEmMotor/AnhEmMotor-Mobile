@@ -158,11 +158,11 @@ export default function VehicleDetailScreen({ navigation, route }) {
         </View>
         <View style={styles.resultRow}>
           <Text style={[styles.resultLabel, { color: activeColors.subtext }]}>Khoản vay giải ngân</Text>
-          <Text style={{ color: activeColors.text, fontWeight: 'bold' }}>{logic.financeResults.loanAmount.toLocaleString()} đ</Text>
+          <Text style={{ color: activeColors.text, fontWeight: 'bold', textAlign: 'right' }}>{logic.financeResults.loanAmount.toLocaleString()} đ</Text>
         </View>
         <View style={styles.resultRow}>
           <Text style={[styles.resultLabel, { color: activeColors.subtext }]}>Chênh lệch tổng chi phí</Text>
-          <Text style={{ color: activeColors.warning, fontSize: 12 }}>+ 12.500.000đ so với trả thẳng</Text>
+          <Text style={{ color: activeColors.warning, fontSize: 12, fontWeight: '600', textAlign: 'right' }}>+ 12.500.000đ so với trả thẳng</Text>
         </View>
       </View>
  
@@ -310,7 +310,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
           <View style={styles.titleRow}>
             <View style={{ flex: 1 }}>
               <Text style={[styles.name, { color: activeColors.text }]}>{motor?.name || 'Motorcycle'}</Text>
-              <Text style={[styles.category, { color: activeColors.subtext }]}>{motor?.brand} • Phiên bản Thể thao</Text>
+              <Text style={[styles.category, { color: activeColors.isDark ? '#CBD5E1' : '#475569' }]}>{motor?.brand || 'Yamaha'} • Phiên bản Thể thao</Text>
             </View>
             <View style={styles.priceContainer}>
               <Text style={[styles.price, { color: activeColors.primary }]}>{motor?.price}</Text>

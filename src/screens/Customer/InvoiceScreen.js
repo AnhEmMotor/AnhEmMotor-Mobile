@@ -71,7 +71,7 @@ export default function InvoiceScreen({ navigation }) {
           <ChevronLeft color={Theme.colors.text} size={24} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Hóa đơn & Chi tiêu 🧾</Text>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}>
           <Settings color={Theme.colors.text} size={24} />
         </TouchableOpacity>
       </Animated.View>

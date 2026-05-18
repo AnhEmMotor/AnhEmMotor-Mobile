@@ -1,45 +1,35 @@
-import { 
-  Bell, Calendar, Wrench, AlertTriangle, ShieldAlert, 
-  Ticket, QrCode, ArrowRight, Book, List, Droplets, 
-  HelpCircle, ChevronRight 
-} from 'lucide-react-native';
-
 export const shortcuts = [
-  { id: 1, title: 'Sổ bảo hành', icon: Book, screen: 'ServiceHistory' },
-  { id: 2, title: 'Catalog', icon: List, screen: 'Catalog' },
-  { id: 3, title: 'Nhật ký xăng', icon: Droplets, screen: 'FinancialHub' },
-  { id: 4, title: 'Hỗ trợ', icon: HelpCircle, screen: 'Support' },
+  { id: 1, title: 'Sổ bảo hành', screen: 'ServiceHistory' },
+  { id: 2, title: 'Sản phẩm', screen: 'Catalog' },
+  { id: 3, title: 'Nhật ký xăng', screen: 'FinancialHub' },
+  { id: 4, title: 'Hỗ trợ', screen: 'Support' },
 ];
 
 export const alerts = [
-  { 
-    id: 1, 
-    type: 'warning', 
-    icon: ShieldAlert, 
+  {
+    id: 1,
+    type: 'warning',
     title: 'Hết hạn bảo hiểm',
     message: 'Xe 60-A1 555.55 sắp hết hạn bảo hiểm vào ngày 20/05.',
     cta: 'Gia hạn bảo hiểm'
   },
-  { 
-    id: 2, 
-    type: 'critical', 
-    icon: AlertTriangle, 
+  {
+    id: 2,
+    type: 'critical',
     title: 'Thay thế phụ tùng',
     message: 'Lọc gió xe SH 125i đã đến kỳ thay thế theo khuyến nghị.',
     cta: 'Đặt lịch sửa chữa'
   },
-  { 
-    id: 3, 
-    type: 'warning', 
-    icon: Wrench, 
+  {
+    id: 3,
+    type: 'warning',
     title: 'Bảo dưỡng định kỳ',
     message: 'Xe của bạn đã đi được 5.000km kể từ lần bảo dưỡng trước.',
     cta: 'Xem chi tiết'
   },
-  { 
-    id: 4, 
-    type: 'critical', 
-    icon: ShieldAlert, 
+  {
+    id: 4,
+    type: 'critical',
     title: 'Cảnh báo triệu hồi',
     message: 'Có thông báo triệu hồi kiểm tra bơm xăng cho dòng xe của bạn.',
     cta: 'Kiểm tra ngay'

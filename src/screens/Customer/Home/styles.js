@@ -149,9 +149,9 @@ export const styles = StyleSheet.create({
   
   voucherModule: { marginBottom: verticalScale(30) },
   voucherGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  voucherCardWrapper: { width: '48%', marginBottom: verticalScale(15) },
+  voucherCardWrapper: { width: '48%', height: verticalScale(140), marginBottom: verticalScale(15) },
   voucherCard: { borderRadius: Theme.radius.md, height: '100%' },
-  voucherCardInner: { padding: moderateScale(16), height: verticalScale(130) },
+  voucherCardInner: { padding: moderateScale(16), height: '100%', justifyContent: 'space-between' },
   voucherTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: verticalScale(12) },
   voucherTextContainer: { flex: 1 },
   voucherTitle: { color: Theme.colors.text, fontSize: moderateScale(14), fontWeight: 'bold', marginBottom: verticalScale(4) },

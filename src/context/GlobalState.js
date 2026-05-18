@@ -9,6 +9,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock 3 unread
   const [isDataSyncing, setIsDataSyncing] = useState(false);
   const [themeMode, setThemeModeState] = useState('dark'); // Mặc định là tối theo chuẩn AEM
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   // Tải chủ đề toàn hệ thống từ AsyncStorage khi ứng dụng khởi chạy
   useEffect(() => {
@@ -70,7 +71,9 @@ export const GlobalStateProvider = ({ children }) => {
       isDataSyncing,
       setIsDataSyncing,
       themeMode,
-      setThemeMode
+      setThemeMode,
+      isSettingsOpen,
+      setSettingsOpen
     }}>
       {children}
     </GlobalStateContext.Provider>

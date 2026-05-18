@@ -106,7 +106,7 @@ export default function SupportScreen({ navigation }) {
         </View>
         <TouchableOpacity
           style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }}
-          onPress={() => navigation.navigate('Profile', { openSettings: true })}
+          onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
         >
           <Settings color={activeColors.text} size={22} />
         </TouchableOpacity>

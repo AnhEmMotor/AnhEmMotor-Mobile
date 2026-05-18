@@ -23,6 +23,7 @@ export const styles = StyleSheet.create({
   // Title & Price Section
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: verticalScale(15) },
   name: { color: Theme.colors.text, fontSize: moderateScale(24), fontWeight: 'bold', flex: 1, marginRight: 15 },
+  category: { fontSize: moderateScale(13), fontWeight: '500', marginTop: 4 },
   priceContainer: { alignItems: 'flex-end' },
   price: { color: Theme.colors.primary, fontSize: moderateScale(22), fontWeight: 'bold' },
   msrp: { color: Theme.colors.subtext, fontSize: moderateScale(13), textDecorationLine: 'line-through', marginTop: 2 },
@@ -76,9 +77,9 @@ export const styles = StyleSheet.create({
   calcValue: { color: Theme.colors.primary, fontWeight: 'bold' },
   slider: { width: '100%', height: 40, marginBottom: 20 },
   resultCard: { backgroundColor: Theme.colors.card, padding: moderateScale(20), borderRadius: Theme.radius.md, marginBottom: 25 },
-  resultRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
-  resultLabel: { color: Theme.colors.subtext, fontSize: 14 },
-  monthlyPayment: { color: '#FFB800', fontSize: moderateScale(20), fontWeight: 'bold' },
+  resultRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+  resultLabel: { color: Theme.colors.subtext, fontSize: 14, flex: 1, marginRight: 10 },
+  monthlyPayment: { color: '#FFB800', fontSize: moderateScale(18), fontWeight: 'bold', textAlign: 'right' },
   partners: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginVertical: 20 },
   partnerLogo: { width: 60, height: 30, opacity: 0.6, resizeMode: 'contain' },
 

@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { LayoutGrid, Car, User, LifeBuoy, Bike, Bell, BarChart2, Calendar, Users, Truck, MessageSquare } from 'lucide-react-native';
+import { LayoutGrid, Car, User, LifeBuoy, Motorbike, Package, Bell, BarChart2, Calendar, Users, Truck, MessageSquare } from 'lucide-react-native';
 import { Theme } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,6 +25,7 @@ import SavedNewsScreen from '../screens/Customer/SavedNewsScreen';
 import ProductListScreen from '../screens/Customer/ProductList/ProductListScreen';
 import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
 import HomeDetailScreen from '../screens/Customer/HomeDetailScreen';
+import InvoiceScreen from '../screens/Customer/InvoiceScreen';
 
 // Admin Screens
 import DashboardScreen from '../screens/Admin/DashboardScreen';
@@ -36,6 +37,7 @@ import LeadScreen from '../screens/Admin/LeadScreen';
 import SupportHubScreen from '../screens/Admin/SupportHubScreen';
 import OrderManageScreen from '../screens/Admin/OrderManageScreen';
 import HubScreen from '../screens/Admin/HubScreen';
+import GlobalSettingsModal from '../components/GlobalSettingsModal';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -75,14 +77,14 @@ function CustomerTabs() {
     }}>
       <Tab.Screen name="Hub" component={HomeScreen} options={{
         tabBarIcon: ({color}) => <LayoutGrid color={color} size={22} />,
-        tabBarLabel: 'The Hub'
+        tabBarLabel: 'Trang chủ'
       }} />
       <Tab.Screen name="Catalog" component={CatalogScreen} options={{
-        tabBarIcon: ({color}) => <Bike color={color} size={22} />,
-        tabBarLabel: 'Catalog'
+        tabBarIcon: ({color}) => <Package color={color} size={22} />,
+        tabBarLabel: 'Sản phẩm'
       }} />
       <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{
-        tabBarIcon: ({color}) => <Car color={color} size={22} />,
+        tabBarIcon: ({color}) => <Motorbike color={color} size={22} />,
         tabBarLabel: 'Xe của tôi'
       }} />
 
@@ -176,7 +178,8 @@ export default function AppNavigator() {
         <Stack.Screen name="ProductList" component={ProductListScreen} />
         <Stack.Screen name="ContactStaff" component={ContactStaffScreen} />
         <Stack.Screen name="HomeDetail" component={HomeDetailScreen} />
-        
+        <Stack.Screen name="InvoiceScreen" component={InvoiceScreen} />
+
         {/* Admin Stack */}
         <Stack.Screen name="AdminHome" component={AdminTabs} />
         <Stack.Screen name="AdminProfile" component={AdminProfileScreen} />
@@ -187,6 +190,7 @@ export default function AppNavigator() {
         <Stack.Screen name="SupportHub" component={SupportHubScreen} />
         <Stack.Screen name="AdminOrders" component={OrderManageScreen} />
       </Stack.Navigator>
+      <GlobalSettingsModal />
     </NavigationContainer>
   );
 }

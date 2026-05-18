@@ -304,7 +304,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
             await repository.clearAllData();
             setIsLoading(false);
             Alert.alert('Thông báo', 'Tài khoản của bạn đã được xóa thành công khỏi hệ thống.', [
-              { text: 'OK', onPress: () => navigation.replace('Login') }
+              { text: 'OK', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' }] }) }
             ]);
           }
         }
@@ -316,7 +316,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     triggerHaptic();
     Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng?', [
       { text: 'Hủy', style: 'cancel' },
-      { text: 'Đăng xuất', onPress: () => navigation.replace('Login') }
+      { text: 'Đăng xuất', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' }] }) }
     ]);
   };
 
@@ -336,6 +336,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     avatarModal,
     setAvatarModal,
     activeField,
+    setActiveField,
     tempData,
     setTempData,
     passwordForm,

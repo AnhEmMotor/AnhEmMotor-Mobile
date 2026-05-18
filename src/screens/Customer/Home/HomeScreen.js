@@ -4,7 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import { useGlobalState } from '../../../context/GlobalState';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
-import { Bell, Calendar, Wrench, Ticket, QrCode, ArrowRight, ChevronRight, Settings, Car } from 'lucide-react-native';
+import { Bell, Calendar, Wrench, AlertTriangle, ShieldAlert, Settings,
+  Ticket, QrCode, ArrowRight,
+  HelpCircle, ChevronRight, Book, List, Droplets
+} from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import ScalePress from '../../../components/ScalePress';
 import CustomBottomSheet from '../../../components/CustomBottomSheet';
@@ -55,7 +58,7 @@ export default function HomeScreen({ navigation }) {
   } = useHome();
 
   const colors = useActiveColors();
-  const { themeMode } = useGlobalState();
+  const { themeMode, setSettingsOpen } = useGlobalState();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -68,7 +71,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={[styles.userName, { color: colors.text }]} numberOfLines={1}>Anh Khôi</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => navigation.navigate('Profile', { openSettings: true })}>
+            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => setSettingsOpen(true)}>
               <Settings color={colors.text} size={moderateScale(20)} />
             </ScalePress>
             <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => navigation.navigate('Notification')}>
@@ -79,37 +82,10 @@ export default function HomeScreen({ navigation }) {
                 </View>
               )}
             </ScalePress>
-            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => navigation.navigate('Profile')}>
+            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile' })}>
               <Image source={{ uri: 'https://img.freepik.com/free-vector/cute-cool-boy-with-glasses-hoodie-pixel-art-style_475147-155.jpg' }} style={styles.avatar} />
             </ScalePress>
           </View>
-        </Animated.View>
-
-        {/* MY VEHICLE QUICK ACTION WIDGET */}
-        <Animated.View entering={FadeInDown.duration(600).delay(100)} style={{ paddingHorizontal: 20, marginBottom: 15 }}>
-          <TouchableOpacity 
-            activeOpacity={0.9}
-            onPress={() => navigation.navigate('MyVehicleDetail')}
-          >
-            <GlassCard 
-              style={{ padding: 15, borderRadius: 16, borderColor: colors.glassBorder, backgroundColor: colors.glassBg, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-              tint={colors.isDark ? 'dark' : 'light'}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                <View style={{ width: 48, height: 48, borderRadius: 12, backgroundColor: colors.isDark ? 'rgba(46,91,255,0.15)' : 'rgba(46,91,255,0.08)', justifyContent: 'center', alignItems: 'center', marginRight: 15 }}>
-                  <Car color={colors.primary} size={24} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: moderateScale(11), fontWeight: 'bold', color: colors.primary, textTransform: 'uppercase', letterSpacing: 0.5 }}>Xe của tôi ➔</Text>
-                  <Text style={{ fontSize: moderateScale(15), fontWeight: 'bold', color: colors.text, marginTop: 2 }}>Honda SH 125i</Text>
-                  <Text style={{ fontSize: moderateScale(12), color: colors.subtext, marginTop: 1 }}>Biển số: 60-A1 555.55 • ODO: 12.500 km</Text>
-                </View>
-              </View>
-              <View style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, backgroundColor: colors.isDark ? 'rgba(16,185,129,0.15)' : 'rgba(16,185,129,0.08)', borderWidth: 1, borderColor: colors.isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.15)' }}>
-                <Text style={{ color: '#10B981', fontSize: 10, fontWeight: 'bold' }}>Hoạt động tốt</Text>
-              </View>
-            </GlassCard>
-          </TouchableOpacity>
         </Animated.View>
 
         {/* 2. STORE BANNERS CAROUSEL */}
@@ -167,18 +143,28 @@ export default function HomeScreen({ navigation }) {
             tint={colors.isDark ? 'dark' : 'light'}
           >
             <View style={styles.shortcutRowContainer}>
-              {shortcuts.map((item) => (
-                <TouchableOpacity 
-                  key={item.id} 
-                  style={styles.shortcutItem}
-                  onPress={() => navigation.navigate(item.screen)}
-                >
-                  <View style={styles.shortcutIconBg}>
-                    <item.icon color={colors.primary} size={moderateScale(20)} />
-                  </View>
-                  <Text style={[styles.shortcutText, { color: colors.text }]}>{item.title}</Text>
-                </TouchableOpacity>
-              ))}
+              {shortcuts.map((item) => {
+                const iconMap = {
+                  'ServiceHistory': Book,
+                  'Catalog': List,
+                  'FinancialHub': Droplets,
+                  'Support': HelpCircle
+                };
+                const IconComponent = iconMap[item.screen] || HelpCircle;
+
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={styles.shortcutItem}
+                    onPress={() => navigation.navigate(item.screen)}
+                  >
+                    <View style={styles.shortcutIconBg}>
+                      <IconComponent color={colors.primary} size={moderateScale(20)} />
+                    </View>
+                    <Text style={[styles.shortcutText, { color: colors.text }]}>{item.title}</Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </GlassCard>
         </Animated.View>
@@ -200,13 +186,13 @@ export default function HomeScreen({ navigation }) {
                   activeOpacity={0.9}
                   onPress={() => navigation.navigate('HomeDetail', { type: 'alert', item: alert })}
                 >
-                  <GlassCard 
-                    style={[styles.alertCard, { borderLeftColor: alertColor, backgroundColor: bgColor, borderColor: colors.glassBorder }]} 
+                  <GlassCard
+                    style={[styles.alertCard, { borderLeftColor: alertColor, backgroundColor: bgColor, borderColor: colors.glassBorder }]}
                     contentStyle={styles.alertCardInner}
                     intensity={15}
                     tint={colors.isDark ? 'dark' : 'light'}
                   >
-                    <alert.icon color={alertColor} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} />
+                    {isCritical ? <AlertTriangle color={alertColor} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} /> : <ShieldAlert color={alertColor} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} />}
                     <View style={styles.alertContent}>
                       <Text style={[styles.alertTitle, { color: colors.text }]}>{alert.title}</Text>
                       <Text style={[styles.alertDesc, { color: colors.subtext }]}>{alert.message}</Text>
