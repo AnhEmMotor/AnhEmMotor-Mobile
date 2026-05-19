@@ -12,7 +12,7 @@ export const Theme = {
     text: '#F8FAFC',         // Ghost White
     subtext: '#94A3B8',      // Slate Gray
     border: 'rgba(255, 255, 255, 0.08)',
-    
+
     // Status colors
     success: '#059669',
     warning: '#D97706',
@@ -22,6 +22,20 @@ export const Theme = {
     // Glass effects
     glassBg: 'rgba(17, 24, 39, 0.65)',
     glassBorder: 'rgba(255, 255, 255, 0.08)',
+
+    // Light theme colors (for future toggle)
+    light: {
+      primary: '#2563EB',    // Bright Blue
+      secondary: '#DC2626',  // Deep Crimson
+      background: '#F8FAFC', // Light Gray
+      card: '#FFFFFF',       // Pure White
+      surface: '#FFFFFF',
+      text: '#0F172A',       // Dark Slate
+      subtext: '#64748B',    // Medium Gray
+      border: 'rgba(0, 0, 0, 0.08)',
+      glassBg: 'rgba(255, 255, 255, 0.8)',
+      glassBorder: 'rgba(0, 0, 0, 0.05)',
+    },
   },
   
   spacing: {
@@ -105,16 +119,39 @@ export const useActiveColors = () => {
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
 
+  // Dark theme (default for AEM)
+  const darkColors = {
+    background: '#0B0F19',
+    card: '#1E293B',
+    surface: '#1E293B',
+    text: '#F8FAFC',
+    subtext: '#94A3B8',
+    border: 'rgba(255, 255, 255, 0.06)',
+    glassBg: 'rgba(17, 24, 39, 0.65)',
+    glassBorder: 'rgba(255, 255, 255, 0.08)',
+    inputBg: 'rgba(255, 255, 255, 0.05)',
+    modalOverlay: 'rgba(0, 0, 0, 0.8)',
+  };
+
+  // Light theme colors
+  const lightColors = {
+    background: '#F8FAFC',
+    card: '#FFFFFF',
+    surface: '#FFFFFF',
+    text: '#0F172A',
+    subtext: '#64748B',
+    border: 'rgba(0, 0, 0, 0.08)',
+    glassBg: 'rgba(255, 255, 255, 0.8)',
+    glassBorder: 'rgba(0, 0, 0, 0.05)',
+    inputBg: 'rgba(0, 0, 0, 0.03)',
+    modalOverlay: 'rgba(0, 0, 0, 0.5)',
+  };
+
+  const colors = isDark ? darkColors : lightColors;
+
   return {
     isDark,
-    background: isDark ? '#0B0F19' : '#F8FAFC',
-    card: isDark ? '#1E293B' : '#FFFFFF',
-    surface: isDark ? '#1E293B' : '#FFFFFF',
-    text: isDark ? '#F8FAFC' : '#0F172A',
-    subtext: isDark ? '#94A3B8' : '#64748B',
-    border: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.05)',
-    glassBg: isDark ? 'rgba(17, 24, 39, 0.65)' : 'rgba(255, 255, 255, 0.7)',
-    glassBorder: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+    ...colors,
     primary: '#3B82F6',
     secondary: '#DC2626',
     success: '#059669',

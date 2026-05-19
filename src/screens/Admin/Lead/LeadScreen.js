@@ -1,14 +1,85 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Linking, Pressable, Modal } from 'react-native';
-import { Theme } from '../../../theme/Theme';
+import { Theme, useActiveColors } from '../../../theme/Theme';
 import { Phone, MessageSquare, MoreVertical, Flame, Calendar, ChevronRight, Bike, Plus, X, Clock, User } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp, Layout } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
+const getStyles = (colors) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: Theme.spacing.lg },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
+  title: { color: colors.text, fontSize: 28, fontWeight: 'bold' },
+  subTitle: { color: colors.subtext, fontSize: 13, marginTop: 4 },
+  filterBtn: { backgroundColor: colors.card, padding: 12, borderRadius: 0, borderWidth: 1, borderColor: colors.border },
+
+  leadCard: { padding: 20, marginBottom: 16 },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
+  nameSection: { flex: 1 },
+  leadName: { color: colors.text, fontSize: 18, fontWeight: 'bold' },
+  moreBtn: { padding: 4 },
+  
+  priorityBadge: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 0, marginTop: 8 },
+  priorityText: { fontSize: 10, fontWeight: '900', marginLeft: 6, letterSpacing: 1 },
+  
+  interestBox: { backgroundColor: colors.surface, padding: 16, borderRadius: 0, borderWidth: 1, borderColor: colors.border, marginBottom: 20 },
+  interestRow: { flexDirection: 'row', alignItems: 'center' },
+  interestLabel: { color: colors.subtext, fontSize: 13, marginLeft: 8 },
+  interestValue: { color: colors.text, fontSize: 14, fontWeight: 'bold' },
+  timeLabel: { color: colors.subtext, fontSize: 11, marginTop: 8 },
+
+  footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 16 },
+  actionGroup: { flexDirection: 'row' },
+  actionBtn: { width: 40, height: 40, borderRadius: 0, borderWidth: 1, borderColor: colors.border, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  
+  detailBtn: { flexDirection: 'row', alignItems: 'center' },
+  detailText: { color: colors.primary, fontWeight: 'bold', fontSize: 13, marginRight: 6 },
+
+  fab: { position: 'absolute', bottom: 30, right: 24, width: 56, height: 56, borderRadius: 0, elevation: 8 },
+  fabGradient: { flex: 1, borderRadius: 0, justifyContent: 'center', alignItems: 'center' },
+
+  // Modal styles for 360 customer profile
+  modalOverlay: { flex: 1, backgroundColor: colors.modalOverlay, justifyContent: 'flex-end' },
+  modalContent: { borderTopLeftRadius: 0, borderTopRightRadius: 0, padding: 24, maxHeight: '92%', borderTopWidth: 2, borderTopColor: colors.primary, backgroundColor: colors.card },
+  dragIndicator: { width: 40, height: 4, backgroundColor: colors.border, borderRadius: 0, alignSelf: 'center', marginBottom: 16 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+  modalTitle: { color: colors.text, fontSize: 20, fontWeight: 'bold' },
+  modalSubtitle: { color: colors.subtext, fontSize: 12, marginTop: 2 },
+  closeBtn: { padding: 4 },
+
+  customerSummaryCard: { backgroundColor: colors.glassBg, padding: 16, borderRadius: 0, borderWidth: 1.5, borderColor: colors.border, marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  customerMainInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  avatarCircle: { width: 48, height: 48, borderRadius: 0, borderWidth: 1.5, borderColor: colors.primary, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center' },
+  customerNameBig: { color: colors.text, fontSize: 18, fontWeight: 'bold' },
+  customerSubRow: { flexDirection: 'row', alignItems: 'center' },
+  timeTagText: { color: colors.subtext, fontSize: 11, marginTop: 4 },
+  summaryActions: { flexDirection: 'row', marginLeft: 8 },
+
+  linearStepper: { paddingLeft: 4, marginBottom: 24 },
+  stepperItem: { flexDirection: 'row', marginBottom: 20 },
+  stepperLeft: { alignItems: 'center', width: 30, marginRight: 14 },
+  stepperDot: { width: 22, height: 22, borderRadius: 0, borderWidth: 1, borderColor: colors.primary, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
+  stepperNum: { color: colors.text, fontSize: 11, fontWeight: 'bold' },
+  stepperLine: { flex: 1, width: 2, backgroundColor: colors.border, marginTop: 4 },
+  stepperRight: { flex: 1 },
+  stepperHeader: { color: colors.text, fontSize: 14, fontWeight: 'bold', marginBottom: 8 },
+  stepperContentBox: { backgroundColor: colors.glassBg, padding: 12, borderRadius: 0, borderWidth: 1, borderColor: colors.border },
+  stepperText: { color: colors.subtext, fontSize: 13, marginBottom: 4 },
+  logItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
+  logText: { color: colors.subtext, fontSize: 12, flex: 1 },
+
+  modalActionsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
+  closeModalBtn: { flex: 1, height: 48, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  closeModalText: { color: colors.subtext, fontSize: 14, fontWeight: 'bold' },
+  confirmBtn: { flex: 2, height: 48, borderRadius: 0, backgroundColor: '#10B981', justifyContent: 'center', alignItems: 'center' },
+  confirmBtnText: { color: '#fff', fontSize: 14, fontWeight: 'bold' }
+});
+
 export default function LeadScreen() {
   const [selectedLead, setSelectedLead] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const colors = useActiveColors();
+  const styles = getStyles(colors);
 
   const leads = [
     { 
@@ -60,7 +131,7 @@ export default function LeadScreen() {
           <Text style={styles.subTitle}>{leads.length} khách hàng đang quan tâm</Text>
         </View>
         <TouchableOpacity style={styles.filterBtn}>
-          <Calendar color={Theme.colors.text} size={20} />
+          <Calendar color={colors.text} size={20} />
         </TouchableOpacity>
       </Animated.View>
 
@@ -85,13 +156,13 @@ export default function LeadScreen() {
                     </View>
                   </View>
                   <TouchableOpacity style={styles.moreBtn}>
-                    <MoreVertical color={Theme.colors.subtext} size={20} />
+                    <MoreVertical color={colors.subtext} size={20} />
                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.interestBox}>
                   <View style={styles.interestRow}>
-                    <Bike color={Theme.colors.primary} size={14} />
+                    <Bike color={colors.primary} size={14} />
                     <Text style={styles.interestLabel}>Quan tâm: </Text>
                     <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.interestValue}>{item.interest}</Text>
                   </View>
@@ -100,16 +171,16 @@ export default function LeadScreen() {
                 
                 <View style={styles.footerRow}>
                   <View style={styles.actionGroup}>
-                    <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: 'rgba(59, 130, 246, 0.22)', borderColor: 'rgba(59, 130, 246, 0.55)', borderWidth: 1 }]} onPress={() => Linking.openURL(`tel:${item.phone}`)}>
-                      <Phone color={Theme.colors.primary} size={18} />
+                    <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: colors.primary + '38', borderColor: colors.primary, borderWidth: 1 }]} onPress={() => Linking.openURL(`tel:${item.phone}`)}>
+                      <Phone color={colors.primary} size={18} />
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: 'rgba(16, 185, 129, 0.22)', borderColor: 'rgba(16, 185, 129, 0.55)', borderWidth: 1 }]} onPress={() => Linking.openURL('https://zalo.me')}>
-                      <MessageSquare color={Theme.colors.success} size={18} />
+                    <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: colors.success + '38', borderColor: colors.success, borderWidth: 1 }]} onPress={() => Linking.openURL('https://zalo.me')}>
+                      <MessageSquare color={colors.success} size={18} />
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity style={styles.detailBtn} onPress={() => handleOpenLead(item)}>
                     <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.detailText}>Xử lý Lead (360°)</Text>
-                    <ChevronRight color={Theme.colors.primary} size={16} />
+                    <ChevronRight color={colors.primary} size={16} />
                   </TouchableOpacity>
                 </View>
               </GlassCard>
@@ -137,7 +208,7 @@ export default function LeadScreen() {
                 <Text style={styles.modalSubtitle}>Đơn vị quản trị CRM • AnhEmMotor Biên Hòa</Text>
               </View>
               <TouchableOpacity style={styles.closeBtn} onPress={() => setModalVisible(false)}>
-                <X color={Theme.colors.text} size={24} />
+                <X color={colors.text} size={24} />
               </TouchableOpacity>
             </View>
 
@@ -147,7 +218,7 @@ export default function LeadScreen() {
                 <View style={styles.customerSummaryCard}>
                   <View style={styles.customerMainInfo}>
                     <View style={styles.avatarCircle}>
-                      <User color="#fff" size={24} />
+                      <User color={colors.text} size={24} />
                     </View>
                     <View style={{ flex: 1, marginLeft: 16 }}>
                       <Text style={styles.customerNameBig}>{selectedLead.name}</Text>
@@ -162,11 +233,11 @@ export default function LeadScreen() {
                   </View>
 
                   <View style={styles.summaryActions}>
-                    <TouchableOpacity style={[styles.actionBtn, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]} onPress={() => Linking.openURL(`tel:${selectedLead.phone}`)}>
-                      <Phone color={Theme.colors.primary} size={18} />
+                    <TouchableOpacity style={[styles.actionBtn, { backgroundColor: colors.primary + '1A', borderColor: colors.primary, borderWidth: 1 }]} onPress={() => Linking.openURL(`tel:${selectedLead.phone}`)}>
+                      <Phone color={colors.primary} size={18} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.actionBtn, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]} onPress={() => Linking.openURL('https://zalo.me')}>
-                      <MessageSquare color={Theme.colors.success} size={18} />
+                    <TouchableOpacity style={[styles.actionBtn, { backgroundColor: colors.success + '1A', borderColor: colors.success, borderWidth: 1 }]} onPress={() => Linking.openURL('https://zalo.me')}>
+                      <MessageSquare color={colors.success} size={18} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -177,7 +248,7 @@ export default function LeadScreen() {
                   {/* Step 1: Thông tin liên hệ */}
                   <View style={styles.stepperItem}>
                     <View style={styles.stepperLeft}>
-                      <View style={[styles.stepperDot, { backgroundColor: Theme.colors.primary }]}>
+                      <View style={[styles.stepperDot, { backgroundColor: colors.primary }]}>
                         <Text style={styles.stepperNum}>1</Text>
                       </View>
                       <View style={styles.stepperLine} />
@@ -185,9 +256,9 @@ export default function LeadScreen() {
                     <View style={styles.stepperRight}>
                       <Text style={styles.stepperHeader}>Thông tin CRM cốt lõi</Text>
                       <View style={styles.stepperContentBox}>
-                        <Text style={styles.stepperText}>📞 SĐT: <Text style={{ color: '#fff', fontWeight: 'bold' }}>{selectedLead.phone}</Text></Text>
-                        <Text style={styles.stepperText}>✉️ Email: <Text style={{ color: '#fff' }}>{selectedLead.email}</Text></Text>
-                        <Text style={styles.stepperText}>📍 Nguồn: <Text style={{ color: Theme.colors.primary, fontWeight: 'bold' }}>Website & App Khách hàng</Text></Text>
+                        <Text style={styles.stepperText}>📞 SĐT: <Text style={{ color: colors.text, fontWeight: 'bold' }}>{selectedLead.phone}</Text></Text>
+                        <Text style={styles.stepperText}>✉️ Email: <Text style={{ color: colors.text }}>{selectedLead.email}</Text></Text>
+                        <Text style={styles.stepperText}>📍 Nguồn: <Text style={{ color: colors.primary, fontWeight: 'bold' }}>Website & App Khách hàng</Text></Text>
                       </View>
                     </View>
                   </View>
@@ -204,15 +275,15 @@ export default function LeadScreen() {
                       <Text style={styles.stepperHeader}>Timeline Liên Hệ & Chăm Sóc</Text>
                       <View style={styles.stepperContentBox}>
                         <View style={styles.logItem}>
-                          <Clock color={Theme.colors.subtext} size={10} style={{ marginRight: 6 }} />
+                          <Clock color={colors.subtext} size={10} style={{ marginRight: 6 }} />
                           <Text style={styles.logText}><Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>09:30</Text> - Đăng ký nhận báo giá lăn bánh Biên Hòa.</Text>
                         </View>
                         <View style={styles.logItem}>
-                          <Clock color={Theme.colors.subtext} size={10} style={{ marginRight: 6 }} />
+                          <Clock color={colors.subtext} size={10} style={{ marginRight: 6 }} />
                           <Text style={styles.logText}><Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>10:15</Text> - Sale gọi điện tư vấn thông số {selectedLead.interest}.</Text>
                         </View>
                         <View style={styles.logItem}>
-                          <Clock color={Theme.colors.subtext} size={10} style={{ marginRight: 6 }} />
+                          <Clock color={colors.subtext} size={10} style={{ marginRight: 6 }} />
                           <Text style={styles.logText}><Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>14:00</Text> - Gửi bảng kê góp qua Zalo. Khách đang cân nhắc.</Text>
                         </View>
                       </View>
@@ -231,7 +302,7 @@ export default function LeadScreen() {
                       <Text style={styles.stepperHeader}>Xe Quan Tâm & Xe Hiện Có</Text>
                       <View style={styles.stepperContentBox}>
                         <Text style={styles.stepperText}>🏍️ Đang quan tâm: <Text style={{ color: '#22D3EE', fontWeight: 'bold' }}>{selectedLead.interest}</Text></Text>
-                        <Text style={styles.stepperText}>🚗 Xe đang đi: <Text style={{ color: '#CBD5E1' }}>Honda Winner X 2021 (Thu cũ đổi mới)</Text></Text>
+                        <Text style={styles.stepperText}>🚗 Xe đang đi: <Text style={{ color: colors.subtext }}>Honda Winner X 2021 (Thu cũ đổi mới)</Text></Text>
                       </View>
                     </View>
                   </View>
@@ -246,7 +317,7 @@ export default function LeadScreen() {
                     <View style={styles.stepperRight}>
                       <Text style={styles.stepperHeader}>Ghi Chú Nội Bộ (Internal notes)</Text>
                       <View style={[styles.stepperContentBox, { borderLeftWidth: 2, borderLeftColor: '#EC4899', paddingLeft: 12 }]}>
-                        <Text style={[styles.stepperText, { fontStyle: 'italic', color: '#E4E7EC', lineHeight: 18 }]}>
+                        <Text style={[styles.stepperText, { fontStyle: 'italic', color: colors.text, lineHeight: 18 }]}>
                           "{selectedLead.notes}"
                         </Text>
                       </View>
@@ -278,79 +349,10 @@ export default function LeadScreen() {
 
       {/* FAB - ADD NEW LEAD (II.1 RULE) */}
       <Pressable style={styles.fab}>
-        <LinearGradient colors={[Theme.colors.secondary, '#991B1B']} style={styles.fabGradient}>
+        <LinearGradient colors={[colors.secondary, '#991B1B']} style={styles.fabGradient}>
           <Plus color="#fff" size={24} />
         </LinearGradient>
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background, paddingHorizontal: Theme.spacing.lg },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
-  title: { color: Theme.colors.text, fontSize: 28, fontWeight: 'bold' },
-  subTitle: { color: Theme.colors.subtext, fontSize: 13, marginTop: 4 },
-  filterBtn: { backgroundColor: Theme.colors.card, padding: 12, borderRadius: 0, borderWidth: 1, borderColor: Theme.colors.border },
-
-  leadCard: { padding: 20, marginBottom: 16 },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
-  nameSection: { flex: 1 },
-  leadName: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold' },
-  moreBtn: { padding: 4 },
-  
-  priorityBadge: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 0, marginTop: 8 },
-  priorityText: { fontSize: 10, fontWeight: '900', marginLeft: 6, letterSpacing: 1 },
-  
-  interestBox: { backgroundColor: 'rgba(255,255,255,0.03)', padding: 16, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)', marginBottom: 20 },
-  interestRow: { flexDirection: 'row', alignItems: 'center' },
-  interestLabel: { color: Theme.colors.subtext, fontSize: 13, marginLeft: 8 },
-  interestValue: { color: Theme.colors.text, fontSize: 14, fontWeight: 'bold' },
-  timeLabel: { color: Theme.colors.subtext, fontSize: 11, marginTop: 8 },
-
-  footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 16 },
-  actionGroup: { flexDirection: 'row' },
-  actionBtn: { width: 40, height: 40, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  
-  detailBtn: { flexDirection: 'row', alignItems: 'center' },
-  detailText: { color: Theme.colors.primary, fontWeight: 'bold', fontSize: 13, marginRight: 6 },
-
-  fab: { position: 'absolute', bottom: 30, right: 24, width: 56, height: 56, borderRadius: 0, elevation: 8 },
-  fabGradient: { flex: 1, borderRadius: 0, justifyContent: 'center', alignItems: 'center' },
-
-  // Modal styles for 360 customer profile
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'flex-end' },
-  modalContent: { borderTopLeftRadius: 0, borderTopRightRadius: 0, padding: 24, maxHeight: '92%', borderTopWidth: 2, borderTopColor: Theme.colors.primary },
-  dragIndicator: { width: 40, height: 4, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 0, alignSelf: 'center', marginBottom: 16 },
-  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
-  modalTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
-  modalSubtitle: { color: Theme.colors.subtext, fontSize: 12, marginTop: 2 },
-  closeBtn: { padding: 4 },
-
-  customerSummaryCard: { backgroundColor: 'rgba(255,255,255,0.02)', padding: 16, borderRadius: 0, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.1)', marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  customerMainInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  avatarCircle: { width: 48, height: 48, borderRadius: 0, borderWidth: 1.5, borderColor: '#3B82F6', backgroundColor: '#111827', justifyContent: 'center', alignItems: 'center' },
-  customerNameBig: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  customerSubRow: { flexDirection: 'row', alignItems: 'center' },
-  timeTagText: { color: Theme.colors.subtext, fontSize: 11, marginTop: 4 },
-  summaryActions: { flexDirection: 'row', marginLeft: 8 },
-
-  linearStepper: { paddingLeft: 4, marginBottom: 24 },
-  stepperItem: { flexDirection: 'row', marginBottom: 20 },
-  stepperLeft: { alignItems: 'center', width: 30, marginRight: 14 },
-  stepperDot: { width: 22, height: 22, borderRadius: 0, borderWidth: 1, borderColor: '#3B82F6', justifyContent: 'center', alignItems: 'center', zIndex: 1 },
-  stepperNum: { color: '#fff', fontSize: 11, fontWeight: 'bold' },
-  stepperLine: { flex: 1, width: 2, backgroundColor: 'rgba(255,255,255,0.05)', marginTop: 4 },
-  stepperRight: { flex: 1 },
-  stepperHeader: { color: '#fff', fontSize: 14, fontWeight: 'bold', marginBottom: 8 },
-  stepperContentBox: { backgroundColor: 'rgba(255,255,255,0.01)', padding: 12, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
-  stepperText: { color: Theme.colors.subtext, fontSize: 13, marginBottom: 4 },
-  logItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  logText: { color: Theme.colors.subtext, fontSize: 12, flex: 1 },
-
-  modalActionsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
-  closeModalBtn: { flex: 1, height: 48, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.04)', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  closeModalText: { color: Theme.colors.subtext, fontSize: 14, fontWeight: 'bold' },
-  confirmBtn: { flex: 2, height: 48, borderRadius: 0, backgroundColor: '#10B981', justifyContent: 'center', alignItems: 'center' },
-  confirmBtnText: { color: '#fff', fontSize: 14, fontWeight: 'bold' }
-});

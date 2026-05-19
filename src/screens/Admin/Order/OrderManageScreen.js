@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Pressable, Dimensions, Image, Linking, TouchableOpacity, Modal, FlatList, ActivityIndicator } from 'react-native';
-import { Theme } from '../../../theme/Theme';
+import { Theme, useActiveColors } from '../../../theme/Theme';
 import { 
   ChevronLeft, 
   MapPin, 
@@ -25,7 +25,95 @@ import { useOrderController } from './useOrderController';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
+const getStyles = (colors) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: Theme.spacing.lg },
+  loadingContainer: { flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' },
+  loadingText: { color: colors.subtext, fontSize: 14, marginTop: 16 },
+  header: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: Theme.spacing.xl + 20, 
+    marginBottom: Theme.spacing.lg 
+  },
+  backBtn: { width: 40, height: 40, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card, justifyContent: 'center', alignItems: 'center' },
+  title: { color: colors.text, fontSize: 20, fontWeight: 'bold' },
+
+  infoBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary + '1A', padding: 12, borderRadius: 0, borderWidth: 1, borderColor: colors.primary + '33', marginBottom: 16 },
+  infoText: { color: colors.subtext, fontSize: 12, marginLeft: 8, flex: 1 },
+
+  orderCard: { padding: 18, marginBottom: 16, overflow: 'hidden', borderWidth: 1, borderColor: colors.border },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
+  orderCodeText: { color: colors.text, fontSize: 16, fontWeight: 'bold' },
+  vehicleText: { color: colors.subtext, fontSize: 13, marginTop: 2 },
+  
+  financeBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 0 },
+  financeText: { fontSize: 11, fontWeight: 'bold' },
+
+  stagesWrapper: { marginVertical: 12 },
+  stageTitle: { color: colors.text, fontSize: 13, fontWeight: '600', marginBottom: 12 },
+  
+  stepsRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  stepItem: { flex: 1, alignItems: 'center' },
+  stepIndicatorRow: { flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'center' },
+  stepCircle: { width: 20, height: 20, borderRadius: 0, borderWidth: 2, borderColor: colors.border, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
+  stepNum: { color: colors.subtext, fontSize: 10, fontWeight: 'bold' },
+  stepLine: { height: 2, backgroundColor: colors.border, flex: 1, position: 'absolute', left: '50%', right: '-50%', top: 9, zIndex: 0 },
+  
+  stepName: { color: colors.subtext, fontSize: 10, marginTop: 8, textAlign: 'center' },
+  stepTime: { color: colors.subtext, fontSize: 8, opacity: 0.5, marginTop: 2, textAlign: 'center' },
+
+  bottleneckAlertBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(239, 68, 68, 0.1)', padding: 10, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.2)', marginVertical: 8 },
+  bottleneckAlertText: { color: '#EF4444', fontSize: 11, fontWeight: 'bold', marginLeft: 8 },
+
+  logisticsContainer: { borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 14, marginTop: 12 },
+  logisticsTitle: { color: colors.text, fontSize: 13, fontWeight: '600', marginBottom: 10 },
+  
+  miniMapPressable: { borderRadius: 0, overflow: 'hidden', borderWidth: 1, borderColor: colors.border, backgroundColor: colors.background },
+  miniMapOverlayContainer: { position: 'relative', height: 100 },
+  mapTip: { position: 'absolute', bottom: 6, right: 6, flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface + 'D9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0 },
+  mapTipText: { color: '#22D3EE', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
+
+  logisticsFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 },
+  logisticsDriverText: { color: colors.subtext, fontSize: 11, marginLeft: 8 },
+  smallCallBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#10B981', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 0 },
+  smallCallText: { color: '#fff', fontSize: 10, fontWeight: 'bold', marginLeft: 4 },
+
+  // Bottom Sheet modal style
+  modalOverlay: { flex: 1, backgroundColor: colors.modalOverlay, justifyContent: 'flex-end' },
+  bottomSheetContainer: { height: screenHeight * 0.8, borderTopLeftRadius: 0, borderTopRightRadius: 0, overflow: 'hidden' },
+  sheetCard: { flex: 1, borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTopWidth: 2, borderTopColor: colors.primary, padding: 24, backgroundColor: colors.card },
+  
+  dragIndicator: { width: 40, height: 4, backgroundColor: colors.border, borderRadius: 0, alignSelf: 'center', marginBottom: 16 },
+  sheetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+  sheetTitle: { color: colors.text, fontSize: 18, fontWeight: 'bold' },
+  sheetSubtitle: { color: colors.subtext, fontSize: 12, marginTop: 2 },
+  closeBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 0, backgroundColor: colors.surface },
+
+  fullMapWrapper: { flex: 1, backgroundColor: colors.background, borderRadius: 0, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', marginBottom: 20 },
+
+  driverCard: { padding: 16, backgroundColor: colors.surface, borderRadius: 0, borderWidth: 1, borderColor: colors.border, marginBottom: 20 },
+  driverInfoRow: { flexDirection: 'row', alignItems: 'center' },
+  truckIconCircle: { width: 44, height: 44, borderRadius: 0, backgroundColor: colors.success + '20', justifyContent: 'center', alignItems: 'center' },
+  driverName: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
+  driverStatus: { color: colors.subtext, fontSize: 11, marginTop: 2 },
+  callIconBtn: { width: 40, height: 40, borderRadius: 0, backgroundColor: '#10B981', justifyContent: 'center', alignItems: 'center' },
+
+  etaBar: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 12, marginTop: 12 },
+  etaText: { color: colors.subtext, fontSize: 12, marginLeft: 8 },
+
+  partsAccordionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderTopWidth: 1, borderBottomWidth: 1, borderColor: colors.border, paddingHorizontal: 4 },
+  partsAccordionTitle: { color: colors.text, fontSize: 14, fontWeight: '600', marginLeft: 8 },
+  
+  partsListContainer: { paddingVertical: 12, paddingHorizontal: 12 },
+  partItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  partName: { color: colors.subtext, fontSize: 13, marginLeft: 8 }
+});
+
 export default function OrderManageScreen({ navigation }) {
+  const colors = useActiveColors();
+  const styles = getStyles(colors);
+
   const { 
     orders, 
     loading, 
@@ -48,7 +136,7 @@ export default function OrderManageScreen({ navigation }) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Theme.colors.primary} />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Đang đồng bộ hồ sơ đơn hàng...</Text>
       </View>
     );
@@ -60,7 +148,7 @@ export default function OrderManageScreen({ navigation }) {
       {/* HEADER BAR */}
       <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={Theme.colors.text} size={24} />
+          <ChevronLeft color={colors.text} size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Đơn Hàng & Hồ Sơ 🗺️</Text>
         <View style={{ width: 40 }} />
@@ -70,7 +158,7 @@ export default function OrderManageScreen({ navigation }) {
         
         {/* PIPELINE OVERVIEW BADGE */}
         <Animated.View entering={FadeInDown.delay(100).duration(800)} style={styles.infoBox}>
-          <Layers color={Theme.colors.primary} size={16} />
+          <Layers color={colors.primary} size={16} />
           <Text style={styles.infoText}>
             Giám sát dòng tiền, hồ sơ hành chính làm biển số và vận chuyển thực tế từ Kho tổng về Biên Hòa.
           </Text>
@@ -79,7 +167,7 @@ export default function OrderManageScreen({ navigation }) {
         {/* ORDERS LIST */}
         {orders.map((order, index) => {
           // Determine status color based on bottleneck
-          const cardBorderColor = order.isBottlenecked ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255,255,255,0.06)';
+          const cardBorderColor = order.isBottlenecked ? 'rgba(239, 68, 68, 0.4)' : colors.border;
 
           return (
             <Animated.View 
@@ -91,12 +179,12 @@ export default function OrderManageScreen({ navigation }) {
                 // Pulse wrapper if bottlenecked
                 <PulseView pulseScale={1.01} duration={1500}>
                   <GlassCard style={[styles.orderCard, { borderColor: cardBorderColor, borderWidth: 1 }]} intensity={25}>
-                    {renderOrderCardContent(order, openLogistics)}
+                    {renderOrderCardContent(order, openLogistics, colors, styles)}
                   </GlassCard>
                 </PulseView>
               ) : (
                 <GlassCard style={[styles.orderCard, { borderColor: cardBorderColor }]} intensity={20}>
-                  {renderOrderCardContent(order, openLogistics)}
+                  {renderOrderCardContent(order, openLogistics, colors, styles)}
                 </GlassCard>
               )}
             </Animated.View>
@@ -125,7 +213,7 @@ export default function OrderManageScreen({ navigation }) {
                   <Text style={styles.sheetSubtitle}>Đơn {selectedOrder?.orderCode} • Tuyến đường Biên Hòa</Text>
                 </View>
                 <TouchableOpacity style={styles.closeBtn} onPress={closeLogistics}>
-                  <Text style={{ color: Theme.colors.subtext, fontWeight: 'bold' }}>Đóng</Text>
+                  <Text style={{ color: colors.subtext, fontWeight: 'bold' }}>Đóng</Text>
                 </TouchableOpacity>
               </View>
 
@@ -159,7 +247,7 @@ export default function OrderManageScreen({ navigation }) {
 
                     {/* Start point */}
                     <Circle cx="50" cy="250" r="8" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
-                    <Circle cx="50" cy="250" r="4" fill="#3B82F6" />
+                    <Circle cx="50" cy="250" r="4" fill={colors.primary} />
                     
                     {/* End point */}
                     <Circle cx="350" cy="50" r="10" fill="#06B6D4" fillOpacity="0.2" />
@@ -220,11 +308,11 @@ export default function OrderManageScreen({ navigation }) {
                   onPress={() => setShowSpareParts(!showSpareParts)}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <ClipboardList color={Theme.colors.primary} size={18} />
+                    <ClipboardList color={colors.primary} size={18} />
                     <Text style={styles.partsAccordionTitle}>Danh sách phụ tùng đi kèm xe</Text>
                   </View>
                   <ChevronRight 
-                    color={Theme.colors.subtext} 
+                    color={colors.subtext} 
                     size={18} 
                     style={{ transform: [{ rotate: showSpareParts ? '90deg' : '0deg' }] }} 
                   />
@@ -234,7 +322,7 @@ export default function OrderManageScreen({ navigation }) {
                   <View style={styles.partsListContainer}>
                     {sparePartsList.map((part, idx) => (
                       <View key={idx} style={styles.partItem}>
-                        <CheckCircle2 color={Theme.colors.success} size={16} />
+                        <CheckCircle2 color={colors.success} size={16} />
                         <Text style={styles.partName}>{part.name}</Text>
                       </View>
                     ))}
@@ -252,7 +340,7 @@ export default function OrderManageScreen({ navigation }) {
 }
 
 // RENDER ORDER CARD CONTENT
-function renderOrderCardContent(order, openLogistics) {
+function renderOrderCardContent(order, openLogistics, colors, styles) {
   return (
     <View>
       
@@ -264,7 +352,7 @@ function renderOrderCardContent(order, openLogistics) {
         </View>
         
         <View style={[styles.financeBadge, { backgroundColor: order.financialStatus.startsWith('✓') ? 'rgba(5, 150, 105, 0.1)' : 'rgba(59, 130, 246, 0.1)' }]}>
-          <Text style={[styles.financeText, { color: order.financialStatus.startsWith('✓') ? Theme.colors.success : Theme.colors.primary }]}>
+          <Text style={[styles.financeText, { color: order.financialStatus.startsWith('✓') ? colors.success : colors.primary }]}>
             {order.financialStatus}
           </Text>
         </View>
@@ -284,8 +372,8 @@ function renderOrderCardContent(order, openLogistics) {
                 <View style={styles.stepIndicatorRow}>
                   <View style={[
                     styles.stepCircle, 
-                    isCompleted && { backgroundColor: Theme.colors.success, borderColor: Theme.colors.success },
-                    isCurrent && { backgroundColor: '#3B82F6', borderColor: '#3B82F6' }
+                    isCompleted && { backgroundColor: colors.success, borderColor: colors.success },
+                    isCurrent && { backgroundColor: colors.primary, borderColor: colors.primary }
                   ]}>
                     {isCompleted ? (
                       <CheckCircle2 color="#fff" size={10} />
@@ -296,11 +384,11 @@ function renderOrderCardContent(order, openLogistics) {
                   {idx < order.stagesData.length - 1 && (
                     <View style={[
                       styles.stepLine,
-                      idx + 1 < order.currentStage && { backgroundColor: Theme.colors.success }
+                      idx + 1 < order.currentStage && { backgroundColor: colors.success }
                     ]} />
                   )}
                 </View>
-                <Text style={[styles.stepName, isCurrent && { color: Theme.colors.text, fontWeight: 'bold' }]}>
+                <Text style={[styles.stepName, isCurrent && { color: colors.text, fontWeight: 'bold' }]}>
                   {stage.name}
                 </Text>
                 <Text style={styles.stepTime}>{stage.time}</Text>
@@ -336,7 +424,7 @@ function renderOrderCardContent(order, openLogistics) {
                   <Circle cx="160" cy="50" r="4" fill="#10B981" />
                 </G>
                 
-                <Circle cx="30" cy="80" r="4" fill="#3B82F6" />
+                <Circle cx="30" cy="80" r="4" fill={colors.primary} />
                 <Circle cx="310" cy="20" r="4" fill="#06B6D4" />
               </Svg>
 
@@ -368,88 +456,3 @@ function renderOrderCardContent(order, openLogistics) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#090E17', paddingHorizontal: Theme.spacing.lg },
-  loadingContainer: { flex: 1, backgroundColor: '#090E17', justifyContent: 'center', alignItems: 'center' },
-  loadingText: { color: Theme.colors.subtext, fontSize: 14, marginTop: 16 },
-  header: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginTop: Theme.spacing.xl + 20, 
-    marginBottom: Theme.spacing.lg 
-  },
-  backBtn: { width: 40, height: 40, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', backgroundColor: '#111827', justifyContent: 'center', alignItems: 'center' },
-  title: { color: Theme.colors.text, fontSize: 20, fontWeight: 'bold' },
-
-  infoBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(59, 130, 246, 0.1)', padding: 12, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.2)', marginBottom: 16 },
-  infoText: { color: Theme.colors.subtext, fontSize: 12, marginLeft: 8, flex: 1 },
-
-  orderCard: { padding: 18, marginBottom: 16, overflow: 'hidden' },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
-  orderCodeText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  vehicleText: { color: Theme.colors.subtext, fontSize: 13, marginTop: 2 },
-  
-  financeBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 0 },
-  financeText: { fontSize: 11, fontWeight: 'bold' },
-
-  stagesWrapper: { marginVertical: 12 },
-  stageTitle: { color: Theme.colors.text, fontSize: 13, fontWeight: '600', marginBottom: 12 },
-  
-  stepsRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  stepItem: { flex: 1, alignItems: 'center' },
-  stepIndicatorRow: { flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'center' },
-  stepCircle: { width: 20, height: 20, borderRadius: 0, borderWidth: 2, borderColor: '#1E293B', backgroundColor: '#090E17', justifyContent: 'center', alignItems: 'center', zIndex: 1 },
-  stepNum: { color: '#94A3B8', fontSize: 10, fontWeight: 'bold' },
-  stepLine: { height: 2, backgroundColor: '#1E293B', flex: 1, position: 'absolute', left: '50%', right: '-50%', top: 9, zIndex: 0 },
-  
-  stepName: { color: Theme.colors.subtext, fontSize: 10, marginTop: 8, textAlign: 'center' },
-  stepTime: { color: Theme.colors.subtext, fontSize: 8, opacity: 0.5, marginTop: 2, textAlign: 'center' },
-
-  bottleneckAlertBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(239, 68, 68, 0.1)', padding: 10, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.2)', marginVertical: 8 },
-  bottleneckAlertText: { color: '#EF4444', fontSize: 11, fontWeight: 'bold', marginLeft: 8 },
-
-  logisticsContainer: { borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 14, marginTop: 12 },
-  logisticsTitle: { color: Theme.colors.text, fontSize: 13, fontWeight: '600', marginBottom: 10 },
-  
-  miniMapPressable: { borderRadius: 0, overflow: 'hidden', borderWidth: 1, borderColor: '#1E293B', backgroundColor: '#0B0F19' },
-  miniMapOverlayContainer: { position: 'relative', height: 100 },
-  mapTip: { position: 'absolute', bottom: 6, right: 6, flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(11, 15, 25, 0.85)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0 },
-  mapTipText: { color: '#22D3EE', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
-
-  logisticsFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 },
-  logisticsDriverText: { color: Theme.colors.subtext, fontSize: 11, marginLeft: 8 },
-  smallCallBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#10B981', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 0 },
-  smallCallText: { color: '#fff', fontSize: 10, fontWeight: 'bold', marginLeft: 4 },
-
-  // Bottom Sheet modal style
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'flex-end' },
-  bottomSheetContainer: { height: screenHeight * 0.8, borderTopLeftRadius: 0, borderTopRightRadius: 0, overflow: 'hidden' },
-  sheetCard: { flex: 1, borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTopWidth: 2, borderTopColor: Theme.colors.primary, padding: 24 },
-  
-  dragIndicator: { width: 40, height: 4, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 0, alignSelf: 'center', marginBottom: 16 },
-  sheetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
-  sheetTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  sheetSubtitle: { color: Theme.colors.subtext, fontSize: 12, marginTop: 2 },
-  closeBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 0, backgroundColor: 'rgba(255,255,255,0.06)' },
-
-  fullMapWrapper: { flex: 1, backgroundColor: '#050B14', borderRadius: 0, borderWidth: 1, borderColor: '#1E293B', overflow: 'hidden', marginBottom: 20 },
-
-  driverCard: { padding: 16, backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', marginBottom: 20 },
-  driverInfoRow: { flexDirection: 'row', alignItems: 'center' },
-  truckIconCircle: { width: 44, height: 44, borderRadius: 0, backgroundColor: 'rgba(16, 185, 129, 0.12)', justifyContent: 'center', alignItems: 'center' },
-  driverName: { color: '#fff', fontSize: 15, fontWeight: 'bold' },
-  driverStatus: { color: Theme.colors.subtext, fontSize: 11, marginTop: 2 },
-  callIconBtn: { width: 40, height: 40, borderRadius: 0, backgroundColor: '#10B981', justifyContent: 'center', alignItems: 'center' },
-
-  etaBar: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.04)', paddingTop: 12, marginTop: 12 },
-  etaText: { color: Theme.colors.subtext, fontSize: 12, marginLeft: 8 },
-
-  partsAccordionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderTopWidth: 1, borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.05)', paddingHorizontal: 4 },
-  partsAccordionTitle: { color: '#fff', fontSize: 14, fontWeight: '600', marginLeft: 8 },
-  
-  partsListContainer: { paddingVertical: 12, paddingHorizontal: 12 },
-  partItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  partName: { color: Theme.colors.subtext, fontSize: 13, marginLeft: 8 }
-});

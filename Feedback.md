@@ -1,68 +1,66 @@
-1. Tầng 1: Định danh tài sản (Vehicle Identity)
-Khách hàng cần thấy ngay chiếc xe chính chủ của mình với các thông tin độc nhất (không trùng lặp với bất kỳ ai):
+Khi khóa tính năng ở trạng thái Chỉ đọc (Read-only) và tập trung vào Giám sát & Cảnh báo, phân hệ Kho trên Mobile Admin sẽ được thiết kế tinh giản, sạch sẽ theo đúng cấu trúc dưới đây:
 
-Hình ảnh thực tế theo đúng màu xe: Nếu khách mua SH màu Xám Xi Măng, ảnh hiển thị phải là màu Xám Xi Măng, không dùng ảnh đại diện chung chung của hãng.
+🔍 1. Thanh Tìm Kiếm & Bộ Lọc Nhanh (Search & Filter)
+Đặt ở đỉnh trang giúp Admin tra cứu nhanh tình trạng một mã phụ tùng khi khách hỏi tại quầy hoặc khi thợ kỹ thuật báo thiếu đồ:
 
-Biển số xe cá nhân: Hiển thị lớn, bo khung mô phỏng biển số thật (Ví dụ: 60-A1 555.55 tại Biên Hòa).
+Thanh tìm kiếm thông minh: Gõ nhanh theo Tên sản phẩm hoặc Mã SKU (Ví dụ: "Nhớt Motul", "Má phanh SH").
 
-Số khung / Số máy: Thông tin pháp lý quan trọng để đối chiếu khi đi làm thủ tục hoặc kiểm tra bảo hành gốc từ hãng.
+Bộ lọc nhanh dạng Tab (Quick Filters): Phân loại nhanh để quét danh sách: [ Tất cả ] | [ Phụ tùng ] | [ Phụ kiện ] | [ Xe nguyên chiếc ].
 
-Biệt danh của xe (Tùy chọn): Cho phép khách tự đặt tên vui vẻ cho xe (Ví dụ: "Vợ hai", "Chiến mã").
+🚨 2. Khối Cảnh Báo "Hàng Dưới Ngưỡng An Toàn" (Low Stock Alerts)
+Đây là khu vực mang lại giá trị lớn nhất cho Admin trên mobile. Hệ thống tự động quét và gom tất cả các sản phẩm có số lượng tồn kho chạm hoặc dưới ngưỡng tối thiểu (Safety Stock Level) đẩy lên trên cùng.
 
-⏳ 2. Tầng 2: Trạng thái Vận hành & Bảo hành (Live Status)
-Số Km đã đi (ODO Dự kiến): Hệ thống dựa vào dữ liệu lần sửa cuối ở xưởng và thuật toán chạy trung bình ngày để hiển thị số ODO ước tính hiện tại.
+Cách hiển thị: Các thẻ sản phẩm ở mục này sẽ có nhãn màu Đỏ Coral hoặc Cam Neon để gây chú ý mạnh.
 
-Thời hạn bảo hành còn lại: Thay vì ghi ngày tháng khô khan, hãy dùng một thanh tiến độ (Progress Bar) kèm số ngày đếm ngược: "Còn 425 ngày bảo hành chính hãng". Điều này nhắc nhở khách hàng về quyền lợi của họ.
+Nội dung mô tả trực quan:
 
-🛠️ 3. Tầng 3: Sức khỏe & Nhật ký "Xe Sạch" (Health Monitor)
-Đây là phần lõi tạo ra dòng tiền quay lại xưởng dịch vụ cho cửa hàng:
+Lọc gió Honda Winner X: Còn 2 cái (Ngưỡng an toàn: 10 cái) ➔ ⚠️ Nguy cấp.
 
-Trạng thái bộ phận (Dự báo hao mòn): Hiển thị danh sách các linh kiện tiêu hao theo dạng thanh màu sắc (Xanh: Tốt / Vàng: Sắp đến hạn / Đỏ: Cần thay ngay):
+Nhớt máy Castrol Power1 1L: Còn 5 chai (Ngưỡng an toàn: 20 chai) ➔ ⚠️ Sắp hết.
 
-Nhớt máy: Còn khoảng 500 km.
+📦 3. Danh Sách Tồn Kho Showroom (Stock List Rows)
+Hiển thị danh sách toàn bộ hàng hóa trong kho Biên Hòa theo dạng các dòng danh sách (List Rows) mỏng, tối giản không gian, loại bỏ hoàn toàn các nút bấm Thêm/Sửa/Xóa.
 
-Má phanh: Trạng thái Tốt.
+Các thông tin hiển thị trên một dòng:
 
-Lọc gió: Cần kiểm tra.
+Ảnh thumbnail nhỏ của sản phẩm.
 
-Lối tắt xem "Bệnh án": Nút bấm dẫn thẳng vào lịch sử tất cả các lần sửa chữa, hóa đơn đã chi tại AnhEmMotor của riêng chiếc xe này.
+Tên sản phẩm + Mã SKU hành chính.
 
-📄 4. Tầng 4: Hồ sơ Pháp lý & Hành chính (Legal Documents)
-Nơi lưu trữ các giấy tờ số hóa để khách hàng có thể lục lại cứu cánh trong các tình huống khẩn cấp trên đường:
+Con số tồn kho hiển thị lớn ở góc phải: Chữ màu xanh mint nếu tồn kho an toàn (Ví dụ: Còn 45).
 
-Bảo hiểm dân sự bắt buộc: Hiển thị ngày hết hạn. Nếu sắp hết hạn, hệ thống sẽ đổi sang màu cam/đỏ kèm nút gia hạn nhanh.
-
-Hóa đơn điện tử mua xe (e-Invoice): File PDF lưu trữ ngày xuống tiền mua xe để đối chiếu thuế bạ.
-
-Trạng thái giấy tờ (Nếu là xe mới mua đang chờ biển): Hiển thị tiến độ duyệt hồ sơ gốc, bấm vào sẽ nhảy về luồng hành chính ở Tab 3.
-
-📱 5. Tầng 5: Cụm hành động nhanh ở đáy màn hình (Sticky Bottom Actions)
-Ghim cố định ở đáy màn hình 2 nút bấm có tần suất sử dụng cao nhất đối với một chiếc xe đang vận hành:
-
-📅 Nút chính (Màu nổi bật): [ Đặt lịch bảo dưỡng xe này ] — Bấm vào hệ thống tự động điền sẵn thông tin xe, biển số vào form đặt lịch, khách chỉ việc chọn giờ đến xưởng Biên Hòa.
-
-📖 Nút phụ (Dạng viền): [ Sách hướng dẫn sử dụng (User Manual) ] — Bản số hóa hướng dẫn thông số áp suất lốp, cách mở cốp thông minh, cách dùng Smartkey của đúng đời xe đó để khách tự tra cứu khi cần.
-
-🎨 Bố cục trực quan hóa nhanh trên Mobile UI:
+🎨 Trực quan hóa giao diện Kho trên Mobile Admin
 Plaintext
 ┌────────────────────────────────────────┐
-│ ❮  Chi tiết chiếc xe của tôi           │
+│ ❮  Tra Cứu Tồn Kho Biên Hòa            │  ◄── Read-only Mode (Không có nút "+")
 ├────────────────────────────────────────┤
-│                [ 🛵 ]                  │ ◄── Đúng màu xe khách mua
-│           HONDA SH 125i                │
-│       [ Biển số: 60-A1 555.55 ]        │ ◄── Khung biển số giả lập
+│ 🔍 Tìm tên sản phẩm, mã SKU...         │
 ├────────────────────────────────────────┤
-│ ⏳ Trạng thái: 5,200 km (ODO)          │
-│ 🛡️ Bảo hành: [██████░░░░] Còn 14 tháng  │
+│ [ Tất cả ]  [ Phụ tùng ]  [ Phụ kiện ]  │  ◄── Bộ lọc nhanh dạng Tab chạm
 ├────────────────────────────────────────┤
-│ 🩺 Sức khỏe phụ tùng                   │
-│   • Nhớt máy:   ⚠️ Còn 300km cần thay  │ ◄── Dự báo hao mòn thông minh
-│   • Má phanh:   ✓ Đang tốt             │
+│ 🚨 CẢNH BÁO HÀNG SẮP HẾT (3)           │
+│ ┌────────────────────────────────────┐ │
+│ │ 🛠️ Lọc gió Winner X  [⚠️ Nguy cấp]   │ │  ◄── Thẻ cảnh báo viền đỏ phát sáng
+│ │ SKU: PT-LG-WN01    | Tồn kho: 02   │ │
+│ └────────────────────────────────────┘ │
 ├────────────────────────────────────────┤
-│ 📄 Giấy tờ của xe                      │
-│   • Bảo hiểm xe: Hết hạn 20/05/2026   │
-│   • Hóa đơn mua xe điện tử (PDF)     ➔ │
+│ 📦 DANH SÁCH HÀNG HÓA                  │
+│ • 🧴 Nhớt Motul Scooter 1L   Tồn: 85  │  ◄── Chữ số tồn kho lớn, màu xanh an toàn
+│   SKU: PK-N-MT02                       │
+│                                        │
+│ • 🪞 Gương chiếu hậu SH      Tồn: 14  │
+│   SKU: PT-G-SH2025                     │
 ├────────────────────────────────────────┤
-│  [ ĐẶT LỊCH SỬA CHỮA ]   [ SÁCH HDSD ] │ ◄── Cụm nút Sticky cố định đáy
+│ 💡 Mọi thao tác Thêm, Sửa, Xóa và Nhập │  ◄── Dòng nhắc nhở phân quyền hệ thống
+│ kho vui lòng thực hiện trên Web Admin. │
 └────────────────────────────────────────┘
-Sự khác biệt lớn nhất ở đây là tính "Cá nhân hóa và Động". Trang chi tiết sản phẩm thì ai nhìn cũng giống nhau, còn trang chi tiết xe này đổi thay theo từng cây số mà khách hàng lăn bánh trên đường.
+⚙️ Thiết kế trang Chi tiết Sản phẩm trên Mobile (View Details Only)
+Khi Admin bấm vào một dòng sản phẩm, App sẽ trượt mở một Bottom Sheet hiển thị sâu hơn các thông số quản trị (vẫn ở chế độ chỉ xem):
+
+Giá vốn / Giá bán niêm yết.
+
+Vị trí vị trí kệ kho: (Ví dụ: Kệ A - Tầng 3 để Admin hướng dẫn nhân viên ra lấy đồ nhanh).
+
+Nhà cung ứng: Tên đơn vị cấp hàng và số điện thoại liên hệ nhanh khi cần giục hàng gấp.
+
+Sự tinh chỉnh này giúp phân hệ Kho trên Mobile trở thành một công cụ kiểm tra dữ liệu cực kỳ bén, giúp quản lý showroom luôn nắm chắc "sức khỏe" hàng hóa trong lòng bàn tay mà không làm phình to kiến trúc phần mềm trên thiết bị di động.

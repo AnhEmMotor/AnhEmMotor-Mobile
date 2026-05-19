@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { Theme } from '../../../theme/Theme';
+import { Theme, useActiveColors } from '../../../theme/Theme';
 import { 
   Layers, 
   Wrench, 
@@ -14,7 +14,28 @@ import {
 import GlassCard from '../../../components/GlassCard';
 import Animated, { FadeInUp, FadeInDown, FadeInRight } from 'react-native-reanimated';
 
+const getStyles = (colors) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: Theme.spacing.lg },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
+  title: { color: colors.text, fontSize: 26, fontWeight: 'bold' },
+  subtitle: { color: colors.subtext, fontSize: 13, marginTop: 4 },
+  iconBox: { backgroundColor: colors.primary + '1A', width: 44, height: 44, borderRadius: 0, borderWidth: 1, borderColor: colors.primary + '4D', justifyContent: 'center', alignItems: 'center' },
+
+  gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: Theme.spacing.md },
+  gridItemWrapper: { width: '48%', marginBottom: 16 },
+  gridItemClickable: { flex: 1 },
+  menuCard: { padding: 16, height: 165, justifyContent: 'space-between' },
+  iconWrapper: { width: 40, height: 40, borderRadius: 0, borderWidth: 1, borderColor: colors.border, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
+  menuTitle: { color: colors.text, fontSize: 14, fontWeight: 'bold' },
+  menuDesc: { color: colors.subtext, fontSize: 11, lineHeight: 16, marginTop: 4, opacity: 0.8 },
+  cardFooter: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  actionText: { fontSize: 10, fontWeight: 'bold', marginRight: 4, textTransform: 'uppercase' }
+});
+
 export default function HubScreen({ navigation }) {
+  const colors = useActiveColors();
+  const styles = getStyles(colors);
+
   const menuItems = [
     {
       id: 'inventory',
@@ -75,7 +96,7 @@ export default function HubScreen({ navigation }) {
           <Text style={styles.subtitle}>Phím tắt điều hành & giám sát showroom</Text>
         </View>
         <View style={styles.iconBox}>
-          <LayoutGrid color={Theme.colors.primary} size={22} />
+          <LayoutGrid color={colors.primary} size={22} />
         </View>
       </Animated.View>
 
@@ -114,21 +135,3 @@ export default function HubScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background, paddingHorizontal: Theme.spacing.lg },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
-  title: { color: Theme.colors.text, fontSize: 26, fontWeight: 'bold' },
-  subtitle: { color: Theme.colors.subtext, fontSize: 13, marginTop: 4 },
-  iconBox: { backgroundColor: 'rgba(59, 130, 246, 0.1)', width: 44, height: 44, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.3)', justifyContent: 'center', alignItems: 'center' },
-
-  gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: Theme.spacing.md },
-  gridItemWrapper: { width: '48%', marginBottom: 16 },
-  gridItemClickable: { flex: 1 },
-  menuCard: { padding: 16, height: 165, justifyContent: 'space-between' },
-  iconWrapper: { width: 40, height: 40, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
-  menuTitle: { color: Theme.colors.text, fontSize: 14, fontWeight: 'bold' },
-  menuDesc: { color: Theme.colors.subtext, fontSize: 11, lineHeight: 16, marginTop: 4, opacity: 0.8 },
-  cardFooter: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
-  actionText: { fontSize: 10, fontWeight: 'bold', marginRight: 4, textTransform: 'uppercase' }
-});
