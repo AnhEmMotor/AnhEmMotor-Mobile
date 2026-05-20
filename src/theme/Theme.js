@@ -90,29 +90,29 @@ export const Theme = {
 
 // Define palettes as plain objects, logic for selecting them will be in useActiveColors
 const darkPalette = {
-  background: '#0B0F19',
+  background: '#0F172A', // Màu tối hơn, dễ nhìn hơn
   card: '#1E293B',
-  surface: '#1E293B',
+  surface: '#334155',
   text: '#F8FAFC',
   subtext: '#94A3B8',
-  border: 'rgba(255, 255, 255, 0.06)',
-  glassBg: 'rgba(17, 24, 39, 0.65)',
-  glassBorder: 'rgba(255, 255, 255, 0.08)',
-  inputBg: 'rgba(255, 255, 255, 0.05)',
-  modalOverlay: 'rgba(0, 0, 0, 0.8)',
+  border: 'rgba(255, 255, 255, 0.12)',
+  glassBg: 'rgba(30, 41, 59, 0.85)',
+  glassBorder: 'rgba(255, 255, 255, 0.15)',
+  inputBg: 'rgba(255, 255, 255, 0.1)',
+  modalOverlay: 'rgba(0, 0, 0, 0.85)',
 };
 
 const lightPalette = {
-  background: '#F8FAFC',
+  background: '#F1F5F9', // Màu sáng nhẹ nhàng hơn
   card: '#FFFFFF',
-  surface: '#FFFFFF',
+  surface: '#E2E8F0',
   text: '#0F172A',
-  subtext: '#64748B',
-  border: 'rgba(0, 0, 0, 0.08)',
-  glassBg: 'rgba(255, 255, 255, 0.8)',
-  glassBorder: 'rgba(0, 0, 0, 0.05)',
-  inputBg: 'rgba(0, 0, 0, 0.03)',
-  modalOverlay: 'rgba(0, 0, 0, 0.5)',
+  subtext: '#475569',
+  border: 'rgba(0, 0, 0, 0.12)',
+  glassBg: 'rgba(255, 255, 255, 0.9)',
+  glassBorder: 'rgba(0, 0, 0, 0.08)',
+  inputBg: 'rgba(0, 0, 0, 0.05)',
+  modalOverlay: 'rgba(0, 0, 0, 0.6)',
 };
 
 // Hook to get active colors based on theme mode

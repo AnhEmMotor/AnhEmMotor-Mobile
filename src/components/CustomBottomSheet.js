@@ -1,19 +1,16 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useRef, useCallback } from 'react';
-import { StyleSheet, View, Text, useColorScheme } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { Theme } from '../theme/Theme';
+import { useActiveColors } from '../theme/Theme';
 
-const CustomBottomSheet = forwardRef(({ children, title, onClose, themeMode = 'dark' }, ref) => {
+const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
   const bottomSheetRef = useRef(null);
+  const activeColors = useActiveColors();
 
-  // Dynamic Theme Evaluation
-  const systemScheme = useColorScheme();
-  const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
-
-  const activeBg = isDark ? '#111827' : '#FFFFFF';
-  const activeTitle = isDark ? '#F8FAFC' : '#0F172A';
-  const activeIndicator = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)';
-  const activeBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)';
+  const activeBg = activeColors.card;
+  const activeTitle = activeColors.text;
+  const activeIndicator = activeColors.isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  const activeBorder = activeColors.border;
 
   // Cấu hình Snap Points cố định để tránh giật lag (Priority 1 & 3)
   const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);

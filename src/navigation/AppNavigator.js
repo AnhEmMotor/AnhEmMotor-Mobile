@@ -109,18 +109,26 @@ function CustomerTabs() {
 }
 
 function AdminTabs() {
+  const { themeMode } = useGlobalState();
+  const systemScheme = useColorScheme();
+  const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
   const barHeight = 55 + bottomInset;
   const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
 
+  const tabBg = isDark ? '#0F172A' : '#FFFFFF';
+  const tabActiveText = Theme.staticColors.primary;
+  const tabInactiveText = isDark ? '#64748B' : '#94A3B8';
+  const tabBorderTop = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+
   return (
     <Tab.Navigator screenOptions={{
       headerShown: false,
       tabBarStyle: { 
-        backgroundColor: '#0B0F19', 
+        backgroundColor: tabBg, 
         borderTopWidth: 1, 
-        borderTopColor: '#1E293B', 
+        borderTopColor: tabBorderTop, 
         height: barHeight, 
         paddingBottom: paddingBottom,
         paddingTop: 8,
@@ -131,11 +139,11 @@ function AdminTabs() {
         right: 0,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -4 },
-        shadowOpacity: 0.3,
+        shadowOpacity: isDark ? 0.4 : 0.2,
         shadowRadius: 8,
       },
-      tabBarActiveTintColor: '#3B82F6', // Electric Blue
-      tabBarInactiveTintColor: '#64748B', // Inactive Slate Gray
+      tabBarActiveTintColor: tabActiveText,
+      tabBarInactiveTintColor: tabInactiveText,
     }}>
       <Tab.Screen name="AdminDashboard" component={DashboardScreen} options={{
         tabBarIcon: ({color}) => <BarChart2 color={color} size={24} />,
