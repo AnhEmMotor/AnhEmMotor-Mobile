@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { Theme, useActiveColors } from '../theme/Theme';
+import { useActiveColors, useTheme } from '../theme/Theme'; // Import useTheme
 import { Check, X, Info, FileText } from 'lucide-react-native';
 import GlassCard from './GlassCard';
 
@@ -28,42 +28,42 @@ const RemoteApproval = ({ items: initialItems, onComplete }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={getStyles(activeColors).container}> {/* Use getStyles for container */}
       <View style={styles.header}>
         <FileText color={activeColors.primary} size={20} />
         <Text style={[styles.title, { color: activeColors.text }]}>Báo giá & Phê duyệt 📝</Text>
       </View>
-      
+
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
         {items.map(item => (
           <GlassCard key={item.id} style={styles.itemCard} intensity={item.status === 'rejected' ? 5 : 15}>
             <View style={styles.itemInfo}>
               <View style={styles.itemNameRow}>
-                <Text style={[styles.itemName, { color: activeColors.text }, item.status === 'rejected' && [styles.rejectedText, { color: activeColors.subtext }]]}>{item.name}</Text>
+                <Text style={[getStyles(activeColors).itemName, { color: activeColors.text }, item.status === 'rejected' && [getStyles(activeColors).rejectedText, { color: activeColors.subtext }]]}>{item.name}</Text>
                 {item.urgent && (
-                  <View style={styles.urgentBadge}>
-                    <Text style={[styles.urgentText, { color: activeColors.secondary }]}>CẦN THIẾT</Text>
+                  <View style={getStyles(activeColors).urgentBadge}>
+                    <Text style={[getStyles(activeColors).urgentText, { color: activeColors.secondary }]}>CẦN THIẾT</Text>
                   </View>
                 )}
               </View>
               <Text style={[styles.itemPrice, { color: activeColors.primary }]}>{formatCurrency(item.price)}</Text>
             </View>
-            
+
             <View style={[styles.actionRow, { borderTopColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
-              <TouchableOpacity 
-                style={[styles.actionBtn, item.status === 'rejected' && [styles.activeReject, { backgroundColor: activeColors.secondary }]]} 
+              <TouchableOpacity
+                style={[getStyles(activeColors).actionBtn, item.status === 'rejected' && [getStyles(activeColors).activeReject, { backgroundColor: activeColors.secondary }]]}
                 onPress={() => toggleStatus(item.id, 'rejected')}
               >
                 <X color={item.status === 'rejected' ? '#fff' : activeColors.subtext} size={18} />
-                <Text style={[styles.actionText, { color: activeColors.subtext }, item.status === 'rejected' && styles.activeLabel]}>Từ chối</Text>
+                <Text style={[getStyles(activeColors).actionText, { color: activeColors.subtext }, item.status === 'rejected' && getStyles(activeColors).activeLabel]}>Từ chối</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.actionBtn, item.status === 'approved' && [styles.activeApprove, { backgroundColor: activeColors.success }]]} 
+
+              <TouchableOpacity
+                style={[getStyles(activeColors).actionBtn, item.status === 'approved' && [getStyles(activeColors).activeApprove, { backgroundColor: activeColors.success }]]}
                 onPress={() => toggleStatus(item.id, 'approved')}
               >
                 <Check color={item.status === 'approved' ? '#fff' : activeColors.subtext} size={18} />
-                <Text style={[styles.actionText, { color: activeColors.subtext }, item.status === 'approved' && styles.activeLabel]}>Đồng ý</Text>
+                <Text style={[getStyles(activeColors).actionText, { color: activeColors.subtext }, item.status === 'approved' && getStyles(activeColors).activeLabel]}>Đồng ý</Text>
               </TouchableOpacity>
             </View>
           </GlassCard>
@@ -71,12 +71,12 @@ const RemoteApproval = ({ items: initialItems, onComplete }) => {
       </ScrollView>
 
       <View style={[styles.footer, { borderTopColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
-        <View style={styles.totalRow}>
-          <Text style={[styles.totalLabel, { color: activeColors.subtext }]}>Tổng cộng dự tính:</Text>
-          <Text style={[styles.totalValue, { color: activeColors.text }]}>{formatCurrency(calculateTotal())}</Text>
+        <View style={getStyles(activeColors).totalRow}>
+          <Text style={[getStyles(activeColors).totalLabel, { color: activeColors.subtext }]}>Tổng cộng dự tính:</Text>
+          <Text style={[getStyles(activeColors).totalValue, { color: activeColors.text }]}>{formatCurrency(calculateTotal())}</Text>
         </View>
-        <TouchableOpacity 
-          style={[styles.submitBtn, { backgroundColor: activeColors.primary }]}
+        <TouchableOpacity
+          style={[getStyles(activeColors).submitBtn, { backgroundColor: activeColors.primary }]}
           onPress={() => onComplete?.(items)}
         >
           <Text style={styles.submitText}>Xác nhận tất cả</Text>
@@ -86,7 +86,7 @@ const RemoteApproval = ({ items: initialItems, onComplete }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   container: { flex: 1 },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   title: { color: '#fff', fontSize: 20, fontWeight: 'bold', marginLeft: 10 },
@@ -95,21 +95,21 @@ const styles = StyleSheet.create({
   itemInfo: { marginBottom: 15 },
   itemNameRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
   itemName: { color: '#fff', fontSize: 15, fontWeight: 'bold', flex: 1 },
-  rejectedText: { color: Theme.colors.subtext, textDecorationLine: 'line-through' },
-  itemPrice: { color: Theme.colors.primary, fontSize: 14, fontWeight: '600' },
+  rejectedText: { color: colors.subtext, textDecorationLine: 'line-through' }, // This is fine
+  itemPrice: { color: colors.primary, fontSize: 14, fontWeight: '600' }, // Use colors.primary
   urgentBadge: { backgroundColor: 'rgba(239, 68, 68, 0.1)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, marginLeft: 10 },
-  urgentText: { color: Theme.colors.secondary, fontSize: 8, fontWeight: '900' },
+  urgentText: { color: colors.secondary, fontSize: 8, fontWeight: '900' }, // This is fine
   actionRow: { flexDirection: 'row', justifyContent: 'flex-end', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 12 },
   actionBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, marginLeft: 10 },
-  activeApprove: { backgroundColor: Theme.colors.success },
-  activeReject: { backgroundColor: Theme.colors.secondary },
-  actionText: { color: Theme.colors.subtext, fontSize: 12, fontWeight: 'bold', marginLeft: 6 },
+  activeApprove: { backgroundColor: colors.success },
+  activeReject: { backgroundColor: colors.secondary },
+  actionText: { color: colors.subtext, fontSize: 12, fontWeight: 'bold', marginLeft: 6 },
   activeLabel: { color: '#fff' },
   footer: { marginTop: 20, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 20 },
-  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  totalLabel: { color: Theme.colors.subtext, fontSize: 14 },
+  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }, // This is fine
+  totalLabel: { color: colors.subtext, fontSize: 14 },
   totalValue: { color: '#fff', fontSize: 22, fontWeight: '900' },
-  submitBtn: { backgroundColor: Theme.colors.primary, height: 55, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+  submitBtn: { backgroundColor: colors.primary, height: 55, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
   submitText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
 });
 

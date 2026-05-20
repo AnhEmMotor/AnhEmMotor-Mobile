@@ -163,7 +163,7 @@ export default function ProfileScreen({ navigation, route }) {
   if (isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: loadingBg, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={Theme.colors.primary} />
+        <ActivityIndicator size="large" color={Theme.staticColors.primary} />
         <Text style={{ color: loadingText, marginTop: 15, fontSize: 14 }}>Đang tải thông tin hồ sơ...</Text>
       </View>
     );
@@ -257,7 +257,7 @@ export default function ProfileScreen({ navigation, route }) {
               {days.map(day => (
                 <TouchableOpacity 
                   key={day} 
-                  style={{ padding: 10, alignItems: 'center', backgroundColor: d === day ? Theme.colors.primary : 'transparent' }}
+                  style={{ padding: 10, alignItems: 'center', backgroundColor: d === day ? Theme.staticColors.primary : 'transparent' }}
                   onPress={() => {
                     const formattedDay = day < 10 ? `0${day}` : `${day}`;
                     const formattedMonth = m < 10 ? `0${m}` : `${m}`;
@@ -277,7 +277,7 @@ export default function ProfileScreen({ navigation, route }) {
               {months.map(month => (
                 <TouchableOpacity 
                   key={month} 
-                  style={{ padding: 10, alignItems: 'center', backgroundColor: m === month ? Theme.colors.primary : 'transparent' }}
+                  style={{ padding: 10, alignItems: 'center', backgroundColor: m === month ? Theme.staticColors.primary : 'transparent' }}
                   onPress={() => {
                     const formattedDay = d < 10 ? `0${d}` : `${d}`;
                     const formattedMonth = month < 10 ? `0${month}` : `${month}`;
@@ -297,7 +297,7 @@ export default function ProfileScreen({ navigation, route }) {
               {years.map(year => (
                 <TouchableOpacity 
                   key={year} 
-                  style={{ padding: 10, alignItems: 'center', backgroundColor: y === year ? Theme.colors.primary : 'transparent' }}
+                  style={{ padding: 10, alignItems: 'center', backgroundColor: y === year ? Theme.staticColors.primary : 'transparent' }}
                   onPress={() => {
                     const formattedDay = d < 10 ? `0${d}` : `${d}`;
                     const formattedMonth = m < 10 ? `0${m}` : `${m}`;
@@ -347,7 +347,7 @@ export default function ProfileScreen({ navigation, route }) {
               {/* 1. Họ và tên */}
               <Text style={[styles.formLabel, { color: activeColors.text }]}>Họ và tên khách hàng</Text>
               <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-                <User color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+                <User color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
                 <TextInput 
                   style={[styles.formInput, { color: activeColors.text }]}
                   value={tempData.name}
@@ -370,9 +370,9 @@ export default function ProfileScreen({ navigation, route }) {
                   );
                 }}
               >
-                <Phone color={Theme.colors.warning} size={18} style={styles.formInputIcon} />
+                <Phone color={Theme.staticColors.warning} size={18} style={styles.formInputIcon} />
                 <Text style={[styles.formInput, { color: activeColors.subtext }]}>{profile.phone}</Text>
-                <Lock color={Theme.colors.warning} size={15} style={{ marginRight: 15 }} />
+                <Lock color={Theme.staticColors.warning} size={15} style={{ marginRight: 15 }} />
               </TouchableOpacity>
 
               {/* 3. Giới tính */}
@@ -398,7 +398,7 @@ export default function ProfileScreen({ navigation, route }) {
               {/* 5. Email */}
               <Text style={[styles.formLabel, { color: activeColors.text }]}>Email nhận hoá đơn PDF</Text>
               <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-                <Mail color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+                <Mail color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
                 <TextInput 
                   style={[styles.formInput, { color: activeColors.text }]}
                   value={tempData.email}
@@ -455,7 +455,7 @@ export default function ProfileScreen({ navigation, route }) {
 
               <Text style={[styles.formLabel, { color: activeColors.text }]}>Số nhà, tên đường cụ thể</Text>
               <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-                <MapPin color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+                <MapPin color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
                 <TextInput 
                   style={[styles.formInput, { color: activeColors.text }]}
                   value={tempData.specificAddress}
@@ -501,8 +501,8 @@ export default function ProfileScreen({ navigation, route }) {
                   <Image source={{ uri: tempData.licenseImage }} style={styles.licenseImage} resizeMode="cover" />
                 ) : (
                   <View style={styles.licenseUploadBtn}>
-                    <Camera color={Theme.colors.primary} size={32} />
-                    <Text style={[styles.licenseUploadText, { color: Theme.colors.primary }]}>Tải lên mặt trước bằng lái</Text>
+                    <Camera color={Theme.staticColors.primary} size={32} />
+                    <Text style={[styles.licenseUploadText, { color: Theme.staticColors.primary }]}>Tải lên mặt trước bằng lái</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -515,7 +515,7 @@ export default function ProfileScreen({ navigation, route }) {
           <View style={styles.formContainer}>
             <Text style={[styles.formLabel, { color: activeColors.text }]}>Họ và tên khách hàng</Text>
             <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-              <User color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+              <User color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
               <TextInput 
                 style={[styles.formInput, { color: activeColors.text }]}
                 value={tempData.name}
@@ -534,7 +534,7 @@ export default function ProfileScreen({ navigation, route }) {
           <View style={styles.formContainer}>
             <Text style={[styles.formLabel, { color: activeColors.text }]}>Email nhận hoá đơn PDF</Text>
             <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-              <Mail color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+              <Mail color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
               <TextInput 
                 style={[styles.formInput, { color: activeColors.text }]}
                 value={tempData.email}
@@ -600,7 +600,7 @@ export default function ProfileScreen({ navigation, route }) {
 
             <Text style={[styles.formLabel, { color: activeColors.text }]}>Số nhà, tên đường cụ thể</Text>
             <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-              <MapPin color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+              <MapPin color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
               <TextInput 
                 style={[styles.formInput, { color: activeColors.text }]}
                 value={tempData.specificAddress}
@@ -651,8 +651,8 @@ export default function ProfileScreen({ navigation, route }) {
                 <Image source={{ uri: tempData.licenseImage }} style={styles.licenseImage} resizeMode="cover" />
               ) : (
                 <View style={styles.licenseUploadBtn}>
-                  <Camera color={Theme.colors.primary} size={32} />
-                  <Text style={[styles.licenseUploadText, { color: Theme.colors.primary }]}>Tải lên mặt trước bằng lái</Text>
+                  <Camera color={Theme.staticColors.primary} size={32} />
+                  <Text style={[styles.licenseUploadText, { color: Theme.staticColors.primary }]}>Tải lên mặt trước bằng lái</Text>
                 </View>
               )}
             </TouchableOpacity>
@@ -665,7 +665,7 @@ export default function ProfileScreen({ navigation, route }) {
           <View style={styles.formContainer}>
             <Text style={[styles.formLabel, { color: activeColors.text }]}>Mật khẩu cũ</Text>
             <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-              <Lock color={Theme.colors.primary} size={18} style={styles.formInputIcon} />
+              <Lock color={Theme.staticColors.primary} size={18} style={styles.formInputIcon} />
               <TextInput 
                 style={[styles.formInput, { color: activeColors.text }]}
                 value={passwordForm.oldPassword}
@@ -678,7 +678,7 @@ export default function ProfileScreen({ navigation, route }) {
 
             <Text style={[styles.formLabel, { color: activeColors.text }]}>Mật khẩu mới</Text>
             <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-              <Lock color={Theme.colors.success} size={18} style={styles.formInputIcon} />
+              <Lock color={Theme.staticColors.success} size={18} style={styles.formInputIcon} />
               <TextInput 
                 style={[styles.formInput, { color: activeColors.text }]}
                 value={passwordForm.newPassword}
@@ -691,7 +691,7 @@ export default function ProfileScreen({ navigation, route }) {
 
             <Text style={[styles.formLabel, { color: activeColors.text }]}>Nhập lại mật khẩu mới</Text>
             <View style={[styles.formInputWrapper, { backgroundColor: activeColors.formInputBg, borderColor: activeColors.formInputBorder }]}>
-              <Lock color={Theme.colors.success} size={18} style={styles.formInputIcon} />
+              <Lock color={Theme.staticColors.success} size={18} style={styles.formInputIcon} />
               <TextInput 
                 style={[styles.formInput, { color: activeColors.text }]}
                 value={passwordForm.confirmPassword}
@@ -799,7 +799,7 @@ export default function ProfileScreen({ navigation, route }) {
         {/* 🎟️ KHỐI 4: VÍ TIỆN ÍCH & QUYỀN LỢI (Financial Wallet & Perks) */}
         <View style={[styles.walletBar, { backgroundColor: activeColors.cardBg, borderColor: activeColors.border }]}>
           <TouchableOpacity style={styles.walletItem} onPress={() => setVoucherModalVisible(true)}>
-            <CreditCard color={Theme.colors.primary} size={18} style={{ marginRight: 6 }} />
+            <CreditCard color={Theme.staticColors.primary} size={18} style={{ marginRight: 6 }} />
             <View>
               <Text style={[styles.walletLabel, { color: activeColors.subtext }]}>Ví Voucher</Text>
               <Text style={[styles.walletValue, { color: activeColors.text }]}>🎟️ 3 Voucher đang có</Text>
@@ -825,7 +825,7 @@ export default function ProfileScreen({ navigation, route }) {
             {/* Đặt lịch */}
             <TouchableOpacity style={styles.shopeeCol} onPress={() => navigation.navigate('Booking')}>
               <View style={[styles.iconCircle, { backgroundColor: activeColors.settingsIconBg, borderColor: activeColors.settingsIconBorder }]}>
-                <FileText color={Theme.colors.primary} size={22} />
+                <FileText color={Theme.staticColors.primary} size={22} />
               </View>
               <Text style={[styles.iconLabel, { color: activeColors.subtext }]}>Đặt lịch</Text>
             </TouchableOpacity>
@@ -833,7 +833,7 @@ export default function ProfileScreen({ navigation, route }) {
             {/* Đang sửa */}
             <TouchableOpacity style={styles.shopeeCol} onPress={() => setLiveWorkshopModalVisible(true)}>
               <View style={[styles.iconCircle, { backgroundColor: activeColors.settingsIconBg, borderColor: activeColors.settingsIconBorder }]}>
-                <Wrench color={Theme.colors.warning} size={22} />
+                <Wrench color={Theme.staticColors.warning} size={22} />
                 <View style={styles.redBadge}><Text style={styles.redBadgeText}>🛠️</Text></View>
               </View>
               <Text style={[styles.iconLabel, { color: activeColors.subtext }]}>Đang sửa</Text>
@@ -1055,7 +1055,7 @@ export default function ProfileScreen({ navigation, route }) {
                   setSettingsModalVisible(false);
                   handleLogout();
                 }}>
-                  <LogOut color={Theme.colors.text} size={18} style={{ marginRight: 8 }} />
+                  <LogOut color={Theme.staticColors.text} size={18} style={{ marginRight: 8 }} />
                   <Text style={styles.logoutText}>Đăng xuất khỏi tài khoản</Text>
                 </TouchableOpacity>
 
@@ -1063,7 +1063,7 @@ export default function ProfileScreen({ navigation, route }) {
                   setSettingsModalVisible(false);
                   handleDeleteAccount();
                 }}>
-                  <Trash2 color={Theme.colors.secondary} size={18} style={{ marginRight: 8 }} />
+                  <Trash2 color={Theme.staticColors.secondary} size={18} style={{ marginRight: 8 }} />
                   <Text style={styles.deleteText}>Xóa tài khoản vĩnh viễn</Text>
                 </TouchableOpacity>
               </View>
@@ -1083,7 +1083,7 @@ export default function ProfileScreen({ navigation, route }) {
                 <Text style={[styles.modalTitle, { marginBottom: 0, color: '#F59E0B' }]}>ĐẶC QUYỀN HẠNG VÀNG</Text>
               </View>
               <TouchableOpacity onPress={() => setPrivilegesModalVisible(false)}>
-                <Text style={{ color: Theme.colors.subtext, fontSize: 13, fontWeight: 'bold' }}>ĐÓNG</Text>
+                <Text style={{ color: Theme.staticColors.subtext, fontSize: 13, fontWeight: 'bold' }}>ĐÓNG</Text>
               </TouchableOpacity>
             </View>
 
@@ -1092,27 +1092,27 @@ export default function ProfileScreen({ navigation, route }) {
               
               <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'flex-start' }}>
                 <Text style={{ color: '#F59E0B', marginRight: 8, fontSize: 16 }}>✦</Text>
-                <Text style={{ color: Theme.colors.text, fontSize: 13, lineHeight: 18 }}>Giảm giá ngay <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>10% công thợ & linh kiện</Text> trên mọi hóa đơn sửa chữa tại Biên Hòa.</Text>
+                <Text style={{ color: Theme.staticColors.text, fontSize: 13, lineHeight: 18 }}>Giảm giá ngay <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>10% công thợ & linh kiện</Text> trên mọi hóa đơn sửa chữa tại Biên Hòa.</Text>
               </View>
               
               <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'flex-start' }}>
                 <Text style={{ color: '#F59E0B', marginRight: 8, fontSize: 16 }}>✦</Text>
-                <Text style={{ color: Theme.colors.text, fontSize: 13, lineHeight: 18 }}>Tặng miễn phí một chai <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Nhớt máy Motul cao cấp</Text> vào tháng sinh nhật của bạn.</Text>
+                <Text style={{ color: Theme.staticColors.text, fontSize: 13, lineHeight: 18 }}>Tặng miễn phí một chai <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Nhớt máy Motul cao cấp</Text> vào tháng sinh nhật của bạn.</Text>
               </View>
 
               <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'flex-start' }}>
                 <Text style={{ color: '#F59E0B', marginRight: 8, fontSize: 16 }}>✦</Text>
-                <Text style={{ color: Theme.colors.text, fontSize: 13, lineHeight: 18 }}>Sử dụng <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Phòng chờ VIP Lounge</Text> phục vụ nước ngọt, trà gừng, cà phê máy hạt miễn phí.</Text>
+                <Text style={{ color: Theme.staticColors.text, fontSize: 13, lineHeight: 18 }}>Sử dụng <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Phòng chờ VIP Lounge</Text> phục vụ nước ngọt, trà gừng, cà phê máy hạt miễn phí.</Text>
               </View>
 
               <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'flex-start' }}>
                 <Text style={{ color: '#F59E0B', marginRight: 8, fontSize: 16 }}>✦</Text>
-                <Text style={{ color: Theme.colors.text, fontSize: 13, lineHeight: 18 }}>Đặc quyền <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Ưu tiên bảo dưỡng</Text>, kỹ thuật viên trưởng trực tiếp xử lý không cần bốc số xếp hàng.</Text>
+                <Text style={{ color: Theme.staticColors.text, fontSize: 13, lineHeight: 18 }}>Đặc quyền <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Ưu tiên bảo dưỡng</Text>, kỹ thuật viên trưởng trực tiếp xử lý không cần bốc số xếp hàng.</Text>
               </View>
 
               <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'flex-start' }}>
                 <Text style={{ color: '#F59E0B', marginRight: 8, fontSize: 16 }}>✦</Text>
-                <Text style={{ color: Theme.colors.text, fontSize: 13, lineHeight: 18 }}>Hỗ trợ <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Xe cứu hộ khẩn cấp 24/7</Text> miễn phí trong bán kính 15km tại khu vực Đồng Nai.</Text>
+                <Text style={{ color: Theme.staticColors.text, fontSize: 13, lineHeight: 18 }}>Hỗ trợ <Text style={{ color: '#F59E0B', fontWeight: 'bold' }}>Xe cứu hộ khẩn cấp 24/7</Text> miễn phí trong bán kính 15km tại khu vực Đồng Nai.</Text>
               </View>
             </ScrollView>
           </View>
@@ -1128,11 +1128,11 @@ export default function ProfileScreen({ navigation, route }) {
             
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Wrench color={Theme.colors.warning} size={22} style={{ marginRight: 8 }} />
+                <Wrench color={Theme.staticColors.warning} size={22} style={{ marginRight: 8 }} />
                 <Text style={[styles.modalTitle, { marginBottom: 0 }]}>TIẾN ĐỘ SỬA XE KHÁCH HÀNG</Text>
               </View>
               <TouchableOpacity onPress={() => setLiveWorkshopModalVisible(false)}>
-                <Text style={{ color: Theme.colors.subtext, fontSize: 12 }}>ĐÓNG</Text>
+                <Text style={{ color: Theme.staticColors.subtext, fontSize: 12 }}>ĐÓNG</Text>
               </TouchableOpacity>
             </View>
 
@@ -1141,8 +1141,8 @@ export default function ProfileScreen({ navigation, route }) {
               <Image source={{ uri: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=2070' }} style={{ width: 60, height: 60, borderRadius: 8, marginRight: 12 }} />
               <View style={{ flex: 1 }}>
                 <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 14 }}>HONDA SH 160i ABS</Text>
-                <Text style={{ color: Theme.colors.subtext, fontSize: 12, marginTop: 2 }}>Biển số: 60-A1 555.55 • Bàn kỹ thuật 3</Text>
-                <Text style={{ color: Theme.colors.warning, fontSize: 11, fontWeight: 'bold', marginTop: 4 }}>🛠️ Đang sửa chữa trực tiếp tại xưởng</Text>
+                <Text style={{ color: Theme.staticColors.subtext, fontSize: 12, marginTop: 2 }}>Biển số: 60-A1 555.55 • Bàn kỹ thuật 3</Text>
+                <Text style={{ color: Theme.staticColors.warning, fontSize: 11, fontWeight: 'bold', marginTop: 4 }}>🛠️ Đang sửa chữa trực tiếp tại xưởng</Text>
               </View>
             </GlassCard>
 
@@ -1151,7 +1151,7 @@ export default function ProfileScreen({ navigation, route }) {
               <Image source={{ uri: 'https://img.freepik.com/free-photo/handsome-mechanic-workshop_23-2148316719.jpg' }} style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10 }} />
               <View>
                 <Text style={{ color: '#fff', fontSize: 13, fontWeight: 'bold' }}>KTV: Nguyễn Văn Hùng</Text>
-                <Text style={{ color: Theme.colors.subtext, fontSize: 11 }}>Trưởng nhóm Kỹ thuật • 8 năm kinh nghiệm (5★)</Text>
+                <Text style={{ color: Theme.staticColors.subtext, fontSize: 11 }}>Trưởng nhóm Kỹ thuật • 8 năm kinh nghiệm (5★)</Text>
               </View>
             </View>
 
@@ -1163,7 +1163,7 @@ export default function ProfileScreen({ navigation, route }) {
                   <View style={{ position: 'absolute', left: -7, top: 0, width: 12, height: 12, borderRadius: 6, backgroundColor: '#10B981' }} />
                   <View style={{ marginBottom: 15 }}>
                     <Text style={{ color: '#10B981', fontSize: 12, fontWeight: 'bold' }}>✓ NHẬN XE & KHẢO SÁT LỖI (Đã Xong)</Text>
-                    <Text style={{ color: Theme.colors.subtext, fontSize: 11, marginTop: 2 }}>08:30 — Khảo sát xước xác vỏ máy, đo dòng điện ắc quy định kỳ.</Text>
+                    <Text style={{ color: Theme.staticColors.subtext, fontSize: 11, marginTop: 2 }}>08:30 — Khảo sát xước xác vỏ máy, đo dòng điện ắc quy định kỳ.</Text>
                   </View>
                 </View>
 
@@ -1172,15 +1172,15 @@ export default function ProfileScreen({ navigation, route }) {
                   <View style={{ position: 'absolute', left: -7, top: 0, width: 12, height: 12, borderRadius: 6, backgroundColor: '#10B981' }} />
                   <View style={{ marginBottom: 15 }}>
                     <Text style={{ color: '#10B981', fontSize: 12, fontWeight: 'bold' }}>✓ XẢ NHỚT CŨ & VỆ SINH BUỒNG ĐỐT (Đã Xong)</Text>
-                    <Text style={{ color: Theme.colors.subtext, fontSize: 11, marginTop: 2 }}>08:50 — Đã vệ sinh sạch muội carbon bằng dung dịch NX5000 Nhật Bản.</Text>
+                    <Text style={{ color: Theme.staticColors.subtext, fontSize: 11, marginTop: 2 }}>08:50 — Đã vệ sinh sạch muội carbon bằng dung dịch NX5000 Nhật Bản.</Text>
                   </View>
                 </View>
 
                 {/* Step 3 */}
-                <View style={{ flexDirection: 'row', borderLeftWidth: 2, borderColor: Theme.colors.warning, paddingLeft: 16, paddingBottom: 15, position: 'relative' }}>
-                  <View style={{ position: 'absolute', left: -7, top: 0, width: 12, height: 12, borderRadius: 6, backgroundColor: Theme.colors.warning }} />
+                <View style={{ flexDirection: 'row', borderLeftWidth: 2, borderColor: Theme.staticColors.warning, paddingLeft: 16, paddingBottom: 15, position: 'relative' }}>
+                  <View style={{ position: 'absolute', left: -7, top: 0, width: 12, height: 12, borderRadius: 6, backgroundColor: Theme.staticColors.warning }} />
                   <View style={{ marginBottom: 15 }}>
-                    <Text style={{ color: Theme.colors.warning, fontSize: 12, fontWeight: 'bold' }}>⚡ THAY ĐĨA PHANH & BỐ THẮNG NISSIN (Đang làm...)</Text>
+                    <Text style={{ color: Theme.staticColors.warning, fontSize: 12, fontWeight: 'bold' }}>⚡ THAY ĐĨA PHANH & BỐ THẮNG NISSIN (Đang làm...)</Text>
                     <Text style={{ color: '#fff', fontSize: 11, marginTop: 2 }}>09:15 — Đang tháo má phanh cũ mòn, căn chỉnh đĩa thắng ABS lực bám chuẩn.</Text>
                   </View>
                 </View>
@@ -1190,7 +1190,7 @@ export default function ProfileScreen({ navigation, route }) {
                   <View style={{ position: 'absolute', left: -7, top: 0, width: 12, height: 12, borderRadius: 6, backgroundColor: 'rgba(255,255,255,0.1)' }} />
                   <View style={{ marginBottom: 5 }}>
                     <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>VỆ SINH NỒI, CÔN & RỬA BỌT TUYẾT (Chờ xử lý)</Text>
-                    <Text style={{ color: Theme.colors.subtext, fontSize: 11, marginTop: 2 }}>Dự kiến hoàn thiện trong vòng 30 phút nữa.</Text>
+                    <Text style={{ color: Theme.staticColors.subtext, fontSize: 11, marginTop: 2 }}>Dự kiến hoàn thiện trong vòng 30 phút nữa.</Text>
                   </View>
                 </View>
               </View>
@@ -1215,7 +1215,7 @@ export default function ProfileScreen({ navigation, route }) {
               {/* Showroom point */}
               <View style={{ position: 'absolute', top: '70%', left: '12%', alignItems: 'center' }}>
                 <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#EC4899', borderWidth: 2, borderColor: '#fff' }} />
-                <Text style={{ color: Theme.colors.subtext, fontSize: 9, fontWeight: 'bold', marginTop: 4 }}>Kho Biên Hòa</Text>
+                <Text style={{ color: Theme.staticColors.subtext, fontSize: 9, fontWeight: 'bold', marginTop: 4 }}>Kho Biên Hòa</Text>
               </View>
 
               {/* Customer Home point */}
@@ -1247,7 +1247,7 @@ export default function ProfileScreen({ navigation, route }) {
             </View>
 
             {/* Split Screen Nửa dưới: Dòng thời gian & Tài xế */}
-            <View style={{ flex: 1, padding: 20, backgroundColor: Theme.colors.background }}>
+            <View style={{ flex: 1, padding: 20, backgroundColor: Theme.staticColors.background }}>
               {/* Handle sheet indicator */}
               <View style={[styles.modalHandle, { alignSelf: 'center', marginBottom: 15 }]} />
 
@@ -1258,7 +1258,7 @@ export default function ProfileScreen({ navigation, route }) {
                 <Image source={{ uri: 'https://img.freepik.com/free-photo/courier-man-delivering-packages-delivery-concept_1150-51152.jpg' }} style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10 }} />
                 <View style={{ flex: 1 }}>
                   <Text style={{ color: '#fff', fontSize: 13, fontWeight: 'bold' }}>Tài xế: Trần Minh Hải</Text>
-                  <Text style={{ color: Theme.colors.subtext, fontSize: 11 }}>Vận chuyển AEM • Xe máy: 60-B1 999.99</Text>
+                  <Text style={{ color: Theme.staticColors.subtext, fontSize: 11 }}>Vận chuyển AEM • Xe máy: 60-B1 999.99</Text>
                 </View>
                 <TouchableOpacity onPress={() => Alert.alert('Đang kết nối 📞', 'Hệ thống đang kết nối cuộc gọi thoại an toàn đến shipper Trần Minh Hải...')} style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(16,185,129,0.1)', justifyContent: 'center', alignItems: 'center' }}>
                   <Phone color="#10B981" size={16} />
@@ -1272,7 +1272,7 @@ export default function ProfileScreen({ navigation, route }) {
                   <View style={{ position: 'absolute', left: -5, top: 2, width: 8, height: 8, borderRadius: 4, backgroundColor: '#3B82F6', shadowColor: '#3B82F6', shadowRadius: 4, shadowOpacity: 0.8 }} />
                   <View style={{ marginBottom: 12 }}>
                     <Text style={{ color: '#3B82F6', fontSize: 12, fontWeight: 'bold' }}>14:05 — Shipper đang giao hàng đến khu vực Phường Quyết Thắng</Text>
-                    <Text style={{ color: Theme.colors.subtext, fontSize: 10 }}>Hàng đang di chuyển qua đường Cách Mạng Tháng Tám, Biên Hòa.</Text>
+                    <Text style={{ color: Theme.staticColors.subtext, fontSize: 10 }}>Hàng đang di chuyển qua đường Cách Mạng Tháng Tám, Biên Hòa.</Text>
                   </View>
                 </View>
 
@@ -1281,7 +1281,7 @@ export default function ProfileScreen({ navigation, route }) {
                   <View style={{ position: 'absolute', left: -5, top: 2, width: 8, height: 8, borderRadius: 4, backgroundColor: 'rgba(255,255,255,0.2)' }} />
                   <View style={{ marginBottom: 12 }}>
                     <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>11:20 — Đơn hàng đã xuất kho tổng showroom Biên Hòa</Text>
-                    <Text style={{ color: Theme.colors.subtext, fontSize: 10 }}>Linh kiện phụ tùng đóng gói đầy đủ hóa đơn bảo hành chính hãng.</Text>
+                    <Text style={{ color: Theme.staticColors.subtext, fontSize: 10 }}>Linh kiện phụ tùng đóng gói đầy đủ hóa đơn bảo hành chính hãng.</Text>
                   </View>
                 </View>
 
@@ -1290,7 +1290,7 @@ export default function ProfileScreen({ navigation, route }) {
                   <View style={{ position: 'absolute', left: -5, top: 2, width: 8, height: 8, borderRadius: 4, backgroundColor: 'rgba(255,255,255,0.2)' }} />
                   <View style={{ marginBottom: 5 }}>
                     <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>09:30 — Đơn hàng đã đóng gói hoàn tất</Text>
-                    <Text style={{ color: Theme.colors.subtext, fontSize: 10 }}>Nhân viên phụ tùng AEM kiểm kho & niêm phong màng co chống thấm nước.</Text>
+                    <Text style={{ color: Theme.staticColors.subtext, fontSize: 10 }}>Nhân viên phụ tùng AEM kiểm kho & niêm phong màng co chống thấm nước.</Text>
                   </View>
                 </View>
               </ScrollView>
@@ -1308,15 +1308,15 @@ export default function ProfileScreen({ navigation, route }) {
             
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <CreditCard color={Theme.colors.primary} size={22} style={{ marginRight: 8 }} />
+                <CreditCard color={Theme.staticColors.primary} size={22} style={{ marginRight: 8 }} />
                 <Text style={[styles.modalTitle, { marginBottom: 0 }]}>VÍ VOUCHER QUÀ TẶNG AEM</Text>
               </View>
               <TouchableOpacity onPress={() => setVoucherModalVisible(false)}>
-                <Text style={{ color: Theme.colors.subtext, fontSize: 12 }}>ĐÓNG</Text>
+                <Text style={{ color: Theme.staticColors.subtext, fontSize: 12 }}>ĐÓNG</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={{ color: Theme.colors.subtext, fontSize: 11, fontStyle: 'italic', marginBottom: 15 }}>💡 Chọn một Voucher để tạo mã QR thanh toán nhanh tại quầy thu ngân.</Text>
+            <Text style={{ color: Theme.staticColors.subtext, fontSize: 11, fontStyle: 'italic', marginBottom: 15 }}>💡 Chọn một Voucher để tạo mã QR thanh toán nhanh tại quầy thu ngân.</Text>
 
             <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
               {/* Voucher 1 */}
@@ -1329,9 +1329,9 @@ export default function ProfileScreen({ navigation, route }) {
                 <View style={{ flex: 1 }}>
                   <Text style={{ color: '#EC4899', fontWeight: 'bold', fontSize: 13 }}>[GIẢM 50K] GIẢM GIÁ CÔNG THỢ</Text>
                   <Text style={{ color: '#fff', fontSize: 11, marginTop: 4 }}>Miễn phí 50K tiền công khi đặt bảo dưỡng định kỳ trên App.</Text>
-                  <Text style={{ color: Theme.colors.subtext, fontSize: 10, marginTop: 4 }}>Hạn dùng: Còn 22 ngày (Áp dụng showroom Biên Hòa)</Text>
+                  <Text style={{ color: Theme.staticColors.subtext, fontSize: 10, marginTop: 4 }}>Hạn dùng: Còn 22 ngày (Áp dụng showroom Biên Hòa)</Text>
                 </View>
-                <ChevronRight color={Theme.colors.subtext} size={18} style={{ alignSelf: 'center' }} />
+                <ChevronRight color={Theme.staticColors.subtext} size={18} style={{ alignSelf: 'center' }} />
               </TouchableOpacity>
 
               {/* Voucher 2 */}
@@ -1344,9 +1344,9 @@ export default function ProfileScreen({ navigation, route }) {
                 <View style={{ flex: 1 }}>
                   <Text style={{ color: '#10B981', fontWeight: 'bold', fontSize: 13 }}>[MIỄN PHÍ] RỬA XE BỌT TUYẾT SIÊU SẠCH</Text>
                   <Text style={{ color: '#fff', fontSize: 11, marginTop: 4 }}>Tặng 1 suất rửa xe bọt tuyết chuyên sâu làm bóng thân vỏ máy.</Text>
-                  <Text style={{ color: Theme.colors.subtext, fontSize: 10, marginTop: 4 }}>Hạn dùng: Đặc quyền sinh nhật tháng 5 của bạn</Text>
+                  <Text style={{ color: Theme.staticColors.subtext, fontSize: 10, marginTop: 4 }}>Hạn dùng: Đặc quyền sinh nhật tháng 5 của bạn</Text>
                 </View>
-                <ChevronRight color={Theme.colors.subtext} size={18} style={{ alignSelf: 'center' }} />
+                <ChevronRight color={Theme.staticColors.subtext} size={18} style={{ alignSelf: 'center' }} />
               </TouchableOpacity>
 
               {/* Voucher 3 */}
@@ -1359,9 +1359,9 @@ export default function ProfileScreen({ navigation, route }) {
                 <View style={{ flex: 1 }}>
                   <Text style={{ color: '#F59E0B', fontWeight: 'bold', fontSize: 13 }}>[GIẢM 15%] GIẢM DẦU NHỚT CHÍNH HÃNG</Text>
                   <Text style={{ color: '#fff', fontSize: 11, marginTop: 4 }}>Giảm trực tiếp 15% khi thay nhớt Motul 300V hoặc nhớt hãng Honda.</Text>
-                  <Text style={{ color: Theme.colors.subtext, fontSize: 10, marginTop: 4 }}>Hạn dùng: Ưu đãi tri ân khách hàng thân thiết</Text>
+                  <Text style={{ color: Theme.staticColors.subtext, fontSize: 10, marginTop: 4 }}>Hạn dùng: Ưu đãi tri ân khách hàng thân thiết</Text>
                 </View>
-                <ChevronRight color={Theme.colors.subtext} size={18} style={{ alignSelf: 'center' }} />
+                <ChevronRight color={Theme.staticColors.subtext} size={18} style={{ alignSelf: 'center' }} />
               </TouchableOpacity>
 
               {/* Simulated QR barcode display */}
@@ -1394,7 +1394,7 @@ export default function ProfileScreen({ navigation, route }) {
                 style={styles.avatarActionButton}
                 onPress={() => handleSelectPhoto('camera')}
               >
-                <Camera color={Theme.colors.primary} size={18} style={{ marginRight: 6 }} />
+                <Camera color={Theme.staticColors.primary} size={18} style={{ marginRight: 6 }} />
                 <Text style={styles.avatarActionText}>Chụp ảnh mới</Text>
               </TouchableOpacity>
               
@@ -1402,7 +1402,7 @@ export default function ProfileScreen({ navigation, route }) {
                 style={styles.avatarActionButton}
                 onPress={() => handleSelectPhoto('gallery')}
               >
-                <Camera color={Theme.colors.primary} size={18} style={{ marginRight: 6 }} />
+                <Camera color={Theme.staticColors.primary} size={18} style={{ marginRight: 6 }} />
                 <Text style={styles.avatarActionText}>Chọn từ thư viện</Text>
               </TouchableOpacity>
             </View>

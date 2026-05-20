@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from 'react-native';
-import { Theme } from '../../theme/Theme';
-import { ChevronLeft, Wrench, CheckCircle2 } from 'lucide-react-native';
+import { ChevronLeft, Wrench, CheckCircle2 } from 'lucide-react-native'; // Import useTheme
+import { useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -10,6 +10,7 @@ import { useServiceHistoryController } from './hooks/useServiceHistoryController
 
 export default function ServiceHistoryScreen({ navigation, route }) {
   const vehicle = route?.params?.vehicle || { id: '1', name: 'Kawasaki Z1000', plate: '59-A3 123.45' };
+  const theme = useTheme();
   
   const { history, reminders, loading } = useServiceHistoryController(vehicle.id || '1');
 
@@ -18,7 +19,7 @@ export default function ServiceHistoryScreen({ navigation, route }) {
       {/* Header */}
       <Animated.View entering={FadeInUp.duration(500)} style={styles.header}>
         <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={Theme.colors.text} size={24} />
+          <ChevronLeft color={theme.colors.text} size={24} />
         </ScalePress>
         <View>
           <Text style={styles.headerTitle}>Lịch sử bảo trì</Text>
@@ -28,7 +29,7 @@ export default function ServiceHistoryScreen({ navigation, route }) {
 
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color={Theme.colors.primary} />
+          <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
@@ -36,16 +37,16 @@ export default function ServiceHistoryScreen({ navigation, route }) {
           {/* Nhắc nhở sắp tới */}
           <Animated.Text entering={FadeInDown.duration(500).delay(100)} style={styles.sectionTitle}>
             Nhắc nhở sắp tới
-          </Animated.Text>
+          </Animated.Text> {/* Use getStyles for sectionTitle */}
           {reminders.map((item, i) => (
             <Animated.View key={i} entering={FadeInDown.duration(500).delay(100 + i * 80)}>
-              <GlassCard style={styles.reminderCard}>
-                <View style={styles.kmBadge}>
-                  <Text style={styles.kmText}>{item.km}</Text>
+              <GlassCard style={[getStyles(theme).reminderCard, { borderColor: theme.colors.border, backgroundColor: theme.colors.card }]} intensity={15}>
+                <View style={[getStyles(theme).kmBadge, { borderColor: theme.colors.warning + '33', backgroundColor: theme.colors.warning + '26' }]}>
+                  <Text style={[getStyles(theme).kmText, { color: theme.colors.warning }]}>{item.km}</Text>
                 </View>
                 <View style={{ flex: 1, marginLeft: 12 }}>
-                  <Text style={styles.reminderTask}>{item.task}</Text>
-                  <Text style={styles.reminderDue}>{item.dueDate}</Text>
+                  <Text style={[getStyles(theme).reminderTask, { color: theme.colors.text }]}>{item.task}</Text>
+                  <Text style={[getStyles(theme).reminderDue, { color: theme.colors.subtext }]}>{item.dueDate}</Text>
                 </View>
               </GlassCard>
             </Animated.View>
@@ -53,29 +54,29 @@ export default function ServiceHistoryScreen({ navigation, route }) {
 
           {/* Dòng thời gian lịch sử */}
           <Animated.Text entering={FadeInDown.duration(500).delay(400)} style={[styles.sectionTitle, { marginTop: Theme.spacing.xl }]}>
-            Lịch sử sửa chữa
+            Lịch sử sửa chữa {/* Use getStyles for sectionTitle */}
           </Animated.Text>
 
-          <View style={styles.timeline}>
+          <View style={getStyles(theme).timeline}>
             {history.map((entry, index) => (
               <Animated.View
                 key={entry.id}
                 entering={FadeInDown.duration(500).delay(400 + index * 120)}
-                style={styles.timelineItem}
+                style={getStyles(theme).timelineItem}
               >
                 {/* Đường kẻ + Icon */}
-                <View style={styles.timelineSide}>
-                  <View style={styles.timelineDot}>
-                    <CheckCircle2 color={Theme.colors.success} size={20} />
+                <View style={getStyles(theme).timelineSide}>
+                  <View style={[getStyles(theme).timelineDot, { backgroundColor: theme.colors.success + '1A' }]}>
+                    <CheckCircle2 color={theme.colors.success} size={20} />
                   </View>
-                  {index < history.length - 1 && <View style={styles.timelineLine} />}
+                  {index < history.length - 1 && <View style={[getStyles(theme).timelineLine, { backgroundColor: theme.colors.border }]} />}
                 </View>
 
                 {/* Nội dung */}
-                <GlassCard style={styles.timelineCard} intensity={12}>
-                  <View style={styles.cardHeader}>
-                    <Text style={styles.cardDate}>{entry.date}</Text>
-                    <Text style={styles.cardCost}>{entry.cost}</Text>
+                <GlassCard style={[getStyles(theme).timelineCard, { borderColor: theme.colors.border, backgroundColor: theme.colors.card }]} intensity={12}>
+                  <View style={getStyles(theme).cardHeader}>
+                    <Text style={[getStyles(theme).cardDate, { color: theme.colors.subtext }]}>{entry.date}</Text>
+                    <Text style={[getStyles(theme).cardCost, { color: theme.colors.primary }]}>{entry.cost}</Text>
                   </View>
                   <Text style={styles.cardTitle}>{entry.title}</Text>
                   <View style={styles.itemList}>
@@ -86,8 +87,8 @@ export default function ServiceHistoryScreen({ navigation, route }) {
                       </View>
                     ))}
                   </View>
-                  <View style={styles.techRow}>
-                    <Wrench color={Theme.colors.subtext} size={12} />
+                  <View style={[getStyles(theme).techRow, { borderTopColor: theme.colors.border }]}>
+                    <Wrench color={theme.colors.subtext} size={12} />
                     <Text style={styles.techText}>{entry.technician}</Text>
                   </View>
                 </GlassCard>
@@ -102,40 +103,41 @@ export default function ServiceHistoryScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background },
+const getStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.colors.background },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: Theme.spacing.md, marginTop: Theme.spacing.xl, marginBottom: Theme.spacing.md },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.md },
-  headerTitle: { color: Theme.colors.text, fontSize: 20, fontWeight: 'bold' },
-  headerSub: { color: Theme.colors.subtext, fontSize: 13, marginTop: 2 },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing.md, marginTop: theme.spacing.xl, marginBottom: theme.spacing.md },
+  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: theme.colors.card, justifyContent: 'center', alignItems: 'center', marginRight: theme.spacing.md },
+  headerTitle: { fontSize: 20, fontWeight: 'bold' },
+  headerSub: { fontSize: 13, marginTop: 2 },
 
-  content: { paddingHorizontal: Theme.spacing.md },
-  sectionTitle: { color: Theme.colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: Theme.spacing.md },
+  content: { paddingHorizontal: theme.spacing.md },
+  sectionTitle: { color: theme.colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: theme.spacing.md },
 
-  reminderCard: { flexDirection: 'row', alignItems: 'center', padding: Theme.spacing.md, marginBottom: Theme.spacing.sm },
-  kmBadge: { backgroundColor: 'rgba(245,158,11,0.15)', paddingHorizontal: 10, paddingVertical: 6, borderRadius: Theme.radius.sm, borderWidth: 1, borderColor: 'rgba(245,158,11,0.3)' },
-  kmText: { color: Theme.colors.warning, fontSize: 12, fontWeight: 'bold' },
-  reminderTask: { color: Theme.colors.text, fontSize: 14, fontWeight: 'bold' },
-  reminderDue: { color: Theme.colors.subtext, fontSize: 12, marginTop: 2 },
+  reminderCard: { flexDirection: 'row', alignItems: 'center', padding: theme.spacing.md, marginBottom: theme.spacing.sm, borderRadius: theme.radius.lg },
+  kmBadge: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: theme.radius.sm, borderWidth: 1 },
+  kmText: { fontSize: 12, fontWeight: 'bold' },
+  reminderTask: { fontSize: 14, fontWeight: 'bold' },
+  reminderDue: { fontSize: 12, marginTop: 2 },
 
-  timeline: { paddingLeft: 4 },
-  timelineItem: { flexDirection: 'row', marginBottom: Theme.spacing.md },
+  timeline: { paddingLeft: 4 }, // This is fine
+  timelineItem: { flexDirection: 'row', marginBottom: theme.spacing.md },
   timelineSide: { alignItems: 'center', width: 36 },
-  timelineDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: 'rgba(16,185,129,0.1)', justifyContent: 'center', alignItems: 'center', zIndex: 1 },
-  timelineLine: { width: 2, flex: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginTop: 4 },
+  timelineDot: { width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
+  timelineLine: { width: 2, flex: 1, marginTop: 4 },
 
-  timelineCard: { flex: 1, marginLeft: Theme.spacing.sm, padding: Theme.spacing.md, borderRadius: Theme.radius.lg },
+  timelineCard: { flex: 1, marginLeft: theme.spacing.sm, padding: theme.spacing.md, borderRadius: theme.radius.lg },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  cardDate: { color: Theme.colors.subtext, fontSize: 12 },
-  cardCost: { color: Theme.colors.primary, fontSize: 13, fontWeight: 'bold' },
-  cardTitle: { color: Theme.colors.text, fontSize: 15, fontWeight: 'bold', marginBottom: Theme.spacing.sm },
+  cardDate: { fontSize: 12 },
+  cardCost: { fontSize: 13, fontWeight: 'bold' },
+  cardTitle: { color: theme.colors.text, fontSize: 15, fontWeight: 'bold', marginBottom: theme.spacing.sm },
 
-  itemList: { marginBottom: Theme.spacing.sm },
+  itemList: { marginBottom: theme.spacing.sm },
   itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
-  itemDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: Theme.colors.primary, marginRight: 8 },
-  itemText: { color: Theme.colors.subtext, fontSize: 13 },
+  itemDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: theme.colors.primary, marginRight: 8 },
+  itemText: { color: theme.colors.subtext, fontSize: 13 },
 
-  techRow: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: Theme.spacing.sm },
-  techText: { color: Theme.colors.subtext, fontSize: 11, marginLeft: 6 },
+  techRow: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, paddingTop: theme.spacing.sm },
+  techText: { color: theme.colors.subtext, fontSize: 11, marginLeft: 6 },
 });

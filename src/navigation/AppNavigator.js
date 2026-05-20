@@ -56,7 +56,7 @@ function CustomerTabs() {
   const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
 
   const tabBg = isDark ? '#111827' : '#FFFFFF';
-  const tabActiveText = Theme.colors.primary;
+  const tabActiveText = Theme.staticColors.primary;
   const tabInactiveText = isDark ? '#64748B' : '#94A3B8';
   const tabBorderTop = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
 

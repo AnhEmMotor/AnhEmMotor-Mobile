@@ -1,519 +1,255 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Image, Modal, Pressable, ActivityIndicator } from 'react-native';
+import React, { useState, useRef, useMemo } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Pressable } from 'react-native';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import { 
-  ScanLine, 
-  Package, 
   Search, 
-  QrCode, 
-  ChevronRight, 
-  RefreshCcw, 
-  Tag, 
-  Edit3, 
-  X,
-  Truck,
-  CheckCircle,
-  Store,
-  Layers,
-  Wrench,
+  ChevronLeft,
   AlertTriangle,
-  PlusCircle,
-  Filter,
-  ChevronLeft
+  Package,
+  Info,
+  MapPin,
+  Phone,
+  DollarSign,
+  AlertCircle
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-  FadeInRight,
-  Layout,
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming
-} from 'react-native-reanimated';
+import Animated, { FadeInUp, FadeInRight, Layout } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
+import CustomBottomSheet from '../../../components/CustomBottomSheet';
+
+const mockInventory = [
+  { id: '1', name: 'Nhớt máy Castrol Power1 1L', sku: 'PK-N-CT01', category: 'Phụ tùng', stock: 5, minLimit: 20, price: '150.000đ', costPrice: '110.000đ', location: 'Kệ A - Tầng 2', supplierName: 'NPP Dầu Nhớt VN', supplierPhone: '0901234567' },
+  { id: '2', name: 'Lọc gió Honda Winner X', sku: 'PT-LG-WN01', category: 'Phụ tùng', stock: 2, minLimit: 10, price: '120.000đ', costPrice: '80.000đ', location: 'Kệ B - Tầng 1', supplierName: 'Phụ tùng Honda', supplierPhone: '0912345678' },
+  { id: '3', name: 'Gương chiếu hậu SH', sku: 'PT-G-SH2025', category: 'Phụ kiện', stock: 14, minLimit: 5, price: '350.000đ', costPrice: '250.000đ', location: 'Kệ C - Tầng 3', supplierName: 'Phụ kiện Xe Máy HCM', supplierPhone: '0923456789' },
+  { id: '4', name: 'Nhớt Motul Scooter 1L', sku: 'PK-N-MT02', category: 'Phụ tùng', stock: 85, minLimit: 15, price: '180.000đ', costPrice: '130.000đ', location: 'Kệ A - Tầng 1', supplierName: 'NPP Dầu Nhớt VN', supplierPhone: '0901234567' },
+  { id: '5', name: 'Balo chống nước', sku: 'PK-B-CN01', category: 'Phụ kiện', stock: 8, minLimit: 5, price: '450.000đ', costPrice: '300.000đ', location: 'Tủ kính D', supplierName: 'Givi VN', supplierPhone: '0988776655' },
+  { id: '6', name: 'Honda Winner X 2026 Đen', sku: 'XE-HW-X26D', category: 'Xe nguyên chiếc', stock: 3, minLimit: 5, price: '46.000.000đ', costPrice: '42.000.000đ', location: 'Khu vực trưng bày 1', supplierName: 'Honda VN', supplierPhone: '18008001' },
+];
+
+const FILTER_TABS = ['Tất cả', 'Phụ tùng', 'Phụ kiện', 'Xe nguyên chiếc'];
 
 const getStyles = (colors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: Theme.spacing.lg },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: Theme.spacing.xl + 20, marginBottom: Theme.spacing.lg },
-  backBtn: { width: 38, height: 38, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
-  title: { color: colors.text, fontSize: 26, fontWeight: 'bold' },
-  syncRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-  syncText: { color: colors.success, fontSize: 11, marginLeft: 6, fontWeight: '500' },
-  qrBtn: { backgroundColor: colors.secondary, width: 44, height: 44, borderRadius: 0, justifyContent: 'center', alignItems: 'center' },
-
-  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card, borderRadius: 0, paddingHorizontal: 16, height: 50, marginBottom: Theme.spacing.md, borderWidth: 1, borderColor: colors.border },
+  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: colors.spacing.lg },
+  header: { flexDirection: 'row', alignItems: 'center', marginTop: colors.spacing.xl + 20, marginBottom: colors.spacing.lg },
+  backBtn: { width: 38, height: 38, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  title: { color: colors.text, fontSize: 22, fontWeight: 'bold' },
+  
+  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card, borderRadius: 0, paddingHorizontal: 16, height: 50, marginBottom: colors.spacing.md, borderWidth: 1, borderColor: colors.border },
   searchIcon: { marginRight: 12 },
   searchInput: { flex: 1, color: colors.text, fontSize: 14 },
-  filterBtn: { padding: 4 },
+  
+  filterContainer: { flexDirection: 'row', marginBottom: colors.spacing.lg },
+  filterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: colors.border, marginRight: 8, backgroundColor: colors.card },
+  activeFilterTab: { backgroundColor: colors.primary, borderColor: colors.primary },
+  filterText: { color: colors.subtext, fontSize: 13, fontWeight: '600' },
+  activeFilterText: { color: '#fff' },
 
-  subTabContainer: { flexDirection: 'row', backgroundColor: colors.card, borderRadius: 0, padding: 4, marginBottom: Theme.spacing.lg, borderWidth: 1, borderColor: colors.border },
-  subTab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, borderRadius: 0 },
-  activeSubTab: { backgroundColor: colors.primary },
-  subTabText: { color: colors.subtext, fontWeight: '600', marginLeft: 8, fontSize: 13 },
-  activeSubTabText: { color: '#fff' },
+  sectionContainer: { marginBottom: colors.spacing.lg },
+  sectionTitleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  sectionTitle: { color: colors.text, fontSize: 16, fontWeight: 'bold', marginLeft: 8, textTransform: 'uppercase' },
+  
+  alertCard: { padding: 16, marginBottom: 10, borderColor: '#EF4444', borderWidth: 1, backgroundColor: 'rgba(239, 68, 68, 0.05)' },
+  itemRow: { padding: 16, marginBottom: 10, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card },
+  
+  itemHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  itemName: { color: colors.text, fontSize: 15, fontWeight: 'bold', flex: 1, marginRight: 10 },
+  itemSku: { color: colors.subtext, fontSize: 12, marginTop: 4 },
+  
+  stockBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+  stockText: { fontSize: 14, fontWeight: 'bold' },
+  
+  warningText: { color: '#EF4444', fontSize: 12, marginTop: 8, fontStyle: 'italic' },
+  
+  footerReminder: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary + '1A', padding: 16, borderRadius: 8, borderWidth: 1, borderColor: colors.primary + '33', marginTop: 10, marginBottom: 40 },
+  footerReminderText: { color: colors.text, fontSize: 13, marginLeft: 12, flex: 1, lineHeight: 20 },
 
-  scanSection: { marginBottom: Theme.spacing.md },
-  scanCard: { padding: 0, overflow: 'hidden' },
-  scanContent: { flexDirection: 'row', alignItems: 'center', padding: 16 },
-  scanIconBox: { width: 48, height: 48, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center' },
-  scanTitle: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
-  scanSub: { color: colors.subtext, fontSize: 12, marginTop: 2 },
-
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
-  sectionTitle: { color: colors.text, fontSize: 16, fontWeight: 'bold' },
-  countText: { color: colors.subtext, fontSize: 12 },
-
-  listSection: { flex: 1 },
-
-  bikeCard: { padding: 16, marginBottom: 12, overflow: 'hidden' },
-  expandedBikeCard: { borderColor: colors.primary + '40', borderWidth: 1 },
-  bikeMain: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  bikeInfoCol: { flex: 1 },
-  bikeName: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
-  bikeVin: { color: colors.subtext, fontSize: 12, marginTop: 4 },
-
-  priceSection: { alignItems: 'flex-end', marginLeft: 10 },
-  priceValue: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
-  editPriceBtn: { flexDirection: 'row', alignItems: 'center', marginTop: 6, backgroundColor: colors.primary + '15', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0, borderWidth: 0.5, borderColor: colors.primary + '33' },
-  editPriceText: { color: colors.primary, fontSize: 11, fontWeight: 'bold', marginLeft: 4 },
-
-  colorMatrixContainer: { marginTop: 14, paddingTop: 14, borderTopWidth: 1, borderTopColor: colors.border },
-  matrixTitle: { color: colors.subtext, fontSize: 12, fontWeight: 'bold', marginBottom: 10 },
-  matrixGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  colorMatrixCapsule: { width: '48%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.glassBg, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 0, marginBottom: 8, borderWidth: 1, borderColor: colors.border },
-  outOfStockCapsule: { backgroundColor: colors.glassBg, opacity: 0.5 },
-  lowStockCapsule: { borderColor: colors.warning + '33', backgroundColor: colors.warning + '0D' },
-  capsuleLeft: { flexDirection: 'row', alignItems: 'center' },
-  colorDot: { width: 10, height: 10, borderRadius: 0, marginRight: 6 },
-  colorName: { color: colors.text, fontSize: 11, fontWeight: '500' },
-  outOfStockText: { color: colors.subtext },
-  colorStockCount: { fontSize: 11, fontWeight: 'bold' },
-
-  partCard: { padding: 16, marginBottom: 12, overflow: 'hidden' },
-  partCardLowStock: { borderColor: colors.error + '40', borderWidth: 1 },
-  partHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  partName: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
-  partCategory: { color: colors.subtext, fontSize: 12, marginTop: 4 },
-
-  lowStockBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.error + '1A', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0 },
-  lowStockBadgeText: { color: colors.error, fontSize: 10, fontWeight: 'bold', marginLeft: 4 },
-  stableStockBadge: { backgroundColor: colors.success + '1A', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0 },
-  stableStockBadgeText: { color: colors.success, fontSize: 10, fontWeight: 'bold' },
-
-  partFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 14, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.border },
-  stockInfoCol: { flexDirection: 'row', alignItems: 'center' },
-  stockLabel: { color: colors.subtext, fontSize: 12 },
-  stockValueText: { fontSize: 13, marginLeft: 6 },
-  restockBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 0 },
-  restockBtnText: { color: '#fff', fontSize: 12, fontWeight: 'bold', marginLeft: 6 },
-
-  scanOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.9)', justifyContent: 'center', alignItems: 'center' },
-  scanFrame: { width: 280, height: 280, borderWidth: 2, borderColor: colors.secondary, borderRadius: 0, overflow: 'hidden', justifyContent: 'center' },
-  scanLineAnim: { width: '100%', height: 2, backgroundColor: colors.secondary, elevation: 5 },
-  scanHint: { color: '#fff', marginTop: 32, fontSize: 15, fontWeight: '500' },
-  closeScan: { position: 'absolute', top: 60, right: 30, zIndex: 10, padding: 10 },
-
-  modalOverlay: { flex: 1, backgroundColor: colors.modalOverlay, justifyContent: 'center', padding: 24 },
-  modalContent: { padding: 24, borderTopWidth: 2, borderTopColor: colors.primary, maxHeight: '90%', backgroundColor: colors.card },
-  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-  modalTitle: { color: colors.text, fontSize: 20, fontWeight: 'bold' },
-  modalBody: { marginBottom: 32 },
-  modalBikeName: { color: colors.primary, fontSize: 16, fontWeight: 'bold', marginBottom: 20 },
-  inputContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.inputBg, borderRadius: 0, height: 60, paddingHorizontal: 20, borderWidth: 1, borderColor: colors.border },
-  currencyPrefix: { color: colors.subtext, fontSize: 16, fontWeight: 'bold', marginRight: 12 },
-  modalInput: { flex: 1, color: colors.text, fontSize: 24, fontWeight: 'bold' },
-  syncWarning: { flexDirection: 'row', alignItems: 'center', marginTop: 16, backgroundColor: colors.warning + '1A', padding: 12, borderRadius: 0, borderWidth: 1, borderColor: colors.warning + '33' },
-  syncWarningText: { color: colors.warning, fontSize: 11, marginLeft: 8, flex: 1, lineHeight: 16 },
-  saveBtn: { backgroundColor: colors.secondary, height: 50, borderRadius: 0, justifyContent: 'center', alignItems: 'center' },
-  saveText: { color: '#fff', fontSize: 15, fontWeight: 'bold' }
+  // Bottom Sheet Styles
+  bsSection: { marginBottom: 20 },
+  bsLabel: { color: colors.subtext, fontSize: 13, marginBottom: 4 },
+  bsValueRow: { flexDirection: 'row', alignItems: 'center' },
+  bsValueText: { color: colors.text, fontSize: 16, fontWeight: '600', marginLeft: 10 },
+  divider: { height: 1, backgroundColor: colors.border, marginVertical: 15 }
 });
 
 export default function InventoryScreen() {
   const colors = useActiveColors();
   const styles = getStyles(colors);
-
+  
   let navigation;
   try {
     navigation = useNavigation();
   } catch (e) {
     navigation = null;
   }
-  const [activeSubTab, setActiveSubTab] = useState('bikes');
+
+  const bottomSheetRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedBikeId, setExpandedBikeId] = useState('1');
-  const [showPriceModal, setShowPriceModal] = useState(false);
-  const [selectedBike, setSelectedBike] = useState(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [syncing, setSyncing] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('Tất cả');
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  const scanPos = useSharedValue(0);
+  const filteredItems = useMemo(() => {
+    return mockInventory.filter(item => {
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            item.sku.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesFilter = activeFilter === 'Tất cả' || item.category === activeFilter;
+      return matchesSearch && matchesFilter;
+    });
+  }, [searchQuery, activeFilter]);
 
-  React.useEffect(() => {
-    if (isScanning) {
-      scanPos.value = withRepeat(withTiming(280, { duration: 2000 }), -1, true);
-    } else {
-      scanPos.value = 0;
-    }
-  }, [isScanning]);
+  const lowStockItems = filteredItems.filter(item => item.stock <= item.minLimit);
+  const normalStockItems = filteredItems.filter(item => item.stock > item.minLimit);
 
-  const scanStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: scanPos.value }]
-  }));
-
-  const [bikeMatrix, setBikeMatrix] = useState([
-    {
-      id: '1',
-      name: 'Honda Winner X 2026',
-      price: '46.000.000đ',
-      vin: 'AEM-W122',
-      colors: [
-        { name: 'Đỏ nhám', stock: 2, status: 'Còn hàng', colorCode: '#B91C1C' },
-        { name: 'Xanh xi măng', stock: 0, status: 'Hết hàng', colorCode: '#64748B' },
-        { name: 'Đen bóng', stock: 5, status: 'Còn hàng', colorCode: '#1F2937' },
-        { name: 'Trắng bạc', stock: 1, status: 'Sắp hết', colorCode: '#CBD5E1' },
-      ]
-    },
-    {
-      id: '2',
-      name: 'Honda SH 160i Thể Thao',
-      price: '102.000.000đ',
-      vin: 'AEM-S998',
-      colors: [
-        { name: 'Đen mờ', stock: 1, status: 'Sắp hết', colorCode: '#111827' },
-        { name: 'Đỏ thể thao', stock: 3, status: 'Còn hàng', colorCode: '#DC2626' },
-        { name: 'Xám xi măng', stock: 0, status: 'Hết hàng', colorCode: '#94A3B8' },
-      ]
-    },
-    {
-      id: '3',
-      name: 'Kawasaki Z1000',
-      price: '420.000.000đ',
-      vin: 'AEM-K992',
-      colors: [
-        { name: 'Xanh Lime', stock: 2, status: 'Còn hàng', colorCode: '#84CC16' },
-        { name: 'Đen nhám', stock: 1, status: 'Sắp hết', colorCode: '#374151' },
-      ]
-    },
-    {
-      id: '4',
-      name: 'Yamaha Exciter 155 VVA',
-      price: '52.000.000đ',
-      vin: 'AEM-E553',
-      colors: [
-        { name: 'Xanh GP', stock: 4, status: 'Còn hàng', colorCode: '#1D4ED8' },
-        { name: 'Xám đen', stock: 0, status: 'Hết hàng', colorCode: '#4B5563' },
-      ]
-    }
-  ]);
-
-  const [partsInventory, setPartsInventory] = useState([
-    { id: '1', name: 'Dầu nhớt Motul 10W40', stock: 12, minLimit: 5, category: 'Dầu nhớt', price: '250.000đ' },
-    { id: '2', name: 'Má phanh Nissin Winner', stock: 2, minLimit: 5, category: 'Má phanh', price: '180.000đ' },
-    { id: '3', name: 'Lọc gió SH 160i', stock: 15, minLimit: 8, category: 'Lọc gió', price: '120.000đ' },
-    { id: '4', name: 'Bugi NGK Iridium', stock: 3, minLimit: 10, category: 'Hệ thống điện', price: '95.000đ' },
-  ]);
-
-  const handleSync = () => {
-    setSyncing(true);
-    setTimeout(() => setSyncing(false), 1500);
+  const openDetails = (item) => {
+    setSelectedItem(item);
+    bottomSheetRef.current?.show();
   };
 
-  const handleRestockPart = (partId) => {
-    setPartsInventory(prev => prev.map(part => {
-      if (part.id === partId) {
-        return { ...part, stock: part.stock + 10 };
-      }
-      return part;
-    }));
+  const renderItem = (item, isAlert) => {
+    const isCritical = item.stock === 0;
+    const isLow = item.stock > 0 && item.stock <= item.minLimit;
+    const stockColor = isAlert ? '#EF4444' : colors.success;
+
+    let alertLabel = '';
+    if (isCritical) alertLabel = '⚠️ Hết hàng';
+    else if (isLow) alertLabel = '⚠️ Sắp hết';
+
+    return (
+      <Animated.View key={item.id} entering={FadeInRight} layout={Layout.springify()}>
+        <TouchableOpacity 
+          activeOpacity={0.7} 
+          onPress={() => openDetails(item)}
+          style={isAlert ? styles.alertCard : styles.itemRow}
+        >
+          <View style={styles.itemHeader}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.itemName} numberOfLines={2}>{item.name}</Text>
+              <Text style={styles.itemSku}>SKU: {item.sku}</Text>
+              {isAlert && (
+                <Text style={styles.warningText}>
+                  Còn {item.stock} cái (Ngưỡng an toàn: {item.minLimit}) ➔ {alertLabel}
+                </Text>
+              )}
+            </View>
+            <View style={[styles.stockBadge, { backgroundColor: isAlert ? 'transparent' : colors.success + '1A' }]}>
+              <Text style={[styles.stockText, { color: stockColor }]}>Tồn: {item.stock}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+    );
   };
-
-  const openPriceEdit = (bike) => {
-    setSelectedBike(bike);
-    setShowPriceModal(true);
-  };
-
-  const filteredBikes = bikeMatrix.filter(bike =>
-    bike.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredParts = partsInventory.filter(part =>
-    part.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView
-        style={styles.container}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
-      >
-      <Animated.View entering={FadeInUp.duration(800)} style={styles.header}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+      <View style={styles.container}>
+        <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
           {navigation && navigation.canGoBack && navigation.canGoBack() && (
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
               <ChevronLeft color={colors.text} size={20} />
             </TouchableOpacity>
           )}
-          <View style={{ flex: 1, marginLeft: navigation && navigation.canGoBack && navigation.canGoBack() ? 12 : 0 }}>
-            <Text style={styles.title}>Quản Lý Kho 📦</Text>
-            <Pressable style={styles.syncRow} onPress={handleSync}>
-              <RefreshCcw color={syncing ? colors.primary : colors.success} size={12} />
-              <Text style={[styles.syncText, syncing && { color: colors.primary }]}>
-                {syncing ? ' Đang đồng bộ Cloud...' : 'Dữ liệu tồn kho khớp 100%'}
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.qrBtn} onPress={() => setIsScanning(true)}>
-          <QrCode color="#fff" size={24} />
-        </TouchableOpacity>
-      </Animated.View>
+          <Text style={styles.title}>Tra Cứu Tồn Kho</Text>
+        </Animated.View>
 
-      <View style={styles.searchContainer}>
-        <Search color={colors.subtext} size={20} style={styles.searchIcon} />
-        <TextInput
-          placeholder={activeSubTab === 'bikes' ? "Tìm nhanh dòng xe (Winner, SH...)" : "Tìm phụ tùng (Dầu nhớt, má phanh...)"}
-          placeholderTextColor={colors.subtext}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          style={styles.searchInput}
-        />
-        {searchQuery !== '' && (
-          <TouchableOpacity onPress={() => setSearchQuery('')} style={{ marginRight: 10 }}>
-            <X color={colors.subtext} size={16} />
-          </TouchableOpacity>
+        <View style={styles.searchContainer}>
+          <Search color={colors.subtext} size={20} style={styles.searchIcon} />
+          <TextInput
+            placeholder="Tìm tên sản phẩm, mã SKU..."
+            placeholderTextColor={colors.subtext}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={styles.searchInput}
+          />
+        </View>
+
+        <View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+            {FILTER_TABS.map(tab => (
+              <TouchableOpacity 
+                key={tab} 
+                style={[styles.filterTab, activeFilter === tab && styles.activeFilterTab]}
+                onPress={() => setActiveFilter(tab)}
+              >
+                <Text style={[styles.filterText, activeFilter === tab && styles.activeFilterText]}>
+                  {tab}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
+          {lowStockItems.length > 0 && (
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionTitleRow}>
+                <AlertTriangle color="#EF4444" size={20} />
+                <Text style={[styles.sectionTitle, { color: '#EF4444' }]}>
+                  CẢNH BÁO HÀNG SẮP HẾT ({lowStockItems.length})
+                </Text>
+              </View>
+              {lowStockItems.map(item => renderItem(item, true))}
+            </View>
+          )}
+
+          {normalStockItems.length > 0 && (
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionTitleRow}>
+                <Package color={colors.primary} size={20} />
+                <Text style={styles.sectionTitle}>DANH SÁCH HÀNG HÓA ({normalStockItems.length})</Text>
+              </View>
+              {normalStockItems.map(item => renderItem(item, false))}
+            </View>
+          )}
+
+          <View style={styles.footerReminder}>
+            <Info color={colors.primary} size={24} />
+            <Text style={styles.footerReminderText}>
+              💡 Mọi thao tác Thêm, Sửa, Xóa và Nhập kho vui lòng thực hiện trên Web Admin.
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
+
+      <CustomBottomSheet ref={bottomSheetRef} title="Chi Tiết Sản Phẩm" themeMode="dark">
+        {selectedItem && (
+          <View style={{ paddingTop: 10 }}>
+            <Text style={[styles.itemName, { fontSize: 18, marginBottom: 4, marginRight: 0 }]}>{selectedItem.name}</Text>
+            <Text style={[styles.itemSku, { marginBottom: 20 }]}>SKU: {selectedItem.sku}</Text>
+
+            <View style={styles.bsSection}>
+              <Text style={styles.bsLabel}>Giá Vốn / Giá Bán Niêm Yết</Text>
+              <View style={styles.bsValueRow}>
+                <DollarSign color={colors.success} size={18} />
+                <Text style={styles.bsValueText}>{selectedItem.costPrice} / {selectedItem.price}</Text>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.bsSection}>
+              <Text style={styles.bsLabel}>Vị Trí Kệ Kho</Text>
+              <View style={styles.bsValueRow}>
+                <MapPin color={colors.secondary} size={18} />
+                <Text style={styles.bsValueText}>{selectedItem.location}</Text>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.bsSection}>
+              <Text style={styles.bsLabel}>Nhà Cung Ứng</Text>
+              <View style={[styles.bsValueRow, { marginBottom: 10 }]}>
+                <Package color={colors.primary} size={18} />
+                <Text style={styles.bsValueText}>{selectedItem.supplierName}</Text>
+              </View>
+              <View style={styles.bsValueRow}>
+                <Phone color={colors.primary} size={18} />
+                <Text style={styles.bsValueText}>{selectedItem.supplierPhone}</Text>
+              </View>
+            </View>
+          </View>
         )}
-        <Pressable style={styles.filterBtn}>
-          <Filter color={colors.text} size={18} />
-        </Pressable>
-      </View>
-
-      <View style={styles.subTabContainer}>
-        <TouchableOpacity
-          style={[styles.subTab, activeSubTab === 'bikes' && styles.activeSubTab]}
-          onPress={() => {
-            setActiveSubTab('bikes');
-            setSearchQuery('');
-          }}
-        >
-          <Layers color={activeSubTab === 'bikes' ? '#fff' : colors.subtext} size={16} />
-          <Text style={[styles.subTabText, activeSubTab === 'bikes' && styles.activeSubTabText]}>Ma Trận Kho Xe</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.subTab, activeSubTab === 'parts' && styles.activeSubTab]}
-          onPress={() => {
-            setActiveSubTab('parts');
-            setSearchQuery('');
-          }}
-        >
-          <Wrench color={activeSubTab === 'parts' ? '#fff' : colors.subtext} size={16} />
-          <Text style={[styles.subTabText, activeSubTab === 'parts' && styles.activeSubTabText]}>Kho Phụ Tùng</Text>
-        </TouchableOpacity>
-      </View>
-
-      {activeSubTab === 'bikes' ? (
-          <View>
-            <Animated.View entering={FadeInDown.delay(100)} style={styles.scanSection}>
-              <Pressable onPress={() => setIsScanning(true)}>
-                <GlassCard style={styles.scanCard} intensity={15}>
-                  <View style={styles.scanContent}>
-                    <View style={styles.scanIconBox}>
-                      <ScanLine color={colors.secondary} size={28} />
-                    </View>
-                    <View style={{ flex: 1, marginLeft: 14 }}>
-                      <Text style={styles.scanTitle}>Quét mã nhận diện VIN 🏷️</Text>
-                      <Text style={styles.scanSub}>Định vị vị trí xe tại Showroom Biên Hòa</Text>
-                    </View>
-                    <ChevronRight color={colors.subtext} size={18} />
-                  </View>
-                </GlassCard>
-              </Pressable>
-            </Animated.View>
-
-            <View style={styles.listSection}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Danh mục sản phẩm</Text>
-                <Text style={styles.countText}>{filteredBikes.length} Dòng xe</Text>
-              </View>
-
-              {filteredBikes.map((item, index) => {
-                const isExpanded = expandedBikeId === item.id;
-                const totalStock = item.colors.reduce((sum, c) => sum + c.stock, 0);
-
-                return (
-                  <Animated.View key={item.id} entering={FadeInRight.delay(index * 100)} layout={Layout.springify()}>
-                    <GlassCard style={[styles.bikeCard, isExpanded && styles.expandedBikeCard]}>
-                      <Pressable onPress={() => setExpandedBikeId(isExpanded ? null : item.id)}>
-                        <View style={styles.bikeMain}>
-                          <View style={styles.bikeInfoCol}>
-                            <Text style={styles.bikeName}>{item.name}</Text>
-                            <Text style={styles.bikeVin}>Mã VIN: {item.vin} • <Text style={{ color: colors.primary, fontWeight: 'bold' }}>{totalStock} xe trong kho</Text></Text>
-                          </View>
-                          <View style={styles.priceSection}>
-                            <Text style={styles.priceValue}>{item.price}</Text>
-                            <TouchableOpacity style={styles.editPriceBtn} onPress={(e) => {
-                              e.stopPropagation();
-                              openPriceEdit(item);
-                            }}>
-                              <Edit3 color={colors.primary} size={12} />
-                              <Text style={styles.editPriceText}>Sửa giá</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </Pressable>
-
-                      {isExpanded && (
-                        <View style={styles.colorMatrixContainer}>
-                          <Text style={styles.matrixTitle}>Bảng số lượng xe chi tiết theo màu sắc:</Text>
-                          <View style={styles.matrixGrid}>
-                            {item.colors.map((color, cIdx) => (
-                              <View key={cIdx} style={[
-                                styles.colorMatrixCapsule,
-                                color.stock === 0 && styles.outOfStockCapsule,
-                                color.stock === 1 && styles.lowStockCapsule
-                              ]}>
-                                <View style={styles.capsuleLeft}>
-                                  <View style={[styles.colorDot, { backgroundColor: color.colorCode }]} />
-                                  <Text style={[styles.colorName, color.stock === 0 && styles.outOfStockText]}>{color.name}</Text>
-                                </View>
-                                <View style={styles.capsuleRight}>
-                                  <Text style={[
-                                    styles.colorStockCount,
-                                    color.stock === 0 && { color: colors.subtext },
-                                    color.stock === 1 && { color: '#F59E0B' },
-                                    color.stock > 1 && { color: colors.success }
-                                  ]}>
-                                    {color.stock === 0 ? 'Hết hàng' : `${color.stock} xe`}
-                                  </Text>
-                                </View>
-                              </View>
-                            ))}
-                          </View>
-                        </View>
-                      )}
-                    </GlassCard>
-                  </Animated.View>
-                );
-              })}
-            </View>
-          </View>
-        ) : (
-          <View style={styles.listSection}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Danh mục Phụ tùng chính hãng</Text>
-              <Text style={styles.countText}>{filteredParts.length} Mặt hàng</Text>
-            </View>
-
-            {filteredParts.map((item, index) => {
-              const isLowStock = item.stock < item.minLimit;
-              return (
-                <Animated.View key={item.id} entering={FadeInRight.delay(index * 100)} layout={Layout.springify()}>
-                  <GlassCard style={[
-                    styles.partCard,
-                    isLowStock && styles.partCardLowStock
-                  ]}>
-                    <View style={styles.partHeader}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.partName}>{item.name}</Text>
-                        <Text style={styles.partCategory}>{item.category} • Giá: {item.price}</Text>
-                      </View>
-
-                      {isLowStock ? (
-                        <View style={styles.lowStockBadge}>
-                          <AlertTriangle color="#EF4444" size={12} />
-                          <Text style={styles.lowStockBadgeText}>🚨 Dưới ngưỡng ({item.minLimit})</Text>
-                        </View>
-                      ) : (
-                        <View style={styles.stableStockBadge}>
-                          <Text style={styles.stableStockBadgeText}>Ổn định</Text>
-                        </View>
-                      )}
-                    </View>
-
-                    <View style={styles.partFooter}>
-                      <View style={styles.stockInfoCol}>
-                        <Text style={styles.stockLabel}>Tồn kho hiện tại:</Text>
-                        <Text style={[
-                          styles.stockValueText,
-                          isLowStock ? { color: '#EF4444', fontWeight: 'bold' } : { color: colors.success }
-                        ]}>
-                          {item.stock} cái
-                        </Text>
-                      </View>
-
-                      <TouchableOpacity
-                        style={[
-                          styles.restockBtn,
-                          isLowStock ? { backgroundColor: colors.success } : { backgroundColor: colors.glassBg }
-                        ]}
-                        onPress={() => handleRestockPart(item.id)}
-                      >
-                        <PlusCircle color="#fff" size={14} />
-                        <Text style={styles.restockBtnText}>
-                          {isLowStock ? 'Nhập hàng nhanh (+10)' : 'Nhập kho thêm'}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </GlassCard>
-                </Animated.View>
-              );
-            })}
-          </View>
-        )
-      }
-
-      <Modal visible={isScanning} transparent animationType="slide">
-        <View style={styles.scanOverlay}>
-          <View style={styles.scanFrame}>
-            <Animated.View style={[styles.scanLineAnim, scanStyle]} />
-          </View>
-          <Text style={styles.scanHint}>Đang quét mã vạch phụ tùng/VIN xe...</Text>
-          <Pressable style={styles.closeScan} onPress={() => setIsScanning(false)}>
-            <X color="#fff" size={32} />
-          </Pressable>
-        </View>
-      </Modal>
-
-      <Modal visible={showPriceModal} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <GlassCard style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Điều chỉnh giá thị trường</Text>
-              <TouchableOpacity onPress={() => setShowPriceModal(false)}>
-                <X color={colors.text} size={24} />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={styles.modalBody}>
-                <Text style={styles.modalBikeName}>{selectedBike?.name}</Text>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.currencyPrefix}>VNĐ</Text>
-                  <TextInput
-                    defaultValue={selectedBike?.price.replace('.000.000đ', '').replace(/\./g, '')}
-                    keyboardType="numeric"
-                    style={styles.modalInput}
-                  />
-                </View>
-                <View style={styles.syncWarning}>
-                  <RefreshCcw color={colors.warning} size={14} />
-                  <Text style={styles.syncWarningText}>Giá mới sẽ đồng bộ đồng thời lên App Khách hàng & Website AnhEmMotor.</Text>
-                </View>
-              </View>
-
-              <TouchableOpacity style={styles.saveBtn} onPress={() => {
-                handleSync();
-                setShowPriceModal(false);
-              }}>
-                <Text style={styles.saveText}>Xác nhận điều chỉnh giá</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </GlassCard>
-        </View>
-      </Modal>
-      </ScrollView>
+      </CustomBottomSheet>
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { Theme } from '../theme/Theme';
+import { useTheme } from '../theme/Theme'; // Import useTheme
 import { LineChart } from 'react-native-chart-kit';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Activity, Zap } from 'lucide-react-native';
@@ -8,6 +8,7 @@ import { Activity, Zap } from 'lucide-react-native';
 const { width } = Dimensions.get('window');
 
 const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
+  const theme = useTheme();
   const chartConfig = {
     backgroundColor: '#1E293B',
     backgroundGradientFrom: '#1E293B',
@@ -30,9 +31,10 @@ const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.titleRow}>
+    <View style={getStyles(theme).container}>
+      <View style={getStyles(theme).header}>
+        {/* Use getStyles for titleRow and title */}
+        <View style={getStyles(theme).titleRow}>
           <Activity color={color} size={18} />
           <Text style={styles.title}>{title}</Text>
         </View>
@@ -63,16 +65,15 @@ const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
         withVerticalLines={false}
         withHorizontalLines={true}
       />
-      
-      <View style={styles.footer}>
-        <Zap color={Theme.colors.subtext} size={12} />
-        <Text style={styles.predictionText}>Dự báo cần thay thế sau 2,500km nữa</Text>
+
+      <View style={getStyles(theme).footer}>
+        <Zap color={theme.colors.subtext} size={12} />
+        <Text style={[getStyles(theme).predictionText, { color: theme.colors.subtext }]}>Dự báo cần thay thế sau 2,500km nữa</Text>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     backgroundColor: 'rgba(255,255,255,0.02)',
     borderRadius: 24,
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: '#fff',
+    color: theme.colors.text, // Use theme.colors.text
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   predictionText: {
-    color: Theme.colors.subtext,
+    // color: Theme.colors.subtext, // Set inline
     fontSize: 11,
     marginLeft: 6,
   },

@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  TextInput, 
-  KeyboardAvoidingView, 
-  Platform, 
-  Image, 
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
   Alert,
   ActivityIndicator
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Theme } from '../../theme/Theme';
+import { useTheme } from '../../theme/Theme'; // Import useTheme
 import { ChevronLeft, User, Phone, Mail, MapPin, Camera, Save } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
@@ -28,6 +27,7 @@ export default function ProfileEditScreen({ navigation }) {
     updateProfileUseCase,
     uploadAvatarUseCase,
   } = useDependency();
+  const theme = useTheme(); // Use the useTheme hook
   const [profileEntity, setProfileEntity] = useState(null);
   const [form, setForm] = useState({
     name: '',
@@ -127,7 +127,7 @@ export default function ProfileEditScreen({ navigation }) {
     try {
       setIsSaving(true);
       const uploadedUri = await uploadAvatarUseCase.execute(uri);
-      
+
       const updatedEntity = profileEntity.clone();
       updatedEntity.licenseImage = uploadedUri; // Sync with selected avatar uri
       await updateProfileUseCase.execute(updatedEntity);
@@ -142,22 +142,22 @@ export default function ProfileEditScreen({ navigation }) {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: Theme.colors.background, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={Theme.colors.primary} />
-        <Text style={{ color: Theme.colors.subtext, marginTop: 15 }}>Đang tải...</Text>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <Text style={{ color: theme.colors.subtext, marginTop: 15 }}>Đang tải...</Text>
       </View>
     );
   }
 
   const fields = [
-    { key: 'name', label: 'Họ và tên', icon: <User color={Theme.colors.primary} size={18} />, placeholder: 'Nhập họ tên...' },
-    { key: 'email', label: 'Email', icon: <Mail color={Theme.colors.info} size={18} />, placeholder: 'Nhập email...', keyboardType: 'email-address' },
-    { key: 'specificAddress', label: 'Địa chỉ nhận xe cụ thể', icon: <MapPin color={Theme.colors.warning} size={18} />, placeholder: 'Nhập địa chỉ...' },
+    { key: 'name', label: 'Họ và tên', icon: <User color={theme.colors.primary} size={18} />, placeholder: 'Nhập họ tên...' },
+    { key: 'email', label: 'Email', icon: <Mail color={theme.colors.info} size={18} />, placeholder: 'Nhập email...', keyboardType: 'email-address' },
+    { key: 'specificAddress', label: 'Địa chỉ nhận xe cụ thể', icon: <MapPin color={theme.colors.warning} size={18} />, placeholder: 'Nhập địa chỉ...' },
   ];
 
   return (
-    <SafeAreaView
-      style={styles.container}
+    <SafeAreaView // Use getStyles for container
+      style={getStyles(theme).container}
       edges={['top']}
     >
       <KeyboardAvoidingView
@@ -165,73 +165,73 @@ export default function ProfileEditScreen({ navigation }) {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         {/* Header */}
-        <Animated.View entering={FadeInUp.duration(500)} style={styles.header}>
-          <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-            <ChevronLeft color={Theme.colors.text} size={24} />
+        <Animated.View entering={FadeInUp.duration(500)} style={getStyles(theme).header}>
+          <ScalePress style={getStyles(theme).backBtn} onPress={() => navigation.goBack()}>
+            <ChevronLeft color={theme.colors.text} size={24} />
           </ScalePress>
-          <Text style={styles.headerTitle}>Thông tin cá nhân</Text>
-          <ScalePress style={styles.saveBtn} onPress={handleSave} disabled={isSaving}>
-            <Save color={Theme.colors.primary} size={20} />
+          <Text style={[getStyles(theme).headerTitle, { color: theme.colors.text }]}>Thông tin cá nhân</Text>
+          <ScalePress style={[getStyles(theme).saveBtn, { backgroundColor: theme.colors.primary + '1A' }]} onPress={handleSave} disabled={isSaving}>
+            <Save color={theme.colors.primary} size={20} />
           </ScalePress>
         </Animated.View>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
 
           {/* Avatar */}
-          <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.avatarSection}>
-            <ScalePress style={styles.avatarWrapper} onPress={pickImage} disabled={isSaving}>
+          <Animated.View entering={FadeInDown.duration(500).delay(100)} style={getStyles(theme).avatarSection}>
+            <ScalePress style={getStyles(theme).avatarWrapper} onPress={pickImage} disabled={isSaving}>
               {profileEntity.licenseImage ? (
-                <Image source={{ uri: profileEntity.licenseImage }} style={styles.avatarImage} />
+                <Image source={{ uri: profileEntity.licenseImage }} style={[getStyles(theme).avatarImage, { borderColor: theme.colors.primary }]} />
               ) : (
-                <View style={styles.avatarPlaceholder}>
-                  <User color="rgba(255,255,255,0.4)" size={48} />
+                <View style={[getStyles(theme).avatarPlaceholder, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+                  <User color={theme.colors.subtext + '66'} size={48} />
                 </View>
               )}
-              <View style={styles.cameraBtn}>
+              <View style={[getStyles(theme).cameraBtn, { backgroundColor: theme.colors.primary, borderColor: theme.colors.background }]}>
                 <Camera color="#fff" size={14} />
               </View>
             </ScalePress>
-            <Text style={styles.changePhotoText}>Đổi ảnh đại diện</Text>
+            <Text style={[getStyles(theme).changePhotoText, { color: theme.colors.primary }]}>Đổi ảnh đại diện</Text>
           </Animated.View>
 
           {/* Locked phone display */}
           <Animated.View entering={FadeInDown.duration(500).delay(150)}>
-            <Text style={styles.label}>Số điện thoại tài khoản (Khóa)</Text>
-            <GlassCard style={[styles.inputCard, { opacity: 0.6 }]}>
-              <View style={styles.iconBox}><Phone color={Theme.colors.success} size={18} /></View>
+            <Text style={[getStyles(theme).label, { color: theme.colors.subtext }]}>Số điện thoại tài khoản (Khóa)</Text>
+            <GlassCard style={[getStyles(theme).inputCard, { opacity: 0.6 }]}>
+              <View style={getStyles(theme).iconBox}><Phone color={theme.colors.success} size={18} /></View>
               <TextInput
-                style={[styles.input, { color: Theme.colors.subtext }]}
+                style={[getStyles(theme).input, { color: theme.colors.subtext }]}
                 value={profileEntity.phone}
                 editable={false}
               />
             </GlassCard>
-            <Text style={styles.hintText}>🔒 Vui lòng liên hệ Hotline 1900 6899 để yêu cầu đổi số điện thoại.</Text>
+            <Text style={[getStyles(theme).hintText, { color: theme.colors.subtext }]}>🔒 Vui lòng liên hệ Hotline 1900 6899 để yêu cầu đổi số điện thoại.</Text>
           </Animated.View>
 
           {/* Form fields */}
           {fields.map((field, index) => (
             <Animated.View key={field.key} entering={FadeInDown.duration(500).delay(200 + index * 80)}>
-              <Text style={styles.label}>{field.label}</Text>
-              <GlassCard style={styles.inputCard}>
-                <View style={styles.iconBox}>{field.icon}</View>
+              <Text style={[getStyles(theme).label, { color: theme.colors.subtext }]}>{field.label}</Text>
+              <GlassCard style={getStyles(theme).inputCard}>
+                <View style={getStyles(theme).iconBox}>{field.icon}</View>
                 <TextInput
-                  style={styles.input}
+                  style={[getStyles(theme).input, { color: theme.colors.text }]}
                   value={form[field.key]}
                   onChangeText={val => update(field.key, val)}
                   placeholder={field.placeholder}
-                  placeholderTextColor={Theme.colors.subtext}
+                  placeholderTextColor={theme.colors.subtext}
                   keyboardType={field.keyboardType || 'default'}
                 />
               </GlassCard>
             </Animated.View>
           ))}
 
-          <Animated.View entering={FadeInDown.duration(500).delay(600)}>
-            <ScalePress style={[styles.submitBtn, isSaving && { opacity: 0.7 }]} onPress={handleSave} disabled={isSaving}>
+          <Animated.View entering={FadeInDown.duration(500).delay(600)}> // Use getStyles for submitBtn
+            <ScalePress style={[getStyles(theme).submitBtn, isSaving && { opacity: 0.7 }, { backgroundColor: theme.colors.primary }]} onPress={handleSave} disabled={isSaving}>
               {isSaving ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <Text style={styles.submitText}>Lưu thông tin</Text>
+                <Text style={getStyles(theme).submitText}>Lưu thông tin</Text>
               )}
             </ScalePress>
           </Animated.View>
@@ -243,29 +243,29 @@ export default function ProfileEditScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background },
+const getStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.colors.background },
 
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: Theme.spacing.md, marginTop: Theme.spacing.xl, marginBottom: Theme.spacing.md },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { flex: 1, textAlign: 'center', color: Theme.colors.text, fontSize: 18, fontWeight: 'bold' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing.md, marginTop: theme.spacing.xl, marginBottom: theme.spacing.md },
+  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: theme.colors.card, justifyContent: 'center', alignItems: 'center' },
+  headerTitle: { flex: 1, textAlign: 'center', color: theme.colors.text, fontSize: 18, fontWeight: 'bold' },
   saveBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(59,130,246,0.1)', justifyContent: 'center', alignItems: 'center' },
 
-  content: { paddingHorizontal: Theme.spacing.md },
+  content: { paddingHorizontal: theme.spacing.md },
 
-  avatarSection: { alignItems: 'center', marginVertical: Theme.spacing.xl },
+  avatarSection: { alignItems: 'center', marginVertical: theme.spacing.xl },
   avatarWrapper: { position: 'relative', width: 100, height: 100 },
-  avatarPlaceholder: { width: 100, height: 100, borderRadius: 50, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: Theme.colors.border },
-  avatarImage: { width: 100, height: 100, borderRadius: 50, borderWidth: 2, borderColor: Theme.colors.primary },
-  cameraBtn: { position: 'absolute', bottom: 0, right: 0, width: 30, height: 30, borderRadius: 15, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: Theme.colors.background },
-  changePhotoText: { color: Theme.colors.primary, fontSize: 13, marginTop: Theme.spacing.sm, fontWeight: '600' },
+  avatarPlaceholder: { width: 100, height: 100, borderRadius: 50, backgroundColor: theme.colors.card, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: theme.colors.border },
+  avatarImage: { width: 100, height: 100, borderRadius: 50, borderWidth: 2, borderColor: theme.colors.primary },
+  cameraBtn: { position: 'absolute', bottom: 0, right: 0, width: 30, height: 30, borderRadius: 15, backgroundColor: theme.colors.primary, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: theme.colors.background },
+  changePhotoText: { color: theme.colors.primary, fontSize: 13, marginTop: theme.spacing.sm, fontWeight: '600' },
 
-  label: { color: Theme.colors.subtext, fontSize: 13, fontWeight: '600', marginBottom: 6, marginTop: Theme.spacing.md },
-  inputCard: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: Theme.spacing.md, paddingVertical: 4 },
+  label: { color: theme.colors.subtext, fontSize: 13, fontWeight: '600', marginBottom: 6, marginTop: theme.spacing.md },
+  inputCard: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing.md, paddingVertical: 4 },
   iconBox: { width: 32, height: 32, justifyContent: 'center', alignItems: 'center', marginRight: 8 },
-  input: { flex: 1, color: Theme.colors.text, fontSize: 15, paddingVertical: 12 },
-  hintText: { color: Theme.colors.subtext, fontSize: 11, marginTop: 6, marginLeft: 4, fontStyle: 'italic' },
+  input: { flex: 1, color: theme.colors.text, fontSize: 15, paddingVertical: 12 },
+  hintText: { color: theme.colors.subtext, fontSize: 11, marginTop: 6, marginLeft: 4, fontStyle: 'italic' },
 
-  submitBtn: { backgroundColor: Theme.colors.primary, padding: 16, borderRadius: Theme.radius.md, alignItems: 'center', marginTop: Theme.spacing.xl },
+  submitBtn: { backgroundColor: theme.colors.primary, padding: 16, borderRadius: theme.radius.md, alignItems: 'center', marginTop: theme.spacing.xl },
   submitText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });

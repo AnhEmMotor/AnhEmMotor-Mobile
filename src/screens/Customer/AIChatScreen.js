@@ -3,11 +3,14 @@ import {
   StyleSheet, Text, View, ScrollView, TextInput,
   KeyboardAvoidingView, Platform
 } from 'react-native';
-import { Theme } from '../../theme/Theme';
+import { Theme, useTheme } from '../../theme/Theme';
 import { ChevronLeft, Send, Bot, Zap, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+
+const DEFAULT_BG = '#0B0F19';
+const DEFAULT_SUBTEXT = '#94A3B8';
 
 const INITIAL_MESSAGES = [
   {
@@ -43,14 +46,14 @@ export default function AIChatScreen({ navigation }) {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef(null);
+  const theme = useTheme();
 
   const sendMessage = (text = input) => {
     if (!text.trim()) return;
     const userMsg = { id: Date.now(), from: 'user', text };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
-    setIsTyping(true);
-
+    if (text !== input) setIsTyping(true);
     setTimeout(() => {
       const botMsg = { id: Date.now() + 1, from: 'bot', text: getBotReply(text) };
       setMessages(prev => [...prev, botMsg]);
@@ -60,98 +63,94 @@ export default function AIChatScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      {/* Header */}
-      <Animated.View entering={FadeInUp.duration(500)} style={[styles.header, { justifyContent: 'space-between', width: '100%', paddingRight: Theme.spacing.md }]}>
+      <Animated.View entering={FadeInUp.duration(500)} style={[styles.header, { flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing.md, marginTop: theme.spacing.xl, marginBottom: theme.spacing.sm, justifyContent: 'space-between', width: '100%', paddingRight: theme.spacing.md }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <ScalePress style={styles.backBtn} onPress={() => navigation.goBack()}>
-            <ChevronLeft color={Theme.colors.text} size={24} />
+          <ScalePress style={[styles.backBtn, { width: 40, height: 40, borderRadius: 20, backgroundColor: theme.colors.card, justifyContent: 'center', alignItems: 'center', marginRight: theme.spacing.md }]} onPress={() => navigation.goBack()}>
+            <ChevronLeft color={theme.colors.text} size={24} />
           </ScalePress>
-          <View style={styles.botInfo}>
-            <View style={styles.botAvatar}>
+          <View style={[styles.botInfo, { flexDirection: 'row', alignItems: 'center' }]}>
+            <View style={[styles.botAvatar, { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: 10, backgroundColor: theme.colors.primary }]}>
               <Bot color="#fff" size={18} />
             </View>
             <View>
-              <Text style={styles.botName}>Trợ lý AnhEmMotor AI</Text>
-              <View style={styles.onlineRow}>
-                <View style={styles.onlineDot} />
-                <Text style={styles.onlineText}>Trả lời ngay lập tức</Text>
+              <Text style={[styles.botName, { fontSize: 16, fontWeight: 'bold', color: theme.colors.text }]}>Trợ lý AnhEmMotor AI</Text>
+              <View style={[styles.onlineRow, { flexDirection: 'row', alignItems: 'center', marginTop: 2 }]}>
+                <View style={[styles.onlineDot, { width: 6, height: 6, borderRadius: 3, marginRight: 5, backgroundColor: theme.colors.success }]} />
+                <Text style={[styles.onlineText, { fontSize: 11, color: theme.colors.success }]}>Trả lời ngay lập tức</Text>
               </View>
             </View>
           </View>
         </View>
-        <ScalePress 
-          style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center' }} 
+        <ScalePress
+          style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.colors.card, justifyContent: 'center', alignItems: 'center' }}
           onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
         >
-          <Settings color={Theme.colors.text} size={22} />
+          <Settings color={theme.colors.text} size={22} />
         </ScalePress>
       </Animated.View>
 
-      {/* Gợi ý nhanh */}
-      <Animated.View entering={FadeInDown.duration(400).delay(100)}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.suggestions}>
+      <Animated.View entering={FadeInDown.duration(400).delay(100)} style={[styles.suggestions, { paddingHorizontal: theme.spacing.md, marginBottom: theme.spacing.sm }]}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {FAQ_SUGGESTIONS.map((q, i) => (
-            <ScalePress key={i} style={styles.suggestionChip} onPress={() => sendMessage(q)}>
-              <Zap color={Theme.colors.warning} size={12} />
-              <Text style={styles.suggestionText}>{q}</Text>
+            <ScalePress key={i} style={[styles.suggestionChip, { flexDirection: 'row', alignItems: 'center', borderRadius: theme.radius.full, paddingHorizontal: 12, paddingVertical: 8, marginRight: 8, borderWidth: 1, backgroundColor: theme.colors.card, borderColor: theme.colors.border }]} onPress={() => sendMessage(q)}>
+              <Zap color={theme.colors.warning} size={12} />
+              <Text style={[styles.suggestionText, { fontSize: 12, marginLeft: 4, color: theme.colors.subtext }]}>{q}</Text>
             </ScalePress>
           ))}
         </ScrollView>
       </Animated.View>
 
-      {/* Danh sách tin nhắn */}
       <ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.messageList}
+        contentContainerStyle={[styles.messageList, { paddingHorizontal: theme.spacing.md, paddingTop: theme.spacing.sm }]}
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
       >
         {messages.map((msg, index) => (
           <Animated.View
             key={msg.id}
             entering={FadeInDown.duration(400).delay(index * 50)}
-            style={[styles.msgWrapper, msg.from === 'user' && styles.msgRight]}
+            style={[styles.msgWrapper, { flexDirection: 'row', alignItems: 'flex-end', marginBottom: theme.spacing.sm }, msg.from === 'user' && styles.msgRight]}
           >
             {msg.from === 'bot' && (
-              <View style={styles.botAvatarSmall}>
+              <View style={[styles.botAvatarSmall, { width: 26, height: 26, borderRadius: 13, justifyContent: 'center', alignItems: 'center', marginRight: 8, backgroundColor: theme.colors.primary }]}>
                 <Bot color="#fff" size={12} />
               </View>
             )}
-            <View style={[styles.bubble, msg.from === 'user' ? styles.userBubble : styles.botBubble]}>
-              <Text style={styles.bubbleText}>{msg.text}</Text>
+            <View style={[styles.bubble, { maxWidth: '78%', borderRadius: 18, padding: theme.spacing.md }, msg.from === 'user' ? [styles.userBubble, { borderBottomRightRadius: 4, marginRight: 0, backgroundColor: theme.colors.primary }] : [styles.botBubble, { borderBottomLeftRadius: 4, backgroundColor: theme.colors.card }]]}>
+              <Text style={[styles.bubbleText, { fontSize: 14, lineHeight: 20, color: msg.from === 'user' ? '#fff' : theme.colors.text }]}>{msg.text}</Text>
             </View>
           </Animated.View>
         ))}
 
         {isTyping && (
           <View style={styles.msgWrapper}>
-            <View style={styles.botAvatarSmall}>
+            <View style={[styles.botAvatarSmall, { width: 26, height: 26, borderRadius: 13, justifyContent: 'center', alignItems: 'center', marginRight: 8, backgroundColor: theme.colors.primary }]}>
               <Bot color="#fff" size={12} />
             </View>
-            <GlassCard style={styles.typingBubble} intensity={15}>
-              <Text style={styles.typingDots}>● ● ●</Text>
+            <GlassCard style={[styles.typingBubble, { padding: theme.spacing.sm, borderRadius: theme.radius.lg }]} intensity={15}>
+              <Text style={[styles.typingDots, { fontSize: 14, letterSpacing: 4, color: theme.colors.subtext }]}>● ● ●</Text>
             </GlassCard>
           </View>
         )}
         <View style={{ height: 20 }} />
       </ScrollView>
 
-      {/* Input */}
-      <View style={styles.inputBar}>
-        <GlassCard style={styles.inputCard} intensity={20}>
+      <View style={[styles.inputBar, { paddingHorizontal: theme.spacing.md, paddingBottom: 24, paddingTop: 8 }]}>
+        <GlassCard style={[styles.inputCard, { flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing.md, paddingVertical: 8 }]} intensity={20}>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, { flex: 1, color: theme.colors.text, fontSize: 14, paddingVertical: 8 }]}
             value={input}
             onChangeText={setInput}
             placeholder="Nhập câu hỏi..."
-            placeholderTextColor={Theme.colors.subtext}
+            placeholderTextColor={DEFAULT_SUBTEXT}
             onSubmitEditing={() => sendMessage()}
             returnKeyType="send"
           />
-          <ScalePress style={styles.sendBtn} onPress={() => sendMessage()}>
+          <ScalePress style={[styles.sendBtn, { width: 36, height: 36, borderRadius: 18, backgroundColor: theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: 8 }]} onPress={() => sendMessage()}>
             <Send color="#fff" size={18} />
           </ScalePress>
         </GlassCard>
@@ -161,36 +160,36 @@ export default function AIChatScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background },
+  container: { flex: 1, backgroundColor: DEFAULT_BG },
 
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: Theme.spacing.md, marginTop: Theme.spacing.xl, marginBottom: Theme.spacing.sm },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.card, justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.md },
-  botInfo: { flexDirection: 'row', alignItems: 'center' },
-  botAvatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
-  botName: { color: Theme.colors.text, fontSize: 16, fontWeight: 'bold' },
-  onlineRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  onlineDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Theme.colors.success, marginRight: 5 },
-  onlineText: { color: Theme.colors.success, fontSize: 11 },
+  header: {},
+  backBtn: {},
+  botInfo: {},
+  botAvatar: {},
+  botName: {},
+  onlineRow: {},
+  onlineDot: {},
+  onlineText: {},
 
-  suggestions: { paddingHorizontal: Theme.spacing.md, marginBottom: Theme.spacing.sm },
-  suggestionChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: Theme.colors.card, borderRadius: Theme.radius.full, paddingHorizontal: 12, paddingVertical: 8, marginRight: 8, borderWidth: 1, borderColor: Theme.colors.border },
-  suggestionText: { color: Theme.colors.subtext, fontSize: 12, marginLeft: 4 },
+  suggestions: {},
+  suggestionChip: {},
+  suggestionText: {},
 
-  messageList: { paddingHorizontal: Theme.spacing.md, paddingTop: Theme.spacing.sm },
-  msgWrapper: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: Theme.spacing.sm },
+  messageList: {},
+  msgWrapper: {},
   msgRight: { flexDirection: 'row-reverse' },
 
-  botAvatarSmall: { width: 26, height: 26, borderRadius: 13, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginRight: 8 },
-  bubble: { maxWidth: '78%', borderRadius: 18, padding: Theme.spacing.md },
-  botBubble: { backgroundColor: Theme.colors.card, borderBottomLeftRadius: 4 },
-  userBubble: { backgroundColor: Theme.colors.primary, borderBottomRightRadius: 4, marginRight: 0 },
-  bubbleText: { color: '#fff', fontSize: 14, lineHeight: 20 },
+  botAvatarSmall: {},
+  bubble: {},
+  botBubble: {},
+  userBubble: {},
+  bubbleText: { color: '#fff' },
 
-  typingBubble: { padding: Theme.spacing.sm, borderRadius: Theme.radius.lg },
-  typingDots: { color: Theme.colors.subtext, fontSize: 14, letterSpacing: 4 },
+  typingBubble: {},
+  typingDots: {},
 
-  inputBar: { paddingHorizontal: Theme.spacing.md, paddingBottom: 24, paddingTop: 8 },
-  inputCard: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: Theme.spacing.md, paddingVertical: 8 },
-  textInput: { flex: 1, color: Theme.colors.text, fontSize: 14, paddingVertical: 8 },
-  sendBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: 8 },
+  inputBar: {},
+  inputCard: {},
+  textInput: {},
+  sendBtn: {},
 });

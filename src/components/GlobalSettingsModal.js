@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Modal, 
-  View, 
-  Text, 
-  ScrollView, 
-  TouchableOpacity, 
-  Alert, 
-  Platform, 
-  ActivityIndicator, 
-  StyleSheet 
+import {
+  Modal,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  Platform,
+  ActivityIndicator,
+  StyleSheet
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LogOut, Trash2, ChevronRight, Settings, Bell, Shield, Languages, Eye } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import { Theme, useActiveColors } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
+import { useTheme } from '../theme/Theme'; // Import the new useTheme hook
 import GlassCard from './GlassCard';
 
 const STORAGE_KEY = '@AEM_Customer_Profile';
@@ -24,8 +24,7 @@ const STORAGE_KEY = '@AEM_Customer_Profile';
 export default function GlobalSettingsModal() {
   const navigation = useNavigation();
   const { isSettingsOpen, setSettingsOpen, themeMode, setThemeMode } = useGlobalState();
-  const activeColors = useActiveColors();
-  const isDark = activeColors.isDark;
+  const theme = useTheme(); // Use the new useTheme hook
 
   // Local settings state
   const [loading, setLoading] = useState(false);
@@ -33,13 +32,13 @@ export default function GlobalSettingsModal() {
     maintenanceNotifications: true,
     biometricLogin: false,
     language: 'vi',
-    theme: 'dark'
+    theme: theme.isDark ? 'dark' : 'light' // Initialize with current theme
   });
 
   // Haptic feedback
   const triggerHaptic = () => {
     if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => { });
     }
   };
 
@@ -76,7 +75,7 @@ export default function GlobalSettingsModal() {
   const handleToggleSetting = async (key, currentValue) => {
     triggerHaptic();
     const newValue = !currentValue;
-    
+
     // Optimistic state update
     const updatedSettings = {
       ...profileSettings,
@@ -107,13 +106,13 @@ export default function GlobalSettingsModal() {
       'Chọn Ngôn Ngữ / Select Language',
       'Vui lòng chọn ngôn ngữ hiển thị:',
       [
-        { 
-          text: 'Tiếng Việt 🇻🇳', 
-          onPress: () => updateSpecificSetting('language', 'vi') 
+        {
+          text: 'Tiếng Việt 🇻🇳',
+          onPress: () => updateSpecificSetting('language', 'vi')
         },
-        { 
-          text: 'English 🇬🇧', 
-          onPress: () => updateSpecificSetting('language', 'en') 
+        {
+          text: 'English 🇬🇧',
+          onPress: () => updateSpecificSetting('language', 'en')
         },
         { text: 'Hủy / Cancel', style: 'cancel' }
       ]
@@ -127,26 +126,26 @@ export default function GlobalSettingsModal() {
       'Giao Diện Ứng Dụng',
       'Chọn chế độ hiển thị:',
       [
-        { 
-          text: 'Sáng ☀️', 
+        {
+          text: 'Sáng ☀️',
           onPress: () => {
             updateSpecificSetting('theme', 'light');
             setThemeMode('light');
-          } 
+          }
         },
-        { 
-          text: 'Tối 🌙', 
+        {
+          text: 'Tối 🌙',
           onPress: () => {
             updateSpecificSetting('theme', 'dark');
             setThemeMode('dark');
-          } 
+          }
         },
-        { 
-          text: 'Hệ thống ⚙️', 
+        {
+          text: 'Hệ thống ⚙️',
           onPress: () => {
             updateSpecificSetting('theme', 'system');
             setThemeMode('system');
-          } 
+          }
         },
         { text: 'Hủy', style: 'cancel' }
       ]
@@ -178,13 +177,13 @@ export default function GlobalSettingsModal() {
     triggerHaptic();
     Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng?', [
       { text: 'Hủy', style: 'cancel' },
-      { 
-        text: 'Đăng xuất', 
+      {
+        text: 'Đăng xuất',
         style: 'destructive',
         onPress: () => {
           setSettingsOpen(false);
           navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
-        } 
+        }
       }
     ]);
   };
@@ -197,8 +196,8 @@ export default function GlobalSettingsModal() {
       'Hành động này không thể hoàn tác. Mọi thông tin xe máy, lịch bảo dưỡng, và điểm thưởng (1,200 điểm) sẽ bị xóa vĩnh viễn khỏi hệ thống Showroom Biên Hòa.',
       [
         { text: 'Hủy', style: 'cancel' },
-        { 
-          text: 'Xóa Vĩnh Viễn', 
+        {
+          text: 'Xóa Vĩnh Viễn',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -216,54 +215,48 @@ export default function GlobalSettingsModal() {
     );
   };
 
-  const activeColorsTheme = {
-    ...activeColors,
-    modalBg: isDark ? '#0F172A' : '#FFFFFF',
-    settingsCardBg: isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF',
-    border: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-  };
-
   return (
-    <Modal 
-      visible={isSettingsOpen} 
-      transparent 
+    <Modal
+      visible={isSettingsOpen}
+      transparent
       animationType="slide"
       onRequestClose={() => setSettingsOpen(false)}
     >
       <View style={styles.modalOverlay}>
-        <BlurView intensity={35} tint={isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
-        
+        <BlurView intensity={35} tint={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
+
         {/* Backdrop Tap closer */}
         <TouchableOpacity style={styles.modalBackdrop} onPress={() => setSettingsOpen(false)} />
-        
+
         {/* Modal Container Card */}
-        <View style={[styles.modalSheet, { backgroundColor: activeColorsTheme.modalBg, borderColor: activeColorsTheme.border }]}>
-          <View style={[styles.modalHandle, { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' }]} />
-          
+        <View style={[styles.modalSheet, { backgroundColor: theme.colors.modalBg, borderColor: theme.colors.border }]}>
+          <View style={[styles.modalHandle, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' }]} />
+
           <View style={styles.modalHeader}>
-            <Settings color={Theme.colors.primary} size={22} style={{ marginRight: 8 }} />
-            <Text style={[styles.modalTitle, { color: activeColorsTheme.text }]}>⚙️ CÀI ĐẶT HỆ THỐNG</Text>
+            <Settings color={theme.colors.primary} size={22} style={{ marginRight: 8 }} />
+            <Text style={[styles.modalTitle, { color: theme.colors.text }]}>⚙️ CÀI ĐẶT HỆ THỐNG</Text>
           </View>
 
           {loading ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="large" color={Theme.colors.primary} />
+              <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
           ) : (
             <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }}>
-              <GlassCard style={{ padding: 6, borderRadius: 16, backgroundColor: activeColorsTheme.settingsCardBg }} intensity={isDark ? 8 : 0}>
-                
+              {/* Use theme.colors.card for background, or a specific modal card background if defined in theme.colors */}
+              <GlassCard style={{ padding: 6, borderRadius: theme.radius.lg, backgroundColor: theme.colors.card }} intensity={theme.isDark ? 8 : 0}>
+
                 {/* 1. Maintenance notifications */}
-                <View style={[styles.settingRow, { borderBottomColor: activeColorsTheme.border }]}>
+                <View style={[styles.settingRow, { borderBottomColor: theme.colors.border }]}>
                   <View style={styles.rowIcon}>
-                    <Bell color={Theme.colors.primary} size={18} />
+                    <Bell color={theme.colors.primary} size={18} />
                   </View>
                   <View style={styles.settingInfo}>
-                    <Text style={[styles.settingTitle, { color: activeColorsTheme.text }]}>Nhắc lịch bảo dưỡng & Kỹ thuật</Text>
-                    <Text style={[styles.settingDesc, { color: activeColorsTheme.subtext }]}>Nhận cảnh báo thay nhớt, kiểm tra định kỳ</Text>
+                    <Text style={[styles.settingTitle, { color: theme.colors.text }]}>Nhắc lịch bảo dưỡng & Kỹ thuật</Text>
+                    <Text style={[styles.settingDesc, { color: theme.colors.subtext }]}>Nhận cảnh báo thay nhớt, kiểm tra định kỳ</Text>
                   </View>
-                  <TouchableOpacity 
-                    style={[styles.toggle, profileSettings.maintenanceNotifications && styles.toggleOn]} 
+                  <TouchableOpacity
+                    style={[styles.toggle, profileSettings.maintenanceNotifications && { backgroundColor: theme.colors.primary }]}
                     onPress={() => handleToggleSetting('maintenanceNotifications', profileSettings.maintenanceNotifications)}
                   >
                     <View style={[styles.toggleDot, profileSettings.maintenanceNotifications && styles.toggleDotOn]} />
@@ -271,16 +264,16 @@ export default function GlobalSettingsModal() {
                 </View>
 
                 {/* 2. Biometrics check */}
-                <View style={[styles.settingRow, { borderBottomColor: activeColorsTheme.border }]}>
+                <View style={[styles.settingRow, { borderBottomColor: theme.colors.border }]}>
                   <View style={styles.rowIcon}>
                     <Shield color="#10B981" size={18} />
                   </View>
                   <View style={styles.settingInfo}>
-                    <Text style={[styles.settingTitle, { color: activeColorsTheme.text }]}>Đăng nhập bằng FaceID / Vân tay</Text>
-                    <Text style={[styles.settingDesc, { color: activeColorsTheme.subtext }]}>Bảo mật cao và mở khoá một chạm tiện lợi</Text>
+                    <Text style={[styles.settingTitle, { color: theme.colors.text }]}>Đăng nhập bằng FaceID / Vân tay</Text>
+                    <Text style={[styles.settingDesc, { color: theme.colors.subtext }]}>Bảo mật cao và mở khoá một chạm tiện lợi</Text>
                   </View>
-                  <TouchableOpacity 
-                    style={[styles.toggle, profileSettings.biometricLogin && styles.toggleOn]} 
+                  <TouchableOpacity
+                    style={[styles.toggle, profileSettings.biometricLogin && { backgroundColor: theme.colors.primary }]}
                     onPress={() => handleToggleSetting('biometricLogin', profileSettings.biometricLogin)}
                   >
                     <View style={[styles.toggleDot, profileSettings.biometricLogin && styles.toggleDotOn]} />
@@ -288,17 +281,17 @@ export default function GlobalSettingsModal() {
                 </View>
 
                 {/* 3. Ngôn ngữ */}
-                <TouchableOpacity style={[styles.settingRow, { borderBottomColor: activeColorsTheme.border }]} onPress={handleLanguageSelect}>
+                <TouchableOpacity style={[styles.settingRow, { borderBottomColor: theme.colors.border }]} onPress={handleLanguageSelect}>
                   <View style={styles.rowIcon}>
                     <Languages color="#F59E0B" size={18} />
                   </View>
                   <View style={styles.settingInfo}>
-                    <Text style={[styles.settingTitle, { color: activeColorsTheme.text }]}>Ngôn ngữ ứng dụng</Text>
-                    <Text style={[styles.settingDesc, { color: activeColorsTheme.subtext }]}>
+                    <Text style={[styles.settingTitle, { color: theme.colors.text }]}>Ngôn ngữ ứng dụng</Text>
+                    <Text style={[styles.settingDesc, { color: theme.colors.subtext }]}>
                       Đang dùng: {profileSettings.language === 'vi' ? 'Tiếng Việt 🇻🇳' : 'English 🇬🇧'}
                     </Text>
                   </View>
-                  <ChevronRight color={activeColorsTheme.subtext} size={18} />
+                  <ChevronRight color={theme.colors.subtext} size={18} />
                 </TouchableOpacity>
 
                 {/* 4. Giao diện theme */}
@@ -307,25 +300,25 @@ export default function GlobalSettingsModal() {
                     <Eye color="#EC4899" size={18} />
                   </View>
                   <View style={styles.settingInfo}>
-                    <Text style={[styles.settingTitle, { color: activeColorsTheme.text }]}>Giao diện ứng dụng</Text>
-                    <Text style={[styles.settingDesc, { color: activeColorsTheme.subtext }]}>
+                    <Text style={[styles.settingTitle, { color: theme.colors.text }]}>Giao diện ứng dụng</Text>
+                    <Text style={[styles.settingDesc, { color: theme.colors.subtext }]}>
                       Đang dùng: {profileSettings.theme === 'light' ? 'Sáng ☀️' : profileSettings.theme === 'dark' ? 'Tối 🌙' : 'Hệ thống ⚙️'}
                     </Text>
                   </View>
-                  <ChevronRight color={activeColorsTheme.subtext} size={18} />
+                  <ChevronRight color={theme.colors.subtext} size={18} />
                 </TouchableOpacity>
               </GlassCard>
 
               {/* Danger Zone */}
               <View style={{ marginTop: 25 }}>
-                <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+                <TouchableOpacity style={[styles.logoutBtn, { backgroundColor: theme.colors.primary }]} onPress={handleLogout}>
                   <LogOut color="#FFF" size={16} style={{ marginRight: 8 }} />
                   <Text style={styles.logoutText}>Đăng xuất khỏi tài khoản</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.deleteBtn} onPress={handleDeleteAccount}>
-                  <Trash2 color={Theme.colors.secondary} size={16} style={{ marginRight: 8 }} />
-                  <Text style={styles.deleteText}>Xóa tài khoản vĩnh viễn</Text>
+                <TouchableOpacity style={[styles.deleteBtn, { borderColor: theme.colors.secondary + '20' }]} onPress={handleDeleteAccount}>
+                  <Trash2 color={theme.colors.secondary} size={16} style={{ marginRight: 8 }} />
+                  <Text style={[styles.deleteText, { color: theme.colors.secondary }]}>Xóa tài khoản vĩnh viễn</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -417,9 +410,6 @@ const styles = StyleSheet.create({
     padding: 2,
     justifyContent: 'center',
   },
-  toggleOn: {
-    backgroundColor: Theme.colors.primary,
-  },
   toggleDot: {
     width: 20,
     height: 20,
@@ -433,8 +423,7 @@ const styles = StyleSheet.create({
   logoutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Theme.colors.primary,
+    justifyContent: 'center', // This is already present, no change needed
     paddingVertical: 14,
     borderRadius: 12,
     marginBottom: 10,
@@ -447,16 +436,10 @@ const styles = StyleSheet.create({
   deleteBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center', // This is already present, no change needed
     backgroundColor: 'rgba(239, 68, 68, 0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.2)',
     paddingVertical: 14,
     borderRadius: 12,
-  },
-  deleteText: {
-    color: Theme.colors.secondary,
-    fontSize: 14,
-    fontWeight: 'bold',
   },
 });

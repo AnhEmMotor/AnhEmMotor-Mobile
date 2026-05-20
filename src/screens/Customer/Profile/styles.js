@@ -4,21 +4,26 @@ import { horizontalScale, verticalScale, moderateScale } from '../../../utils/re
 
 const { width } = Dimensions.get('window');
 
+const DEFAULT_BG = '#0B0F19';
+const DEFAULT_CARD = '#1E293B';
+const DEFAULT_TEXT = '#F8FAFC';
+const DEFAULT_SUBTEXT = '#94A3B8';
+const DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
+
 export const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background },
+  container: { flex: 1, backgroundColor: DEFAULT_BG },
   scrollContent: { 
     paddingHorizontal: horizontalScale(20), 
     paddingBottom: verticalScale(140) 
   },
   title: { 
-    color: Theme.colors.text, 
+    color: DEFAULT_TEXT, 
     fontSize: moderateScale(26), 
     fontWeight: 'bold', 
     marginTop: verticalScale(15), 
     marginBottom: verticalScale(20) 
   },
   
-  // Header section
   profileHeader: { alignItems: 'center', marginBottom: verticalScale(25) },
   avatarWrapper: { position: 'relative' },
   avatar: { 
@@ -26,7 +31,7 @@ export const styles = StyleSheet.create({
     height: horizontalScale(96), 
     borderRadius: horizontalScale(48), 
     borderWidth: 2, 
-    borderColor: Theme.colors.primary, 
+    borderColor: Theme.staticColors.primary, 
     backgroundColor: '#1E293B' 
   },
   vipBadge: { 
@@ -40,36 +45,35 @@ export const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center', 
     borderWidth: 2, 
-    borderColor: Theme.colors.background 
+    borderColor: DEFAULT_BG 
   },
   editBadge: { 
     position: 'absolute', 
     top: -2, 
     right: -2, 
-    backgroundColor: Theme.colors.primary, 
+    backgroundColor: Theme.staticColors.primary, 
     width: horizontalScale(28), 
     height: horizontalScale(28), 
     borderRadius: horizontalScale(14), 
     justifyContent: 'center', 
     alignItems: 'center', 
     borderWidth: 2, 
-    borderColor: Theme.colors.background, 
+    borderColor: DEFAULT_BG, 
     zIndex: 10 
   },
   userNameHeader: { 
-    color: Theme.colors.text, 
+    color: DEFAULT_TEXT, 
     fontSize: moderateScale(22), 
     fontWeight: 'bold', 
     marginTop: verticalScale(12) 
   },
   userStatus: { 
-    color: Theme.colors.subtext, 
+    color: DEFAULT_SUBTEXT, 
     fontSize: moderateScale(13), 
     marginTop: verticalScale(4), 
     opacity: 0.8 
   },
   
-  // Membership Card
   cardWrapper: { marginBottom: verticalScale(25) },
   membershipCard: { 
     height: verticalScale(185), 
@@ -99,7 +103,6 @@ export const styles = StyleSheet.create({
   cardHolder: { color: 'rgba(255,255,255,0.6)', fontSize: moderateScale(10), fontWeight: 'bold' },
   cardNumber: { color: '#fff', fontSize: moderateScale(14), fontWeight: '600', marginTop: verticalScale(4), letterSpacing: 2 },
 
-  // Stats Card
   statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: verticalScale(25) },
   statItem: { 
     width: '48%', 
@@ -108,10 +111,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center', 
     borderRadius: Theme.radius.md 
   },
-  statLabel: { color: Theme.colors.subtext, fontSize: moderateScale(12), marginBottom: verticalScale(4) },
-  statValue: { color: Theme.colors.primary, fontSize: moderateScale(18), fontWeight: 'bold' },
+  statLabel: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(12), marginBottom: verticalScale(4) },
+  statValue: { color: Theme.staticColors.primary, fontSize: moderateScale(18), fontWeight: 'bold' },
   
-  // Info Section & Click-to-edit rows
   sectionHeader: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
@@ -119,8 +121,8 @@ export const styles = StyleSheet.create({
     marginBottom: verticalScale(12), 
     marginTop: verticalScale(10) 
   },
-  sectionLabel: { color: Theme.colors.text, fontSize: moderateScale(17), fontWeight: 'bold' },
-  sectionSubtitle: { color: Theme.colors.subtext, fontSize: moderateScale(11) },
+  sectionLabel: { color: DEFAULT_TEXT, fontSize: moderateScale(17), fontWeight: 'bold' },
+  sectionSubtitle: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(11) },
   
   menuGroup: { marginBottom: verticalScale(25) },
   infoRowWrapper: { marginBottom: verticalScale(10) },
@@ -132,11 +134,10 @@ export const styles = StyleSheet.create({
     borderRadius: Theme.radius.md 
   },
   infoLeft: { flex: 1 },
-  infoTitle: { color: Theme.colors.subtext, fontSize: moderateScale(12), fontWeight: '500' },
-  infoValue: { color: Theme.colors.text, fontSize: moderateScale(15), fontWeight: '600', marginTop: verticalScale(4) },
+  infoTitle: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(12), fontWeight: '500' },
+  infoValue: { color: DEFAULT_TEXT, fontSize: moderateScale(15), fontWeight: '600', marginTop: verticalScale(4) },
   infoRight: { flexDirection: 'row', alignItems: 'center' },
   
-  // Settings
   settingsCard: { padding: moderateScale(10), borderRadius: Theme.radius.lg },
   settingRow: { 
     flexDirection: 'row', 
@@ -149,10 +150,9 @@ export const styles = StyleSheet.create({
   },
   settingRowLast: { borderBottomWidth: 0 },
   settingInfo: { flex: 1, marginRight: horizontalScale(10) },
-  settingTitle: { color: Theme.colors.text, fontSize: moderateScale(15), fontWeight: 'bold' },
-  settingDesc: { color: Theme.colors.subtext, fontSize: moderateScale(12), marginTop: verticalScale(2), opacity: 0.8 },
+  settingTitle: { color: DEFAULT_TEXT, fontSize: moderateScale(15), fontWeight: 'bold' },
+  settingDesc: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(12), marginTop: verticalScale(2), opacity: 0.8 },
   
-  // Toggles
   toggle: { 
     width: horizontalScale(46), 
     height: verticalScale(26), 
@@ -161,7 +161,7 @@ export const styles = StyleSheet.create({
     padding: 3, 
     justifyContent: 'center' 
   },
-  toggleOn: { backgroundColor: Theme.colors.primary },
+  toggleOn: { backgroundColor: Theme.staticColors.primary },
   toggleDot: { 
     width: horizontalScale(20), 
     height: horizontalScale(20), 
@@ -170,7 +170,6 @@ export const styles = StyleSheet.create({
   },
   toggleDotOn: { alignSelf: 'flex-end' },
   
-  // Danger Zone / Bottom Buttons
   dangerSpacer: { height: verticalScale(25) },
   logoutBtn: { 
     flexDirection: 'row', 
@@ -183,7 +182,7 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.06)', 
     backgroundColor: 'rgba(255,255,255,0.01)' 
   },
-  logoutText: { color: Theme.colors.text, fontWeight: 'bold', fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
+  logoutText: { color: DEFAULT_TEXT, fontWeight: 'bold', fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
   deleteBtn: { 
     flexDirection: 'row', 
     alignItems: 'center', 
@@ -195,9 +194,8 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(220,38,38,0.2)', 
     backgroundColor: 'rgba(220,38,38,0.02)' 
   },
-  deleteText: { color: Theme.colors.secondary, fontWeight: 'bold', fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
+  deleteText: { color: Theme.staticColors.secondary, fontWeight: 'bold', fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
 
-  // Modals (Avatar sheets)
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)' },
   avatarModalSheet: { 
@@ -217,9 +215,8 @@ export const styles = StyleSheet.create({
     alignSelf: 'center', 
     marginBottom: verticalScale(22) 
   },
-  modalTitle: { color: Theme.colors.text, fontSize: moderateScale(19), fontWeight: 'bold', marginBottom: verticalScale(20), textAlign: 'center' },
+  modalTitle: { color: DEFAULT_TEXT, fontSize: moderateScale(19), fontWeight: 'bold', marginBottom: verticalScale(20), textAlign: 'center' },
   
-  // Image Selector Buttons in bottom sheet
   avatarActionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: verticalScale(22) },
   avatarActionButton: { 
     width: '48%', 
@@ -232,7 +229,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1, 
     borderColor: 'rgba(255,255,255,0.08)' 
   },
-  avatarActionText: { color: Theme.colors.text, fontWeight: '600', fontSize: moderateScale(13), marginLeft: horizontalScale(8) },
+  avatarActionText: { color: DEFAULT_TEXT, fontWeight: '600', fontSize: moderateScale(13), marginLeft: horizontalScale(8) },
 
   avatarGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   avatarOption: { 
@@ -247,12 +244,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center' 
   },
-  selectedAvatarOption: { borderColor: Theme.colors.primary, backgroundColor: 'rgba(59,130,246,0.15)' },
+  selectedAvatarOption: { borderColor: Theme.staticColors.primary, backgroundColor: 'rgba(59,130,246,0.15)' },
   avatarOptionImg: { width: '100%', height: '100%', borderRadius: Theme.radius.sm },
   
-  // Bottom Sheet Form Styles
   formContainer: { width: '100%', paddingVertical: verticalScale(5) },
-  formLabel: { color: Theme.colors.subtext, fontSize: moderateScale(13), fontWeight: '600', marginBottom: verticalScale(8), marginTop: verticalScale(5) },
+  formLabel: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(13), fontWeight: '600', marginBottom: verticalScale(8), marginTop: verticalScale(5) },
   formInputWrapper: { 
     flexDirection: 'row', 
     alignItems: 'center', 
@@ -263,10 +259,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(15), 
     marginBottom: verticalScale(18) 
   },
-  formInput: { flex: 1, color: Theme.colors.text, fontSize: moderateScale(15), paddingVertical: verticalScale(12) },
+  formInput: { flex: 1, color: DEFAULT_TEXT, fontSize: moderateScale(15), paddingVertical: verticalScale(12) },
   formInputIcon: { marginRight: horizontalScale(10) },
   
-  // Selector Options (Radio/Tab selectors)
   tabSelector: { 
     flexDirection: 'row', 
     backgroundColor: 'rgba(255,255,255,0.03)', 
@@ -277,11 +272,10 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.08)' 
   },
   tabOption: { flex: 1, paddingVertical: verticalScale(12), alignItems: 'center', borderRadius: 10 },
-  activeTabOption: { backgroundColor: Theme.colors.primary },
-  tabOptionText: { color: Theme.colors.subtext, fontSize: moderateScale(13), fontWeight: 'bold' },
+  activeTabOption: { backgroundColor: Theme.staticColors.primary },
+  tabOptionText: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(13), fontWeight: 'bold' },
   activeTabOptionText: { color: '#fff' },
 
-  // Administrative selection columns
   regionGroup: { marginBottom: verticalScale(18) },
   regionSelectButton: { 
     flexDirection: 'row', 
@@ -294,16 +288,14 @@ export const styles = StyleSheet.create({
     padding: moderateScale(12), 
     marginBottom: verticalScale(10) 
   },
-  regionSelectLabel: { color: Theme.colors.subtext, fontSize: moderateScale(11) },
-  regionSelectValue: { color: Theme.colors.text, fontSize: moderateScale(14), fontWeight: '600', marginTop: verticalScale(4) },
+  regionSelectLabel: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(11) },
+  regionSelectValue: { color: DEFAULT_TEXT, fontSize: moderateScale(14), fontWeight: '600', marginTop: verticalScale(4) },
   
-  // Scroll list of administrative regions
   regionList: { maxHeight: verticalScale(140), backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: Theme.radius.md, padding: 5, marginBottom: verticalScale(12) },
   regionItem: { paddingVertical: verticalScale(10), paddingHorizontal: horizontalScale(15), borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.02)' },
-  regionItemText: { color: Theme.colors.subtext, fontSize: moderateScale(14) },
-  regionItemTextActive: { color: Theme.colors.primary, fontWeight: 'bold' },
+  regionItemText: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(14) },
+  regionItemTextActive: { color: Theme.staticColors.primary, fontWeight: 'bold' },
 
-  // License image preview
   licenseImageContainer: { 
     height: verticalScale(150), 
     borderRadius: Theme.radius.md, 
@@ -318,17 +310,16 @@ export const styles = StyleSheet.create({
   },
   licenseImage: { width: '100%', height: '100%' },
   licenseUploadBtn: { alignItems: 'center' },
-  licenseUploadText: { color: Theme.colors.primary, fontSize: moderateScale(13), fontWeight: '600', marginTop: verticalScale(6) },
+  licenseUploadText: { color: Theme.staticColors.primary, fontSize: moderateScale(13), fontWeight: '600', marginTop: verticalScale(6) },
 
-  // Sticky updates button in bottom sheets (Sticky bottom UX)
   stickyButtonWrapper: { marginTop: verticalScale(10) },
   primaryButton: { 
     height: verticalScale(50), 
     borderRadius: Theme.radius.md, 
-    backgroundColor: Theme.colors.primary, 
+    backgroundColor: Theme.staticColors.primary, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    shadowColor: Theme.colors.primary, 
+    shadowColor: Theme.staticColors.primary, 
     shadowOffset: { width: 0, height: 4 }, 
     shadowOpacity: 0.3, 
     shadowRadius: 10, 
@@ -338,7 +329,6 @@ export const styles = StyleSheet.create({
   buttonDisabled: { backgroundColor: 'rgba(255,255,255,0.08)' },
   buttonDisabledText: { color: 'rgba(255,255,255,0.3)' },
 
-  // Shopee and TikTok Shop Premium Style Classes
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -346,7 +336,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(20),
     paddingTop: verticalScale(15),
     paddingBottom: verticalScale(10),
-    backgroundColor: Theme.colors.background,
+    backgroundColor: DEFAULT_BG,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.04)'
   },
@@ -386,21 +376,21 @@ export const styles = StyleSheet.create({
     height: horizontalScale(70),
     borderRadius: horizontalScale(35),
     borderWidth: 2,
-    borderColor: Theme.colors.primary,
+    borderColor: Theme.staticColors.primary,
     backgroundColor: '#1E293B'
   },
   shopeeCameraBadge: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: Theme.colors.primary,
+    backgroundColor: Theme.staticColors.primary,
     width: horizontalScale(22),
     height: horizontalScale(22),
     borderRadius: horizontalScale(11),
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: Theme.colors.background
+    borderColor: DEFAULT_BG
   },
   shopeeHeaderText: {
     flex: 1,
@@ -428,7 +418,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   shopeeUid: {
-    color: Theme.colors.subtext,
+    color: DEFAULT_SUBTEXT,
     fontSize: moderateScale(11),
     marginTop: verticalScale(4),
     opacity: 0.8
@@ -457,12 +447,12 @@ export const styles = StyleSheet.create({
     marginHorizontal: horizontalScale(12)
   },
   walletLabel: {
-    color: Theme.colors.subtext,
+    color: DEFAULT_SUBTEXT,
     fontSize: moderateScale(10),
     fontWeight: '500'
   },
   walletValue: {
-    color: Theme.colors.text,
+    color: DEFAULT_TEXT,
     fontSize: moderateScale(12),
     fontWeight: 'bold',
     marginTop: verticalScale(1)
@@ -513,7 +503,7 @@ export const styles = StyleSheet.create({
     elevation: 3
   },
   iconLabel: {
-    color: Theme.colors.subtext,
+    color: DEFAULT_SUBTEXT,
     fontSize: moderateScale(11),
     textAlign: 'center',
     marginTop: verticalScale(8)

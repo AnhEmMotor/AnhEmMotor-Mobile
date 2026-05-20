@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { Theme } from '../../theme/Theme';
+import { useTheme } from '../../theme/Theme'; // Import useTheme
 import { CheckCircle2, Circle, Clock, FileText } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassCard from '../../components/GlassCard';
@@ -8,57 +8,55 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 export default function LegalProgressScreen() {
   const steps = [
-    { id: 1, title: 'Đã hoàn tất thanh toán', date: '01/05/2026', completed: true },
-    { id: 2, title: 'Đang chuẩn bị hồ sơ gốc', date: '03/05/2026', completed: true },
-    { id: 3, title: 'Đang làm thủ tục đóng thuế', date: '05/05/2026', completed: true },
-    { id: 4, title: 'Đợi bấm biển số', date: 'Dự kiến: 10/05/2026', completed: false },
-    { id: 5, title: 'Bàn giao xe & Giấy tờ', date: 'Dự kiến: 12/05/2026', completed: false },
+    { id: 1, title: 'Đã hoàn tất thanh toán', date: '01/05/2026', completed: true, icon: CheckCircle2, iconColor: 'success' },
+    { id: 2, title: 'Đang chuẩn bị hồ sơ gốc', date: '03/05/2026', completed: true, icon: CheckCircle2, iconColor: 'success' },
+    { id: 3, title: 'Đang làm thủ tục đóng thuế', date: '05/05/2026', completed: true, icon: CheckCircle2, iconColor: 'success' },
+    { id: 4, title: 'Đợi bấm biển số', date: 'Dự kiến: 10/05/2026', completed: false, icon: Clock, iconColor: 'subtext' },
+    { id: 5, title: 'Bàn giao xe & Giấy tờ', date: 'Dự kiến: 12/05/2026', completed: false, icon: Clock, iconColor: 'subtext' },
   ];
+  const theme = useTheme(); // Use the useTheme hook
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={getStyles(theme).container} showsVerticalScrollIndicator={false}>
       <Animated.View entering={FadeInUp.duration(600).delay(100)}>
-        <Text style={styles.title}>Tiến độ Pháp lý</Text>
-        <View style={styles.headerInfo}>
-          <Text style={styles.bikeName}>Kawasaki Z1000</Text>
-          <Text style={styles.bikePlate}>Biển số: 59-A3 123.45</Text>
+        <Text style={[getStyles(theme).title, { color: theme.colors.text }]}>Tiến độ Pháp lý</Text>
+        <View style={getStyles(theme).headerInfo}>
+          <Text style={[getStyles(theme).bikeName, { color: theme.colors.primary }]}>Kawasaki Z1000</Text>
+          <Text style={[getStyles(theme).bikePlate, { color: theme.colors.subtext }]}>Biển số: 59-A3 123.45</Text>
         </View>
       </Animated.View>
 
-      <View style={styles.timelineContainer}>
+      <View style={getStyles(theme).timelineContainer}>
         {steps.map((step, index) => (
-          <Animated.View 
-            key={step.id} 
+          <Animated.View
+            key={step.id}
             entering={FadeInDown.duration(600).delay(200 + index * 100)}
-            style={styles.stepRow}
+            style={getStyles(theme).stepRow}
           >
-            <View style={styles.leftLine}>
-              <View style={[styles.iconWrapper, { backgroundColor: step.completed ? Theme.colors.success + '20' : 'rgba(255,255,255,0.05)' }]}>
-                {step.completed ? 
-                  <CheckCircle2 color={Theme.colors.success} size={20} /> : 
-                  <Clock color={Theme.colors.subtext} size={20} />
-                }
+            <View style={getStyles(theme).leftLine}>
+              <View style={[getStyles(theme).iconWrapper, { backgroundColor: theme.colors[step.iconColor] + '20', borderColor: theme.colors.border }]}>
+                {React.createElement(step.icon, { color: theme.colors[step.iconColor], size: 20 })}
               </View>
               {index !== steps.length - 1 && (
-                <View style={[styles.line, { backgroundColor: step.completed ? Theme.colors.success : 'rgba(255,255,255,0.1)' }]} />
+                <View style={[getStyles(theme).line, { backgroundColor: step.completed ? theme.colors.success : theme.colors.border }]} />
               )}
             </View>
-            <View style={styles.rightContent}>
-              <GlassCard 
-                style={[styles.contentCard, { borderColor: step.completed ? Theme.colors.success + '40' : 'rgba(255,255,255,0.1)' }]}
+            <View style={getStyles(theme).rightContent}>
+              <GlassCard
+                style={[getStyles(theme).contentCard, { borderColor: step.completed ? theme.colors.success + '40' : theme.colors.border, backgroundColor: theme.colors.card }]}
                 intensity={step.completed ? 15 : 5}
               >
-                <Text style={[styles.stepTitle, { color: step.completed ? Theme.colors.text : Theme.colors.subtext }]}>{step.title}</Text>
-                <View style={styles.dateRow}>
-                  <FileText color={Theme.colors.subtext} size={12} />
-                  <Text style={styles.stepDate}>{step.date}</Text>
+                <Text style={[getStyles(theme).stepTitle, { color: step.completed ? theme.colors.text : theme.colors.subtext }]}>{step.title}</Text>
+                <View style={getStyles(theme).dateRow}>
+                  <FileText color={theme.colors.subtext} size={12} />
+                  <Text style={[getStyles(theme).stepDate, { color: theme.colors.subtext }]}>{step.date}</Text>
                 </View>
               </GlassCard>
             </View>
           </Animated.View>
         ))}
       </View>
-      
+
       <Animated.View entering={FadeInUp.duration(800).delay(1000)}>
         <LinearGradient
           colors={['rgba(0, 122, 255, 0.1)', 'rgba(0, 122, 255, 0.05)']}
@@ -73,26 +71,26 @@ export default function LegalProgressScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background, paddingHorizontal: Theme.spacing.lg },
-  title: { color: Theme.colors.text, fontSize: 32, fontWeight: 'bold', marginTop: Theme.spacing.xl, marginBottom: Theme.spacing.sm },
-  headerInfo: { marginBottom: Theme.spacing.xl },
-  bikeName: { color: Theme.colors.primary, fontSize: 20, fontWeight: 'bold' },
-  bikePlate: { color: Theme.colors.subtext, fontSize: 14, marginTop: 4 },
-  
-  timelineContainer: { paddingLeft: 5 },
+const getStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.colors.background, paddingHorizontal: theme.spacing.lg },
+  title: { fontSize: 32, fontWeight: 'bold', marginTop: theme.spacing.xl, marginBottom: theme.spacing.sm },
+  headerInfo: { marginBottom: theme.spacing.xl },
+  bikeName: { fontSize: 20, fontWeight: 'bold' },
+  bikePlate: { fontSize: 14, marginTop: 4 },
+
+  timelineContainer: { paddingLeft: 5 }, // This is fine
   stepRow: { flexDirection: 'row', minHeight: 100 },
-  leftLine: { alignItems: 'center', marginRight: Theme.spacing.md },
-  iconWrapper: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', zIndex: 1, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+  leftLine: { alignItems: 'center', marginRight: theme.spacing.md },
+  iconWrapper: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', zIndex: 1, borderWidth: 1 },
   line: { width: 2, flex: 1, marginVertical: 4 },
-  
-  rightContent: { flex: 1, paddingBottom: Theme.spacing.lg },
-  contentCard: { padding: Theme.spacing.md, borderRadius: Theme.radius.lg },
+
+  rightContent: { flex: 1, paddingBottom: theme.spacing.lg },
+  contentCard: { padding: theme.spacing.md, borderRadius: theme.radius.lg },
   stepTitle: { fontSize: 16, fontWeight: 'bold' },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
-  stepDate: { color: Theme.colors.subtext, fontSize: 12, marginLeft: 6 },
+  stepDate: { fontSize: 12, marginLeft: 6 },
 
-  infoCard: { padding: Theme.spacing.lg, borderRadius: Theme.radius.lg, borderWidth: 1, borderColor: 'rgba(0,122,255,0.2)', marginTop: Theme.spacing.md },
-  infoText: { color: Theme.colors.text, fontSize: 13, lineHeight: 20, textAlign: 'center', fontStyle: 'italic' }
+  infoCard: { padding: theme.spacing.lg, borderRadius: theme.radius.lg, borderWidth: 1, borderColor: 'rgba(0,122,255,0.2)', marginTop: theme.spacing.md },
+  infoText: { color: theme.colors.text, fontSize: 13, lineHeight: 20, textAlign: 'center', fontStyle: 'italic' } // This is fine
 });
-
+

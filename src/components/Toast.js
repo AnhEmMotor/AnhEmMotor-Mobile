@@ -1,14 +1,14 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withSpring, 
-  withSequence, 
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withSequence,
   withDelay,
   withTiming
 } from 'react-native-reanimated';
-import { Theme } from '../theme/Theme';
+import { useTheme } from '../theme/Theme'; // Import useTheme
 import { CheckCircle } from 'lucide-react-native';
 
 const Toast = forwardRef((props, ref) => {
@@ -39,16 +39,17 @@ const Toast = forwardRef((props, ref) => {
     };
   });
 
+  const theme = useTheme();
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
-      <CheckCircle color={Theme.colors.success} size={20} />
+    <Animated.View style={[getStyles(theme).container, animatedStyle]}>
+      <CheckCircle color={theme.colors.success} size={20} /> {/* Use theme.colors.success */}
       <Text style={styles.text}>{message}</Text>
     </Animated.View>
   );
 });
 
 const styles = StyleSheet.create({
-  container: {
+  container: { // This will be moved to getStyles
     position: 'absolute',
     top: 0,
     left: 20,
@@ -75,7 +76,41 @@ const styles = StyleSheet.create({
     })
   },
   text: {
-    color: '#fff',
+    color: '#fff', // This will be moved to getStyles
+    marginLeft: 12,
+    fontWeight: '600',
+    fontSize: 14
+  }
+});
+const getStyles = (theme) => StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 20,
+    right: 20,
+    backgroundColor: theme.colors.card, // Use theme.colors.card
+    padding: 16,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    zIndex: 999,
+    borderWidth: 1,
+    borderColor: theme.colors.success + '33', // Use theme.colors.success
+    ...Platform.select({
+      web: {
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)'
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 10
+      }
+    })
+  },
+  text: {
+    color: theme.colors.text, // Use theme.colors.text
     marginLeft: 12,
     fontWeight: '600',
     fontSize: 14

@@ -65,11 +65,11 @@ export default function NotificationScreen({ navigation }) {
   const getIcon = (type) => {
     switch (type) {
       case 'delivery':
-        return <Truck color={Theme.colors.warning} size={22} />;
+        return <Truck color={Theme.staticColors.warning} size={22} />;
       case 'process':
-        return <FileText color={Theme.colors.primary} size={22} />;
+        return <FileText color={Theme.staticColors.primary} size={22} />;
       case 'maintenance':
-        return <Wrench color={Theme.colors.warning} size={22} />;
+        return <Wrench color={Theme.staticColors.warning} size={22} />;
       case 'workshop':
         return <Wrench color="#10B981" size={22} />;
       case 'cleancar':
@@ -78,20 +78,20 @@ export default function NotificationScreen({ navigation }) {
         return <Gift color="#A855F7" size={22} />;
       case 'voucher_expiry':
       case 'birthday':
-        return <Gift color={Theme.colors.primary} size={22} />;
+        return <Gift color={Theme.staticColors.primary} size={22} />;
       case 'referral':
         return <Gift color="#3B82F6" size={22} />;
       case 'recall':
       case 'paperwork':
-        return <AlertTriangle color={Theme.colors.error} size={22} />;
+        return <AlertTriangle color={Theme.staticColors.error} size={22} />;
       case 'invoice':
         return <FileText color="#10B981" size={22} />;
       case 'feedback':
         return <MessageSquare color="#3B82F6" size={22} />;
       case 'security':
-        return <Lock color={Theme.colors.error} size={22} />;
+        return <Lock color={Theme.staticColors.error} size={22} />;
       default:
-        return <Bell color={Theme.colors.primary} size={22} />;
+        return <Bell color={Theme.staticColors.primary} size={22} />;
     }
   };
 
@@ -126,7 +126,7 @@ export default function NotificationScreen({ navigation }) {
               
               {/* Delivery Route */}
               <View style={styles.roadLine} />
-              <View style={[styles.roadActiveLine, { width: '70%', backgroundColor: Theme.colors.warning }]} />
+              <View style={[styles.roadActiveLine, { width: '70%', backgroundColor: Theme.staticColors.warning }]} />
               
               {/* Warehouse Node */}
               <View style={styles.warehouseNode}>
@@ -138,10 +138,10 @@ export default function NotificationScreen({ navigation }) {
 
               {/* Truck Node */}
               <View style={[styles.truckNode, { left: '55%' }]}>
-                <Animated.View entering={FadeInDown.delay(300)} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(217, 119, 6, 0.15)', justifyContent: 'center', alignItems: 'center', marginBottom: 4, borderWidth: 1, borderColor: Theme.colors.warning }}>
-                  <Truck color={Theme.colors.warning} size={18} />
+                <Animated.View entering={FadeInDown.delay(300)} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(217, 119, 6, 0.15)', justifyContent: 'center', alignItems: 'center', marginBottom: 4, borderWidth: 1, borderColor: Theme.staticColors.warning }}>
+                  <Truck color={Theme.staticColors.warning} size={18} />
                 </Animated.View>
-                <Text style={[styles.nodeLabel, { color: Theme.colors.warning, fontWeight: 'bold' }]}>Đang chở</Text>
+                <Text style={[styles.nodeLabel, { color: Theme.staticColors.warning, fontWeight: 'bold' }]}>Đang chở</Text>
               </View>
 
               {/* Showroom Biên Hòa */}
@@ -174,7 +174,7 @@ export default function NotificationScreen({ navigation }) {
             </View>
             
             <View style={[styles.techRow, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', padding: 12, borderRadius: 12, marginBottom: 15, borderBottomWidth: 0 }]}>
-              <View style={[styles.techAvatar, { backgroundColor: Theme.colors.primary }]}>
+              <View style={[styles.techAvatar, { backgroundColor: Theme.staticColors.primary }]}>
                 <Text style={styles.techAvatarText}>H</Text>
               </View>
               <View style={{ flex: 1 }}>
@@ -191,7 +191,7 @@ export default function NotificationScreen({ navigation }) {
                 { name: '1. Nhớt máy Motul Gold 10W40', status: '✓ Đã thay', color: '#10B981' },
                 { name: '2. Lọc gió động cơ Honda chính hãng', status: '✓ Đã thay', color: '#10B981' },
                 { name: '3. Vệ sinh buồng đốt & Kim phun', status: '✓ Đã thay', color: '#10B981' },
-                { name: '4. Kiểm tra nước làm mát & Điện ắc quy', status: '⚙ Đang đo', color: Theme.colors.warning }
+                { name: '4. Kiểm tra nước làm mát & Điện ắc quy', status: '⚙ Đang đo', color: Theme.staticColors.warning }
               ].map((item, index) => (
                 <View key={index} style={[styles.partItem, { backgroundColor: isDark ? 'rgba(255,255,255,0.01)' : 'rgba(0,0,0,0.01)', borderBottomWidth: 0, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 8 }]}>
                   <Text style={[styles.partName, { color: activeColors.text, fontSize: moderateScale(11) }]}>{item.name}</Text>
@@ -224,7 +224,7 @@ export default function NotificationScreen({ navigation }) {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity 
-                style={{ flex: 1, height: 48, borderRadius: 12, backgroundColor: Theme.colors.primary, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                style={{ flex: 1, height: 48, borderRadius: 12, backgroundColor: Theme.staticColors.primary, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
                 onPress={() => Alert.alert('Thành công', 'Đã chia sẻ mã giới thiệu lên mạng xã hội!')}
               >
                 <Share2 color="#fff" size={14} />
@@ -263,7 +263,7 @@ export default function NotificationScreen({ navigation }) {
           <View>
             <View style={[styles.invoiceSheet, { backgroundColor: isDark ? '#1C1917' : '#F8FAFC', borderWidth: 1, borderColor: activeColors.border, borderRadius: 16, padding: 16, marginBottom: 15 }]}>
               <View style={[styles.invoiceHeader, { borderBottomWidth: 1, borderBottomColor: activeColors.border, paddingBottom: 10, marginBottom: 12 }]}>
-                <Text style={[styles.invoiceLogo, { color: Theme.colors.primary }]}>AnhEmMotor 🏍️</Text>
+                <Text style={[styles.invoiceLogo, { color: Theme.staticColors.primary }]}>AnhEmMotor 🏍️</Text>
                 <Text style={[styles.invoiceTitle, { color: activeColors.subtext, fontSize: moderateScale(10), fontWeight: 'bold' }]}>HÓA ĐƠN ĐIỆN TỬ (E-INVOICE)</Text>
               </View>
               
@@ -333,7 +333,7 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={{ color: activeColors.subtext, fontSize: moderateScale(12), flex: 1 }}>Khai thuế trước bạ online (Đã hoàn thành)</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginRight: 10 }}>
+                <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: Theme.staticColors.primary, justifyContent: 'center', alignItems: 'center', marginRight: 10 }}>
                   <Text style={{ color: '#fff', fontSize: moderateScale(10), fontWeight: 'bold' }}>2</Text>
                 </View>
                 <Text style={{ color: activeColors.text, fontSize: moderateScale(12), fontWeight: 'bold', flex: 1 }}>Bấm biển số tại Biên Hòa (Đang tiến hành)</Text>
@@ -364,8 +364,8 @@ export default function NotificationScreen({ navigation }) {
       case 'insurance':
         return (
           <View style={{ alignItems: 'center' }}>
-            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(217, 119, 6, 0.15)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Theme.colors.warning, marginBottom: 15 }}>
-              <ShieldCheck color={Theme.colors.warning} size={32} />
+            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(217, 119, 6, 0.15)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Theme.staticColors.warning, marginBottom: 15 }}>
+              <ShieldCheck color={Theme.staticColors.warning} size={32} />
             </View>
             <Text style={{ color: activeColors.text, fontSize: moderateScale(15), fontWeight: 'bold', marginBottom: 10 }}>Gia hạn bảo hiểm xe máy trực tuyến</Text>
             <Text style={{ color: activeColors.subtext, fontSize: moderateScale(12), textAlign: 'center', lineHeight: 18, marginBottom: 20 }}>
@@ -471,7 +471,7 @@ export default function NotificationScreen({ navigation }) {
               <Text style={[
                 styles.tabText, 
                 { color: activeColors.subtext },
-                isSelected && [styles.activeTabText, { color: Theme.colors.primary, fontWeight: 'bold' }]
+                isSelected && [styles.activeTabText, { color: Theme.staticColors.primary, fontWeight: 'bold' }]
               ]}>
                 {tab.label}
               </Text>
@@ -599,7 +599,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.alertCard}>
               <View style={styles.alertHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <CalendarClock color={Theme.colors.warning} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <CalendarClock color={Theme.staticColors.warning} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.alertTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Nhắc Lịch Bảo Dưỡng Thông Minh</Text>
                 </View>
                 <View style={styles.alertBadge}>
@@ -608,7 +608,7 @@ export default function NotificationScreen({ navigation }) {
               </View>
               
               <Text style={[styles.alertDesc, { color: activeColors.text }]}>
-                Xe SH 160i (60-A1 555.55) của bạn đã chạy thêm <Text style={{fontWeight: 'bold', color: Theme.colors.warning}}>2,000km</Text>. Đã đến lúc thay nhớt máy và kiểm tra tổng quát để đảm bảo xe luôn bốc và an toàn.
+                Xe SH 160i (60-A1 555.55) của bạn đã chạy thêm <Text style={{fontWeight: 'bold', color: Theme.staticColors.warning}}>2,000km</Text>. Đã đến lúc thay nhớt máy và kiểm tra tổng quát để đảm bảo xe luôn bốc và an toàn.
               </Text>
 
               <View style={[styles.odoContainer, { backgroundColor: isDark ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.04)' }]}>
@@ -617,7 +617,7 @@ export default function NotificationScreen({ navigation }) {
                 </View>
                 <View style={styles.odoLabels}>
                   <Text style={[styles.odoLabelText, { color: activeColors.subtext }]}>Lần bảo dưỡng trước</Text>
-                  <Text style={[styles.odoLabelText, { fontWeight: 'bold', color: Theme.colors.warning }]}>+2,000 km (Thay nhớt máy)</Text>
+                  <Text style={[styles.odoLabelText, { fontWeight: 'bold', color: Theme.staticColors.warning }]}>+2,000 km (Thay nhớt máy)</Text>
                 </View>
               </View>
 
@@ -708,7 +708,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.loyaltyVoucherCard}>
               <View style={styles.loyaltyVoucherHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <Gift color={Theme.colors.primary} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Gift color={Theme.staticColors.primary} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.loyaltyVoucherTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Voucher Đang Kích Hoạt</Text>
                 </View>
                 <View style={styles.voucherUrgentBadge}>
@@ -732,7 +732,7 @@ export default function NotificationScreen({ navigation }) {
               </Text>
 
               <TouchableOpacity 
-                style={[styles.loyaltyCtaButton, { backgroundColor: Theme.colors.primary }]}
+                style={[styles.loyaltyCtaButton, { backgroundColor: Theme.staticColors.primary }]}
                 onPress={() => logic.handleAction(logic.notifications.find(n => n.id === 'l2'))}
               >
                 <Text style={styles.loyaltyCtaText}>Sử dụng ngay 🎟️</Text>
@@ -803,7 +803,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500)} style={styles.systemRecallCard}>
               <View style={styles.systemRecallHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <AlertTriangle color={Theme.colors.error} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <AlertTriangle color={Theme.staticColors.error} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.systemRecallTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Thông báo Triệu hồi Kỹ thuật</Text>
                 </View>
                 <View style={styles.recallUrgentBadge}>
@@ -827,7 +827,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.systemInsuranceCard}>
               <View style={styles.systemInsuranceHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <ShieldCheck color={Theme.colors.warning} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <ShieldCheck color={Theme.staticColors.warning} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.systemInsuranceTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Hạn Bảo Hiểm Dân Sự Xe</Text>
                 </View>
                 <View style={styles.insuranceWarningBadge}>
@@ -836,11 +836,11 @@ export default function NotificationScreen({ navigation }) {
               </View>
 
               <Text style={[styles.systemInsuranceDesc, { color: activeColors.text }]}>
-                Bảo hiểm dân sự bắt buộc của xe <Text style={{fontWeight: 'bold', color: activeColors.text}}>60-A1 555.55</Text> sẽ hết hạn vào ngày <Text style={{fontWeight: 'bold', color: Theme.colors.warning}}>20/05/2026</Text>. Hãy gia hạn trực tuyến để tránh bị phạt khi lưu thông trên đường.
+                Bảo hiểm dân sự bắt buộc của xe <Text style={{fontWeight: 'bold', color: activeColors.text}}>60-A1 555.55</Text> sẽ hết hạn vào ngày <Text style={{fontWeight: 'bold', color: Theme.staticColors.warning}}>20/05/2026</Text>. Hãy gia hạn trực tuyến để tránh bị phạt khi lưu thông trên đường.
               </Text>
 
               <TouchableOpacity 
-                style={[styles.systemCtaButton, { backgroundColor: Theme.colors.warning }]}
+                style={[styles.systemCtaButton, { backgroundColor: Theme.staticColors.warning }]}
                 onPress={() => logic.handleAction(logic.notifications.find(n => n.id === 'sys2'))}
               >
                 <Text style={styles.systemCtaText}>Gia hạn bảo hiểm trực tuyến 🛡️</Text>
@@ -886,7 +886,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.systemSecurityCard}>
               <View style={styles.systemSecurityHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <Lock color={Theme.colors.error} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Lock color={Theme.staticColors.error} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.systemSecurityTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Cảnh báo Đăng nhập lạ</Text>
                 </View>
                 <View style={styles.securityAlertBadge}>
@@ -895,7 +895,7 @@ export default function NotificationScreen({ navigation }) {
               </View>
 
               <Text style={[styles.systemSecurityDesc, { color: activeColors.text }]}>
-                Phát hiện thiết bị lạ đăng nhập tài khoản của bạn tại <Text style={{fontWeight: 'bold', color: Theme.colors.error}}>Biên Hòa lúc 08:30</Text>. Nếu không phải hành động của bạn, hãy khẩn cấp đổi mật khẩu để bảo vệ tài khoản.
+                Phát hiện thiết bị lạ đăng nhập tài khoản của bạn tại <Text style={{fontWeight: 'bold', color: Theme.staticColors.error}}>Biên Hòa lúc 08:30</Text>. Nếu không phải hành động của bạn, hãy khẩn cấp đổi mật khẩu để bảo vệ tài khoản.
               </Text>
 
               <TouchableOpacity 
@@ -1028,10 +1028,10 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </View>
             
-            <Text style={[styles.modalSub, { color: activeColors.subtext }]}>Honda SH 160i (60-A1 555.55) • Showroom Biên Hòa</Text>
+            <Text style={[styles.modalSub, { color: activeColors.subtext }]}>Honda SH 160i (60-A1 555.55)</Text>
 
             {/* Date selection list */}
-            <Text style={[styles.bookingSectionTitle, { color: activeColors.text }]}>1. Chọn ngày đến xưởng:</Text>
+            <Text style={[styles.bookingSectionTitle, { color: activeColors.text, marginTop: 5 }]}>1. Chọn ngày đến xưởng:</Text>
             <View style={styles.bookingDateRow}>
               {[
                 { date: '18/05/2026', label: 'T2', day: '18', desc: 'Mai' },
@@ -1086,7 +1086,7 @@ export default function NotificationScreen({ navigation }) {
                 logic.setBookingModalVisible(false);
                 Alert.alert(
                   'Đặt lịch thành công!',
-                  `Lịch hẹn của bạn đã được xác nhận vào lúc ${logic.selectedTime} ngày ${logic.selectedDate} tại Showroom Biên Hòa. KTV trưởng sẽ sẵn sàng tiếp đón xe của bạn!`
+                  `Lịch hẹn của bạn đã được xác nhận vào lúc ${logic.selectedTime} ngày ${logic.selectedDate} tại Cửa hàng. KTV trưởng sẽ sẵn sàng tiếp đón xe của bạn!`
                 );
               }}
             >

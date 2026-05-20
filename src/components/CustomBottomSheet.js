@@ -61,30 +61,30 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose, themeMode = 'd
         }
       }}
     >
-      <BottomSheetScrollView 
+      <BottomSheetScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-            <Text style={[styles.headerTitle, { color: activeTitle }]}>{title}</Text>
+          <Text style={[styles.headerTitle, { color: activeTitle }]}>{title}</Text>
         </View>
         <View style={styles.content}>
           {children}
         </View>
         {/* Padding Bottom 40px as suggested (Mẹo kiểm tra) */}
-        <View style={{ height: 60 }} /> 
+        <View style={{ height: 60 }} />
       </BottomSheetScrollView>
     </BottomSheet>
   );
 });
 
 const styles = StyleSheet.create({
-  background: {
-    backgroundColor: Theme.colors.card,
+  background: { // This style is applied via `backgroundStyle` prop, which already uses `activeBg` and `activeBorder`.
+    // backgroundColor: Theme.colors.card, // Remove this, it's redundant
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    // borderColor: 'rgba(255,255,255,0.1)', // Remove this, it's redundant
   },
   handleIndicator: {
     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    color: Theme.colors.text,
+    // color: Theme.colors.text, // Remove this, it's overridden by inline style
     fontSize: 18,
     fontWeight: 'bold',
   },

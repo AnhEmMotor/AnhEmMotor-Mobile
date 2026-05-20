@@ -12,24 +12,27 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { Mail, Lock, Eye, EyeOff, ChevronRight, Shield } from 'lucide-react-native';
-import { Theme } from '../theme/Theme';
+import { Mail, Lock, Eye, EyeOff, ChevronRight, Shield, Moon, Sun } from 'lucide-react-native';
+import { Theme, useActiveColors, useTheme } from '../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 const { height } = Dimensions.get('window');
 
 export default function LoginScreen({ navigation }) {
+  const { isDarkMode, toggleTheme } = useTheme();
+  const colors = useActiveColors();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [activeInput, setActiveInput] = useState(null);
 
   return (
-    <View style={styles.container}>
-      {/* Soft gradient background */}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Soft gradient background matching theme */}
       <LinearGradient
-        colors={['#0A0F1E', '#0F172A', '#1E293B']}
+        colors={isDarkMode ? ['#0A0F1E', '#0F172A', '#1E293B'] : ['#F8FAFC', '#E2E8F0', '#CBD5E1']}
         style={StyleSheet.absoluteFill}
       />
 
@@ -42,6 +45,13 @@ export default function LoginScreen({ navigation }) {
         style={styles.content}
       >
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          {/* Theme Toggle Button */}
+          <Animated.View entering={FadeInDown.duration(800)} style={styles.themeToggleContainer}>
+             <Pressable style={[styles.themeToggleBtn, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }]} onPress={toggleTheme}>
+              {isDarkMode ? <Sun color={colors.text} size={20} /> : <Moon color={colors.text} size={20} />}
+            </Pressable>
+          </Animated.View>
+
           {/* Brand Header */}
           <Animated.View entering={FadeInDown.duration(800).delay(100)} style={styles.header}>
             <LinearGradient
@@ -50,24 +60,28 @@ export default function LoginScreen({ navigation }) {
             >
               <Text style={styles.logoText}>AE</Text>
             </LinearGradient>
-            <Text style={styles.title}>AnhEm Motor</Text>
-            <Text style={styles.subtitle}>Showroom xe mô tô cao cấp</Text>
+            <Text style={[styles.title, { color: colors.text }]}>AnhEm Motor</Text>
+            <Text style={[styles.subtitle, { color: colors.subtext }]}>Showroom xe mô tô cao cấp</Text>
           </Animated.View>
 
           {/* Form Card */}
-          <Animated.View entering={FadeInDown.duration(800).delay(250)} style={styles.card}>
-            <BlurView intensity={25} tint="dark" style={StyleSheet.absoluteFill} />
+          <Animated.View entering={FadeInDown.duration(800).delay(250)} style={[styles.card, { borderColor: isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }]}>
+            <BlurView intensity={isDarkMode ? 25 : 50} tint={isDarkMode ? "dark" : "light"} style={StyleSheet.absoluteFill} />
             <View style={styles.cardInner}>
-              <Text style={styles.formTitle}>Chào mừng trở lại</Text>
-              <Text style={styles.formSubtitle}>Đăng nhập để tiếp tục</Text>
+              <Text style={[styles.formTitle, { color: colors.text }]}>Chào mừng trở lại</Text>
+              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>Đăng nhập để tiếp tục</Text>
 
               {/* Email Input */}
-              <View style={[styles.inputWrapper, activeInput === 'email' && styles.inputActive]}>
-                <Mail size={moderateScale(18)} color={activeInput === 'email' ? Theme.colors.primary : Theme.colors.subtext} />
+              <View style={[
+                styles.inputWrapper, 
+                { backgroundColor: isDarkMode ? 'rgba(15,23,42,0.7)' : 'rgba(255,255,255,0.7)', borderColor: isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
+                activeInput === 'email' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }]
+              ]}>
+                <Mail size={moderateScale(18)} color={activeInput === 'email' ? colors.primary : colors.subtext} />
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Email của bạn"
-                  placeholderTextColor={Theme.colors.subtext}
+                  placeholderTextColor={colors.subtext}
                   value={email}
                   onChangeText={setEmail}
                   onFocus={() => setActiveInput('email')}
@@ -78,12 +92,16 @@ export default function LoginScreen({ navigation }) {
               </View>
 
               {/* Password Input */}
-              <View style={[styles.inputWrapper, activeInput === 'password' && styles.inputActive]}>
-                <Lock size={moderateScale(18)} color={activeInput === 'password' ? Theme.colors.primary : Theme.colors.subtext} />
+              <View style={[
+                styles.inputWrapper, 
+                { backgroundColor: isDarkMode ? 'rgba(15,23,42,0.7)' : 'rgba(255,255,255,0.7)', borderColor: isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
+                activeInput === 'password' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }]
+              ]}>
+                <Lock size={moderateScale(18)} color={activeInput === 'password' ? colors.primary : colors.subtext} />
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { color: colors.text }]}
                   placeholder="Mật khẩu"
-                  placeholderTextColor={Theme.colors.subtext}
+                  placeholderTextColor={colors.subtext}
                   value={password}
                   onChangeText={setPassword}
                   onFocus={() => setActiveInput('password')}
@@ -92,14 +110,14 @@ export default function LoginScreen({ navigation }) {
                 />
                 <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
                   {showPassword
-                    ? <EyeOff size={moderateScale(18)} color={Theme.colors.subtext} />
-                    : <Eye size={moderateScale(18)} color={Theme.colors.subtext} />
+                    ? <EyeOff size={moderateScale(18)} color={colors.subtext} />
+                    : <Eye size={moderateScale(18)} color={colors.subtext} />
                   }
                 </Pressable>
               </View>
 
               <Pressable style={styles.forgotPassword}>
-                <Text style={styles.forgotText}>Quên mật khẩu?</Text>
+                <Text style={[styles.forgotText, { color: colors.primary }]}>Quên mật khẩu?</Text>
               </Pressable>
 
               {/* Customer Login */}
@@ -118,27 +136,31 @@ export default function LoginScreen({ navigation }) {
               </Pressable>
 
               <View style={styles.divider}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>hoặc</Text>
-                <View style={styles.dividerLine} />
+                <View style={[styles.dividerLine, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)' }]} />
+                <Text style={[styles.dividerText, { color: colors.subtext }]}>hoặc</Text>
+                <View style={[styles.dividerLine, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)' }]} />
               </View>
 
               {/* Admin Login */}
               <Pressable
-                style={({ pressed }) => [styles.btnAdmin, pressed && styles.btnPressed]}
+                style={({ pressed }) => [
+                  styles.btnAdmin, 
+                  pressed && styles.btnPressed,
+                  { borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', backgroundColor: isDarkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)' }
+                ]}
                 onPress={() => navigation.navigate('AdminHome')}
               >
-                <Shield size={moderateScale(16)} color={Theme.colors.subtext} style={{ marginRight: horizontalScale(8) }} />
-                <Text style={styles.btnAdminText}>Vào với quyền Quản Trị</Text>
+                <Shield size={moderateScale(16)} color={colors.subtext} style={{ marginRight: horizontalScale(8) }} />
+                <Text style={[styles.btnAdminText, { color: colors.subtext }]}>Vào với quyền Quản Trị</Text>
               </Pressable>
             </View>
           </Animated.View>
 
           {/* Footer */}
           <Animated.View entering={FadeInUp.duration(800).delay(400)} style={styles.footer}>
-            <Text style={styles.footerText}>Chưa có tài khoản? </Text>
+            <Text style={[styles.footerText, { color: colors.subtext }]}>Chưa có tài khoản? </Text>
             <Pressable>
-              <Text style={styles.signupText}>Đăng ký miễn phí</Text>
+              <Text style={[styles.signupText, { color: colors.primary }]}>Đăng ký miễn phí</Text>
             </Pressable>
           </Animated.View>
         </ScrollView>
@@ -148,7 +170,10 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0F1E' },
+  container: { flex: 1 },
+
+  themeToggleContainer: { position: 'absolute', top: 10, right: 10, zIndex: 10 },
+  themeToggleBtn: { padding: 10, borderRadius: 20 },
 
   glowTop: {
     position: 'absolute', top: verticalScale(-100), left: '30%',
@@ -169,39 +194,38 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(60),
   },
 
-  header: { alignItems: 'center', marginBottom: verticalScale(32) },
+  header: { alignItems: 'center', marginBottom: verticalScale(32), marginTop: verticalScale(20) },
   logoCircle: {
     width: horizontalScale(72), height: horizontalScale(72), borderRadius: horizontalScale(36),
     justifyContent: 'center', alignItems: 'center',
     marginBottom: verticalScale(16),
   },
   logoText: { color: '#fff', fontSize: moderateScale(28), fontWeight: '900', letterSpacing: 1 },
-  title: { color: '#F1F5F9', fontSize: moderateScale(26), fontWeight: '700', marginBottom: verticalScale(6) },
-  subtitle: { color: Theme.colors.subtext, fontSize: moderateScale(14) },
+  title: { fontSize: moderateScale(26), fontWeight: '700', marginBottom: verticalScale(6) },
+  subtitle: { fontSize: moderateScale(14) },
 
   card: {
     borderRadius: Theme.radius.lg, overflow: 'hidden',
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
     marginBottom: verticalScale(24),
   },
   cardInner: { padding: moderateScale(24) },
 
-  formTitle: { color: '#F1F5F9', fontSize: moderateScale(20), fontWeight: '700', marginBottom: verticalScale(4) },
-  formSubtitle: { color: Theme.colors.subtext, fontSize: moderateScale(13), marginBottom: verticalScale(24) },
+  formTitle: { fontSize: moderateScale(20), fontWeight: '700', marginBottom: verticalScale(4) },
+  formSubtitle: { fontSize: moderateScale(13), marginBottom: verticalScale(24) },
 
   inputWrapper: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: 'rgba(15,23,42,0.7)',
     borderRadius: Theme.radius.md, marginBottom: verticalScale(14),
     paddingHorizontal: horizontalScale(14), height: verticalScale(52),
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
   },
-  inputActive: { borderColor: 'rgba(26,110,255,0.5)', backgroundColor: 'rgba(26,110,255,0.06)' },
-  input: { flex: 1, color: '#F1F5F9', fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
+  inputActive: { borderWidth: 1 },
+  input: { flex: 1, fontSize: moderateScale(15), marginLeft: horizontalScale(10) },
   eyeBtn: { padding: moderateScale(4) },
 
   forgotPassword: { alignSelf: 'flex-end', marginBottom: verticalScale(20) },
-  forgotText: { color: Theme.colors.primary, fontSize: moderateScale(13) },
+  forgotText: { fontSize: moderateScale(13) },
 
   btnPrimary: { borderRadius: Theme.radius.md, overflow: 'hidden', marginBottom: verticalScale(16) },
   btnPressed: { opacity: 0.85 },
@@ -212,19 +236,17 @@ const styles = StyleSheet.create({
   btnText: { color: '#fff', fontSize: moderateScale(15), fontWeight: '600', marginRight: horizontalScale(6) },
 
   divider: { flexDirection: 'row', alignItems: 'center', marginBottom: verticalScale(16) },
-  dividerLine: { flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.07)' },
-  dividerText: { color: Theme.colors.subtext, fontSize: moderateScale(12), paddingHorizontal: horizontalScale(12) },
+  dividerLine: { flex: 1, height: 1 },
+  dividerText: { fontSize: moderateScale(12), paddingHorizontal: horizontalScale(12) },
 
   btnAdmin: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     height: verticalScale(50), borderRadius: Theme.radius.md,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderWidth: 1,
   },
-  btnAdminText: { color: Theme.colors.subtext, fontSize: moderateScale(14), fontWeight: '500' },
+  btnAdminText: { fontSize: moderateScale(14), fontWeight: '500' },
 
   footer: { flexDirection: 'row', justifyContent: 'center' },
-  footerText: { color: Theme.colors.subtext, fontSize: moderateScale(14) },
-  signupText: { color: Theme.colors.primary, fontSize: moderateScale(14), fontWeight: '600' },
+  footerText: { fontSize: moderateScale(14) },
+  signupText: { fontSize: moderateScale(14), fontWeight: '600' },
 });
-

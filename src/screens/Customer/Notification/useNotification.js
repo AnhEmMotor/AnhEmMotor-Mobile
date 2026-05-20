@@ -192,7 +192,7 @@ export const useNotification = (navigation) => {
   const [workshopStep, setWorkshopStep] = useState(2); // 1: Khám xe, 2: Sửa chữa, 3: Kiểm tra cuối, 4: Rửa xe & Sẵn sàng
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('18/05/2026');
-  const [selectedTime, setSelectedTime] = useState('09:30');
+  const [selectedTime, setSelectedTime] = useState('08:00');
 
   const serviceHistory = [
     {

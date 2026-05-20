@@ -134,7 +134,7 @@ export default function SupportScreen({ navigation }) {
                 style={[styles.secondaryBtn, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)', borderColor: activeColors.border }]}
                 onPress={() => navigation.navigate('ContactStaff')}
               >
-                <User color={Theme.colors.primary} size={moderateScale(18)} />
+                <User color={Theme.staticColors.primary} size={moderateScale(18)} />
                 <Text style={[styles.secondaryBtnText, { color: activeColors.text }]}>Hỗ Trợ Viên</Text>
               </ScalePress>
             </View>
@@ -179,7 +179,7 @@ export default function SupportScreen({ navigation }) {
                   onPress={handleAttachImage}
                   activeOpacity={0.7}
                 >
-                  <Camera color={Theme.colors.primary} size={moderateScale(20)} />
+                  <Camera color={Theme.staticColors.primary} size={moderateScale(20)} />
                 </TouchableOpacity>
 
                 {attachedImages.map((uri, idx) => (
@@ -227,7 +227,7 @@ export default function SupportScreen({ navigation }) {
                       <Text style={styles.ticketType}>{ticket.issueType}</Text>
                       <Text style={[
                         styles.ticketStatus,
-                        { color: ticket.status === 'resolved' ? Theme.colors.success : Theme.colors.warning }
+                        { color: ticket.status === 'resolved' ? Theme.staticColors.success : Theme.staticColors.warning }
                       ]}>
                         {ticket.statusLabel}
                       </Text>
@@ -300,7 +300,7 @@ export default function SupportScreen({ navigation }) {
           <Text style={[styles.sectionLabel, { color: activeColors.text }]}>Cửa hàng kinh doanh xe máy 📍</Text>
           <GlassCard style={styles.systemCard}>
             <View style={styles.systemHeader}>
-              <MapPin color={Theme.colors.primary} size={moderateScale(20)} />
+              <MapPin color={Theme.staticColors.primary} size={moderateScale(20)} />
               <Text style={[styles.systemTitle, { color: activeColors.text }]}>Showroom AnhEmMotor Biên Hòa</Text>
             </View>
             <Text style={[styles.systemAddress, { color: activeColors.text }]}>Số 28, Đường Đồng Khởi, Phường Tân Phong, Thành phố Biên Hòa, Tỉnh Đồng Nai</Text>
@@ -384,7 +384,7 @@ export default function SupportScreen({ navigation }) {
           <View style={styles.sheetContent}>
             <View style={styles.ticketDetailBox}>
               <View style={styles.ticketDetailMeta}>
-                <Text style={{ color: Theme.colors.primary, fontSize: 13, fontWeight: 'bold' }}>
+                <Text style={{ color: Theme.staticColors.primary, fontSize: 13, fontWeight: 'bold' }}>
                   Yêu cầu: {selectedTicket.issueType}
                 </Text>
                 <Text style={{ color: activeColors.subtext, fontSize: 12 }}>

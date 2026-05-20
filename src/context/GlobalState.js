@@ -8,7 +8,7 @@ const STORAGE_KEY = '@AEM_Customer_Profile';
 export const GlobalStateProvider = ({ children }) => {
   const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock 3 unread
   const [isDataSyncing, setIsDataSyncing] = useState(false);
-  const [themeMode, setThemeModeState] = useState('dark'); // Mặc định là tối theo chuẩn AEM
+  const [themeMode, setThemeModeState] = useState(null); // Khởi tạo là null hoặc undefined để chỉ ra rằng theme chưa được tải
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   // Tải chủ đề toàn hệ thống từ AsyncStorage khi ứng dụng khởi chạy
@@ -19,7 +19,10 @@ export const GlobalStateProvider = ({ children }) => {
         if (storedProfile) {
           const parsed = JSON.parse(storedProfile);
           if (parsed && parsed.settings && parsed.settings.theme) {
-            setThemeModeState(parsed.settings.theme);
+            setThemeModeState(parsed.settings.theme); // Sử dụng theme đã lưu
+          } else {
+            // Nếu không có theme đã lưu, đặt mặc định
+            setThemeModeState('dark'); // Mặc định là tối theo chuẩn AEM
           }
         }
       } catch (err) {

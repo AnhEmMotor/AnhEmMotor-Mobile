@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, Trash2, Bookmark, Settings } from 'lucide-react-native';
-import { Theme } from '../../theme/Theme';
+import { useTheme } from '../../theme/Theme'; // Import useTheme
 import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ import ScalePress from '../../components/ScalePress';
 
 export default function SavedNewsScreen({ navigation }) {
   const [savedItems, setSavedItems] = useState([]);
+  const theme = useTheme(); // Use the useTheme hook
 
   useEffect(() => {
     loadSavedNews();
@@ -37,13 +38,13 @@ export default function SavedNewsScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color="#fff" size={28} />
+    <SafeAreaView style={[getStyles(theme).container, { backgroundColor: theme.colors.background }]} edges={['top']}>
+      <View style={getStyles(theme).header}>
+        <TouchableOpacity style={[getStyles(theme).backBtn, { backgroundColor: theme.colors.card }]} onPress={() => navigation.goBack()}>
+          <ChevronLeft color={theme.colors.text} size={28} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Tin đã lưu</Text>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}>
+        <Text style={[getStyles(theme).headerTitle, { color: theme.colors.text }]}>Tin đã lưu</Text>
+        <TouchableOpacity style={[getStyles(theme).backBtn, { backgroundColor: theme.colors.card }]} onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}>
           <Settings color="#fff" size={22} />
         </TouchableOpacity>
       </View>
@@ -53,14 +54,14 @@ export default function SavedNewsScreen({ navigation }) {
         contentContainerStyle={styles.scrollContent}
       >
         {savedItems.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Bookmark color={Theme.colors.subtext} size={64} opacity={0.3} />
-            <Text style={styles.emptyText}>Bạn chưa lưu tin tức nào</Text>
+          <View style={getStyles(theme).emptyState}>
+            <Bookmark color={theme.colors.subtext} size={64} opacity={0.3} />
+            <Text style={[getStyles(theme).emptyText, { color: theme.colors.subtext }]}>Bạn chưa lưu tin tức nào</Text>
             <TouchableOpacity 
-                style={styles.exploreBtn}
+                style={[getStyles(theme).exploreBtn, { backgroundColor: theme.colors.primary + '1A' }]}
                 onPress={() => navigation.navigate('CustomerHome')}
             >
-                <Text style={styles.exploreBtnText}>Khám phá ngay</Text>
+                <Text style={[getStyles(theme).exploreBtnText, { color: theme.colors.primary }]}>Khám phá ngay</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -69,14 +70,14 @@ export default function SavedNewsScreen({ navigation }) {
               key={item.id} 
               entering={FadeInDown.delay(index * 100)}
             >
-              <GlassCard style={styles.newsCard} intensity={10}>
+              <GlassCard style={[getStyles(theme).newsCard, { borderColor: theme.colors.border, backgroundColor: theme.colors.card }]} intensity={10}>
                 <Image source={{ uri: item.image }} style={styles.newsImage} />
                 <View style={styles.newsContent}>
-                  <Text style={styles.newsTitle}>{item.title}</Text>
-                  <View style={styles.newsFooter}>
-                    <TouchableOpacity onPress={() => removeNews(item.id)} style={styles.removeBtn}>
-                      <Trash2 color={Theme.colors.secondary} size={18} />
-                      <Text style={styles.removeText}>Gỡ bỏ</Text>
+                  <Text style={[getStyles(theme).newsTitle, { color: theme.colors.text }]}>{item.title}</Text>
+                  <View style={[getStyles(theme).newsFooter, { borderTopColor: theme.colors.border }]}>
+                    <TouchableOpacity onPress={() => removeNews(item.id)} style={getStyles(theme).removeBtn}>
+                      <Trash2 color={theme.colors.secondary} size={18} />
+                      <Text style={[getStyles(theme).removeText, { color: theme.colors.secondary }]}>Gỡ bỏ</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -89,24 +90,24 @@ export default function SavedNewsScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Theme.colors.background },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, height: 60 },
-  backBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+const getStyles = (theme) => StyleSheet.create({
+  container: { flex: 1 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: theme.spacing.md, height: 60 },
+  backBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center', borderRadius: theme.radius.md },
+  headerTitle: { fontSize: 18, fontWeight: 'bold' },
   
-  scrollContent: { padding: 20, flexGrow: 1 },
+  scrollContent: { padding: theme.spacing.md, flexGrow: 1 },
   
   emptyState: { flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 100 },
-  emptyText: { color: Theme.colors.subtext, fontSize: 16, marginTop: 20 },
-  exploreBtn: { marginTop: 20, backgroundColor: 'rgba(59, 130, 246, 0.1)', paddingHorizontal: 25, paddingVertical: 12, borderRadius: 20 },
-  exploreBtnText: { color: Theme.colors.primary, fontWeight: 'bold' },
+  emptyText: { fontSize: 16, marginTop: 20 },
+  exploreBtn: { marginTop: 20, paddingHorizontal: 25, paddingVertical: 12, borderRadius: theme.radius.full },
+  exploreBtnText: { fontWeight: 'bold' },
 
-  newsCard: { marginBottom: 20, overflow: 'hidden', padding: 0 },
+  newsCard: { marginBottom: 20, overflow: 'hidden', padding: 0, borderRadius: theme.radius.lg },
   newsImage: { width: '100%', height: 150 },
-  newsContent: { padding: 15 },
-  newsTitle: { color: Theme.colors.text, fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
-  newsFooter: { flexDirection: 'row', justifyContent: 'flex-end', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 10 },
+  newsContent: { padding: theme.spacing.md },
+  newsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
+  newsFooter: { flexDirection: 'row', justifyContent: 'flex-end', borderTopWidth: 1, paddingTop: 10 },
   removeBtn: { flexDirection: 'row', alignItems: 'center' },
-  removeText: { color: Theme.colors.secondary, fontSize: 12, fontWeight: 'bold', marginLeft: 6 }
+  removeText: { fontSize: 12, fontWeight: 'bold', marginLeft: 6 }
 });
