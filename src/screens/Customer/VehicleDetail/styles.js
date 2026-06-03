@@ -6,13 +6,13 @@ const { width } = Dimensions.get('window');
 
 // Use dark theme as default fallback since background colors are dynamic
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_CARD = '#1E293B';
+const DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
 
 export const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: DEFAULT_BG },
-  scrollView: { flex: 1 },
+  container: { flex: 1, minHeight: '100vh', backgroundColor: DEFAULT_BG },
+  scrollView: { flex: 1, minHeight: '100vh' },
   scrollContent: { paddingBottom: 100 },
   
   // Header / Image Area
@@ -87,7 +87,7 @@ export const styles = StyleSheet.create({
   resultLabel: { color: DEFAULT_SUBTEXT, fontSize: 14, flex: 1, marginRight: 10 },
   monthlyPayment: { color: '#FFB800', fontSize: moderateScale(18), fontWeight: 'bold', textAlign: 'right' },
   partners: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginVertical: 20 },
-  partnerLogo: { width: 60, height: 30, opacity: 0.6, resizeMode: 'contain' },
+  partnerLogo: { width: 60, height: 30, opacity: 0.6 },
 
   checklist: { backgroundColor: 'rgba(255,255,255,0.02)', padding: 15, borderRadius: 12, borderLeftWidth: 3, borderLeftColor: Theme.staticColors.primary },
   checkItem: { color: DEFAULT_SUBTEXT, fontSize: 13, marginBottom: 8 },
@@ -123,3 +123,4 @@ export const styles = StyleSheet.create({
   gradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   btnText: { color: '#fff', fontWeight: 'bold', fontSize: 15 }
 });
+

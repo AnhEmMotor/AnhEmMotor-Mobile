@@ -124,7 +124,7 @@ export default function ProfileScreen({ navigation, route }) {
     settingsCardBg: isDark ? 'rgba(255,255,255,0.01)' : '#FFFFFF',
     settingsIconBg: isDark ? 'rgba(255,255,255,0.03)' : '#F1F5F9',
     settingsIconBorder: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-    modalBg: isDark ? '#0F172A' : '#FFFFFF',
+    modalBg: isDark ? '#050505' : '#FFFFFF',
     regionItemBorder: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.03)',
     regionListBg: isDark ? 'rgba(0,0,0,0.2)' : '#F1F5F9',
     formInputBg: isDark ? 'rgba(255,255,255,0.03)' : '#FFFFFF',
@@ -885,10 +885,10 @@ export default function ProfileScreen({ navigation, route }) {
             {/* Đang giao */}
             <TouchableOpacity style={styles.shopeeCol} onPress={() => setMapTrackingModalVisible(true)}>
               <View style={[styles.iconCircle, styles.glowBorder, { backgroundColor: activeColors.settingsIconBg, borderColor: activeColors.settingsIconBorder }]}>
-                <Truck color="#3B82F6" size={22} />
+                <Truck color="#E31B23" size={22} />
                 <View style={styles.blueBadgeDot} />
               </View>
-              <Text style={[styles.iconLabel, { color: '#3B82F6', fontWeight: 'bold' }]}>Đang giao</Text>
+              <Text style={[styles.iconLabel, { color: '#E31B23', fontWeight: 'bold' }]}>Đang giao</Text>
             </TouchableOpacity>
 
             {/* Hoàn thành */}
@@ -908,7 +908,7 @@ export default function ProfileScreen({ navigation, route }) {
             <TouchableOpacity style={[styles.settingRow, { borderBottomColor: activeColors.border }]} onPress={() => openEditField('profile')}>
               <View style={[styles.settingInfo, { flexDirection: 'row', alignItems: 'center' }]}>
                 <View style={[styles.listIconCircle, { backgroundColor: activeColors.listIconBg }]}>
-                  <User color="#3B82F6" size={16} />
+                  <User color="#E31B23" size={16} />
                 </View>
                 <View style={{ flex: 1, marginRight: 8 }}>
                   <Text style={[styles.settingTitle, { color: activeColors.text }]}>Thông tin cá nhân</Text>
@@ -1205,12 +1205,12 @@ export default function ProfileScreen({ navigation, route }) {
           <TouchableOpacity style={styles.modalBackdrop} onPress={() => setMapTrackingModalVisible(false)} />
           <View style={[styles.avatarModalSheet, { height: '82%', padding: 0 }]}>
             {/* Split Screen Nửa trên: Bản đồ GPS Map */}
-            <View style={{ height: '42%', backgroundColor: '#0f172a', position: 'relative', overflow: 'hidden', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+            <View style={{ height: '42%', backgroundColor: '#050505', position: 'relative', overflow: 'hidden', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
               
               {/* Fake Live GPS Map graphics (Dark Theme map layout) */}
               {/* Route line */}
               <View style={{ position: 'absolute', top: '50%', left: '15%', right: '15%', height: 4, backgroundColor: 'rgba(59,130,246,0.3)', transform: [{ rotate: '-25deg' }] }} />
-              <View style={{ position: 'absolute', top: '48%', left: '15%', right: '35%', height: 4, backgroundColor: '#3B82F6', transform: [{ rotate: '-25deg' }] }} />
+              <View style={{ position: 'absolute', top: '48%', left: '15%', right: '35%', height: 4, backgroundColor: '#E31B23', transform: [{ rotate: '-25deg' }] }} />
               
               {/* Showroom point */}
               <View style={{ position: 'absolute', top: '70%', left: '12%', alignItems: 'center' }}>
@@ -1228,20 +1228,20 @@ export default function ProfileScreen({ navigation, route }) {
 
               {/* Driver Marker (Lái xe di động) */}
               <Animated.View style={{ position: 'absolute', top: '44%', left: '46%', alignItems: 'center' }}>
-                <LinearGradient colors={['#3B82F6', '#1D4ED8']} style={{ width: 34, height: 34, borderRadius: 17, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: '#fff', shadowColor: '#3B82F6', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.5, shadowRadius: 6 }}>
+                <LinearGradient colors={['#E31B23', '#991B1B']} style={{ width: 34, height: 34, borderRadius: 17, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: '#fff', shadowColor: '#E31B23', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.5, shadowRadius: 6 }}>
                   <Truck color="#fff" size={16} />
                 </LinearGradient>
-                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#3B82F6', marginTop: 2, alignSelf: 'center' }} />
+                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#E31B23', marginTop: 2, alignSelf: 'center' }} />
               </Animated.View>
 
               {/* Close Button map overlay */}
-              <TouchableOpacity onPress={() => setMapTrackingModalVisible(false)} style={{ position: 'absolute', top: 12, right: 12, backgroundColor: 'rgba(15,23,42,0.7)', width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' }}>
+              <TouchableOpacity onPress={() => setMapTrackingModalVisible(false)} style={{ position: 'absolute', top: 12, right: 12, backgroundColor: 'rgba(5,5,5,0.7)', width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' }}>
                 <Text style={{ color: '#fff', fontSize: 14, fontWeight: 'bold' }}>×</Text>
               </TouchableOpacity>
 
               {/* ETA Indicator */}
-              <View style={{ position: 'absolute', bottom: 12, left: 12, backgroundColor: 'rgba(15,23,42,0.85)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(59,130,246,0.3)', flexDirection: 'row', alignItems: 'center' }}>
-                <ActivityIndicator size="small" color="#3B82F6" style={{ marginRight: 8 }} />
+              <View style={{ position: 'absolute', bottom: 12, left: 12, backgroundColor: 'rgba(5,5,5,0.85)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(59,130,246,0.3)', flexDirection: 'row', alignItems: 'center' }}>
+                <ActivityIndicator size="small" color="#E31B23" style={{ marginRight: 8 }} />
                 <Text style={{ color: '#fff', fontSize: 11, fontWeight: 'bold' }}>🚚 Shipper đang đến • ETA: 12 phút</Text>
               </View>
             </View>
@@ -1268,10 +1268,10 @@ export default function ProfileScreen({ navigation, route }) {
               {/* Logistics Timeline logs */}
               <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                 {/* 1 */}
-                <View style={{ flexDirection: 'row', borderLeftWidth: 1.5, borderColor: '#3B82F6', paddingLeft: 14, paddingBottom: 12, position: 'relative' }}>
-                  <View style={{ position: 'absolute', left: -5, top: 2, width: 8, height: 8, borderRadius: 4, backgroundColor: '#3B82F6', shadowColor: '#3B82F6', shadowRadius: 4, shadowOpacity: 0.8 }} />
+                <View style={{ flexDirection: 'row', borderLeftWidth: 1.5, borderColor: '#E31B23', paddingLeft: 14, paddingBottom: 12, position: 'relative' }}>
+                  <View style={{ position: 'absolute', left: -5, top: 2, width: 8, height: 8, borderRadius: 4, backgroundColor: '#E31B23', shadowColor: '#E31B23', shadowRadius: 4, shadowOpacity: 0.8 }} />
                   <View style={{ marginBottom: 12 }}>
-                    <Text style={{ color: '#3B82F6', fontSize: 12, fontWeight: 'bold' }}>14:05 — Shipper đang giao hàng đến khu vực Phường Quyết Thắng</Text>
+                    <Text style={{ color: '#E31B23', fontSize: 12, fontWeight: 'bold' }}>14:05 — Shipper đang giao hàng đến khu vực Phường Quyết Thắng</Text>
                     <Text style={{ color: Theme.staticColors.subtext, fontSize: 10 }}>Hàng đang di chuyển qua đường Cách Mạng Tháng Tám, Biên Hòa.</Text>
                   </View>
                 </View>
@@ -1465,3 +1465,4 @@ export default function ProfileScreen({ navigation, route }) {
     </SafeAreaView>
   );
 }
+

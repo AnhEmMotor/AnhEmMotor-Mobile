@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window');
 
 // Use dark theme as default fallback since background colors are dynamic
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_CARD = '#1E293B';
+const DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
 const DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: -20,
     overflow: 'hidden', 
     position: 'relative',
-    backgroundColor: '#0F172A',
+    backgroundColor: '#050505',
   },
   carouselScroll: { flex: 1 },
   bannerItem: { 
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
   bannerImage: { 
     width: '100%', 
     height: '100%', 
-    resizeMode: 'cover',
+    
     position: 'absolute'
   },
   bannerGradient: { 
@@ -59,14 +59,14 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-start', 
     backgroundColor: 'rgba(59, 130, 246, 0.25)', 
     borderWidth: 1, 
-    borderColor: '#3B82F6', 
+    borderColor: '#E31B23', 
     paddingHorizontal: 10, 
     paddingVertical: 4, 
     borderRadius: 8, 
     marginBottom: verticalScale(8) 
   },
   bannerBadgeText: { 
-    color: '#3B82F6', 
+    color: '#E31B23', 
     fontSize: moderateScale(10), 
     fontWeight: 'bold', 
     letterSpacing: 0.5 
@@ -127,7 +127,7 @@ export const styles = StyleSheet.create({
     width: horizontalScale(44),
     height: horizontalScale(44),
     borderRadius: horizontalScale(22),
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    backgroundColor: 'rgba(59, 130, 246, 0.14)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: verticalScale(6)
@@ -169,7 +169,7 @@ export const styles = StyleSheet.create({
   viewAll: { color: Theme.staticColors.primary, fontSize: moderateScale(13), fontWeight: '600' },
   exploreGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   exploreItem: { width: '48%', height: verticalScale(160), borderRadius: Theme.radius.md, overflow: 'hidden', marginBottom: verticalScale(15) },
-  exploreImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+  exploreImage: { width: '100%', height: '100%' },
   exploreGradient: { position: 'absolute', bottom: 0, left: 0, right: 0, height: verticalScale(80), justifyContent: 'flex-end', padding: moderateScale(12) },
   exploreCat: { color: Theme.staticColors.primary, fontSize: moderateScale(10), fontWeight: 'bold', marginBottom: verticalScale(2) },
   exploreTitle: { color: '#fff', fontSize: moderateScale(13), fontWeight: 'bold' },
@@ -192,3 +192,4 @@ export const styles = StyleSheet.create({
   bsCodeLabel: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(12), marginBottom: verticalScale(4), letterSpacing: 1 },
   bsCodeValue: { color: Theme.staticColors.primary, fontSize: moderateScale(24), fontWeight: '900', letterSpacing: 2 }
 });
+

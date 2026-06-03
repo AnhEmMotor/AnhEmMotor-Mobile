@@ -24,9 +24,9 @@ const getStyles = (colors) => StyleSheet.create({
   
   interestBox: { backgroundColor: colors.surface, padding: 16, borderRadius: 0, borderWidth: 1, borderColor: colors.border, marginBottom: 20 },
   interestRow: { flexDirection: 'row', alignItems: 'center' },
-  interestLabel: { color: colors.subtext, fontSize: 13, marginLeft: 8 },
+  interestLabel: { color: colors.text, fontSize: 13, marginLeft: 8 },
   interestValue: { color: colors.text, fontSize: 14, fontWeight: 'bold' },
-  timeLabel: { color: colors.subtext, fontSize: 11, marginTop: 8 },
+  timeLabel: { color: colors.text, fontSize: 11, marginTop: 8 },
 
   footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 16 },
   actionGroup: { flexDirection: 'row' },
@@ -109,7 +109,7 @@ export default function LeadScreen() {
       name: 'Lê Thảo Nhi', 
       interest: 'VinFast Klara S', 
       status: 'Cold', 
-      color: '#3B82F6', 
+      color: '#E31B23', 
       time: '1 ngày trước',
       phone: '093.456.7890',
       email: 'nhi.lethao@gmail.com',
@@ -172,15 +172,15 @@ export default function LeadScreen() {
                 <View style={styles.footerRow}>
                   <View style={styles.actionGroup}>
                     <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: colors.primary + '38', borderColor: colors.primary, borderWidth: 1 }]} onPress={() => Linking.openURL(`tel:${item.phone}`)}>
-                      <Phone color={colors.primary} size={18} />
+                      <Phone color={colors.text} size={18} />
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: colors.success + '38', borderColor: colors.success, borderWidth: 1 }]} onPress={() => Linking.openURL('https://zalo.me')}>
-                      <MessageSquare color={colors.success} size={18} />
+                      <MessageSquare color={colors.text} size={18} />
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity style={styles.detailBtn} onPress={() => handleOpenLead(item)}>
-                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.detailText}>Xử lý Lead (360°)</Text>
-                    <ChevronRight color={colors.primary} size={16} />
+                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.detailText, { color: colors.text }]}>Xử lý Lead (360°)</Text>
+                    <ChevronRight color={colors.text} size={16} />
                   </TouchableOpacity>
                 </View>
               </GlassCard>
@@ -356,3 +356,4 @@ export default function LeadScreen() {
     </View>
   );
 }
+

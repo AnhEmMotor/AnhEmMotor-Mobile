@@ -9,6 +9,7 @@ const DEFAULT_SUBTEXT = '#94A3B8';
 export const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: DEFAULT_BG },
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: horizontalScale(20), paddingVertical: verticalScale(15), borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)' },
+  headerActions: { flexDirection: 'row', alignItems: 'center' },
   backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
   headerTitleContainer: { flex: 1, marginLeft: horizontalScale(15) },
   headerTitle: { color: '#fff', fontSize: moderateScale(18), fontWeight: 'bold' },
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   cardWrapper: { width: '48%', marginBottom: verticalScale(20) },
   productItemOpen: { backgroundColor: 'transparent' },
-  productImageOpen: { width: '100%', height: verticalScale(110), resizeMode: 'cover', borderRadius: 4 },
+  productImageOpen: { width: '100%', height: verticalScale(110), borderRadius: 4 },
   productInfoOpen: { paddingVertical: verticalScale(10), alignItems: 'center' },
   productNameOpen: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold', textAlign: 'center', marginBottom: verticalScale(4) },
   productPriceOpen: { color: Theme.staticColors.primary, fontSize: moderateScale(15), fontWeight: 'bold', textAlign: 'center' },

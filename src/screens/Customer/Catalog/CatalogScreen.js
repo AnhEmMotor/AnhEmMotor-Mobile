@@ -75,14 +75,23 @@ export default function CatalogScreen({ navigation }) {
             <Camera color={activeColors.primary} size={moderateScale(18)} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.filterBtn} onPress={() => setFilterModal(true)}>
-          <Filter color="#fff" size={moderateScale(20)} />
+        <TouchableOpacity
+          style={[
+            styles.filterBtn,
+            { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)' },
+          ]}
+          onPress={() => setFilterModal(true)}
+        >
+          <Filter color={activeColors.isDark ? '#fff' : '#000'} size={moderateScale(20)} />
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.filterBtn, { marginLeft: moderateScale(8) }]} 
+        <TouchableOpacity
+          style={[
+            styles.filterBtn,
+            { marginLeft: moderateScale(8), backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)' },
+          ]}
           onPress={() => setSettingsOpen(true)}
         >
-          <Settings color="#fff" size={moderateScale(20)} />
+          <Settings color={activeColors.isDark ? '#fff' : '#000'} size={moderateScale(20)} />
         </TouchableOpacity>
       </Animated.View>
 
@@ -101,7 +110,7 @@ export default function CatalogScreen({ navigation }) {
                 ]}
                 onPress={() => setActiveCategory(cat)}
               >
-                <Text style={[styles.chipText, { color: activeColors.subtext }, activeCategory === cat && [styles.activeChipText, { color: '#fff' }]]}>{cat}</Text>
+                <Text style={[styles.chipText, { color: activeColors.text }, activeCategory === cat && [styles.activeChipText, { color: '#fff' }]]}>{cat}</Text>
               </ScalePress>
             ))}
           </ScrollView>
@@ -120,8 +129,8 @@ export default function CatalogScreen({ navigation }) {
                 ]}
                 onPress={() => setActiveBrand(brand.name)}
               >
-                <Image source={{ uri: brand.image }} style={styles.brandLogo} />
-                <Text style={[styles.brandText, { color: activeColors.subtext }, activeBrand === brand.name && [styles.activeBrandText, { color: activeColors.primary }]]}>{brand.name}</Text>
+                <Image source={{ uri: brand.image }} style={styles.brandLogo} resizeMode="contain" />
+                <Text style={[styles.brandText, { color: activeColors.text }, activeBrand === brand.name && [styles.activeBrandText, { color: activeColors.primary }]]}>{brand.name}</Text>
               </ScalePress>
             ))}
           </ScrollView>
@@ -144,10 +153,10 @@ export default function CatalogScreen({ navigation }) {
                 }}
               >
                 <View style={styles.typeCardInner}>
-                  <Image source={{ uri: type.image }} style={styles.typeIconSmall} />
+                  <Image source={{ uri: type.image }} style={styles.typeIconSmall} resizeMode="contain" />
                   <Text style={[styles.typeTextLarge, { color: activeColors.text }, activeType === type.name && [styles.activeTypeTextLarge, { color: activeColors.primary }]]}>{type.name}</Text>
                 </View>
-                <ChevronRight color={activeType === type.name ? activeColors.primary : activeColors.subtext} size={moderateScale(18)} />
+                <ChevronRight color={activeType === type.name ? activeColors.primary : activeColors.text} size={moderateScale(18)} />
               </ScalePress>
             ))}
           </View>

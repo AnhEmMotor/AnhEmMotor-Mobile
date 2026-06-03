@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
 
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)' },
-  modalSheet: { backgroundColor: '#0F172A', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: 60 },
+  modalSheet: { backgroundColor: '#050505', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: 60 },
   modalHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.1)', alignSelf: 'center', marginBottom: 24 },
   modalTitle: { fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
   modalSub: { fontSize: 14, marginBottom: 30 },
@@ -209,3 +209,4 @@ const styles = StyleSheet.create({
   pdfBtn: { backgroundColor: Theme.staticColors.secondary, height: 60, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   pdfText: { color: '#fff', fontSize: 16, fontWeight: 'bold', marginLeft: 12 }
 });
+

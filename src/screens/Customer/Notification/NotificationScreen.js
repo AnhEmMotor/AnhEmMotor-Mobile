@@ -52,9 +52,9 @@ export default function NotificationScreen({ navigation }) {
 
   const activeColors = {
     background: isDark ? '#0B0F19' : '#F8FAFC',
-    card: isDark ? '#1E293B' : '#FFFFFF',
-    cardBg: isDark ? '#1E293B' : '#FFFFFF',
-    text: isDark ? '#F8FAFC' : '#0F172A',
+    card: isDark ? '#111111' : '#FFFFFF',
+    cardBg: isDark ? '#111111' : '#FFFFFF',
+    text: isDark ? '#F8FAFC' : '#050505',
     subtext: isDark ? '#94A3B8' : '#64748B',
     border: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
   };
@@ -80,14 +80,14 @@ export default function NotificationScreen({ navigation }) {
       case 'birthday':
         return <Gift color={Theme.staticColors.primary} size={22} />;
       case 'referral':
-        return <Gift color="#3B82F6" size={22} />;
+        return <Gift color="#E31B23" size={22} />;
       case 'recall':
       case 'paperwork':
         return <AlertTriangle color={Theme.staticColors.error} size={22} />;
       case 'invoice':
         return <FileText color="#10B981" size={22} />;
       case 'feedback':
-        return <MessageSquare color="#3B82F6" size={22} />;
+        return <MessageSquare color="#E31B23" size={22} />;
       case 'security':
         return <Lock color={Theme.staticColors.error} size={22} />;
       default:
@@ -120,7 +120,7 @@ export default function NotificationScreen({ navigation }) {
       case 'deliveryMap':
         return (
           <View>
-            <View style={[styles.mapContainer, { backgroundColor: isDark ? '#1E293B' : '#F1F5F9', borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: activeColors.border }]}>
+            <View style={[styles.mapContainer, { backgroundColor: isDark ? '#111111' : '#F1F5F9', borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: activeColors.border }]}>
               {/* Fake Map Grid */}
               <View style={[styles.mapGrid, { opacity: isDark ? 0.15 : 0.08 }]} />
               
@@ -323,7 +323,7 @@ export default function NotificationScreen({ navigation }) {
         return (
           <View style={[styles.workshopCard, { borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.2)', backgroundColor: isDark ? 'rgba(59, 130, 246, 0.02)' : 'rgba(59, 130, 246, 0.05)' }]}>
             <View style={{ borderBottomWidth: 1, borderBottomColor: activeColors.border, paddingBottom: 10, marginBottom: 12 }}>
-              <Text style={[styles.workshopTitle, { color: '#3B82F6' }]}>Quy trình thủ tục Hành chính</Text>
+              <Text style={[styles.workshopTitle, { color: '#E31B23' }]}>Quy trình thủ tục Hành chính</Text>
             </View>
             <View style={{ paddingVertical: 5, gap: 12 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -772,7 +772,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.loyaltyReferralCard}>
               <View style={styles.loyaltyReferralHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <Gift color="#3B82F6" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <Gift color="#E31B23" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.loyaltyReferralTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Đồng Hành Giới Thiệu Xe</Text>
                 </View>
                 <View style={styles.referralActiveBadge}>
@@ -790,10 +790,10 @@ export default function NotificationScreen({ navigation }) {
               </Text>
 
               <TouchableOpacity 
-                style={[styles.loyaltyCtaButton, { backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 1, borderColor: '#3B82F6' }]}
+                style={[styles.loyaltyCtaButton, { backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 1, borderColor: '#E31B23' }]}
                 onPress={() => logic.handleAction(logic.notifications.find(n => n.id === 'l3'))}
               >
-                <Text style={[styles.loyaltyCtaText, { color: '#3B82F6' }]}>Chia sẻ mã ngay 🎁</Text>
+                <Text style={[styles.loyaltyCtaText, { color: '#E31B23' }]}>Chia sẻ mã ngay 🎁</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -912,7 +912,7 @@ export default function NotificationScreen({ navigation }) {
             <Animated.View entering={FadeInDown.duration(500)} style={styles.systemFeedbackCard}>
               <View style={styles.systemFeedbackHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                  <MessageSquare color="#3B82F6" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                  <MessageSquare color="#E31B23" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
                   <Text style={[styles.systemFeedbackTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Phản hồi Ý kiến Đóng góp</Text>
                 </View>
                 <View style={styles.feedbackBlueBadge}>
@@ -931,7 +931,7 @@ export default function NotificationScreen({ navigation }) {
               </Text>
 
               <TouchableOpacity 
-                style={[styles.systemCtaButton, { backgroundColor: '#3B82F6' }]}
+                style={[styles.systemCtaButton, { backgroundColor: '#E31B23' }]}
                 onPress={() => logic.handleAction(logic.notifications.find(n => n.id === 'sys4'))}
               >
                 <Text style={styles.systemCtaText}>Xem nội dung giải quyết 💬</Text>
@@ -1099,3 +1099,4 @@ export default function NotificationScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+

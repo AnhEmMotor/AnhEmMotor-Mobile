@@ -56,26 +56,26 @@ const getStyles = (colors) => StyleSheet.create({
   customerName: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
   tagRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   typeTag: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 0, marginRight: 8 },
-  typeText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.5 },
-  timeText: { color: colors.subtext, fontSize: 11 },
+  typeText: { color: colors.text, fontSize: 10, fontWeight: '900', letterSpacing: 0.5 },
+  timeText: { color: colors.text, fontSize: 11 },
 
   slaBadgeColumn: { alignItems: 'flex-end', marginLeft: 8 },
   slaIndicator: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, paddingVertical: 3, borderRadius: 0, marginBottom: 4, borderWidth: 1 },
   slaWarning: { backgroundColor: 'rgba(245, 158, 11, 0.22)', borderColor: 'rgba(245, 158, 11, 0.45)' },
   slaWarningText: { color: '#F59E0B', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
   slaNormal: { backgroundColor: 'rgba(59, 130, 246, 0.22)', borderColor: 'rgba(59, 130, 246, 0.45)' },
-  slaNormalText: { color: '#3B82F6', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
+  slaNormalText: { color: '#E31B23', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
   slaSuccess: { backgroundColor: 'rgba(16, 185, 129, 0.22)', borderColor: 'rgba(16, 185, 129, 0.45)' },
   slaSuccessText: { color: '#10B981', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
 
   lowRatingAlert: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(239, 68, 68, 0.08)', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.2)', marginTop: 12 },
   lowRatingAlertText: { color: colors.error, fontSize: 11, fontWeight: 'bold', marginLeft: 6 },
 
-  ticketContent: { color: colors.text, fontSize: 13, lineHeight: 20, marginTop: 12, opacity: 0.9 },
+  ticketContent: { color: colors.text, fontSize: 13, lineHeight: 20, marginTop: 12 },
   
   internalLogsContainer: { backgroundColor: colors.surface, padding: 10, borderRadius: 0, marginTop: 12, borderWidth: 1, borderColor: colors.border },
   internalLogsHeader: { color: colors.primary, fontSize: 10, fontWeight: 'bold', textTransform: 'uppercase', marginBottom: 2 },
-  internalLogsText: { color: colors.subtext, fontSize: 11, lineHeight: 16, fontStyle: 'italic' },
+  internalLogsText: { color: colors.text, fontSize: 11, lineHeight: 16, fontStyle: 'italic' },
 
   assignedDetailsRow: { flexDirection: 'row', alignItems: 'center', marginTop: 12 },
   assignedLabel: { color: colors.subtext, fontSize: 11 },
@@ -103,7 +103,7 @@ const getStyles = (colors) => StyleSheet.create({
 
   ticketBrief: { backgroundColor: colors.surface, padding: 14, borderRadius: 0, borderWidth: 1, borderColor: colors.border, marginBottom: 20 },
   briefCustomer: { color: colors.primary, fontSize: 13, fontWeight: 'bold' },
-  briefContent: { color: colors.subtext, fontSize: 12, marginTop: 6, fontStyle: 'italic' },
+  briefContent: { color: colors.text, fontSize: 12, marginTop: 6, fontStyle: 'italic' },
 
   templateList: { marginBottom: 20 },
   templateHeader: { color: colors.text, fontSize: 14, fontWeight: 'bold', marginBottom: 12 },
@@ -275,7 +275,7 @@ export default function SupportHubScreen({ navigation }) {
                         )}
                         {item.status === 'assigned' && item.slaResolveMinutes > 0 && (
                           <View style={[styles.slaIndicator, styles.slaNormal]}>
-                            <Clock color="#3B82F6" size={10} />
+                            <Clock color="#E31B23" size={10} />
                             <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.slaNormalText}>SLA xử lý: {Math.round(item.slaResolveMinutes/60)}h</Text>
                           </View>
                         )}
@@ -450,3 +450,4 @@ export default function SupportHubScreen({ navigation }) {
     </View>
   );
 }
+

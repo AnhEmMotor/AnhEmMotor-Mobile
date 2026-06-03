@@ -10,9 +10,9 @@ const { width } = Dimensions.get('window');
 const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
   const theme = useTheme();
   const chartConfig = {
-    backgroundColor: '#1E293B',
-    backgroundGradientFrom: '#1E293B',
-    backgroundGradientTo: '#1E293B',
+    backgroundColor: theme.colors.card,
+    backgroundGradientFrom: theme.colors.card,
+    backgroundGradientTo: theme.colors.card,
     decimalPlaces: 0,
     color: (opacity = 1) => color,
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -75,12 +75,12 @@ const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
 };
 const getStyles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255,255,255,0.02)',
+    backgroundColor: theme.colors.surface,
     borderRadius: 24,
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.colors.border,
   },
   header: {
     flexDirection: 'row',
@@ -125,3 +125,4 @@ const getStyles = (theme) => StyleSheet.create({
 });
 
 export default PredictiveHealth;
+

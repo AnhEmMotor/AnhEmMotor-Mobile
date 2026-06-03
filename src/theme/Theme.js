@@ -5,13 +5,13 @@ import { useGlobalState } from '../context/GlobalState';
 export const Theme = {
   // Static colors that are consistent across themes (e.g., brand colors, status colors)
   staticColors: {
-    primary: '#3B82F6',      // Luxury Blue
-    secondary: '#DC2626',    // Deep Crimson
+    primary: '#E31B23',      // AnhEmMotor Red
+    secondary: '#FFFFFF',    // White accent for brand
     // Status colors
-    success: '#059669',
-    warning: '#D97706',
+    success: '#22C55E',
+    warning: '#F59E0B',
     error: '#DC2626',
-    info: '#2563EB',
+    info: '#F8FAFC',
   },
 
   spacing: {
@@ -78,7 +78,7 @@ export const Theme = {
       elevation: 15,
     },
     primary: {
-      boxShadow: '0px 10px 20px rgba(0, 122, 255, 0.4)',
+      boxShadow: '0px 10px 20px rgba(227, 27, 35, 0.4)',
       elevation: 10,
     },
     secondary: {
@@ -90,26 +90,26 @@ export const Theme = {
 
 // Define palettes as plain objects, logic for selecting them will be in useActiveColors
 const darkPalette = {
-  background: '#0F172A', // Màu tối hơn, dễ nhìn hơn
-  card: '#1E293B',
-  surface: '#334155',
+  background: '#050505', // Deep black brand background
+  card: '#111111',
+  surface: '#1C1C1C',
   text: '#F8FAFC',
-  subtext: '#94A3B8',
-  border: 'rgba(255, 255, 255, 0.12)',
-  glassBg: 'rgba(30, 41, 59, 0.85)',
-  glassBorder: 'rgba(255, 255, 255, 0.15)',
-  inputBg: 'rgba(255, 255, 255, 0.1)',
-  modalOverlay: 'rgba(0, 0, 0, 0.85)',
+  subtext: '#E5E7EB',
+  border: 'rgba(255, 255, 255, 0.14)',
+  glassBg: 'rgba(20, 20, 20, 0.78)',
+  glassBorder: 'rgba(255, 255, 255, 0.12)',
+  inputBg: 'rgba(255, 255, 255, 0.08)',
+  modalOverlay: 'rgba(0, 0, 0, 0.92)',
 };
 
 const lightPalette = {
-  background: '#F1F5F9', // Màu sáng nhẹ nhàng hơn
-  card: '#FFFFFF',
-  surface: '#E2E8F0',
-  text: '#0F172A',
+  background: '#FFFFFF', // Clean white theme
+  card: '#F8FAFC',
+  surface: '#E5E7EB',
+  text: '#111827',
   subtext: '#475569',
   border: 'rgba(0, 0, 0, 0.12)',
-  glassBg: 'rgba(255, 255, 255, 0.9)',
+  glassBg: 'rgba(255, 255, 255, 0.92)',
   glassBorder: 'rgba(0, 0, 0, 0.08)',
   inputBg: 'rgba(0, 0, 0, 0.05)',
   modalOverlay: 'rgba(0, 0, 0, 0.6)',

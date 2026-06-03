@@ -21,19 +21,34 @@ export default function ProductListScreen({ route, navigation }) {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
       <View style={[styles.header, { borderBottomColor: activeColors.border }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel="Quay lại"
+          style={[styles.backBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}
+        >
           <ArrowLeft color={activeColors.text} size={24} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
           <Text style={[styles.headerTitle, { color: activeColors.text }]}>{type !== 'Tất cả' ? type : 'Sản phẩm'}</Text>
           <Text style={[styles.headerSubtitle, { color: activeColors.subtext }]}>{brand !== 'Tất cả' ? brand : 'Tất cả thương hiệu'}</Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <TouchableOpacity style={[styles.cartBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="Giỏ hàng"
+            onPress={() => navigation.navigate('Cart')}
+            style={[styles.cartBtn, { marginRight: 10, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}
+          >
             <ShoppingCart color={activeColors.text} size={24} />
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.cartBtn, { padding: 8, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }]} 
+          <TouchableOpacity
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="Cài đặt"
+            style={[styles.cartBtn, { padding: 8, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }]}
             onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
           >
             <Settings color={activeColors.text} size={24} />
@@ -41,10 +56,15 @@ export default function ProductListScreen({ route, navigation }) {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]}>
         <View style={styles.resultsCount}>
           <Text style={[styles.countText, { color: activeColors.subtext }]}>Tìm thấy {filteredProducts.length} sản phẩm</Text>
-          <TouchableOpacity style={[styles.filterBtn, { backgroundColor: activeColors.isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.08)' }]}>
+          <TouchableOpacity
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="Lọc sản phẩm"
+            style={[styles.filterBtn, { backgroundColor: activeColors.isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.08)' }]}
+          >
             <Filter color={activeColors.primary} size={18} />
             <Text style={[styles.filterText, { color: activeColors.primary }]}>Lọc thêm</Text>
           </TouchableOpacity>
@@ -57,23 +77,29 @@ export default function ProductListScreen({ route, navigation }) {
               entering={FadeInDown.duration(600).delay(index * 100)}
               style={styles.cardWrapper}
             >
-              <ScalePress 
-                onPress={() => navigation.navigate('VehicleDetail', { motor: item })} 
+              <ScalePress
+                accessibilityRole="button"
+                accessible
+                accessibilityLabel={`Mở chi tiết ${item.name}`}
+                onPress={() => navigation.navigate('VehicleDetail', { motor: item })}
                 style={[
-                  styles.productItemOpen, 
-                  { 
-                    backgroundColor: activeColors.card, 
-                    borderRadius: 12, 
-                    borderWidth: 1, 
-                    borderColor: activeColors.border, 
+                  styles.productItemOpen,
+                  {
+                    backgroundColor: activeColors.card,
+                    // borderRadius: 12,
+                    // borderWidth: 1,
+                    // borderColor: activeColors.border,
                     overflow: 'hidden',
                     padding: 8
                   }
                 ]}
               >
-                <Image 
-                  source={item.img ? (typeof item.img === 'string' ? { uri: item.img } : item.img) : { uri: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070' }} 
-                  style={[styles.productImageOpen, { borderRadius: 8 }]} 
+                <Image
+                  accessible
+                  accessibilityLabel={`Hình ${item.name}`}
+                  source={item.img ? (typeof item.img === 'string' ? { uri: item.img } : item.img) : { uri: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070' }}
+                  style={[styles.productImageOpen, { borderRadius: 8 }]}
+                  resizeMode="cover"
                 />
                 <View style={styles.productInfoOpen}>
                   <Text style={[styles.productNameOpen, { color: activeColors.text }]} numberOfLines={2}>{item.name}</Text>

@@ -5,7 +5,7 @@ import { horizontalScale, verticalScale, moderateScale } from '../../../utils/re
 const { width } = Dimensions.get('window');
 
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_CARD = '#1E293B';
+const DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
 const DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     borderRadius: horizontalScale(48), 
     borderWidth: 2, 
     borderColor: Theme.staticColors.primary, 
-    backgroundColor: '#1E293B' 
+    backgroundColor: '#111111' 
   },
   vipBadge: { 
     position: 'absolute', 
@@ -199,7 +199,7 @@ export const styles = StyleSheet.create({
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)' },
   avatarModalSheet: { 
-    backgroundColor: '#0F172A', 
+    backgroundColor: '#050505', 
     borderTopLeftRadius: 30, 
     borderTopRightRadius: 30, 
     padding: moderateScale(22), 
@@ -377,7 +377,7 @@ export const styles = StyleSheet.create({
     borderRadius: horizontalScale(35),
     borderWidth: 2,
     borderColor: Theme.staticColors.primary,
-    backgroundColor: '#1E293B'
+    backgroundColor: '#111111'
   },
   shopeeCameraBadge: {
     position: 'absolute',
@@ -495,8 +495,8 @@ export const styles = StyleSheet.create({
     position: 'relative'
   },
   glowBorder: {
-    borderColor: '#3B82F6',
-    shadowColor: '#3B82F6',
+    borderColor: '#E31B23',
+    shadowColor: '#E31B23',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.4,
     shadowRadius: 5,
@@ -533,9 +533,9 @@ export const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#E31B23',
     borderWidth: 1.5,
-    borderColor: '#0F172A'
+    borderColor: '#050505'
   },
   listIconCircle: {
     width: horizontalScale(32),
@@ -559,3 +559,4 @@ export const styles = StyleSheet.create({
     marginBottom: verticalScale(30)
   }
 });
+

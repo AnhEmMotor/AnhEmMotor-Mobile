@@ -42,7 +42,7 @@ export default function HubScreen({ navigation }) {
       title: 'Kho Xe & Phụ Tùng',
       desc: 'Tra cứu ma trận tồn kho, phụ tùng dưới hạn mức.',
       icon: Layers,
-      color: '#3B82F6', // Blue
+      color: '#E31B23', // Blue
       screen: 'AdminInventory'
     },
     {
@@ -135,3 +135,4 @@ export default function HubScreen({ navigation }) {
     </View>
   );
 }
+

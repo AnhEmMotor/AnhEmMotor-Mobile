@@ -72,11 +72,11 @@ const getStyles = (colors) => StyleSheet.create({
   customerName: { color: colors.text, fontSize: 16, fontWeight: '900', textTransform: 'uppercase', marginBottom: 8 },
   
   bikeInfoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  bikeText: { color: colors.subtext, fontSize: 13, marginLeft: 8 },
+  bikeText: { color: colors.text, fontSize: 13, marginLeft: 8 },
   bikeBold: { color: colors.text, fontWeight: '600' },
 
   assignedSaleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, backgroundColor: colors.primary + '0D', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 0, borderWidth: 1, borderColor: colors.primary + '1A' },
-  assignedSaleText: { color: colors.subtext, fontSize: 12, marginLeft: 8 },
+  assignedSaleText: { color: colors.text, fontSize: 12, marginLeft: 8 },
 
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12, borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 12 },
   callIconBtn: { width: 44, height: 44, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center' },
@@ -99,7 +99,7 @@ const getStyles = (colors) => StyleSheet.create({
   statusIndicatorText: { color: '#10B981', fontSize: 13, fontWeight: 'bold', marginLeft: 8 },
 
   infoBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary + '1A', padding: 12, borderRadius: 0, borderWidth: 1, borderColor: colors.primary + '33', marginBottom: 16 },
-  infoText: { color: colors.subtext, fontSize: 12, marginLeft: 8, flex: 1 },
+  infoText: { color: colors.text, fontSize: 12, marginLeft: 8, flex: 1 },
 
   modalOverlay: { flex: 1, backgroundColor: colors.modalOverlay, justifyContent: 'flex-end' },
   modalContent: { borderTopLeftRadius: 0, borderTopRightRadius: 0, padding: 24, maxHeight: '60%', borderTopWidth: 2, borderTopColor: colors.primary },
@@ -115,21 +115,24 @@ const getStyles = (colors) => StyleSheet.create({
   staffOnlineDot: { width: 12, height: 12, borderRadius: 0, backgroundColor: colors.success, position: 'absolute', right: 0, bottom: 0, borderWidth: 2, borderColor: colors.background },
   staffOnlineDotInactive: { backgroundColor: '#64748B' },
   staffNameText: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
-  staffStatusText: { color: colors.subtext, fontSize: 11, marginTop: 2 },
+  staffStatusText: { color: colors.text, fontSize: 11, marginTop: 2 },
 
   workshopStepperContainer: { marginVertical: 12, borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 12 },
   workshopStepperTitle: { color: colors.text, fontSize: 13, fontWeight: '600', marginBottom: 12 },
   workshopStepsRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   workshopStepItem: { flex: 1, alignItems: 'center' },
   workshopStepCircle: { width: 18, height: 18, borderRadius: 0, borderWidth: 2, borderColor: colors.border, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
-  workshopStepNum: { color: colors.subtext, fontSize: 9, fontWeight: 'bold' },
+  workshopStepNum: { color: colors.text, fontSize: 9, fontWeight: 'bold' },
   workshopStepLine: { height: 2, backgroundColor: colors.border, flex: 1, position: 'absolute', left: '50%', right: '-50%', top: 8, zIndex: 0 },
-  workshopStepLabel: { color: colors.subtext, fontSize: 10, marginTop: 6, textAlign: 'center' },
+  workshopStepLabel: { color: colors.text, fontSize: 10, marginTop: 6, textAlign: 'center' },
 });
 
 export default function AppointmentManageScreen({ navigation }) {
   const colors = useActiveColors();
   const styles = getStyles(colors);
+  const primaryColor = colors.primary || Theme.staticColors.primary;
+  const pendingTextColor = colors.isDark ? '#fff' : colors.text;
+  const actionContentColor = colors.isDark ? '#fff' : primaryColor;
 
   const { 
     appointments, 
@@ -274,11 +277,18 @@ export default function AppointmentManageScreen({ navigation }) {
 
                       {/* Nút chính: Chỉ định Sale */}
                       <TouchableOpacity 
-                        style={[styles.mainActionBtn, { backgroundColor: item.status === 'pending' ? colors.primary : colors.primary + '38', borderColor: item.status === 'pending' ? colors.primary : colors.primary + '66', borderWidth: 1 }]}
+                        style={[
+                          styles.mainActionBtn,
+                          {
+                            backgroundColor: primaryColor + '45',
+                            borderColor: primaryColor + '60',
+                            borderWidth: 1
+                          }
+                        ]}
                         onPress={() => openAssignModal(item.id)}
                       >
-                        <Users color={item.status === 'pending' ? '#fff' : colors.primary} size={18} />
-                        <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.mainActionBtnText, { color: item.status === 'pending' ? '#fff' : colors.primary, marginLeft: 8 }]}>
+                        <Users color={actionContentColor} size={18} />
+                        <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.mainActionBtnText, { color: actionContentColor, marginLeft: 8 }]}>
                           {item.status === 'pending' ? 'Chỉ định Sale' : 'Đổi nhân viên'}
                         </Text>
                       </TouchableOpacity>
@@ -441,7 +451,7 @@ export default function AppointmentManageScreen({ navigation }) {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <GlassCard style={styles.modalContent} intensity={40}>
+          <View style={[styles.modalContent, { backgroundColor: colors.isDark ? '#000' : '#fff' }]}> 
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Chỉ định Sale phụ trách 👥</Text>
               <TouchableOpacity style={styles.closeBtn} onPress={() => setModalVisible(false)}>
@@ -474,7 +484,7 @@ export default function AppointmentManageScreen({ navigation }) {
               )}
               style={styles.staffList}
             />
-          </GlassCard>
+          </View>
         </View>
       </Modal>
     </View>

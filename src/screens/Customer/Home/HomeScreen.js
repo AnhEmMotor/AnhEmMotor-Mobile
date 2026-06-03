@@ -71,10 +71,10 @@ export default function HomeScreen({ navigation }) {
             <Text style={[styles.userName, { color: colors.text }]} numberOfLines={1}>Anh Khôi</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => setSettingsOpen(true)}>
+            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.surface }]} onPress={() => setSettingsOpen(true)}>
               <Settings color={colors.text} size={moderateScale(20)} />
             </ScalePress>
-            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.card }]} onPress={() => navigation.navigate('Notification')}>
+            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.surface }]} onPress={() => navigation.navigate('Notification')}>
               <Bell color={colors.text} size={moderateScale(20)} />
               {unreadNotifications > 0 && (
                 <View style={[styles.badge, { borderColor: colors.card }]}>
@@ -109,7 +109,7 @@ export default function HomeScreen({ navigation }) {
                 <View key={banner.id} style={[styles.bannerItem, { width: width }]}>
                   <Image source={{ uri: banner.image }} style={styles.bannerImage} />
                   <LinearGradient
-                    colors={['transparent', 'rgba(15, 23, 42, 0.95)']}
+                    colors={['transparent', 'rgba(5, 5, 5, 0.95)']}
                     style={styles.bannerGradient}
                   >
                     <View style={styles.bannerBadge}>
@@ -158,8 +158,8 @@ export default function HomeScreen({ navigation }) {
                     style={styles.shortcutItem}
                     onPress={() => navigation.navigate(item.screen)}
                   >
-                    <View style={styles.shortcutIconBg}>
-                      <IconComponent color={colors.primary} size={moderateScale(20)} />
+                    <View style={[styles.shortcutIconBg, { backgroundColor: colors.primary + (colors.isDark ? '22' : '18') }] }>
+                      <IconComponent color= {colors.text} size={moderateScale(20)} />
                     </View>
                     <Text style={[styles.shortcutText, { color: colors.text }]}>{item.title}</Text>
                   </TouchableOpacity>
@@ -176,9 +176,9 @@ export default function HomeScreen({ navigation }) {
             {alerts.map((alert) => {
               const isCritical = alert.type === 'critical';
               const alertColor = isCritical ? colors.error : colors.warning;
-              const bgColor = isCritical 
-                ? (colors.isDark ? 'rgba(239, 68, 68, 0.12)' : 'rgba(239, 68, 68, 0.06)') 
-                : (colors.isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.06)');
+              const bgColor = isCritical
+                ? 'rgba(239, 68, 68, 0.12)'
+                : 'rgba(245, 158, 11, 0.12)';
 
               return (
                 <TouchableOpacity
@@ -192,13 +192,13 @@ export default function HomeScreen({ navigation }) {
                     intensity={15}
                     tint={colors.isDark ? 'dark' : 'light'}
                   >
-                    {isCritical ? <AlertTriangle color={alertColor} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} /> : <ShieldAlert color={alertColor} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} />}
+                    {isCritical ? <AlertTriangle color={colors.text} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} /> : <ShieldAlert color={colors.text} size={moderateScale(20)} strokeWidth={1.5} style={styles.alertIcon} />}
                     <View style={styles.alertContent}>
                       <Text style={[styles.alertTitle, { color: colors.text }]}>{alert.title}</Text>
                       <Text style={[styles.alertDesc, { color: colors.subtext }]}>{alert.message}</Text>
                       <View style={styles.alertCta}>
-                        <Text style={[styles.alertCtaText, { color: alertColor }]}>{alert.cta}</Text>
-                        <ArrowRight color={alertColor} size={moderateScale(12)} strokeWidth={2} style={{ marginLeft: 4 }} />
+                        <Text style={[styles.alertCtaText, { color: colors.text }]}>{alert.cta}</Text>
+                        <ArrowRight color={colors.text} size={moderateScale(12)} strokeWidth={2} style={{ marginLeft: 4 }} />
                       </View>
                     </View>
                   </GlassCard>
@@ -224,8 +224,8 @@ export default function HomeScreen({ navigation }) {
                   tint={colors.isDark ? 'dark' : 'light'}
                 >
                   <View style={styles.voucherTop}>
-                    <Ticket color={colors.primary} size={moderateScale(20)} />
-                    <QrCode color={colors.subtext} size={moderateScale(20)} />
+                    <Ticket color={colors.text} size={moderateScale(20)} />
+                    <QrCode color={colors.text} size={moderateScale(20)} />
                   </View>
                   <View style={styles.voucherTextContainer}>
                     <Text style={[styles.voucherTitle, { color: colors.text }]} numberOfLines={2}>{voucher.title}</Text>
@@ -252,9 +252,9 @@ export default function HomeScreen({ navigation }) {
                 style={styles.exploreItem}
                 onPress={() => navigation.navigate('HomeDetail', { type: 'promo', item: item })}
               >
-                <Image source={{ uri: item.image }} style={styles.exploreImage} />
+                <Image source={{ uri: item.image }} style={styles.exploreImage} resizeMode="cover" />
                 <LinearGradient
-                  colors={['transparent', 'rgba(15, 23, 42, 0.9)']}
+                  colors={['transparent', 'rgba(5, 5, 5, 0.9)']}
                   style={styles.exploreGradient}
                 >
                   <Text style={[styles.exploreCat, { color: colors.primary }]}>{item.category}</Text>
@@ -290,7 +290,7 @@ export default function HomeScreen({ navigation }) {
                   <Text style={[styles.blogDesc, { color: colors.subtext }]} numberOfLines={2}>{news.desc}</Text>
                   <Text style={[styles.blogMeta, { color: colors.primary }]}>{news.author} • {news.date}</Text>
                 </View>
-                <ChevronRight color={colors.subtext} size={moderateScale(16)} />
+                <ChevronRight color={colors.text} size={moderateScale(16)} />
               </GlassCard>
             </ScalePress>
           ))}
@@ -314,7 +314,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={[styles.bsTitle, { color: colors.text }]}>{selectedVoucher.title}</Text>
             <Text style={[styles.bsDesc, { color: colors.subtext }]}>{selectedVoucher.desc}</Text>
             <View style={[styles.bsCodeBox, { 
-              backgroundColor: colors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', 
+              backgroundColor: colors.isDark ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0,0,0,0.02)', 
               borderColor: colors.border 
             }]}>
               <Text style={[styles.bsCodeLabel, { color: colors.subtext }]}>MÃ ƯU ĐÃI</Text>
@@ -326,3 +326,4 @@ export default function HomeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+

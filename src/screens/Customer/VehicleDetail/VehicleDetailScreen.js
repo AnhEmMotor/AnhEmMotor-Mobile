@@ -62,7 +62,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
         {[
           { icon: <ShieldCheck color={activeColors.primary} size={20} />, title: 'Phanh ABS', desc: 'Khống chế lực phanh an toàn.' },
           { icon: <Key color={activeColors.warning} size={20} />, title: 'Smartkey', desc: 'Chống trộm thông minh.' },
-          { icon: <Droplet color="#3B82F6" size={20} />, title: 'Động cơ eSP+', desc: 'Tiết kiệm xăng tối đa.' },
+          { icon: <Droplet color="#E31B23" size={20} />, title: 'Động cơ eSP+', desc: 'Tiết kiệm xăng tối đa.' },
           { icon: <Usb color="#A855F7" size={20} />, title: 'Sạc USB', desc: 'Sạc điện thoại ngay trong cốp.' },
         ].map((f, i) => (
           <View key={i} style={[styles.featureCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
@@ -270,11 +270,11 @@ export default function VehicleDetailScreen({ navigation, route }) {
  
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* HERO SECTION */}
-        <View style={[styles.header, { backgroundColor: activeColors.isDark ? '#1E293B' : '#FFFFFF' }]}>
+        <View style={[styles.header, { backgroundColor: activeColors.isDark ? '#111111' : '#FFFFFF' }]}>
           <View
             style={styles.imageWrapper}
             onMoveShouldSetResponder={(evt) => {
@@ -390,3 +390,4 @@ const SpecRow = ({ label, value, activeColors }) => (
     <Text style={[styles.specValue, { color: activeColors.text }]}>{value}</Text>
   </View>
 );
+
