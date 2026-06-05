@@ -120,12 +120,12 @@ export default function MyVehiclesScreen({ navigation, route }) {
                     paddingVertical: 10,
                     borderRadius: 12,
                     backgroundColor: isSelected 
-                      ? activeColors.primary 
+                      ? Theme.staticColors.primary 
                       : (activeColors.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'),
                     marginRight: 10,
                     borderWidth: 1,
                     borderColor: isSelected 
-                      ? activeColors.primary 
+                      ? Theme.staticColors.primary 
                       : (activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'),
                   }}
                 >

@@ -5,7 +5,7 @@ import { horizontalScale, verticalScale, moderateScale } from '../../../utils/re
 const { width } = Dimensions.get('window');
 
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_CARD = '#1E293B';
+const DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
 const DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
   ticketContent: { color: DEFAULT_TEXT, fontSize: moderateScale(13), lineHeight: 18, marginBottom: verticalScale(8) },
   ticketFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   ticketDate: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(11) },
-  ticketCta: { color: '#3B82F6', fontSize: moderateScale(11), fontWeight: 'bold' },
+  ticketCta: { color: '#E31B23', fontSize: moderateScale(11), fontWeight: 'bold' },
   
   searchBox: { height: verticalScale(48), borderRadius: Theme.radius.md, backgroundColor: 'rgba(255,255,255,0.03)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)', flexDirection: 'row', alignItems: 'center', paddingHorizontal: horizontalScale(15), marginBottom: verticalScale(15) },
   searchInput: { flex: 1, color: '#fff', fontSize: moderateScale(14), marginLeft: horizontalScale(10) },
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
   systemTitle: { color: '#fff', fontSize: moderateScale(16), fontWeight: 'bold', marginLeft: horizontalScale(8) },
   systemAddress: { color: 'rgba(255,255,255,0.8)', fontSize: moderateScale(13), lineHeight: 18, marginBottom: verticalScale(6) },
   systemHours: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(12), marginBottom: verticalScale(15) },
-  mapBtn: { height: verticalScale(48), borderRadius: Theme.radius.md, backgroundColor: '#0284C7', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
+  mapBtn: { height: verticalScale(48), borderRadius: Theme.radius.md, backgroundColor: '#B91C1C', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
   mapBtnText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold', marginLeft: horizontalScale(8) },
   
   sheetContent: { padding: moderateScale(20) },
@@ -105,3 +105,4 @@ export const styles = StyleSheet.create({
   systemContactItem: { flexDirection: 'row', alignItems: 'center', marginBottom: verticalScale(10) },
   systemContactText: { color: 'rgba(255,255,255,0.9)', fontSize: moderateScale(13), marginLeft: horizontalScale(10) }
 });
+

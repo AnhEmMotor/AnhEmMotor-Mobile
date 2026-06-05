@@ -326,7 +326,7 @@ export default function SupportScreen({ navigation }) {
                 onPress={handleEmailSupport}
                 activeOpacity={0.7}
               >
-                <Mail color="#3B82F6" size={moderateScale(16)} />
+                <Mail color="#E31B23" size={moderateScale(16)} />
                 <Text style={[styles.systemContactText, { color: activeColors.text }]}>support@anhemmotor.vn</Text>
               </TouchableOpacity>
             </View>
@@ -445,3 +445,4 @@ export default function SupportScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+

@@ -69,7 +69,7 @@ export const FAQ_CATEGORIES = [
     id: 'faq_legal',
     title: 'Thủ tục Hành chính',
     icon: FileText,
-    iconColor: '#3B82F6', // Blue
+    iconColor: '#E31B23', // Blue
     items: [
       {
         id: 'leg_q1',
@@ -79,3 +79,4 @@ export const FAQ_CATEGORIES = [
     ]
   }
 ];
+

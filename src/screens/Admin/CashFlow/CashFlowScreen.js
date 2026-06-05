@@ -116,7 +116,7 @@ export default function CashFlowScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
         {/* II.5.A CHỈ SỐ DOANH THU (GOLDEN NUMBERS) */}
         <Animated.View entering={FadeInDown.delay(100)} style={styles.goldenNumbers}>
-          <LinearGradient colors={['#1E293B', '#0F172A']} style={styles.mainBalanceCard}>
+          <LinearGradient colors={['#111111', '#050505']} style={styles.mainBalanceCard}>
             <View style={styles.balanceHeader}>
               <View>
                 <Text style={styles.goldLabel}>Doanh thu thực tế (Net)</Text>
@@ -253,3 +253,4 @@ export default function CashFlowScreen({ navigation }) {
     </View>
   );
 }
+

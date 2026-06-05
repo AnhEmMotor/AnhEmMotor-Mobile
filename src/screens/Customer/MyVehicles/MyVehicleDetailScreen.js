@@ -438,9 +438,9 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
 
             <ScrollView showsVerticalScrollIndicator={false} style={[styles.invoiceScroll, { backgroundColor: '#F8FAFC', borderRadius: 12, padding: 15 }]}>
               <View style={{ alignItems: 'center', marginBottom: 15 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#1E293B' }}>CÔNG TY CỔ PHẦN ANHEMMOTOR</Text>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#111111' }}>CÔNG TY CỔ PHẦN ANHEMMOTOR</Text>
                 <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>Showroom 5 Sao Biên Hòa, Đồng Nai</Text>
-                <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#3B82F6', marginTop: 8 }}>HÓA ĐƠN GIÁ TRỊ GIA TĂNG (GTGT)</Text>
+                <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#E31B23', marginTop: 8 }}>HÓA ĐƠN GIÁ TRỊ GIA TĂNG (GTGT)</Text>
                 <Text style={{ fontSize: 10, color: '#64748B' }}>Mẫu số: HD-SH125-99882 · Ngày: 15/05/2024</Text>
               </View>
 
@@ -572,12 +572,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginRight: 8 
   },
-  saveBtn: { backgroundColor: '#3B82F6', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
+  saveBtn: { backgroundColor: '#E31B23', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
   saveBtnText: { color: '#FFF', fontSize: 12, fontWeight: 'bold' },
   
   plateContainer: { 
     borderWidth: 2, 
-    borderColor: '#1E293B', 
+    borderColor: '#111111', 
     backgroundColor: '#FFF', 
     borderRadius: 8, 
     padding: 4,
@@ -595,8 +595,8 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     alignItems: 'center' 
   },
-  plateHeader: { fontSize: 12, fontWeight: '900', color: '#1E293B' },
-  plateBody: { fontSize: 16, fontWeight: '900', color: '#1E293B', marginTop: 1 },
+  plateHeader: { fontSize: 12, fontWeight: '900', color: '#111111' },
+  plateBody: { fontSize: 16, fontWeight: '900', color: '#111111', marginTop: 1 },
   
   idCard: { padding: 15, borderRadius: 16, marginTop: 5 },
   idRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
@@ -702,13 +702,14 @@ const styles = StyleSheet.create({
   manualTipCard: { padding: 12, borderRadius: 12 },
   tipTitle: { fontSize: 13, fontWeight: 'bold', marginBottom: 6 },
   tipDesc: { fontSize: 11, lineHeight: 16, marginTop: 2 },
-  closeModalBtn: { backgroundColor: '#3B82F6', height: 45, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  closeModalBtn: { backgroundColor: '#E31B23', height: 45, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   closeBtnText: { color: '#FFF', fontWeight: 'bold' },
 
   invoiceScroll: { maxHeight: 320, padding: 12 },
   invoiceDivider: { height: 1, backgroundColor: '#E2E8F0', marginVertical: 12, borderStyle: 'dashed' },
   invoiceRow: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 4 },
   invLabel: { color: '#64748B', fontSize: 12 },
-  invVal: { color: '#1E293B', fontSize: 12, fontWeight: 'bold', textAlign: 'right', flex: 1, marginLeft: 15 },
+  invVal: { color: '#111111', fontSize: 12, fontWeight: 'bold', textAlign: 'right', flex: 1, marginLeft: 15 },
   invoiceActionBtn: { flex: 1, height: 40, borderRadius: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }
 });
+

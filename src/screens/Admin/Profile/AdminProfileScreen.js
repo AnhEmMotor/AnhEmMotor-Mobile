@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Theme, useActiveColors } from '../../../theme/Theme';
+import { useGlobalState } from '../../../context/GlobalState';
 import { 
   Settings, 
   LogOut, 
   ChevronRight, 
+  ChevronLeft,
   User, 
   ShieldCheck, 
   Database, 
@@ -48,6 +50,7 @@ const getStyles = (colors) => StyleSheet.create({
 export default function AdminProfileScreen({ navigation }) {
   const colors = useActiveColors();
   const styles = getStyles(colors);
+  const { setSettingsOpen } = useGlobalState();
 
   const adminMenuItems = [
     { icon: <User color={colors.primary} size={22} />, label: 'Thông tin tài khoản Admin', sub: 'Quản lý thông cá nhân & Avatar' },
@@ -57,9 +60,23 @@ export default function AdminProfileScreen({ navigation }) {
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
-        <Text style={styles.title}>Quản trị viên</Text>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: Theme.spacing.xl }} showsVerticalScrollIndicator={false}>
+      <Animated.View entering={FadeInUp.duration(600)} style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => navigation.canGoBack() && navigation.goBack()}
+            style={{ width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center', marginRight: Theme.spacing.sm, backgroundColor: colors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)' }}
+          >
+            <ChevronLeft color={colors.isDark ? '#fff' : '#000'} size={20} />
+          </TouchableOpacity>
+          <Text style={styles.title}>Quản trị viên</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => setSettingsOpen(true)}
+          style={{ width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)' }}
+        >
+          <Settings color={colors.isDark ? '#fff' : '#000'} size={20} />
+        </TouchableOpacity>
       </Animated.View>
 
       {/* Admin Header */}

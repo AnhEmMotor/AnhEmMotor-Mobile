@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window');
 
 // Use dark theme as default fallback since background colors are dynamic
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_CARD = '#1E293B';
+const DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
 
@@ -65,14 +65,14 @@ export const styles = StyleSheet.create({
   // Modals Styling
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)' },
-  modalSheet: { backgroundColor: '#0F172A', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: verticalScale(40), borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', borderBottomWidth: 0 },
+  modalSheet: { backgroundColor: '#050505', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: verticalScale(40), borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', borderBottomWidth: 0 },
   modalHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.15)', alignSelf: 'center', marginBottom: 20 },
   modalTitleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   modalTitle: { color: Theme.staticColors.text, fontSize: moderateScale(22), fontWeight: 'bold' },
   modalSub: { color: Theme.staticColors.subtext, fontSize: moderateScale(13), marginBottom: 25 },
 
   // Map Tracking Modal
-  mapContainer: { width: '100%', height: 220, backgroundColor: '#1E293B', borderRadius: 20, overflow: 'hidden', marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
+  mapContainer: { width: '100%', height: 220, backgroundColor: '#111111', borderRadius: 20, overflow: 'hidden', marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
   mapGrid: { ...StyleSheet.absoluteFillObject, opacity: 0.15 },
   roadLine: { position: 'absolute', width: '80%', height: 3, backgroundColor: 'rgba(255,255,255,0.1)', top: '50%' },
   roadActiveLine: { position: 'absolute', width: '45%', height: 3, backgroundColor: Theme.staticColors.primary, top: '50%', left: '10%' },
@@ -114,7 +114,7 @@ export const styles = StyleSheet.create({
   invoiceTitle: { color: '#475569', fontSize: moderateScale(11), fontWeight: 'bold' },
   invoiceRow: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 6 },
   invoiceLabel: { color: '#64748B', fontSize: moderateScale(13) },
-  invoiceVal: { color: '#1E293B', fontSize: moderateScale(13), fontWeight: 'bold' },
+  invoiceVal: { color: '#111111', fontSize: moderateScale(13), fontWeight: 'bold' },
   invoiceTotalRow: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: '#E2E8F0', paddingTop: 12, marginTop: 12 },
   invoiceTotalVal: { color: '#1E3A8A', fontSize: moderateScale(18), fontWeight: 'bold' },
 
@@ -259,8 +259,8 @@ export const styles = StyleSheet.create({
   
   dashedVoucherBody: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 12, borderStyle: 'dashed', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', height: 80, overflow: 'hidden', marginBottom: 15 },
   dashedVoucherLeft: { width: '30%', backgroundColor: 'rgba(59, 130, 246, 0.1)', justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.1)', borderStyle: 'dashed' },
-  voucherValBig: { color: '#3B82F6', fontSize: moderateScale(28), fontWeight: '900' },
-  voucherValLabel: { color: '#3B82F6', fontSize: moderateScale(9), fontWeight: 'bold', letterSpacing: 1 },
+  voucherValBig: { color: '#E31B23', fontSize: moderateScale(28), fontWeight: '900' },
+  voucherValLabel: { color: '#E31B23', fontSize: moderateScale(9), fontWeight: 'bold', letterSpacing: 1 },
   dashedVoucherRight: { flex: 1, paddingLeft: 16, justifyContent: 'center' },
   voucherNameTitle: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
   voucherCodeLabel: { color: Theme.staticColors.subtext, fontSize: moderateScale(11), marginTop: 4, letterSpacing: 0.5 },
@@ -281,9 +281,9 @@ export const styles = StyleSheet.create({
   // Block 4: Referral styles
   loyaltyReferralCard: { backgroundColor: 'rgba(59, 130, 246, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)' },
   loyaltyReferralHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  loyaltyReferralTitle: { color: '#3B82F6', fontSize: moderateScale(15), fontWeight: 'bold' },
+  loyaltyReferralTitle: { color: '#E31B23', fontSize: moderateScale(15), fontWeight: 'bold' },
   referralActiveBadge: { backgroundColor: 'rgba(59, 130, 246, 0.15)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12 },
-  referralActiveBadgeText: { color: '#3B82F6', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
+  referralActiveBadgeText: { color: '#E31B23', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
   
   referralCodeDashCard: { backgroundColor: '#1E1B4B', padding: 16, borderRadius: 12, alignItems: 'center', marginBottom: 15, borderWidth: 1, borderColor: 'rgba(99, 102, 241, 0.2)' },
   referralCodeTextVal: { color: '#fff', fontSize: moderateScale(22), fontWeight: '900', letterSpacing: 1.5 },
@@ -325,11 +325,11 @@ export const styles = StyleSheet.create({
   // Block 4: Feedback Card
   systemFeedbackCard: { backgroundColor: 'rgba(59, 130, 246, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)' },
   systemFeedbackHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  systemFeedbackTitle: { color: '#3B82F6', fontSize: moderateScale(15), fontWeight: 'bold' },
+  systemFeedbackTitle: { color: '#E31B23', fontSize: moderateScale(15), fontWeight: 'bold' },
   feedbackBlueBadge: { backgroundColor: 'rgba(59, 130, 246, 0.15)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12 },
-  feedbackBlueBadgeText: { color: '#3B82F6', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
+  feedbackBlueBadgeText: { color: '#E31B23', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
   
-  feedbackParchmentPaper: { backgroundColor: 'rgba(255,255,255,0.02)', padding: 14, borderRadius: 12, marginBottom: 12, borderLeftWidth: 3, borderLeftColor: '#3B82F6' },
+  feedbackParchmentPaper: { backgroundColor: 'rgba(255,255,255,0.02)', padding: 14, borderRadius: 12, marginBottom: 12, borderLeftWidth: 3, borderLeftColor: '#E31B23' },
   feedbackParchmentBody: { color: 'rgba(255,255,255,0.6)', fontSize: moderateScale(12), fontStyle: 'italic', lineHeight: 18 },
   systemFeedbackDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
@@ -341,3 +341,4 @@ export const styles = StyleSheet.create({
   securityAlertBadgeText: { color: '#E11D48', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
   systemSecurityDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 }
 });
+

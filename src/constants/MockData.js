@@ -50,5 +50,5 @@ export const MOCK_MOTORS = [
 export const MOCK_LEADS = [
   { id: '1', name: 'Nguyễn Văn Khôi', interest: 'Honda SH 160i', status: 'Hot', color: '#EF4444', time: 'Vừa xong' },
   { id: '2', name: 'Trần Minh Nam', interest: 'Yamaha Exciter 155', status: 'Warm', color: '#F59E0B', time: '2 giờ trước' },
-  { id: '3', name: 'Lê Thảo Nhi', interest: 'VinFast Klara S', status: 'Cold', color: '#3B82F6', time: '1 ngày trước' }
+  { id: '3', name: 'Lê Thảo Nhi', interest: 'VinFast Klara S', status: 'Cold', color: '#E31B23', time: '1 ngày trước' }
 ];

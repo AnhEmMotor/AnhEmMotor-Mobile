@@ -40,12 +40,12 @@ const getStyles = (colors) => StyleSheet.create({
   title: { color: colors.text, fontSize: 20, fontWeight: 'bold' },
 
   infoBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary + '1A', padding: 12, borderRadius: 0, borderWidth: 1, borderColor: colors.primary + '33', marginBottom: 16 },
-  infoText: { color: colors.subtext, fontSize: 12, marginLeft: 8, flex: 1 },
+  infoText: { color: colors.text, fontSize: 12, marginLeft: 8, flex: 1 },
 
   orderCard: { padding: 18, marginBottom: 16, overflow: 'hidden', borderWidth: 1, borderColor: colors.border },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
   orderCodeText: { color: colors.text, fontSize: 16, fontWeight: 'bold' },
-  vehicleText: { color: colors.subtext, fontSize: 13, marginTop: 2 },
+  vehicleText: { color: colors.text, fontSize: 13, marginTop: 2 },
   
   financeBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 0 },
   financeText: { fontSize: 11, fontWeight: 'bold' },
@@ -57,11 +57,11 @@ const getStyles = (colors) => StyleSheet.create({
   stepItem: { flex: 1, alignItems: 'center' },
   stepIndicatorRow: { flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'center' },
   stepCircle: { width: 20, height: 20, borderRadius: 0, borderWidth: 2, borderColor: colors.border, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
-  stepNum: { color: colors.subtext, fontSize: 10, fontWeight: 'bold' },
+  stepNum: { color: colors.text, fontSize: 10, fontWeight: 'bold' },
   stepLine: { height: 2, backgroundColor: colors.border, flex: 1, position: 'absolute', left: '50%', right: '-50%', top: 9, zIndex: 0 },
   
-  stepName: { color: colors.subtext, fontSize: 10, marginTop: 8, textAlign: 'center' },
-  stepTime: { color: colors.subtext, fontSize: 8, opacity: 0.5, marginTop: 2, textAlign: 'center' },
+  stepName: { color: colors.text, fontSize: 10, marginTop: 8, textAlign: 'center' },
+  stepTime: { color: colors.text, fontSize: 8, marginTop: 2, textAlign: 'center' },
 
   bottleneckAlertBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(239, 68, 68, 0.1)', padding: 10, borderRadius: 0, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.2)', marginVertical: 8 },
   bottleneckAlertText: { color: '#EF4444', fontSize: 11, fontWeight: 'bold', marginLeft: 8 },
@@ -75,7 +75,7 @@ const getStyles = (colors) => StyleSheet.create({
   mapTipText: { color: '#22D3EE', fontSize: 9, fontWeight: 'bold', marginLeft: 4 },
 
   logisticsFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 },
-  logisticsDriverText: { color: colors.subtext, fontSize: 11, marginLeft: 8 },
+  logisticsDriverText: { color: colors.text, fontSize: 11, marginLeft: 8 },
   smallCallBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#10B981', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 0 },
   smallCallText: { color: '#fff', fontSize: 10, fontWeight: 'bold', marginLeft: 4 },
 
@@ -96,18 +96,18 @@ const getStyles = (colors) => StyleSheet.create({
   driverInfoRow: { flexDirection: 'row', alignItems: 'center' },
   truckIconCircle: { width: 44, height: 44, borderRadius: 0, backgroundColor: colors.success + '20', justifyContent: 'center', alignItems: 'center' },
   driverName: { color: colors.text, fontSize: 15, fontWeight: 'bold' },
-  driverStatus: { color: colors.subtext, fontSize: 11, marginTop: 2 },
+  driverStatus: { color: colors.text, fontSize: 11, marginTop: 2 },
   callIconBtn: { width: 40, height: 40, borderRadius: 0, backgroundColor: '#10B981', justifyContent: 'center', alignItems: 'center' },
 
   etaBar: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 12, marginTop: 12 },
-  etaText: { color: colors.subtext, fontSize: 12, marginLeft: 8 },
+  etaText: { color: colors.text, fontSize: 12, marginLeft: 8 },
 
   partsAccordionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderTopWidth: 1, borderBottomWidth: 1, borderColor: colors.border, paddingHorizontal: 4 },
   partsAccordionTitle: { color: colors.text, fontSize: 14, fontWeight: '600', marginLeft: 8 },
   
   partsListContainer: { paddingVertical: 12, paddingHorizontal: 12 },
   partItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  partName: { color: colors.subtext, fontSize: 13, marginLeft: 8 }
+  partName: { color: colors.text, fontSize: 13, marginLeft: 8 }
 });
 
 export default function OrderManageScreen({ navigation }) {
@@ -222,12 +222,12 @@ export default function OrderManageScreen({ navigation }) {
                 <View style={styles.fullMapWrapper}>
                   <Svg width="100%" height={100} viewBox="0 0 400 300" style={{ height: 260 }}>
                     {/* Grid lines */}
-                    <Line x1="20" y1="50" x2="380" y2="50" stroke="#1E293B" strokeWidth="1" strokeDasharray="5,5" />
-                    <Line x1="20" y1="150" x2="380" y2="150" stroke="#1E293B" strokeWidth="1" strokeDasharray="5,5" />
-                    <Line x1="20" y1="250" x2="380" y2="250" stroke="#1E293B" strokeWidth="1" strokeDasharray="5,5" />
-                    <Line x1="100" y1="10" x2="100" y2="290" stroke="#1E293B" strokeWidth="1" strokeDasharray="5,5" />
-                    <Line x1="200" y1="10" x2="200" y2="290" stroke="#1E293B" strokeWidth="1" strokeDasharray="5,5" />
-                    <Line x1="300" y1="10" x2="300" y2="290" stroke="#1E293B" strokeWidth="1" strokeDasharray="5,5" />
+                    <Line x1="20" y1="50" x2="380" y2="50" stroke="#111111" strokeWidth="1" strokeDasharray="5,5" />
+                    <Line x1="20" y1="150" x2="380" y2="150" stroke="#111111" strokeWidth="1" strokeDasharray="5,5" />
+                    <Line x1="20" y1="250" x2="380" y2="250" stroke="#111111" strokeWidth="1" strokeDasharray="5,5" />
+                    <Line x1="100" y1="10" x2="100" y2="290" stroke="#111111" strokeWidth="1" strokeDasharray="5,5" />
+                    <Line x1="200" y1="10" x2="200" y2="290" stroke="#111111" strokeWidth="1" strokeDasharray="5,5" />
+                    <Line x1="300" y1="10" x2="300" y2="290" stroke="#111111" strokeWidth="1" strokeDasharray="5,5" />
 
                     {/* Main road path */}
                     <Path 
@@ -246,7 +246,7 @@ export default function OrderManageScreen({ navigation }) {
                     />
 
                     {/* Start point */}
-                    <Circle cx="50" cy="250" r="8" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
+                    <Circle cx="50" cy="250" r="8" fill="#111111" stroke="#64748B" strokeWidth="2" />
                     <Circle cx="50" cy="250" r="4" fill={colors.primary} />
                     
                     {/* End point */}
@@ -255,7 +255,7 @@ export default function OrderManageScreen({ navigation }) {
                     
                     {/* Labels */}
                     <G>
-                      <Rect x="20" y="265" width="70" height="18" rx="4" fill="#1E293B" />
+                      <Rect x="20" y="265" width="70" height="18" rx="4" fill="#111111" />
                       <Text style={{ fill: '#94A3B8', fontSize: 9, fontWeight: 'bold' }} x="25" y="277">KHO TỔNG</Text>
                     </G>
                     <G>
@@ -414,8 +414,8 @@ function renderOrderCardContent(order, openLogistics, colors, styles) {
           <Pressable style={styles.miniMapPressable} onPress={() => openLogistics(order)}>
             <View style={styles.miniMapOverlayContainer}>
               <Svg width="100%" height={100} viewBox="0 0 350 100">
-                <Line x1="10" y1="30" x2="340" y2="30" stroke="#1E293B" strokeWidth="1" strokeDasharray="3,3" />
-                <Line x1="10" y1="70" x2="340" y2="70" stroke="#1E293B" strokeWidth="1" strokeDasharray="3,3" />
+                <Line x1="10" y1="30" x2="340" y2="30" stroke="#111111" strokeWidth="1" strokeDasharray="3,3" />
+                <Line x1="10" y1="70" x2="340" y2="70" stroke="#111111" strokeWidth="1" strokeDasharray="3,3" />
                 
                 <Path d="M 30 80 C 120 70, 200 30, 310 20" fill="none" stroke="#22D3EE" strokeWidth="2.5" />
                 
@@ -456,3 +456,4 @@ function renderOrderCardContent(order, openLogistics, colors, styles) {
     </View>
   );
 }
+

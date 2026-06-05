@@ -206,7 +206,7 @@ export default function HomeDetailScreen({ route, navigation }) {
         <GlassCard style={[getStyles(theme).contentCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]} intensity={15}>
           {/* Featured Alert Banner Image */}
           <View style={getStyles(theme).voucherImageWrapper}>
-            <Image source={{ uri: alertImg }} style={getStyles(theme).voucherImageBanner} />
+            <Image source={{ uri: alertImg }} style={getStyles(theme).voucherImageBanner} resizeMode="cover" />
             <View style={[getStyles(theme).voucherImageOverlayBadge, { backgroundColor: theme.colors.warning }]}>
               <Text style={getStyles(theme).voucherImageOverlayText}>BẢO DƯỠNG ĐỊNH KỲ</Text>
             </View>
@@ -346,7 +346,7 @@ export default function HomeDetailScreen({ route, navigation }) {
         <GlassCard style={[getStyles(theme).contentCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]} intensity={15}>
           {/* Featured Voucher Banner Image */}
           <View style={getStyles(theme).voucherImageWrapper}>
-            <Image source={{ uri: voucherImg }} style={getStyles(theme).voucherImageBanner} />
+            <Image source={{ uri: voucherImg }} style={getStyles(theme).voucherImageBanner} resizeMode="cover" />
             <View style={[getStyles(theme).voucherImageOverlayBadge, { backgroundColor: theme.colors.primary }]}>
               <Text style={getStyles(theme).voucherImageOverlayText}>VIP GIFT</Text>
             </View>
@@ -367,7 +367,7 @@ export default function HomeDetailScreen({ route, navigation }) {
               {/* Row 1: Thời gian */}
               <View style={styles.infoBoardRow}>
                 <View style={[styles.infoIconBg, { backgroundColor: 'rgba(59,130,246,0.1)' }]}>
-                  <Calendar color="#3B82F6" size={16} />
+                  <Calendar color="#E31B23" size={16} />
                 </View>
                 <View style={styles.infoBoardCol}>
                   <Text style={[styles.infoLabel, { color: colors.subtext }]}>Thời gian áp dụng</Text>
@@ -1519,7 +1519,6 @@ const getStyles = (theme) => StyleSheet.create({
   voucherImageBanner: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   voucherImageOverlayBadge: {
     position: 'absolute',
@@ -1626,3 +1625,4 @@ const getStyles = (theme) => StyleSheet.create({
   bookingTimeCardActive: { backgroundColor: '#2E5BFF', borderColor: '#2E5BFF' },
   bookingTimeText: { fontSize: moderateScale(12), fontWeight: 'bold' },
 });
+

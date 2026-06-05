@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { LayoutGrid, Car, User, LifeBuoy, Motorbike, Package, Bell, BarChart2, Calendar, Users, Truck, MessageSquare } from 'lucide-react-native';
-import { Theme } from '../theme/Theme';
+import { Theme, useActiveColors } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -42,11 +42,13 @@ import SupportHubScreen from '../screens/Admin/SupportHubScreen';
 import OrderManageScreen from '../screens/Admin/OrderManageScreen';
 import HubScreen from '../screens/Admin/HubScreen';
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
+import { navigationRef } from './RootNavigation';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function CustomerTabs() {
+  const activeColors = useActiveColors();
   const { themeMode } = useGlobalState();
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
@@ -55,10 +57,10 @@ function CustomerTabs() {
   const barHeight = 55 + bottomInset;
   const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
 
-  const tabBg = isDark ? '#111827' : '#FFFFFF';
+  const tabBg = activeColors.background;
   const tabActiveText = Theme.staticColors.primary;
-  const tabInactiveText = isDark ? '#64748B' : '#94A3B8';
-  const tabBorderTop = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  const tabInactiveText = activeColors.subtext;
+  const tabBorderTop = activeColors.border;
 
   return (
     <Tab.Navigator screenOptions={{
@@ -109,6 +111,7 @@ function CustomerTabs() {
 }
 
 function AdminTabs() {
+  const activeColors = useActiveColors();
   const { themeMode } = useGlobalState();
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
@@ -117,10 +120,10 @@ function AdminTabs() {
   const barHeight = 55 + bottomInset;
   const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
 
-  const tabBg = isDark ? '#0F172A' : '#FFFFFF';
+  const tabBg = activeColors.background;
   const tabActiveText = Theme.staticColors.primary;
-  const tabInactiveText = isDark ? '#64748B' : '#94A3B8';
-  const tabBorderTop = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+  const tabInactiveText = activeColors.subtext;
+  const tabBorderTop = activeColors.border;
 
   return (
     <Tab.Navigator screenOptions={{
@@ -153,7 +156,7 @@ function AdminTabs() {
         tabBarIcon: ({color}) => <Calendar color={color} size={24} />,
         tabBarLabel: 'Lịch hẹn',
         tabBarBadge: 2, // Red notification badge
-        tabBarBadgeStyle: { backgroundColor: '#DC2626', color: '#fff', fontSize: 10, fontWeight: 'bold' }
+        tabBarBadgeStyle: { backgroundColor: Theme.staticColors.error, color: Theme.staticColors.secondary, fontSize: 10, fontWeight: 'bold' }
       }} />
       <Tab.Screen name="AdminOrders" component={OrderManageScreen} options={{
         tabBarIcon: ({color}) => <Truck color={color} size={24} />,
@@ -173,7 +176,7 @@ function AdminTabs() {
 
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="CustomerHome" component={CustomerTabs} />
@@ -210,3 +213,4 @@ export default function AppNavigator() {
     </NavigationContainer>
   );
 }
+
