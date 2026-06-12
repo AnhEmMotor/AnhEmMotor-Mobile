@@ -114,5 +114,4 @@ jobs:
           name: Latest Release
           files: |
             release-files/app-release.apk
-            release-files/AnhEmMotorMobile.app
           make_latest: true
