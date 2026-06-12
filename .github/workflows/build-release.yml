@@ -68,14 +68,12 @@ jobs:
         run: |
           cd ios
           xcodebuild -workspace AnhEmMotorMobile.xcworkspace -scheme AnhEmMotorMobile -configuration Release -sdk iphonesimulator -derivedDataPath build
-          cd build/Build/Products/Release-iphonesimulator
-          zip -r ../../../../../ios-app.zip AnhEmMotorMobile.app
 
       - name: Upload iOS Artifact
         uses: actions/upload-artifact@v7
         with:
           name: ios-app
-          path: ios-app.zip
+          path: ios/build/Build/Products/Release-iphonesimulator/AnhEmMotorMobile.app
 
   release:
     name: Update Release
@@ -116,5 +114,5 @@ jobs:
           name: Latest Release
           files: |
             release-files/app-release.apk
-            release-files/ios-app.zip
+            release-files/AnhEmMotorMobile.app
           make_latest: true
