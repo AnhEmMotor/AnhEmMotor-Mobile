@@ -126,6 +126,7 @@ export const useActiveColors = () => {
 
   return {
     isDark,
+    ...Theme.staticColors,
     ...activePalette,
   };
 };

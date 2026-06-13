@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Pressable, Image, Linking, TouchableOpacity, Modal, FlatList, ActivityIndicator } from 'react-native';
-import { Theme, useActiveColors } from '../../../theme/Theme';
+import { StyleSheet, Text, View, ScrollView, Pressable, Image, Linking, TouchableOpacity, Modal, FlatList, ActivityIndicator, TextInput } from 'react-native';
+import { Theme, useTheme } from '../../../theme/Theme';
 import { 
   Calendar as CalendarIcon, 
   Clock, 
@@ -15,7 +15,9 @@ import {
   Users,
   Award,
   AlertCircle,
-  ChevronLeft
+  ChevronLeft,
+  Search,
+  Plus
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp, Layout } from 'react-native-reanimated';
@@ -32,8 +34,8 @@ const getStyles = (colors) => StyleSheet.create({
   
   tabContainer: { 
     flexDirection: 'row', 
-    backgroundColor: colors.card, 
-    borderRadius: 0, 
+    backgroundColor: colors.surface, 
+    borderRadius: 8, 
     padding: 4, 
     marginTop: Theme.spacing.md,
     borderWidth: 1,
@@ -44,12 +46,28 @@ const getStyles = (colors) => StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    paddingVertical: 12, 
-    borderRadius: 0 
+    paddingVertical: 10, 
+    borderRadius: 6 
   },
   activeTab: { backgroundColor: colors.primary },
-  tabText: { color: colors.subtext, fontWeight: '600', marginLeft: 8, fontSize: 14 },
+  tabText: { color: colors.subtext, fontWeight: '600', fontSize: 14 },
   activeTabText: { color: '#fff' },
+
+  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface, borderRadius: 8, paddingHorizontal: 12, marginTop: 16, height: 44, borderWidth: 1, borderColor: colors.border },
+  searchInput: { flex: 1, marginLeft: 8, color: colors.text, fontSize: 14 },
+  
+  filterContainer: { flexDirection: 'row', marginTop: 12, marginBottom: 4 },
+  filterChip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, marginRight: 8 },
+  filterChipActive: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: colors.primary + '1A', borderWidth: 1, borderColor: colors.primary, marginRight: 8 },
+  filterText: { color: colors.subtext, fontSize: 13, fontWeight: '600' },
+  filterTextActive: { color: colors.primary, fontSize: 13, fontWeight: '600' },
+
+  overviewContainer: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: colors.surface, padding: 16, borderRadius: 8, borderWidth: 1, borderColor: colors.border, marginVertical: 12 },
+  overviewItem: { alignItems: 'center', flex: 1 },
+  overviewValue: { fontSize: 18, fontWeight: 'bold', marginTop: 4, color: colors.text },
+  overviewLabel: { fontSize: 12, color: colors.subtext, marginTop: 2, textAlign: 'center' },
+
+  fab: { position: 'absolute', right: 20, bottom: 20, width: 56, height: 56, borderRadius: 28, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84 },
 
   dateSelector: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: Theme.spacing.md },
   dateLabel: { color: colors.text, fontSize: 16, fontWeight: 'bold' },
@@ -128,7 +146,7 @@ const getStyles = (colors) => StyleSheet.create({
 });
 
 export default function AppointmentManageScreen({ navigation }) {
-  const colors = useActiveColors();
+  const { colors } = useTheme();
   const styles = getStyles(colors);
   const primaryColor = colors.primary || Theme.staticColors.primary;
   const pendingTextColor = colors.isDark ? '#fff' : colors.text;
@@ -186,25 +204,45 @@ export default function AppointmentManageScreen({ navigation }) {
               <ChevronLeft color={colors.text} size={20} />
             </TouchableOpacity>
           )}
-          <Text style={[styles.title, (navigation && navigation.canGoBack && navigation.canGoBack()) && { marginLeft: 10 }]}>Lịch Showroom 📅</Text>
+          <Text style={[styles.title, (navigation && navigation.canGoBack && navigation.canGoBack()) && { marginLeft: 10 }]}>LỊCH SHOWROOM</Text>
         </View>
+        <Text style={{ color: colors.text, fontSize: 16, marginTop: 8, fontWeight: '600' }}>Hôm nay, 06/06/2026</Text>
+        <Text style={{ color: colors.subtext, fontSize: 14, marginTop: 4 }}>12 lịch lái thử • 4 lịch dịch vụ</Text>
         
         <View style={styles.tabContainer}>
           <Pressable 
             style={[styles.tab, activeTab === 'test_drive' && styles.activeTab]} 
             onPress={() => setActiveTab('test_drive')}
           >
-            <Bike color={activeTab === 'test_drive' ? '#fff' : colors.subtext} size={18} />
-            <Text style={[styles.tabText, activeTab === 'test_drive' && styles.activeTabText]}>Lịch Lái Thử</Text>
+            <Text style={[styles.tabText, activeTab === 'test_drive' && styles.activeTabText]}>Lái thử (12)</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'service' && styles.activeTab]} 
             onPress={() => setActiveTab('service')}
           >
-            <CalendarIcon color={activeTab === 'service' ? '#fff' : colors.subtext} size={18} />
-            <Text style={[styles.tabText, activeTab === 'service' && styles.activeTabText]}>Lịch Dịch Vụ</Text>
+            <Text style={[styles.tabText, activeTab === 'service' && styles.activeTabText]}>Dịch vụ (4)</Text>
           </Pressable>
         </View>
+
+        <View style={styles.searchContainer}>
+          <Search color={colors.subtext} size={18} />
+          <TextInput placeholder="Tìm khách hàng..." style={styles.searchInput} placeholderTextColor={colors.subtext} />
+        </View>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+          <TouchableOpacity style={styles.filterChipActive}>
+            <Text style={styles.filterTextActive}>Tất cả</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterChip}>
+            <Text style={styles.filterText}>Chờ phân bổ</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterChip}>
+            <Text style={styles.filterText}>Đã phân công</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterChip}>
+            <Text style={styles.filterText}>Đã xác nhận</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </Animated.View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
@@ -212,11 +250,29 @@ export default function AppointmentManageScreen({ navigation }) {
           
           /* 🏎️ LỊCH LÁI THỬ (100% CHIỀU DỌC - QUY TẮC 3 GIÂY) */
           <View>
-            <View style={styles.dateSelector}>
-              <Text style={styles.dateLabel}>Tiếp nhận khách mới</Text>
-              <Pressable style={styles.calendarBtn} onPress={refreshAppointments}>
-                <Clock color={colors.primary} size={18} />
-              </Pressable>
+            {/* TỔNG QUAN */}
+            <View style={styles.overviewContainer}>
+              <View style={styles.overviewItem}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.error, marginRight: 6 }} />
+                  <Text style={styles.overviewValue}>4</Text>
+                </View>
+                <Text style={styles.overviewLabel}>Chờ phân bổ</Text>
+              </View>
+              <View style={styles.overviewItem}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success, marginRight: 6 }} />
+                  <Text style={styles.overviewValue}>6</Text>
+                </View>
+                <Text style={styles.overviewLabel}>Đã phân công</Text>
+              </View>
+              <View style={styles.overviewItem}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#3B82F6', marginRight: 6 }} />
+                  <Text style={styles.overviewValue}>2</Text>
+                </View>
+                <Text style={styles.overviewLabel}>Xác nhận</Text>
+              </View>
             </View>
 
             {appointments.length === 0 ? (
@@ -231,70 +287,69 @@ export default function AppointmentManageScreen({ navigation }) {
                   entering={FadeInDown.delay(index * 100)} 
                   layout={Layout.springify()}
                 >
-                  <GlassCard style={styles.appointmentCard}>
-                    {/* Dòng 1: Trạng thái & Giờ */}
-                    <View style={styles.cardRow1}>
-                      <Text style={styles.timeText}>{item.timeSlot}</Text>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('AdminAppointmentDetail', { appointment: item })}>
+                    <GlassCard style={[styles.appointmentCard, { padding: 12 }]}>
+                      {/* Dòng 1: Giờ & Trạng thái nằm ngang */}
+                      <View style={[styles.cardRow1, { marginBottom: 8 }]}>
+                        <Text style={styles.timeText}>{item.timeSlot}{item.date ? ` - ${item.date}` : ''}</Text>
                       {item.status === 'pending' ? (
-                        <View style={[styles.badge, styles.badgePending]}>
-                          <View style={[styles.badgeDot, { backgroundColor: colors.error }]} />
-                          <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.badgeText, { color: colors.error }]}>Chờ phân bổ</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.error, marginRight: 6 }} />
+                          <Text style={{ fontSize: 13, color: colors.error, fontWeight: 'bold' }}>Chờ phân bổ</Text>
                         </View>
                       ) : (
-                        <View style={[styles.badge, styles.badgeSuccess]}>
-                          <View style={[styles.badgeDot, { backgroundColor: colors.success }]} />
-                          <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.badgeText, { color: colors.success }]}>Đã chỉ định</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success, marginRight: 6 }} />
+                          <Text style={{ fontSize: 13, color: colors.success, fontWeight: 'bold' }}>Đã phân công</Text>
                         </View>
                       )}
                     </View>
 
-                    {/* Dòng 2: Tên Khách Hàng (VIẾT HOA, CỠ LỚN) */}
-                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.customerName}>{item.customerName}</Text>
+                    {/* Dòng 2: Tên Khách Hàng */}
+                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.customerName, { marginBottom: 4 }]}>{item.customerName}</Text>
 
                     {/* Dòng 3: Chi Tiết Xe */}
-                    <View style={styles.bikeInfoRow}>
-                      <Bike color={colors.subtext} size={16} />
-                      <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.bikeText}>Xe lái thử: <Text style={styles.bikeBold}>{item.vehicleName}</Text></Text>
+                    <View style={[styles.bikeInfoRow, { marginBottom: 4 }]}>
+                      <Text style={{ fontSize: 14, color: colors.text }}>🏍</Text>
+                      <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.bikeText, { marginLeft: 6 }]}>{item.vehicleName}</Text>
                     </View>
 
                     {/* Hiển thị nhân viên được chỉ định nếu đã có */}
                     {item.assignedSaleName && (
-                      <View style={styles.assignedSaleRow}>
-                        <Users color={colors.primary} size={14} />
-                        <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.assignedSaleText}>Sale phụ trách: <Text style={{ color: colors.text, fontWeight: '600' }}>{item.assignedSaleName}</Text></Text>
+                      <View style={[styles.bikeInfoRow, { marginBottom: 4 }]}>
+                        <Text style={{ fontSize: 14, color: colors.text }}>👤</Text>
+                        <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.bikeText, { marginLeft: 6, fontWeight: '600' }]}>{item.assignedSaleName}</Text>
                       </View>
                     )}
 
-                    {/* Dòng 4: Cụm Nút Hành Động 1-Chạm (One-Touch) */}
-                    <View style={styles.actionRow}>
-                      {/* Nút phụ: Gọi điện */}
+                    {/* Dòng 4: Cụm Nút Hành Động Ngắn Gọn */}
+                    <View style={[styles.actionRow, { marginTop: 8, paddingTop: 8 }]}>
                       <TouchableOpacity 
-                        style={styles.callIconBtn} 
+                        style={[styles.callIconBtn, { width: 36, height: 36, borderRadius: 18 }]} 
                         onPress={() => Linking.openURL(`tel:${item.customerPhone}`)}
                       >
-                        <Phone color={colors.text} size={18} />
+                        <Phone color={colors.text} size={16} />
                       </TouchableOpacity>
 
-                      {/* Nút chính: Chỉ định Sale */}
                       <TouchableOpacity 
                         style={[
                           styles.mainActionBtn,
                           {
-                            backgroundColor: primaryColor + '45',
-                            borderColor: primaryColor + '60',
-                            borderWidth: 1
+                            height: 36, borderRadius: 6, backgroundColor: 'transparent',
+                            justifyContent: 'flex-start', marginLeft: 16, flex: 1, borderWidth: 0
                           }
                         ]}
                         onPress={() => openAssignModal(item.id)}
                       >
-                        <Users color={actionContentColor} size={18} />
-                        <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.mainActionBtnText, { color: actionContentColor, marginLeft: 8 }]}>
+                        <Text style={{ fontSize: 14, color: colors.text }}>{item.status === 'pending' ? '👤' : '🔄'}</Text>
+                        <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.mainActionBtnText, { color: actionContentColor, marginLeft: 8, fontSize: 14 }]}>
                           {item.status === 'pending' ? 'Chỉ định Sale' : 'Đổi nhân viên'}
                         </Text>
                       </TouchableOpacity>
                     </View>
 
-                  </GlassCard>
+                    </GlassCard>
+                  </TouchableOpacity>
                 </Animated.View>
               ))
             )}
@@ -320,10 +375,11 @@ export default function AppointmentManageScreen({ navigation }) {
                   entering={FadeInDown.delay(index * 100)}
                   layout={Layout.springify()}
                 >
-                  <GlassCard style={styles.appointmentCard}>
-                    {/* Dòng 1: Giờ & Biển Số Viết Hoa Nổi Bật */}
-                    <View style={styles.cardRow1}>
-                      <Text style={styles.timeText}>{item.timeSlot}</Text>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('AdminAppointmentDetail', { appointment: item })}>
+                    <GlassCard style={styles.appointmentCard}>
+                      {/* Dòng 1: Giờ & Biển Số Viết Hoa Nổi Bật */}
+                      <View style={styles.cardRow1}>
+                        <Text style={styles.timeText}>{item.timeSlot}{item.date ? ` - ${item.date}` : ''}</Text>
                       <View style={styles.plateContainer}>
                         <Text style={styles.plateText}>{item.licensePlate}</Text>
                       </View>
@@ -435,7 +491,8 @@ export default function AppointmentManageScreen({ navigation }) {
                       )}
                     </View>
 
-                  </GlassCard>
+                    </GlassCard>
+                  </TouchableOpacity>
                 </Animated.View>
               ))
             )}
@@ -487,6 +544,10 @@ export default function AppointmentManageScreen({ navigation }) {
           </View>
         </View>
       </Modal>
+
+      <TouchableOpacity style={styles.fab}>
+        <Plus color="#fff" size={24} />
+      </TouchableOpacity>
     </View>
   );
 }

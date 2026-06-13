@@ -17,6 +17,7 @@ let inMemoryAppointments = [
   {
     id: '1',
     type: 'test_drive',
+    date: '10/06/2026',
     timeSlot: '09:30',
     status: 'pending', // 'pending', 'assigned', 'confirmed'
     customerName: 'ANH NGUYỄN AN KHÔI',
@@ -28,6 +29,7 @@ let inMemoryAppointments = [
   {
     id: '2',
     type: 'test_drive',
+    date: '10/06/2026',
     timeSlot: '10:30',
     status: 'confirmed',
     customerName: 'ANH TRẦN VĂN NAM',
@@ -39,6 +41,7 @@ let inMemoryAppointments = [
   {
     id: '3',
     type: 'service',
+    date: '10/06/2026',
     timeSlot: '14:00',
     status: 'pending', // 'pending', 'in_garage', 'done'
     customerName: 'ANH NGUYỄN HOÀNG LONG',
@@ -51,6 +54,7 @@ let inMemoryAppointments = [
   {
     id: '4',
     type: 'service',
+    date: '11/06/2026',
     timeSlot: '15:30',
     status: 'pending',
     customerName: 'ANH PHẠM QUỐC ANH',

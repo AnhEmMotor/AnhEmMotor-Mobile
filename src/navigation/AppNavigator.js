@@ -1,5 +1,6 @@
-import React from 'react';
-import { useColorScheme } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useColorScheme, View, ActivityIndicator, Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -9,6 +10,8 @@ import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/Shared/RegisterScreen';
+import ForgotPasswordScreen from '../screens/Shared/ForgotPasswordScreen';
 import HomeScreen from '../screens/Customer/HomeScreen';
 import CatalogScreen from '../screens/Customer/CatalogScreen';
 import BookingScreen from '../screens/Customer/BookingScreen';
@@ -34,7 +37,8 @@ import LegalProgressScreen from '../screens/Customer/LegalProgressScreen';
 // Admin Screens
 import DashboardScreen from '../screens/Admin/DashboardScreen';
 import AdminProfileScreen from '../screens/Admin/AdminProfileScreen';
-import AppointmentManageScreen from '../screens/Admin/AppointmentManageScreen';
+import AppointmentManageScreen from '../screens/Admin/Appointment/AppointmentManageScreen';
+import AdminAppointmentDetailScreen from '../screens/Admin/Appointment/AdminAppointmentDetailScreen';
 import InventoryScreen from '../screens/Admin/InventoryScreen';
 import CashFlowScreen from '../screens/Admin/CashFlowScreen';
 import LeadScreen from '../screens/Admin/LeadScreen';
@@ -136,14 +140,15 @@ function AdminTabs() {
         paddingBottom: paddingBottom,
         paddingTop: 8,
         elevation: 10,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -4 },
-        shadowOpacity: isDark ? 0.4 : 0.2,
-        shadowRadius: 8,
+        ...Platform.select({
+          web: { boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)' },
+          default: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -4 },
+            shadowOpacity: isDark ? 0.4 : 0.2,
+            shadowRadius: 8,
+          }
+        })
       },
       tabBarActiveTintColor: tabActiveText,
       tabBarInactiveTintColor: tabInactiveText,
@@ -175,10 +180,47 @@ function AdminTabs() {
 }
 
 export default function AppNavigator() {
+  const [initialRoute, setInitialRoute] = useState(null);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const profileStr = await AsyncStorage.getItem('@AEM_Customer_Profile');
+        
+        if (token && profileStr) {
+          const profile = JSON.parse(profileStr);
+          if (profile.permissions && profile.permissions.length > 0) {
+            setInitialRoute('AdminHome');
+          } else {
+            setInitialRoute('CustomerHome');
+          }
+        } else {
+          setInitialRoute('Login');
+        }
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+        setInitialRoute('Login');
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  if (initialRoute === null) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#050505', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#E31B23" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="CustomerHome" component={CustomerTabs} />
         <Stack.Screen name="Booking" component={BookingScreen} />
         <Stack.Screen name="MyVehicles" component={MyVehiclesScreen} />
@@ -203,6 +245,7 @@ export default function AppNavigator() {
         <Stack.Screen name="AdminHome" component={AdminTabs} />
         <Stack.Screen name="AdminProfile" component={AdminProfileScreen} />
         <Stack.Screen name="AdminAppointments" component={AppointmentManageScreen} />
+        <Stack.Screen name="AdminAppointmentDetail" component={AdminAppointmentDetailScreen} />
         <Stack.Screen name="AdminInventory" component={InventoryScreen} />
         <Stack.Screen name="CashFlow" component={CashFlowScreen} />
         <Stack.Screen name="AdminLeads" component={LeadScreen} />

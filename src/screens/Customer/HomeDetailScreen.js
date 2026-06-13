@@ -41,8 +41,9 @@ import {
   CalendarClock,
   ShieldAlert
 } from 'lucide-react-native';
-import { useActiveColors, Theme } from '../../theme/Theme';
+import { useActiveColors, Theme, useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
+import { styles } from './Home/styles';
 import ScalePress from '../../components/ScalePress';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 
@@ -363,85 +364,85 @@ export default function HomeDetailScreen({ route, navigation }) {
 
           <View style={styles.voucherBody}>
             {/* 1. THỜI GIAN, ĐỐI TƯỢNG, ĐỊA ĐIỂM (STRUCTURED INFO BOARD) */}
-            <View style={[styles.voucherInfoBoard, { borderColor: colors.border, backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)' }]}>
+            <View style={[getStyles(theme).voucherInfoBoard, { borderColor: colors.border, backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)' }]}>
               {/* Row 1: Thời gian */}
-              <View style={styles.infoBoardRow}>
-                <View style={[styles.infoIconBg, { backgroundColor: 'rgba(59,130,246,0.1)' }]}>
+              <View style={getStyles(theme).infoBoardRow}>
+                <View style={[getStyles(theme).infoIconBg, { backgroundColor: 'rgba(59,130,246,0.1)' }]}>
                   <Calendar color="#E31B23" size={16} />
                 </View>
-                <View style={styles.infoBoardCol}>
-                  <Text style={[styles.infoLabel, { color: colors.subtext }]}>Thời gian áp dụng</Text>
-                  <Text style={[styles.infoVal, { color: colors.text }]}>Từ 15/05/2026 đến hết 31/12/2026</Text>
+                <View style={getStyles(theme).infoBoardCol}>
+                  <Text style={[getStyles(theme).infoLabel, { color: colors.subtext }]}>Thời gian áp dụng</Text>
+                  <Text style={[getStyles(theme).infoVal, { color: colors.text }]}>Từ 15/05/2026 đến hết 31/12/2026</Text>
                 </View>
               </View>
 
               {/* Row 2: Đối tượng */}
-              <View style={[styles.infoBoardRow, { borderTopWidth: 1, borderTopColor: colors.border }]}>
-                <View style={[styles.infoIconBg, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
+              <View style={[getStyles(theme).infoBoardRow, { borderTopWidth: 1, borderTopColor: colors.border }]}>
+                <View style={[getStyles(theme).infoIconBg, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
                   <User color="#10B981" size={16} />
                 </View>
-                <View style={styles.infoBoardCol}>
-                  <Text style={[styles.infoLabel, { color: colors.subtext }]}>Đối tượng sử dụng</Text>
-                  <Text style={[styles.infoVal, { color: colors.text }]}>
+                <View style={getStyles(theme).infoBoardCol}>
+                  <Text style={[getStyles(theme).infoLabel, { color: colors.subtext }]}>Đối tượng sử dụng</Text>
+                  <Text style={[getStyles(theme).infoVal, { color: colors.text }]}>
                     {activeItem.title.includes('Nhớt') ? 'Hội viên sở hữu Xe Côn Tay' : 'Tất cả Khách hàng thành viên App'}
                   </Text>
                 </View>
               </View>
 
               {/* Row 3: Địa điểm */}
-              <View style={[styles.infoBoardRow, { borderTopWidth: 1, borderTopColor: colors.border }]}>
-                <View style={[styles.infoIconBg, { backgroundColor: 'rgba(245,158,11,0.1)' }]}>
+              <View style={[getStyles(theme).infoBoardRow, { borderTopWidth: 1, borderTopColor: colors.border }]}>
+                <View style={[getStyles(theme).infoIconBg, { backgroundColor: 'rgba(245,158,11,0.1)' }]}>
                   <MapPin color="#F59E0B" size={16} />
                 </View>
-                <View style={styles.infoBoardCol}>
-                  <Text style={[styles.infoLabel, { color: colors.subtext }]}>Địa điểm áp dụng</Text>
-                  <Text style={[styles.infoVal, { color: colors.text }]}>Hệ thống Showroom & Xưởng sửa chữa AnhEmMotor Biên Hòa</Text>
+                <View style={getStyles(theme).infoBoardCol}>
+                  <Text style={[getStyles(theme).infoLabel, { color: colors.subtext }]}>Địa điểm áp dụng</Text>
+                  <Text style={[getStyles(theme).infoVal, { color: colors.text }]}>Hệ thống Showroom & Xưởng sửa chữa AnhEmMotor Biên Hòa</Text>
                 </View>
               </View>
             </View>
 
             {/* 2. MÔ TẢ LỢI ÍCH DÀNH CHO KHÁCH HÀNG */}
-            <View style={styles.benefitsSection}>
-              <View style={styles.benefitHeaderRow}>
+            <View style={getStyles(theme).benefitsSection}>
+              <View style={getStyles(theme).benefitHeaderRow}>
                 <Sparkles color={colors.primary} size={18} />
-                <Text style={[styles.sectionHeading, { color: colors.text, marginLeft: 8, marginBottom: 0 }]}>Lợi ích của voucher khi sử dụng:</Text>
+                <Text style={[getStyles(theme).sectionHeading, { color: colors.text, marginLeft: 8, marginBottom: 0 }]}>Lợi ích của voucher khi sử dụng:</Text>
               </View>
 
-              <View style={styles.benefitList}>
+              <View style={getStyles(theme).benefitList}>
                 {benefits.map((benefit, idx) => (
-                  <View key={idx} style={styles.benefitItem}>
-                    <View style={[styles.benefitCheckWrapper, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
+                  <View key={idx} style={getStyles(theme).benefitItem}>
+                    <View style={[getStyles(theme).benefitCheckWrapper, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
                       <Check color="#10B981" size={10} strokeWidth={3} />
                     </View>
-                    <Text style={[styles.benefitText, { color: colors.text }]}>{benefit}</Text>
+                    <Text style={[getStyles(theme).benefitText, { color: colors.text }]}>{benefit}</Text>
                   </View>
                 ))}
               </View>
             </View>
 
             {/* HIỆU ỨNG ĐẶC SẮC: ĐƯỜNG RÃNH BẤM VÉ VẬT LÝ DẠNG TICKET (COUPON DIVIDER) */}
-            <View style={styles.couponDividerContainer}>
-              <View style={[styles.couponDividerLeftCircle, { backgroundColor: colors.background, borderColor: colors.border }]} />
-              <View style={[styles.couponDividerDashLine, { borderColor: colors.border }]} />
-              <View style={[styles.couponDividerRightCircle, { backgroundColor: colors.background, borderColor: colors.border }]} />
+            <View style={getStyles(theme).couponDividerContainer}>
+              <View style={[getStyles(theme).couponDividerLeftCircle, { backgroundColor: colors.background, borderColor: colors.border }]} />
+              <View style={[getStyles(theme).couponDividerDashLine, { borderColor: colors.border }]} />
+              <View style={[getStyles(theme).couponDividerRightCircle, { backgroundColor: colors.background, borderColor: colors.border }]} />
             </View>
 
             {/* 3. QR CODE & BARCODE SCANNER */}
             <View style={getStyles(theme).qrSection}>
-              <Text style={[styles.sectionHeading, { color: colors.text, textAlign: 'center', marginBottom: 12 }]}>Mã QR thanh toán tại quầy</Text>
-              <View style={[styles.qrContainer, { backgroundColor: '#FFFFFF' }]}>
+              <Text style={[getStyles(theme).sectionHeading, { color: colors.text, textAlign: 'center', marginBottom: 12 }]}>Mã QR thanh toán tại quầy</Text>
+              <View style={[getStyles(theme).qrContainer, { backgroundColor: '#FFFFFF' }]}>
                 <QrCode color="#000" size={moderateScale(160)} />
               </View>
               <Text style={{ color: colors.subtext, fontSize: 11, marginTop: 10, textAlign: 'center' }}>Đưa mã này cho lễ tân của showroom AnhEmMotor trước khi thanh toán.</Text>
             </View>
 
             {/* 4. PROMO CODE COPY BOX */}
-            {activeItem.code && ( // Use getStyles for codeBox
+            {!!activeItem.code && ( // Use getStyles for codeBox
               <View style={[getStyles(theme).codeBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', borderColor: colors.border, borderStyle: 'dashed' }]}>
                 <Text style={[getStyles(theme).codeLabel, { color: colors.subtext }]}>MÃ VOUCHER ĐỂ SAO CHÉP</Text>
                 <View style={getStyles(theme).codeRow}>
                   <Text style={[getStyles(theme).codeVal, { color: colors.primary }]}>{activeItem.code}</Text>
-                  <TouchableOpacity onPress={copyToClipboard} style={styles.copyBtn}>
+                  <TouchableOpacity onPress={copyToClipboard} style={getStyles(theme).copyBtn}>
                     {copied ? <Check color={Theme.colors.success} size={18} /> : <Copy color={colors.subtext} size={18} />}
                   </TouchableOpacity>
                 </View>
@@ -465,7 +466,7 @@ export default function HomeDetailScreen({ route, navigation }) {
   const renderPromoDetail = () => {
     return (
       <ScrollView contentContainerStyle={{ paddingBottom: 50 }}> {/* This is fine */}
-        {activeItem.image && (
+        {!!activeItem.image && (
           <View style={getStyles(theme).heroContainer}>
             <Image source={{ uri: activeItem.image }} style={getStyles(theme).heroImage} />
             <TouchableOpacity style={[getStyles(theme).floatingBadge, { backgroundColor: theme.colors.primary }]}>
@@ -601,7 +602,7 @@ export default function HomeDetailScreen({ route, navigation }) {
           }}
           scrollEventThrottle={16}
         > {/* This is fine */}
-          {activeItem.image && (
+          {!!activeItem.image && (
             <View style={styles.heroContainer}>
               <Image source={{ uri: activeItem.image }} style={styles.heroImage} />
             </View>

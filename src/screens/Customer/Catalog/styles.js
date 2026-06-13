@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
 
   scanOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', alignItems: 'center' },
   scanFrame: { width: width * 0.7, height: width * 0.7, borderWidth: 2, borderColor: Theme.staticColors.primary, borderRadius: 20, overflow: 'hidden' },
-  scanLine: { width: '100%', height: 4, backgroundColor: Theme.staticColors.primary, shadowColor: Theme.staticColors.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 10 },
+  scanLine: { width: '100%', height: 4, boxShadow: '0 0 10px Theme.staticColors.primary' },
   scanText: { color: '#fff', fontSize: moderateScale(16), fontWeight: 'bold', marginTop: verticalScale(30) },
 
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },

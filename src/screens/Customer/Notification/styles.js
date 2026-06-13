@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
@@ -119,7 +119,7 @@ export const styles = StyleSheet.create({
   invoiceTotalVal: { color: '#1E3A8A', fontSize: moderateScale(18), fontWeight: 'bold' },
 
   // Feedback Letter Modal
-  letterPaper: { backgroundColor: '#FEFBF3', borderRadius: 20, padding: 20, borderWidth: 1, borderColor: '#E5E0D8', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 10, marginBottom: 20 },
+  letterPaper: { backgroundColor: '#FEFBF3', borderRadius: 20, padding: 20, borderWidth: 1, borderColor: '#E5E0D8', marginBottom: 20, ...Platform.select({ web: { boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }, default: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 10 } }) },
   letterHeader: { borderBottomWidth: 1, borderBottomColor: '#EBE5DA', paddingBottom: 10, marginBottom: 15 },
   letterLogo: { color: '#8B5A2B', fontSize: moderateScale(14), fontWeight: 'bold', letterSpacing: 1 },
   letterDate: { color: '#A3998D', fontSize: moderateScale(11), marginTop: 2 },
@@ -190,7 +190,7 @@ export const styles = StyleSheet.create({
   odoLabels: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   odoLabelText: { color: Theme.staticColors.subtext, fontSize: moderateScale(11) },
   
-  alertCtaButton: { height: 48, borderRadius: 14, backgroundColor: Theme.staticColors.primary, justifyContent: 'center', alignItems: 'center', shadowColor: Theme.staticColors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 },
+  alertCtaButton: { height: 48, borderRadius: 14, backgroundColor: Theme.staticColors.primary, justifyContent: 'center', alignItems: 'center', elevation: 4, ...Platform.select({ web: { boxShadow: `0px 4px 8px ${Theme.staticColors.primary}33` }, default: { shadowColor: Theme.staticColors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 } }) },
   alertCtaText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
 
   // Block 3: History section
@@ -247,7 +247,7 @@ export const styles = StyleSheet.create({
   virtualCardPoints: { color: '#F59E0B', fontSize: moderateScale(15), fontWeight: 'bold' },
   
   loyaltyMemberDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
-  loyaltyCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#A855F7', justifyContent: 'center', alignItems: 'center', shadowColor: '#A855F7', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 },
+  loyaltyCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#A855F7', justifyContent: 'center', alignItems: 'center', elevation: 4, ...Platform.select({ web: { boxShadow: '0px 4px 8px rgba(168, 85, 247, 0.2)' }, default: { shadowColor: '#A855F7', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 } }) },
   loyaltyCtaText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
 
   // Block 2: Voucher ticket styles
@@ -298,7 +298,7 @@ export const styles = StyleSheet.create({
   recallUrgentBadgeText: { color: '#EF4444', fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
   systemRecallDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
   
-  systemCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#EF4444', justifyContent: 'center', alignItems: 'center', shadowColor: '#EF4444', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 },
+  systemCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#EF4444', justifyContent: 'center', alignItems: 'center', elevation: 4, ...Platform.select({ web: { boxShadow: '0px 4px 8px rgba(239, 68, 68, 0.2)' }, default: { shadowColor: '#EF4444', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 } }) },
   systemCtaText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
 
   // Block 2: Insurance Card

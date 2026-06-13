@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Linking, Pressabl
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import { Phone, MessageSquare, MoreVertical, Flame, Calendar, ChevronRight, Bike, Plus, X, Clock, User } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
+import LeadCard from '../../../components/LeadCard';
 import Animated, { FadeInDown, FadeInUp, Layout } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -145,46 +146,7 @@ export default function LeadScreen() {
             entering={FadeInDown.duration(800).delay(200 + index * 100)}
             layout={Layout.springify()}
           >
-            <TouchableOpacity activeOpacity={0.9} onPress={() => handleOpenLead(item)}>
-              <GlassCard style={styles.leadCard} intensity={15}>
-                <View style={styles.cardHeader}>
-                  <View style={styles.nameSection}>
-                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.leadName}>{item.name}</Text>
-                    <View style={[styles.priorityBadge, { backgroundColor: item.color + '25', borderColor: item.color + '66', borderWidth: 1 }]}>
-                      <Flame color={item.color} size={12} strokeWidth={3} />
-                      <Text style={[styles.priorityText, { color: item.color }]}>{item.status.toUpperCase()}</Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity style={styles.moreBtn}>
-                    <MoreVertical color={colors.subtext} size={20} />
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.interestBox}>
-                  <View style={styles.interestRow}>
-                    <Bike color={colors.primary} size={14} />
-                    <Text style={styles.interestLabel}>Quan tâm: </Text>
-                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.interestValue}>{item.interest}</Text>
-                  </View>
-                  <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={styles.timeLabel}>{item.time}</Text>
-                </View>
-                
-                <View style={styles.footerRow}>
-                  <View style={styles.actionGroup}>
-                    <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: colors.primary + '38', borderColor: colors.primary, borderWidth: 1 }]} onPress={() => Linking.openURL(`tel:${item.phone}`)}>
-                      <Phone color={colors.text} size={18} />
-                    </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7} style={[styles.actionBtn, { backgroundColor: colors.success + '38', borderColor: colors.success, borderWidth: 1 }]} onPress={() => Linking.openURL('https://zalo.me')}>
-                      <MessageSquare color={colors.text} size={18} />
-                    </TouchableOpacity>
-                  </View>
-                  <TouchableOpacity style={styles.detailBtn} onPress={() => handleOpenLead(item)}>
-                    <Text numberOfLines={1} adjustsFontSizeToFit minimumScaleFactor={0.8} style={[styles.detailText, { color: colors.text }]}>Xử lý Lead (360°)</Text>
-                    <ChevronRight color={colors.text} size={16} />
-                  </TouchableOpacity>
-                </View>
-              </GlassCard>
-            </TouchableOpacity>
+            <LeadCard lead={item} onPress={() => handleOpenLead(item)} />
           </Animated.View>
         ))}
       </ScrollView>

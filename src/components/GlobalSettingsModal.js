@@ -384,11 +384,11 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     borderWidth: 1,
     borderBottomWidth: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -10 },
-    shadowOpacity: 0.15,
-    shadowRadius: 15,
     elevation: 20,
+    ...Platform.select({
+      web: { boxShadow: '0px -10px 15px rgba(0,0,0,0.15)' },
+      default: { shadowColor: '#000', shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.15, shadowRadius: 15 }
+    })
   },
   modalHandle: {
     width: 44,
@@ -497,11 +497,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 18,
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
     elevation: 12,
+    ...Platform.select({
+      web: { boxShadow: '0px 6px 12px rgba(0,0,0,0.12)' },
+      default: { shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.12, shadowRadius: 12 }
+    })
   },
   logoutModalTitle: {
     fontSize: 16,

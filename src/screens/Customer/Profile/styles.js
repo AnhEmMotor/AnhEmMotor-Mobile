@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
@@ -81,10 +81,15 @@ export const styles = StyleSheet.create({
     overflow: 'hidden', 
     padding: moderateScale(22), 
     elevation: 15, 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 10 }, 
-    shadowOpacity: 0.3, 
-    shadowRadius: 20 
+    ...Platform.select({
+      web: { boxShadow: '0px 10px 20px rgba(0,0,0,0.3)' },
+      default: {
+        shadowColor: '#000', 
+        shadowOffset: { width: 0, height: 10 }, 
+        shadowOpacity: 0.3, 
+        shadowRadius: 20 
+      }
+    })
   },
   glare: { ...StyleSheet.absoluteFillObject, width: '200%', height: '200%', top: '-50%', left: '-50%' },
   cardContent: { flex: 1, justifyContent: 'space-between' },
@@ -319,11 +324,16 @@ export const styles = StyleSheet.create({
     backgroundColor: Theme.staticColors.primary, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    shadowColor: Theme.staticColors.primary, 
-    shadowOffset: { width: 0, height: 4 }, 
-    shadowOpacity: 0.3, 
-    shadowRadius: 10, 
-    elevation: 5 
+    elevation: 5,
+    ...Platform.select({
+      web: { boxShadow: `0px 4px 10px ${Theme.staticColors.primary}4D` },
+      default: {
+        shadowColor: Theme.staticColors.primary, 
+        shadowOffset: { width: 0, height: 4 }, 
+        shadowOpacity: 0.3, 
+        shadowRadius: 10, 
+      }
+    })
   },
   primaryButtonText: { color: '#fff', fontSize: moderateScale(15), fontWeight: 'bold' },
   buttonDisabled: { backgroundColor: 'rgba(255,255,255,0.08)' },
@@ -496,11 +506,16 @@ export const styles = StyleSheet.create({
   },
   glowBorder: {
     borderColor: '#E31B23',
-    shadowColor: '#E31B23',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 5,
-    elevation: 3
+    elevation: 3,
+    ...Platform.select({
+      web: { boxShadow: '0px 0px 5px rgba(227, 27, 35, 0.4)' },
+      default: {
+        shadowColor: '#E31B23',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.4,
+        shadowRadius: 5,
+      }
+    })
   },
   iconLabel: {
     color: DEFAULT_SUBTEXT,

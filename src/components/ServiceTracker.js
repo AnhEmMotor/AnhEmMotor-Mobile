@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Platform } from 'react-native';
 import { useActiveColors, useTheme } from '../theme/Theme'; // Import useTheme
 import {
   ClipboardCheck,
@@ -39,7 +39,7 @@ const ServiceTracker = ({ currentStep = 2 }) => {
                 <View style={getStyles(activeColors).iconWrapper}>
                   {isActive ? (
                     <PulseView pulseScale={1.2}>
-                      <View style={[getStyles(activeColors).iconCircle, getStyles(activeColors).activeCircle, { backgroundColor: activeColors.primary, shadowColor: activeColors.primary }]}>
+                      <View style={[getStyles(activeColors).iconCircle, getStyles(activeColors).activeCircle, { backgroundColor: activeColors.primary }]}>
                         <Icon color="#fff" size={20} />
                       </View>
                     </PulseView>
@@ -93,11 +93,23 @@ const getStyles = (colors) => StyleSheet.create({
   stepItem: { alignItems: 'center', width: (width - 80) / 5 },
   iconWrapper: { alignItems: 'center', height: 40, justifyContent: 'center' },
   iconCircle: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
-  activeCircle: { backgroundColor: colors.primary, shadowColor: colors.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }, // Use colors.primary
+  activeCircle: {
+    backgroundColor: colors.primary,
+    ...Platform.select({
+      web: { boxShadow: `0px 0px 10px ${colors.primary}80` },
+      default: {
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
+        elevation: 5
+      }
+    })
+  },
   completedCircle: { backgroundColor: 'rgba(16, 185, 129, 0.1)' },
   pendingCircle: { backgroundColor: 'rgba(255,255,255,0.05)' },
   connector: { position: 'absolute', right: -((width - 80) / 10) - 10, width: (width - 80) / 5, height: 2, top: 20, zIndex: 0 },
-  completedConnector: { backgroundColor: colors.success }, // Use colors.success
+  completedConnector: { backgroundColor: colors.success },
   pendingConnector: { backgroundColor: 'rgba(255,255,255,0.05)' },
   stepTitle: { fontSize: 9, fontWeight: 'bold', marginTop: 15, textAlign: 'center' },
   activeText: { color: colors.primary },

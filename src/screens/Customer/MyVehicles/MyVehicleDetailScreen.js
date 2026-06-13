@@ -10,7 +10,8 @@ import {
   Dimensions,
   Modal,
   TextInput,
-  Alert
+  Alert,
+  Platform
 } from 'react-native';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import {
@@ -581,11 +582,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF', 
     borderRadius: 8, 
     padding: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3
+    elevation: 3,
+    ...Platform.select({ web: { boxShadow: '0px 2px 4px rgba(0,0,0,0.1)' }, default: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 } })
   },
   plateContent: { 
     borderWidth: 1, 
@@ -695,7 +693,7 @@ const styles = StyleSheet.create({
 
   // Modal styles
   modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  modalContent: { width: '100%', borderRadius: 24, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5 },
+  modalContent: { width: '100%', borderRadius: 24, padding: 20, elevation: 5, ...Platform.select({ web: { boxShadow: '0px 10px 10px rgba(0,0,0,0.25)' }, default: { shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.25, shadowRadius: 10 } }) },
   modalHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 15 },
   modalTitle: { fontSize: 18, fontWeight: 'bold' },
   modalBody: { maxHeight: 300, marginBottom: 15 },

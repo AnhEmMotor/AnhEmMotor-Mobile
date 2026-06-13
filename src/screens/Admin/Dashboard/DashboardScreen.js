@@ -448,7 +448,7 @@ export default function DashboardScreen({ navigation }) {
                 <Text style={styles.funnelLabel}>Lái Thử Xe</Text>
                 <View style={styles.funnelBarContainer}>
                   <LinearGradient 
-                    colors={['#1E1B4B', '#2563EB']} 
+                    colors={['#1E1B4B', colors.primary]} 
                     start={{x: 0, y: 0}} end={{x: 1, y: 0}}
                     style={[styles.funnelBar, { width: '55%' }]}
                   >
@@ -511,7 +511,7 @@ export default function DashboardScreen({ navigation }) {
               {/* Col 2: VF3 */}
               <View style={styles.verticalColContainer}>
                 <Text style={styles.colValue}>8</Text>
-                <View style={[styles.verticalCol, { height: 80, backgroundColor: '#2563EB' }]} />
+                <View style={[styles.verticalCol, { height: 80, backgroundColor: colors.primary }]} />
                 <Text style={styles.colLabel}>VF3</Text>
               </View>
 

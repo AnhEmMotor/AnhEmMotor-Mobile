@@ -71,22 +71,18 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold', 
     letterSpacing: 0.5 
   },
-  bannerTitle: { 
-    color: '#fff', 
-    fontSize: moderateScale(17), 
-    fontWeight: 'bold', 
+  bannerTitle: {
+    color: '#fff',
+    fontSize: moderateScale(17),
+    fontWeight: 'bold',
     marginBottom: verticalScale(6),
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3
+    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)'
   },
-  bannerSub: { 
-    color: 'rgba(255,255,255,0.75)', 
-    fontSize: moderateScale(12), 
+  bannerSub: {
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: moderateScale(12),
     lineHeight: moderateScale(16),
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3
+    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)'
   },
   paginationDots: { 
     position: 'absolute', 
