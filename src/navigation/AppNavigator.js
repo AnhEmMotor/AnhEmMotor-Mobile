@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { LayoutGrid, Car, User, LifeBuoy, Motorbike, Package, Bell, BarChart2, Calendar, Users, Truck, MessageSquare } from 'lucide-react-native';
+import { LayoutGrid, Car, User, LifeBuoy, Motorbike, Package, Bell, BarChart2, Calendar, Users, Truck, MessageSquare, Navigation } from 'lucide-react-native';
 import { Theme, useActiveColors } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -45,6 +45,7 @@ import LeadScreen from '../screens/Admin/LeadScreen';
 import SupportHubScreen from '../screens/Admin/SupportHubScreen';
 import OrderManageScreen from '../screens/Admin/OrderManageScreen';
 import HubScreen from '../screens/Admin/HubScreen';
+import MapTrackingScreen from '../screens/Admin/MapTrackingScreen';
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
 import { navigationRef } from './RootNavigation';
 
@@ -171,6 +172,10 @@ function AdminTabs() {
         tabBarIcon: ({color}) => <Users color={color} size={24} />,
         tabBarLabel: 'Khách hàng'
       }} />
+      <Tab.Screen name="AdminMapTracking" component={MapTrackingScreen} options={{
+        tabBarIcon: ({color}) => <Navigation color={color} size={24} />,
+        tabBarLabel: 'Vận chuyển'
+      }} />
       <Tab.Screen name="AdminHub" component={HubScreen} options={{
         tabBarIcon: ({color}) => <LayoutGrid color={color} size={24} />,
         tabBarLabel: 'Tiện ích'
@@ -251,6 +256,7 @@ export default function AppNavigator() {
         <Stack.Screen name="AdminLeads" component={LeadScreen} />
         <Stack.Screen name="SupportHub" component={SupportHubScreen} />
         <Stack.Screen name="AdminOrders" component={OrderManageScreen} />
+        <Stack.Screen name="AdminMapTracking" component={MapTrackingScreen} />
       </Stack.Navigator>
       <GlobalSettingsModal />
     </NavigationContainer>

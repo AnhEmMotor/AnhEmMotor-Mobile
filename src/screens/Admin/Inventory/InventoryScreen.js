@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Pressable } from 'react-native';
-import { Theme, useActiveColors } from '../../../theme/Theme';
+import { Theme, useTheme } from '../../../theme/Theme';
 import { 
   Search, 
   ChevronLeft,
@@ -28,53 +28,54 @@ const mockInventory = [
 
 const FILTER_TABS = ['Tất cả', 'Phụ tùng', 'Phụ kiện', 'Xe nguyên chiếc'];
 
-const getStyles = (colors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: colors.spacing.lg },
-  header: { flexDirection: 'row', alignItems: 'center', marginTop: colors.spacing.xl + 20, marginBottom: colors.spacing.lg },
-  backBtn: { width: 38, height: 38, borderRadius: 0, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  title: { color: colors.text, fontSize: 22, fontWeight: 'bold' },
-  
-  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card, borderRadius: 0, paddingHorizontal: 16, height: 50, marginBottom: colors.spacing.md, borderWidth: 1, borderColor: colors.border },
+const getStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.colors.background, paddingHorizontal: theme.spacing.lg },
+  header: { flexDirection: 'row', alignItems: 'center', marginTop: theme.spacing.xl + 20, marginBottom: theme.spacing.lg },
+  backBtn: { width: 38, height: 38, borderRadius: 0, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.card, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  title: { color: theme.colors.text, fontSize: 22, fontWeight: 'bold' },
+
+  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.card, borderRadius: 0, paddingHorizontal: 16, height: 50, marginBottom: theme.spacing.md, borderWidth: 1, borderColor: theme.colors.border },
   searchIcon: { marginRight: 12 },
-  searchInput: { flex: 1, color: colors.text, fontSize: 14 },
-  
-  filterContainer: { flexDirection: 'row', marginBottom: colors.spacing.lg },
-  filterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: colors.border, marginRight: 8, backgroundColor: colors.card },
-  activeFilterTab: { backgroundColor: colors.primary, borderColor: colors.primary },
-  filterText: { color: colors.subtext, fontSize: 13, fontWeight: '600' },
+  searchInput: { flex: 1, color: theme.colors.text, fontSize: 14 },
+
+  filterContainer: { flexDirection: 'row', marginBottom: theme.spacing.lg },
+  filterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: theme.colors.border, marginRight: 8, backgroundColor: theme.colors.card },
+  activeFilterTab: { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary },
+  filterText: { color: theme.colors.subtext, fontSize: 13, fontWeight: '600' },
   activeFilterText: { color: '#fff' },
 
-  sectionContainer: { marginBottom: colors.spacing.lg },
+  sectionContainer: { marginBottom: theme.spacing.lg },
   sectionTitleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  sectionTitle: { color: colors.text, fontSize: 16, fontWeight: 'bold', marginLeft: 8, textTransform: 'uppercase' },
-  
+  sectionTitle: { color: theme.colors.text, fontSize: 16, fontWeight: 'bold', marginLeft: 8, textTransform: 'uppercase' },
+
   alertCard: { padding: 16, marginBottom: 10, borderColor: '#EF4444', borderWidth: 1, backgroundColor: 'rgba(239, 68, 68, 0.05)' },
-  itemRow: { padding: 16, marginBottom: 10, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card },
-  
+  itemRow: { padding: 16, marginBottom: 10, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.card },
+
   itemHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  itemName: { color: colors.text, fontSize: 15, fontWeight: 'bold', flex: 1, marginRight: 10 },
-  itemSku: { color: colors.subtext, fontSize: 12, marginTop: 4 },
-  
+  itemName: { color: theme.colors.text, fontSize: 15, fontWeight: 'bold', flex: 1, marginRight: 10 },
+  itemSku: { color: theme.colors.subtext, fontSize: 12, marginTop: 4 },
+
   stockBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
   stockText: { fontSize: 14, fontWeight: 'bold' },
-  
+
   warningText: { color: '#EF4444', fontSize: 12, marginTop: 8, fontStyle: 'italic' },
-  
-  footerReminder: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary + '1A', padding: 16, borderRadius: 8, borderWidth: 1, borderColor: colors.primary + '33', marginTop: 10, marginBottom: 40 },
-  footerReminderText: { color: colors.text, fontSize: 13, marginLeft: 12, flex: 1, lineHeight: 20 },
+
+  footerReminder: { flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.primary + '1A', padding: 16, borderRadius: 8, borderWidth: 1, borderColor: theme.colors.primary + '33', marginTop: 10, marginBottom: 40 },
+  footerReminderText: { color: theme.colors.text, fontSize: 13, marginLeft: 12, flex: 1, lineHeight: 20 },
 
   // Bottom Sheet Styles
   bsSection: { marginBottom: 20 },
-  bsLabel: { color: colors.subtext, fontSize: 13, marginBottom: 4 },
+  bsLabel: { color: theme.colors.subtext, fontSize: 13, marginBottom: 4 },
   bsValueRow: { flexDirection: 'row', alignItems: 'center' },
-  bsValueText: { color: colors.text, fontSize: 16, fontWeight: '600', marginLeft: 10 },
-  divider: { height: 1, backgroundColor: colors.border, marginVertical: 15 }
+  bsValueText: { color: theme.colors.text, fontSize: 16, fontWeight: '600', marginLeft: 10 },
+  divider: { height: 1, backgroundColor: theme.colors.border, marginVertical: 15 }
 });
 
 export default function InventoryScreen() {
-  const colors = useActiveColors();
-  const styles = getStyles(colors);
-  
+  const theme = useTheme();
+  const colors = theme.colors;
+  const styles = getStyles(theme);
+
   let navigation;
   try {
     navigation = useNavigation();
