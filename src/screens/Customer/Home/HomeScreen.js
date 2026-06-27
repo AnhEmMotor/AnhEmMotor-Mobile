@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme, useActiveColors } from '../../../theme/Theme';
@@ -38,6 +38,55 @@ const BANNERS = [
     subtitle: 'Kỹ thuật viên 10 năm kinh nghiệm cùng công nghệ chuẩn đoán lỗi thông minh đạt chuẩn Quốc tế.',
     image: 'https://images.unsplash.com/photo-1558981359-219d6364c9c8?q=80&w=2070',
     tag: 'DỊCH VỤ 5 SAO'
+  },
+  {
+    id: 'b4',
+    title: 'Xe Máy Điện - Xanh Cho Tương Lai',
+    subtitle: 'Bộ sưu tập xe máy điện thông minh với công nghệ pin tiên tiến, thân thiện môi trường và tiết kiệm chi phí.',
+    image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?q=80&w=2070',
+    tag: 'XE ĐIỆN'
+  },
+  {
+    id: 'b5',
+    title: 'Phụ Kiện Chính Hãng Giá Tốt',
+    subtitle: 'Đa dạng phụ kiện chính hãng: nắp bình xăng, yên xe, gương, phuộc, và đồ chơi xe cao cấp.',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2070',
+    tag: 'PHỤ KIỆN'
+  },
+  {
+    id: 'b6',
+    title: 'Ưu Đãi Đặc Biệt Cuối Tuần',
+    subtitle: 'Giảm ngay lên đến 15% cho 50 khách hàng đầu tiên - Áp dụng cho mọi dòng xe trong showroom.',
+    image: 'https://images.unsplash.com/photo-1568772585407-e3b87e6104c9?q=80&w=2070',
+    tag: 'ƯU ĐÃI'
+  },
+  {
+    id: 'b7',
+    title: 'Xe Ga Động Cơ Mới - Công Nghệ 2025',
+    subtitle: 'Tương lai di chuyển bắt đầu từ đây với động cơ mạnh mẽ, tiết kiệm nhiên liệu và thân thiện môi trường.',
+    image: 'https://images.unsplash.com/photo-1568772585407-e3b87e6104c9?q=80&w=2070',
+    tag: 'CÔNG NGHỆ MỚI'
+  },
+  {
+    id: 'b8',
+    title: 'Bảo Hiểm Xe Máy Toàn Diện',
+    subtitle: 'Bảo vệ xe của bạn với gói bảo hiểm toàn diện, hỗ trợ 24/7, quy trình bồi thường nhanh chóng.',
+    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070',
+    tag: 'BẢO HIỂM'
+  },
+  {
+    id: 'b9',
+    title: 'Thuê Xe Máy Dịch Vụ Cao Cấp',
+    subtitle: 'Dịch vụ thuê xe máy linh hoạt - giá tốt, xe mới, bảo dưỡng đầy đủ, giao xe tận nơi.',
+    image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=2070',
+    tag: 'THUÊ XE'
+  },
+  {
+    id: 'b10',
+    title: 'Đồng Hồ Thông Minh Cho Xe Máy',
+    subtitle: 'Công nghệ theo dõi sức khỏe xe, định vị thời gian thực, cảnh báo va chạm và lịch sử hành trình chi tiết.',
+    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?q=80&w=2070',
+    tag: 'SMART DEVICE'
   }
 ];
 
@@ -48,6 +97,7 @@ const BANNERS = [
 export default function HomeScreen({ navigation }) {
   const { width } = useWindowDimensions();
   const [activeBanner, setActiveBanner] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { 
     unreadNotifications, 
     vehicleStatus, 
@@ -59,6 +109,102 @@ export default function HomeScreen({ navigation }) {
 
   const colors = useActiveColors();
   const { themeMode, setSettingsOpen } = useGlobalState();
+
+  // Carousel configuration - show 2-3 images with peek effect
+  const BANNER_WIDTH = width * 0.78; // Each banner takes 78% of screen width
+  const BANNER_SPACING = 12; // Spacing between banners
+  const BANNER_PADDING = (width - BANNER_WIDTH) / 2; // Center the first banner
+
+  const scrollViewRef = useRef(null);
+  const intervalRef = useRef(null);
+  const resumeTimeoutRef = useRef(null);
+  const isSnappingRef = useRef(false);
+  const isUserInitiatedRef = useRef(false);
+
+  // Auto-slide functionality
+  useEffect(() => {
+    if (isAutoPlaying) {
+      intervalRef.current = setInterval(() => {
+        setActiveBanner((prev) => (prev + 1) % BANNERS.length);
+      }, 4000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isAutoPlaying]);
+
+  // Snap to nearest banner after momentum scroll ends
+  const handleMomentumEnd = (e) => {
+    if (isSnappingRef.current) return;
+    const offset = e.nativeEvent.contentOffset.x;
+    const index = Math.round(offset / (BANNER_WIDTH + BANNER_SPACING));
+    const clampedIndex = Math.min(Math.max(index, 0), BANNERS.length - 1);
+    setActiveBanner(clampedIndex);
+    // Snap to exact position (only if not already aligned)
+    const targetX = clampedIndex * (BANNER_WIDTH + BANNER_SPACING);
+    if (Math.abs(offset - targetX) > 1) {
+      isSnappingRef.current = true;
+      const scrollView = scrollViewRef.current;
+      if (scrollView) {
+        scrollView.scrollTo({ x: targetX, animated: true });
+      }
+      setTimeout(() => { isSnappingRef.current = false; }, 400);
+    }
+  };
+
+  // Pause auto-play when user starts dragging
+  const handleScrollBeginDrag = () => {
+    setIsAutoPlaying(false);
+  };
+
+  // Resume auto-play after user stops dragging
+  const handleScrollEndDrag = () => {
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      setIsAutoPlaying(true);
+      resumeTimeoutRef.current = null;
+    }, 2000);
+  };
+
+  // Cleanup resume timeout
+  useEffect(() => {
+    return () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, []);
+
+  // Scroll to specific banner
+  const scrollToBanner = (index) => {
+    const scrollView = scrollViewRef.current;
+    if (scrollView) {
+      scrollView.scrollTo({
+        x: index * (BANNER_WIDTH + BANNER_SPACING),
+        animated: true
+      });
+    }
+  };
+
+  // Sync scroll position when activeBanner changes from user interaction
+  useEffect(() => {
+    if (isUserInitiatedRef.current) {
+      scrollToBanner(activeBanner);
+      isUserInitiatedRef.current = false;
+    }
+  }, [activeBanner]);
+
+  const handleDotPress = (index) => {
+    isUserInitiatedRef.current = true;
+    setIsAutoPlaying(false);
+    setActiveBanner(index);
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      setIsAutoPlaying(true);
+      resumeTimeoutRef.current = null;
+    }, 4000);
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -92,22 +238,22 @@ export default function HomeScreen({ navigation }) {
         <Animated.View entering={FadeInDown.duration(600).delay(200)} style={styles.vehicleModule}>
           <View style={[styles.carouselContainer, { backgroundColor: colors.background }]}>
             <ScrollView
+              ref={scrollViewRef}
               horizontal
-              pagingEnabled
               showsHorizontalScrollIndicator={false}
-              onScroll={(e) => {
-                const offset = e.nativeEvent.contentOffset.x;
-                const index = Math.round(offset / width);
-                if (index !== activeBanner) {
-                  setActiveBanner(index);
-                }
-              }}
+              onMomentumScrollEnd={handleMomentumEnd}
+              onScrollBeginDrag={handleScrollBeginDrag}
+              onScrollEndDrag={handleScrollEndDrag}
               scrollEventThrottle={16}
+              contentContainerStyle={{
+                paddingHorizontal: BANNER_PADDING
+              }}
               style={styles.carouselScroll}
+              decelerationRate="fast"
             >
               {BANNERS.map((banner) => (
-                <View key={banner.id} style={[styles.bannerItem, { width: width }]}>
-                  <Image source={{ uri: banner.image }} style={styles.bannerImage} />
+                <View key={banner.id} style={[styles.bannerItem, { width: BANNER_WIDTH, marginHorizontal: BANNER_SPACING / 2 }]}>
+                  <Image source={{ uri: banner.image }} style={styles.bannerImage} resizeMode="cover" />
                   <LinearGradient
                     colors={['transparent', 'rgba(5, 5, 5, 0.95)']}
                     style={styles.bannerGradient}
@@ -125,14 +271,18 @@ export default function HomeScreen({ navigation }) {
             {/* Carousel Pagination Dots */}
             <View style={styles.paginationDots}>
               {BANNERS.map((_, index) => (
-                <View 
-                  key={index} 
-                  style={[
-                    styles.dot, 
-                    activeBanner === index ? styles.activeDot : styles.inactiveDot
-                  ]} 
-                  tint={colors.isDark ? 'dark' : 'light'}
-                />
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleDotPress(index)}
+                  activeOpacity={0.7}
+                >
+                  <View
+                    style={[
+                      styles.dot,
+                      activeBanner === index ? styles.activeDot : styles.inactiveDot
+                    ]}
+                  />
+                </TouchableOpacity>
               ))}
             </View>
           </View>

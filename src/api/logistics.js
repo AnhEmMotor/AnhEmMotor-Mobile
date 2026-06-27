@@ -1,9 +1,4 @@
-/**
- * Logistics API Service
- * Handles all API calls to backend logistics endpoints
- */
-
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+import { API_BASE_URL } from '../config';
 
 /**
  * Fetch active shipments that are currently in transit

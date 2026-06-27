@@ -34,16 +34,17 @@ export const styles = StyleSheet.create({
     backgroundColor: '#050505',
   },
   carouselScroll: { flex: 1 },
-  bannerItem: { 
-    height: '100%', 
+  bannerItem: {
+    height: '100%',
     position: 'relative',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderRadius: 12
   },
-  bannerImage: { 
-    width: '100%', 
-    height: '100%', 
-    
-    position: 'absolute'
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    borderRadius: 12
   },
   bannerGradient: { 
     position: 'absolute', 

@@ -64,7 +64,7 @@ export default function ContactStaffScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: activeColors.background }]}
+      style={[getStyles(activeColors).container, { backgroundColor: activeColors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
@@ -84,7 +84,7 @@ export default function ContactStaffScreen({ navigation }) {
             <Phone color={activeColors.primary} size={20} />
           </ScalePress>
           <ScalePress
-            style={[styles.callBtn, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}
+            style={[getStyles(activeColors).callBtn, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}
             onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
           >
             <Settings color={activeColors.text} size={20} />
@@ -109,8 +109,8 @@ export default function ContactStaffScreen({ navigation }) {
       </View>
 
       {activeTab === 'thread' ? (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.threadList}>
-          <Text style={[styles.sectionHint, { color: activeColors.subtext }]}>Trao đổi về: Kawasaki Z1000 - Bảo dưỡng 08/05</Text>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles(activeColors).threadList}>
+          <Text style={[getStyles(activeColors).sectionHint, { color: activeColors.subtext }]}>Trao đổi về: Kawasaki Z1000 - Bảo dưỡng 08/05</Text>
           {THREAD_HISTORY.map((msg, index) => {
             const isCustomer = msg.from === 'customer';
             return (
@@ -120,8 +120,8 @@ export default function ContactStaffScreen({ navigation }) {
                 style={[getStyles(activeColors).bubbleWrapper, isCustomer && getStyles(activeColors).bubbleRight]}
               >
                 {!isCustomer && (
-                  <View style={[styles.avatarCircle, { backgroundColor: activeColors.primary }]}>
-                    <Text style={styles.avatarText}>AE</Text>
+                  <View style={[getStyles(activeColors).avatarCircle, { backgroundColor: activeColors.primary }]}>
+                    <Text style={getStyles(activeColors).avatarText}>AE</Text>
                   </View>
                 )}
                 <View style={[
@@ -131,21 +131,21 @@ export default function ContactStaffScreen({ navigation }) {
                     : [getStyles(activeColors).staffBubble, { backgroundColor: activeColors.card }]
                 ]}>
                   <Text style={[
-                    styles.bubbleName,
+                    getStyles(activeColors).bubbleName,
                     { color: isCustomer ? 'rgba(255,255,255,0.7)' : activeColors.subtext }
                   ]}>
                     {msg.name}
                   </Text>
                   <Text style={[
-                    styles.bubbleText,
+                    getStyles(activeColors).bubbleText,
                     { color: isCustomer ? '#FFFFFF' : activeColors.text }
                   ]}>
                     {msg.message}
                   </Text>
-                  <View style={styles.bubbleMeta}>
+                  <View style={getStyles(activeColors).bubbleMeta}>
                     <Clock size={10} color={isCustomer ? 'rgba(255,255,255,0.6)' : activeColors.subtext} />
                     <Text style={[
-                      styles.bubbleTime,
+                      getStyles(activeColors).bubbleTime,
                       { color: isCustomer ? 'rgba(255,255,255,0.5)' : activeColors.subtext }
                     ]}>
                       {msg.time}
@@ -165,7 +165,7 @@ export default function ContactStaffScreen({ navigation }) {
           <View style={{ height: 80 }} />
         </ScrollView>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.composeContainer}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles(activeColors).composeContainer}>
           <Animated.View entering={FadeInDown.duration(500)}> {/* This is fine */}
             <GlassCard
               style={[getStyles(activeColors).recipientCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
@@ -173,18 +173,18 @@ export default function ContactStaffScreen({ navigation }) {
             >
               <Mail color={activeColors.primary} size={18} />
               <View style={{ marginLeft: 12, flex: 1 }}>
-                <Text style={[styles.recipientLabel, { color: activeColors.subtext }]}>Gửi đến</Text>
-                <Text style={[styles.recipientEmail, { color: activeColors.primary }]}>{STAFF_EMAIL}</Text>
+                <Text style={[getStyles(activeColors).recipientLabel, { color: activeColors.subtext }]}>Gửi đến</Text>
+                <Text style={[getStyles(activeColors).recipientEmail, { color: activeColors.primary }]}>{STAFF_EMAIL}</Text>
               </View>
             </GlassCard>
 
             <Text style={[getStyles(activeColors).composeLabel, { color: activeColors.text }]}>Nội dung</Text>
             <GlassCard
-              style={[styles.textAreaCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+              style={[getStyles(activeColors).textAreaCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
               tint={activeColors.isDark ? 'dark' : 'light'}
             >
               <TextInput
-                style={[styles.textArea, { color: activeColors.text }]}
+                style={[getStyles(activeColors).textArea, { color: activeColors.text }]}
                 value={message}
                 onChangeText={setMessage}
                 placeholder="Nhập nội dung cần trao đổi với nhân viên AnhEmMotor..."
@@ -199,10 +199,10 @@ export default function ContactStaffScreen({ navigation }) {
             {quickTemplates.map((tmpl, i) => (
               <ScalePress key={i} onPress={() => setMessage(tmpl)}>
                 <GlassCard
-                  style={[styles.templateCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+                  style={[getStyles(activeColors).templateCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
                   tint={activeColors.isDark ? 'dark' : 'light'}
                 >
-                  <Text style={[styles.templateText, { color: activeColors.subtext }]}>{tmpl}</Text>
+                  <Text style={[getStyles(activeColors).templateText, { color: activeColors.subtext }]}>{tmpl}</Text>
                 </GlassCard>
               </ScalePress>
             ))}
@@ -212,7 +212,7 @@ export default function ContactStaffScreen({ navigation }) {
               onPress={handleSendEmail}
             >
               <Send color="#fff" size={18} />
-              <Text style={styles.sendBtnText}>Mở ứng dụng Email & Gửi</Text>
+              <Text style={getStyles(activeColors).sendBtnText}>Mở ứng dụng Email & Gửi</Text>
             </ScalePress>
           </Animated.View>
           <View style={{ height: 60 }} />
