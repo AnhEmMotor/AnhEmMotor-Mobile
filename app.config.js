@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "AnhEmMotorMobile",
     "slug": "AnhEmMotorMobile",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY}"
+        "googleMapsApiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || "dummy_ios_key"
       }
     },
     "android": {
@@ -26,7 +26,7 @@
       "edgeToEdgeEnabled": true,
       "config": {
         "googleMaps": {
-          "apiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY}"
+          "apiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || "dummy_android_key"
         }
       },
       "permissions": [
@@ -38,7 +38,7 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "extra": {
-        "googleMapsApiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_WEB_API_KEY}"
+        "googleMapsApiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_WEB_API_KEY || "dummy_web_key"
       }
     },
     "plugins": [
@@ -51,4 +51,4 @@
       ]
     ]
   }
-}
+};
