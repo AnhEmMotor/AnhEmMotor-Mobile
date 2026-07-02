@@ -28,7 +28,7 @@ jobs:
           java-version: "17"
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm ci
 
       - name: Setup Environment
         run: |
