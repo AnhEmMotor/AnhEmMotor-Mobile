@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Theme } from '../theme/Theme';
+import { useTheme } from '../theme/Theme'; // Import useTheme
 import { Inbox, PackageOpen } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
@@ -10,43 +10,44 @@ export default function EmptyState({
   message = 'Hiện tại chưa có dữ liệu để hiển thị.',
   style
 }) {
+  const theme = useTheme();
   return (
-    <Animated.View entering={FadeInDown.duration(600)} style={[styles.container, style]}>
-      <View style={styles.iconCircle}>
-        <Icon color={Theme.colors.primary} size={48} strokeWidth={1.5} />
+    <Animated.View entering={FadeInDown.duration(600)} style={[getStyles(theme).container, style]}>
+      <View style={[getStyles(theme).iconCircle, { backgroundColor: theme.colors.primary + '1A' }]}>
+        <Icon color={theme.colors.primary} size={48} strokeWidth={1.5} />
       </View>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={[getStyles(theme).title, { color: theme.colors.text }]}>{title}</Text>
+      <Text style={[getStyles(theme).message, { color: theme.colors.subtext }]}>{message}</Text>
     </Animated.View>
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: Theme.spacing.xl,
+    padding: theme.spacing.xl,
     minHeight: 300,
   },
   iconCircle: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    // backgroundColor: 'rgba(59, 130, 246, 0.1)', // Set inline
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: Theme.spacing.lg,
+    marginBottom: theme.spacing.lg,
   },
   title: {
-    color: Theme.colors.text,
+    // color: Theme.colors.text, // Set inline
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: Theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
     textAlign: 'center',
   },
   message: {
-    color: Theme.colors.subtext,
+    // color: Theme.colors.subtext, // Set inline
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,

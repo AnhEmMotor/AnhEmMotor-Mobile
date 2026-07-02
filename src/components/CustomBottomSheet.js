@@ -1,10 +1,16 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useRef, useCallback } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { Theme } from '../theme/Theme';
+import { useActiveColors } from '../theme/Theme';
 
-const CustomBottomSheet = forwardRef(({ children, title }, ref) => {
+const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
   const bottomSheetRef = useRef(null);
+  const activeColors = useActiveColors();
+
+  const activeBg = activeColors.card;
+  const activeTitle = activeColors.text;
+  const activeIndicator = activeColors.isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  const activeBorder = activeColors.border;
 
   // Cấu hình Snap Points cố định để tránh giật lag (Priority 1 & 3)
   const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
@@ -42,35 +48,40 @@ const CustomBottomSheet = forwardRef(({ children, title }, ref) => {
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       backdropComponent={renderBackdrop}
-      backgroundStyle={styles.background}
-      handleIndicatorStyle={styles.handleIndicator}
+      backgroundStyle={[styles.background, { backgroundColor: activeBg, borderColor: activeBorder }]}
+      handleIndicatorStyle={[styles.handleIndicator, { backgroundColor: activeIndicator }]}
       enableContentPanningGesture={true}
       enableOverdrag={false} // Tránh lỗi kéo quá đà trên Web
+      onChange={(index) => {
+        if (index === -1 && onClose) {
+          onClose();
+        }
+      }}
     >
-      <BottomSheetScrollView 
+      <BottomSheetScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-            <Text style={styles.headerTitle}>{title}</Text>
+          <Text style={[styles.headerTitle, { color: activeTitle }]}>{title}</Text>
         </View>
         <View style={styles.content}>
           {children}
         </View>
         {/* Padding Bottom 40px as suggested (Mẹo kiểm tra) */}
-        <View style={{ height: 60 }} /> 
+        <View style={{ height: 60 }} />
       </BottomSheetScrollView>
     </BottomSheet>
   );
 });
 
 const styles = StyleSheet.create({
-  background: {
-    backgroundColor: Theme.colors.card,
+  background: { // This style is applied via `backgroundStyle` prop, which already uses `activeBg` and `activeBorder`.
+    // backgroundColor: Theme.colors.card, // Remove this, it's redundant
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    // borderColor: 'rgba(255,255,255,0.1)', // Remove this, it's redundant
   },
   handleIndicator: {
     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -83,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    color: Theme.colors.text,
+    // color: Theme.colors.text, // Remove this, it's overridden by inline style
     fontSize: 18,
     fontWeight: 'bold',
   },

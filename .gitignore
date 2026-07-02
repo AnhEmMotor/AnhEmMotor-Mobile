@@ -31,6 +31,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env*
 .env*.local
 
 # typescript
@@ -45,3 +46,6 @@ yarn-error.*
 expo_logs.txt
 expo_build.log
 expo_full_logs.txt
+claude-genkit-plugin/
+*.txt
+*.log
