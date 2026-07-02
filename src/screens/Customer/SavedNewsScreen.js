@@ -10,7 +10,8 @@ import ScalePress from '../../components/ScalePress';
 
 export default function SavedNewsScreen({ navigation }) {
   const [savedItems, setSavedItems] = useState([]);
-  const theme = useTheme(); // Use the useTheme hook
+  const { theme, getStyles } = useTheme();
+  const styles = getStyles(theme);
 
   useEffect(() => {
     loadSavedNews();

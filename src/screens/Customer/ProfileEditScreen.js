@@ -27,7 +27,8 @@ export default function ProfileEditScreen({ navigation }) {
     updateProfileUseCase,
     uploadAvatarUseCase,
   } = useDependency();
-  const theme = useTheme(); // Use the useTheme hook
+  const { theme, getStyles } = useTheme();
+  const styles = getStyles(theme);
   const [profileEntity, setProfileEntity] = useState(null);
   const [form, setForm] = useState({
     name: '',

@@ -47,3 +47,5 @@ expo_logs.txt
 expo_build.log
 expo_full_logs.txt
 claude-genkit-plugin/
+*.txt
+*.log
