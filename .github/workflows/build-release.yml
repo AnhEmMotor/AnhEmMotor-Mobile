@@ -51,53 +51,9 @@ jobs:
           name: AnhEmMotor-Latest-Release
           path: android/app/build/outputs/apk/release/AnhEmMotor-Latest-Release.apk
 
-  build-ios:
-    name: Build iOS Simulator App
-    runs-on: macos-15
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: "npm"
-
-      - name: Setup Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '16.3'
-
-      - name: Install dependencies
-        run: npm ci || npm install
-
-      - name: Setup Environment
-        run: |
-          echo "EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY=${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}" >> $GITHUB_ENV
-          echo "EXPO_PUBLIC_BACKEND_API_URL=${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}" >> $GITHUB_ENV
-          echo "EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY=${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}" >> $GITHUB_ENV
-
-      - name: Expo Prebuild
-        run: npx expo prebuild --platform ios --clean
-
-      - name: Build iOS App for Simulator
-        run: |
-          cd ios
-          xcodebuild -workspace AnhEmMotorMobile.xcworkspace -scheme AnhEmMotorMobile -configuration Release -sdk iphonesimulator -derivedDataPath build
-          cd build/Build/Products/Release-iphonesimulator
-          zip -r ../../../../../AnhEmMotor-Latest-iOS-Simulator.zip AnhEmMotorMobile.app
-
-      - name: Upload iOS Artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: AnhEmMotor-Latest-iOS-Simulator
-          path: AnhEmMotor-Latest-iOS-Simulator.zip
-
   release:
     name: Update Release
-    needs: [build-android, build-ios]
+    needs: build-android
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -114,12 +70,6 @@ jobs:
           name: AnhEmMotor-Latest-Release
           path: release-files/
 
-      - name: Download iOS App
-        uses: actions/download-artifact@v8
-        with:
-          name: AnhEmMotor-Latest-iOS-Simulator
-          path: release-files/
-
       - name: Move tag
         run: |
           git config user.name "github-actions[bot]"
@@ -132,7 +82,5 @@ jobs:
         with:
           tag_name: latest
           name: Latest Release
-          files: |
-            release-files/AnhEmMotor-Latest-Release.apk
-            release-files/AnhEmMotor-Latest-iOS-Simulator.zip
+          files: release-files/AnhEmMotor-Latest-Release.apk
           make_latest: true

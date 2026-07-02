@@ -1,6 +1,6 @@
 export default {
   "expo": {
-    "name": "AnhEmMotorMobile",
+    "name": "Anh Em Motor",
     "slug": "AnhEmMotorMobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +10,7 @@ export default {
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": true,
@@ -22,7 +22,7 @@ export default {
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
       "config": {
@@ -43,6 +43,7 @@ export default {
       }
     },
     "plugins": [
+      "expo-status-bar",
       [
         "expo-image-picker",
         {
