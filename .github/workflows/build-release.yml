@@ -30,22 +30,20 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Setup Environment
+        run: |
+          echo "EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY=${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}" >> $GITHUB_ENV
+          echo "EXPO_PUBLIC_BACKEND_API_URL=${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}" >> $GITHUB_ENV
+          echo "EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY=${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}" >> $GITHUB_ENV
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform android --clean
-        env:
-          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
-          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
 
       - name: Build Android APK
         run: |
           cd android
           ./gradlew assembleRelease
           mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/AnhEmMotor-Latest-Release.apk
-        env:
-          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
-          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
@@ -55,7 +53,7 @@ jobs:
 
   build-ios:
     name: Build iOS Simulator App
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout code
@@ -67,15 +65,21 @@ jobs:
           node-version: 22
           cache: "npm"
 
+      - name: Select Xcode 16.3 if available
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer || sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer || true
+
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Setup Environment
+        run: |
+          echo "EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY=${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}" >> $GITHUB_ENV
+          echo "EXPO_PUBLIC_BACKEND_API_URL=${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}" >> $GITHUB_ENV
+          echo "EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY=${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}" >> $GITHUB_ENV
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform ios --clean
-        env:
-          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
-          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
 
       - name: Build iOS App for Simulator
         run: |
@@ -83,10 +87,6 @@ jobs:
           xcodebuild -workspace AnhEmMotorMobile.xcworkspace -scheme AnhEmMotorMobile -configuration Release -sdk iphonesimulator -derivedDataPath build
           cd build/Build/Products/Release-iphonesimulator
           zip -r ../../../../../AnhEmMotor-Latest-iOS-Simulator.zip AnhEmMotorMobile.app
-        env:
-          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
-          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
 
       - name: Upload iOS Artifact
         uses: actions/upload-artifact@v7
