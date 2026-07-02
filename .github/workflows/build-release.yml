@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: "npm"
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -28,7 +27,7 @@ jobs:
           java-version: "17"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Setup Environment
         run: |
