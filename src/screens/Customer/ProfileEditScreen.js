@@ -12,6 +12,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '../../theme/Theme'; // Import useTheme
 import { ChevronLeft, User, Phone, Mail, MapPin, Camera, Save } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';

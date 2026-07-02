@@ -10,6 +10,7 @@ import { useTheme } from '../theme/Theme'; // Import useTheme
 const { width } = Dimensions.get('window');
 
 const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
+  const theme = useTheme();
   const [downPaymentPercent, setDownPaymentPercent] = useState(30);
   const [months, setMonths] = useState(24);
   const [monthlyInstallment, setMonthlyInstallment] = useState(0);

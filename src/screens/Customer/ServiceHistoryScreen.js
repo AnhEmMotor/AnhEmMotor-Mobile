@@ -117,7 +117,7 @@ export default function ServiceHistoryScreen({ navigation, route }) {
 					{/* Dòng thời gian lịch sử */}
 					<Animated.Text
 						entering={FadeInDown.duration(500).delay(400)}
-						style={[styles.sectionTitle, { marginTop: Theme.spacing.xl }]}
+						style={[styles.sectionTitle, { marginTop: theme.spacing.xl }]}
 					>
 						Lịch sử sửa chữa {/* Use getStyles for sectionTitle */}
 					</Animated.Text>

@@ -17,6 +17,7 @@ import { useGlobalState } from '../../context/GlobalState';
 export default function BookingScreen({ navigation }) {
   const activeColors = useActiveColors();
   const theme = useTheme(); // Use the useTheme hook
+  const styles = getStyles(theme, activeColors);
   const { setSettingsOpen } = useGlobalState();
   const toastRef = useRef(null);
   const [activeView, setActiveView] = useState('booking'); // 'booking' or 'status'
@@ -40,12 +41,12 @@ export default function BookingScreen({ navigation }) {
   const timeSlots = ['08:00', '09:00', '10:00', '13:00', '14:00', '15:00'];
 
   const renderStep1 = () => (
-    <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={getStyles().stepContainer}>
-      <Text style={[getStyles().stepTitle, { color: activeColors.text }]}>Chọn xe cần dịch vụ</Text>
+    <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
+      <Text style={[styles.stepTitle, { color: activeColors.text }]}>Chọn xe cần dịch vụ</Text>
       {myBikes.map((bike, i) => (
         <ScalePress key={i} onPress={() => { setSelectedVehicle(bike); setStep(2); }}>
-          <GlassCard style={[getStyles().optionCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]} intensity={15}>
-            <View style={[getStyles().optionIconBox, { backgroundColor: activeColors.border + '33' }]}>
+          <GlassCard style={[styles.optionCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]} intensity={15}>
+            <View style={[styles.optionIconBox, { backgroundColor: activeColors.border + '33' }]}>
               <Bike color={activeColors.primary} size={24} />
             </View>
             <View style={{ flex: 1, marginLeft: 15 }}>
@@ -60,15 +61,15 @@ export default function BookingScreen({ navigation }) {
   );
 
   const renderStep2 = () => (
-    <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={getStyles().stepContainer}>
-      <TouchableOpacity onPress={() => setStep(1)} style={getStyles().backLinkWrapper}>
-        <Text style={[getStyles().backLink, { color: activeColors.primary }]}>← Đổi xe ({selectedVehicle?.name})</Text>
+    <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
+      <TouchableOpacity onPress={() => setStep(1)} style={styles.backLinkWrapper}>
+        <Text style={[styles.backLink, { color: activeColors.primary }]}>← Đổi xe ({selectedVehicle?.name})</Text>
       </TouchableOpacity>
-      <Text style={[getStyles().stepTitle, { color: activeColors.text }]}>Chọn loại dịch vụ</Text>
+      <Text style={[styles.stepTitle, { color: activeColors.text }]}>Chọn loại dịch vụ</Text>
       {services.map((s, i) => (
         <ScalePress key={i} onPress={() => { setSelectedService(s.name); setStep(3); }}>
-          <GlassCard style={[getStyles().optionCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]} intensity={15}>
-            <View style={[getStyles().optionIconBox, { backgroundColor: activeColors.border + '33' }]}>
+          <GlassCard style={[styles.optionCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]} intensity={15}>
+            <View style={[styles.optionIconBox, { backgroundColor: activeColors.border + '33' }]}>
               {s.icon}
             </View>
             <View style={{ flex: 1, marginLeft: 15 }}>
@@ -83,28 +84,28 @@ export default function BookingScreen({ navigation }) {
   );
 
   const renderStep3 = () => (
-    <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={getStyles().stepContainer}>
-      <TouchableOpacity onPress={() => setStep(2)} style={getStyles().backLinkWrapper}>
-        <Text style={[getStyles().backLink, { color: activeColors.primary }]}>← Đổi dịch vụ ({selectedService})</Text>
+    <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
+      <TouchableOpacity onPress={() => setStep(2)} style={styles.backLinkWrapper}>
+        <Text style={[styles.backLink, { color: activeColors.primary }]}>← Đổi dịch vụ ({selectedService})</Text>
       </TouchableOpacity>
-      <Text style={[getStyles().stepTitle, { color: activeColors.text }]}>Chọn thời gian</Text>
+      <Text style={[styles.stepTitle, { color: activeColors.text }]}>Chọn thời gian</Text>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: theme.spacing.lg }}>
         {[6, 7, 8, 9, 10, 11].map(d => (
           <ScalePress key={d} onPress={() => setSelectedDate(`Ngày ${d}/05`)} style={{ marginRight: theme.spacing.md }}>
-            <GlassCard style={[getStyles().dateCard, selectedDate === `Ngày ${d}/05` && getStyles().selectedCard, selectedDate === `Ngày ${d}/05` && { borderColor: activeColors.primary }]} intensity={selectedDate === `Ngày ${d}/05` ? 40 : 15}>
-              <Text style={[getStyles().dateText, { color: activeColors.text }]}>{d}</Text>
-              <Text style={[getStyles().monthText, { color: activeColors.subtext }]}>Tháng 5</Text>
+            <GlassCard style={[styles.dateCard, selectedDate === `Ngày ${d}/05` && styles.selectedCard, selectedDate === `Ngày ${d}/05` && { borderColor: activeColors.primary }]} intensity={selectedDate === `Ngày ${d}/05` ? 40 : 15}>
+              <Text style={[styles.dateText, { color: activeColors.text }]}>{d}</Text>
+              <Text style={[styles.monthText, { color: activeColors.subtext }]}>Tháng 5</Text>
             </GlassCard>
           </ScalePress>
         ))}
       </ScrollView>
 
-      <View style={getStyles().timeGrid}>
+      <View style={styles.timeGrid}>
         {timeSlots.map((time, index) => (
-          <ScalePress key={time} style={getStyles().timeSlotWrapper} onPress={() => setSelectedTime(time)}>
-            <GlassCard style={[getStyles().timeCard, selectedTime === time && getStyles().selectedCard, selectedTime === time && { borderColor: activeColors.primary }]} intensity={selectedTime === time ? 40 : 15}>
-              <Text style={[getStyles().timeText, { color: activeColors.subtext }, selectedTime === time && { color: '#fff' }]}>{time}</Text>
+          <ScalePress key={time} style={styles.timeSlotWrapper} onPress={() => setSelectedTime(time)}>
+            <GlassCard style={[styles.timeCard, selectedTime === time && styles.selectedCard, selectedTime === time && { borderColor: activeColors.primary }]} intensity={selectedTime === time ? 40 : 15}>
+              <Text style={[styles.timeText, { color: activeColors.subtext }, selectedTime === time && { color: '#fff' }]}>{time}</Text>
             </GlassCard>
           </ScalePress>
         ))}
@@ -127,9 +128,9 @@ export default function BookingScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={[getStyles().container, { backgroundColor: activeColors.background }]} edges={['top']}>
-      <View style={getStyles().header}>
-        <View style={[getStyles().headerTopRow, { marginBottom: 15 }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
+      <View style={styles.header}>
+        <View style={[styles.headerTopRow, { marginBottom: 15 }]}>
           <ScalePress style={{ width: 44, height: 44, justifyContent: 'center' }} onPress={() => navigation.goBack()}>
             <ChevronLeft color={activeColors.text} size={28} />
           </ScalePress>
@@ -137,12 +138,12 @@ export default function BookingScreen({ navigation }) {
             <Settings color={activeColors.text} size={22} />
           </ScalePress>
         </View>
-        <View style={[getStyles().tabSwitcher, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }]}>
-          <TouchableOpacity onPress={() => setActiveView('booking')} style={[getStyles().tab, activeView === 'booking' && [getStyles().activeTab, { backgroundColor: activeColors.card }]]}>
-            <Text style={[getStyles().tabText, { color: activeColors.subtext }, activeView === 'booking' && { color: activeColors.primary }]}>Đặt lịch</Text>
+        <View style={[styles.tabSwitcher, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }]}>
+          <TouchableOpacity onPress={() => setActiveView('booking')} style={[styles.tab, activeView === 'booking' && [styles.activeTab, { backgroundColor: activeColors.card }]]}>
+            <Text style={[styles.tabText, { color: activeColors.subtext }, activeView === 'booking' && { color: activeColors.primary }]}>Đặt lịch</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setActiveView('status')} style={[getStyles().tab, activeView === 'status' && [getStyles().activeTab, { backgroundColor: activeColors.card }]]}>
-            <Text style={[getStyles().tabText, { color: activeColors.subtext }, activeView === 'status' && { color: activeColors.primary }]}>Đang sửa chữa</Text>
+          <TouchableOpacity onPress={() => setActiveView('status')} style={[styles.tab, activeView === 'status' && [styles.activeTab, { backgroundColor: activeColors.card }]]}>
+            <Text style={[styles.tabText, { color: activeColors.subtext }, activeView === 'status' && { color: activeColors.primary }]}>Đang sửa chữa</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -152,7 +153,7 @@ export default function BookingScreen({ navigation }) {
         contentContainerStyle={styles.scrollContent}
       > {/* Use getStyles for scrollContent */}
         {activeView === 'booking' ? (
-          <View style={getStyles().bookingContent}>
+          <View style={styles.bookingContent}>
             <View style={styles.progressContainer}>
               {[1, 2, 3].map(i => (
                 <View key={i} style={[styles.progressDot, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)' }, step >= i && [styles.activeProgressDot, { backgroundColor: activeColors.primary }]]} />
@@ -178,7 +179,7 @@ export default function BookingScreen({ navigation }) {
   );
 }
 
-const getStyles = () => StyleSheet.create({
+const getStyles = (theme, activeColors) => StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { paddingHorizontal: theme.spacing.lg, paddingBottom: 120, flexGrow: 1 },
   header: { marginTop: 10, marginBottom: theme.spacing.xl, paddingHorizontal: theme.spacing.lg },

@@ -29,7 +29,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};
-  const theme = useTheme(); // Use the useTheme hook
+  const theme = useTheme();
+  const styles = getStyles(theme); // Use the useTheme hook
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedColor, setSelectedColor] = useState(motor?.colors?.[0]?.id || 'default');
   const [rotationIndex, setRotationIndex] = useState(0);

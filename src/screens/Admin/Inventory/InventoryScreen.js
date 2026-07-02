@@ -76,12 +76,7 @@ export default function InventoryScreen() {
   const colors = theme.colors;
   const styles = getStyles(theme);
 
-  let navigation;
-  try {
-    navigation = useNavigation();
-  } catch (e) {
-    navigation = null;
-  }
+  const navigation = useNavigation();
 
   const bottomSheetRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');

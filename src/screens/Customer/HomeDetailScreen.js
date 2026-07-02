@@ -72,7 +72,8 @@ const MOCK_RELATED_NEWS = [
 export default function HomeDetailScreen({ route, navigation }) {
   const { type: initialType, item: initialItem } = route.params || {};
   const colors = useActiveColors();
-  const theme = useTheme(); // Use the useTheme hook
+  const theme = useTheme();
+  const styles = getStyles(theme); // Use the useTheme hook
   const isDark = colors.isDark;
 
   // Hỗ trợ chuyển đổi bài viết khi nhấn vào Tin liên quan
@@ -919,14 +920,6 @@ const getStyles = (theme) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: theme.spacing.md,
-    borderBottomWidth: 1,
-  },
-  header: {
-    height: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
     borderBottomWidth: 1,
   },
   backIconBtn: {
