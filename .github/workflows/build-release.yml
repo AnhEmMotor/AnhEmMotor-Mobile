@@ -33,8 +33,9 @@ jobs:
       - name: Expo Prebuild
         run: npx expo prebuild --platform android --clean
         env:
-          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
+          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
+          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
 
       - name: Build Android APK
         run: |
@@ -42,8 +43,9 @@ jobs:
           ./gradlew assembleRelease
           mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/AnhEmMotor-Latest-Release.apk
         env:
-          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
+          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
+          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
@@ -71,8 +73,9 @@ jobs:
       - name: Expo Prebuild
         run: npx expo prebuild --platform ios --clean
         env:
-          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
+          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
+          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
 
       - name: Build iOS App for Simulator
         run: |
@@ -81,8 +84,9 @@ jobs:
           cd build/Build/Products/Release-iphonesimulator
           zip -r ../../../../../AnhEmMotor-Latest-iOS-Simulator.zip AnhEmMotorMobile.app
         env:
-          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY }}
-          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
+          EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key' }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL || 'http://localhost' }}
+          EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key' }}
 
       - name: Upload iOS Artifact
         uses: actions/upload-artifact@v7
