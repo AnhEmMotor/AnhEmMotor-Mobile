@@ -25,7 +25,7 @@ jobs:
         run: npm ci || npm install
 
       - name: Run Lint
-        run: npm run lint
+        run: npm run lint -- --max-warnings=0
 
       - name: Expo Export (Check build)
         run: npx expo export
