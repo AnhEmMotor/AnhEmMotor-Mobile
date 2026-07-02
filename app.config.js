@@ -14,6 +14,7 @@ export default {
     },
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.AnhEmMotorMobile",
       "config": {
         "googleMapsApiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || "dummy_ios_key"
       }
