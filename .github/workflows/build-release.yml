@@ -34,6 +34,7 @@ jobs:
         run: npx expo prebuild --platform android --clean
         env:
           EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
 
       - name: Build Android APK
         run: |
@@ -41,6 +42,7 @@ jobs:
           ./gradlew assembleRelease
         env:
           EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v7
@@ -69,6 +71,7 @@ jobs:
         run: npx expo prebuild --platform ios --clean
         env:
           EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
 
       - name: Build iOS App for Simulator
         run: |
@@ -78,6 +81,7 @@ jobs:
           zip -r ../../../../../ios-app.zip AnhEmMotorMobile.app
         env:
           EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY: ${{ secrets.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY }}
+          EXPO_PUBLIC_BACKEND_API_URL: ${{ secrets.EXPO_PUBLIC_BACKEND_API_URL }}
 
       - name: Upload iOS Artifact
         uses: actions/upload-artifact@v7
