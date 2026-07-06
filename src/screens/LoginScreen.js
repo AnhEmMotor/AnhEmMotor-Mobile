@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { Mail, Lock, Eye, EyeOff, ChevronRight, Moon, Sun } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, ChevronRight, Moon, Sun, Square } from 'lucide-react-native';
 import { Theme, useActiveColors, useTheme } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
