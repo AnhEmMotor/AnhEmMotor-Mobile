@@ -9,7 +9,7 @@ import { useGlobalState } from '../../../../context/GlobalState';
 import { useDependency } from '../../../../di/DependencyContext';
 
 
-// Mock Administrative Regions Database for Viet Nam
+// Vietnam address regions data (used for profile address editing UI)
 export const MOCK_REGIONS = {
   provinces: ['Hồ Chí Minh', 'Đồng Nai', 'Hà Nội', 'Bình Dương'],
   districts: {
