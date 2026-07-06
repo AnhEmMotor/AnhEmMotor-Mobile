@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useColorScheme, View, ActivityIndicator, Platform } from 'react-native';
+import { useColorScheme, View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { LayoutGrid, Car, User, LifeBuoy, Motorbike, Package, Bell, BarChart2, Calendar, Users, Truck, MessageSquare, Navigation } from 'lucide-react-native';
+import { LayoutGrid, User, LifeBuoy, Motorbike, Package, Bell } from 'lucide-react-native';
 import { Theme, useActiveColors } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,19 +33,6 @@ import ServiceHistoryScreen from '../screens/Customer/ServiceHistoryScreen';
 import FinancialHubScreen from '../screens/Customer/FinancialHubScreen';
 import LegalProgressScreen from '../screens/Customer/LegalProgressScreen';
 
-
-// Admin Screens
-import DashboardScreen from '../screens/Admin/DashboardScreen';
-import AdminProfileScreen from '../screens/Admin/AdminProfileScreen';
-import AppointmentManageScreen from '../screens/Admin/Appointment/AppointmentManageScreen';
-import AdminAppointmentDetailScreen from '../screens/Admin/Appointment/AdminAppointmentDetailScreen';
-import InventoryScreen from '../screens/Admin/InventoryScreen';
-import CashFlowScreen from '../screens/Admin/CashFlowScreen';
-import LeadScreen from '../screens/Admin/LeadScreen';
-import SupportHubScreen from '../screens/Admin/SupportHubScreen';
-import OrderManageScreen from '../screens/Admin/OrderManageScreen';
-import HubScreen from '../screens/Admin/HubScreen';
-import MapTrackingScreen from '../screens/Admin/MapTrackingScreen';
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
 import { navigationRef } from './RootNavigation';
 
@@ -70,11 +57,11 @@ function CustomerTabs() {
   return (
     <Tab.Navigator screenOptions={{
       headerShown: false,
-      tabBarStyle: { 
-        backgroundColor: tabBg, 
-        borderTopWidth: 1, 
+      tabBarStyle: {
+        backgroundColor: tabBg,
+        borderTopWidth: 1,
         borderTopColor: tabBorderTop,
-        height: barHeight, 
+        height: barHeight,
         paddingBottom: paddingBottom,
         paddingTop: 10,
         elevation: 0,
@@ -86,100 +73,12 @@ function CustomerTabs() {
       tabBarActiveTintColor: tabActiveText,
       tabBarInactiveTintColor: tabInactiveText,
     }}>
-      <Tab.Screen name="Hub" component={HomeScreen} options={{
-        tabBarIcon: ({color}) => <LayoutGrid color={color} size={22} />,
-        tabBarLabel: 'Trang chủ'
-      }} />
-      <Tab.Screen name="Catalog" component={CatalogScreen} options={{
-        tabBarIcon: ({color}) => <Package color={color} size={22} />,
-        tabBarLabel: 'Sản phẩm'
-      }} />
-      <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{
-        tabBarIcon: ({color}) => <Motorbike color={color} size={22} />,
-        tabBarLabel: 'Xe của tôi'
-      }} />
-
-      <Tab.Screen name="Notification" component={NotificationScreen} options={{
-        tabBarIcon: ({color}) => <Bell color={color} size={22} />,
-        tabBarLabel: 'Thông báo'
-      }} />
-      <Tab.Screen name="Support" component={SupportScreen} options={{
-        tabBarIcon: ({color}) => <LifeBuoy color={color} size={22} />,
-        tabBarLabel: 'Hỗ trợ'
-      }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{
-        tabBarIcon: ({color}) => <User color={color} size={22} />,
-        tabBarLabel: 'Cá nhân'
-      }} />
-    </Tab.Navigator>
-  );
-}
-
-function AdminTabs() {
-  const activeColors = useActiveColors();
-  const { themeMode } = useGlobalState();
-  const systemScheme = useColorScheme();
-  const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
-  const insets = useSafeAreaInsets();
-  const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
-  const barHeight = 55 + bottomInset;
-  const paddingBottom = insets.bottom > 0 ? insets.bottom - 4 : 10;
-
-  const tabBg = activeColors.background;
-  const tabActiveText = Theme.staticColors.primary;
-  const tabInactiveText = activeColors.subtext;
-  const tabBorderTop = activeColors.border;
-
-  return (
-    <Tab.Navigator screenOptions={{
-      headerShown: false,
-      tabBarStyle: { 
-        backgroundColor: tabBg, 
-        borderTopWidth: 1, 
-        borderTopColor: tabBorderTop, 
-        height: barHeight, 
-        paddingBottom: paddingBottom,
-        paddingTop: 8,
-        elevation: 10,
-        ...Platform.select({
-          web: { boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)' },
-          default: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: -4 },
-            shadowOpacity: isDark ? 0.4 : 0.2,
-            shadowRadius: 8,
-          }
-        })
-      },
-      tabBarActiveTintColor: tabActiveText,
-      tabBarInactiveTintColor: tabInactiveText,
-    }}>
-      <Tab.Screen name="AdminDashboard" component={DashboardScreen} options={{
-        tabBarIcon: ({color}) => <BarChart2 color={color} size={24} />,
-        tabBarLabel: 'Tổng quan'
-      }} />
-      <Tab.Screen name="AdminAppointments" component={AppointmentManageScreen} options={{
-        tabBarIcon: ({color}) => <Calendar color={color} size={24} />,
-        tabBarLabel: 'Lịch hẹn',
-        tabBarBadge: 2, // Red notification badge
-        tabBarBadgeStyle: { backgroundColor: Theme.staticColors.error, color: Theme.staticColors.secondary, fontSize: 10, fontWeight: 'bold' }
-      }} />
-      <Tab.Screen name="AdminOrders" component={OrderManageScreen} options={{
-        tabBarIcon: ({color}) => <Truck color={color} size={24} />,
-        tabBarLabel: 'Đơn hàng'
-      }} />
-      <Tab.Screen name="AdminLeads" component={LeadScreen} options={{
-        tabBarIcon: ({color}) => <Users color={color} size={24} />,
-        tabBarLabel: 'Khách hàng'
-      }} />
-      <Tab.Screen name="AdminMapTracking" component={MapTrackingScreen} options={{
-        tabBarIcon: ({color}) => <Navigation color={color} size={24} />,
-        tabBarLabel: 'Vận chuyển'
-      }} />
-      <Tab.Screen name="AdminHub" component={HubScreen} options={{
-        tabBarIcon: ({color}) => <LayoutGrid color={color} size={24} />,
-        tabBarLabel: 'Tiện ích'
-      }} />
+      <Tab.Screen name="Hub" component={HomeScreen} options={{ tabBarIcon: ({color}) => <LayoutGrid color={color} size={22} />, tabBarLabel: 'Trang chủ' }} />
+      <Tab.Screen name="Catalog" component={CatalogScreen} options={{ tabBarIcon: ({color}) => <Package color={color} size={22} />, tabBarLabel: 'Sản phẩm' }} />
+      <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{ tabBarIcon: ({color}) => <Motorbike color={color} size={22} />, tabBarLabel: 'Xe của tôi' }} />
+      <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarIcon: ({color}) => <Bell color={color} size={22} />, tabBarLabel: 'Thông báo' }} />
+      <Tab.Screen name="Support" component={SupportScreen} options={{ tabBarIcon: ({color}) => <LifeBuoy color={color} size={22} />, tabBarLabel: 'Hỗ trợ' }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarIcon: ({color}) => <User color={color} size={22} />, tabBarLabel: 'Cá nhân' }} />
     </Tab.Navigator>
   );
 }
@@ -192,14 +91,8 @@ export default function AppNavigator() {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         const profileStr = await AsyncStorage.getItem('@AEM_Customer_Profile');
-        
         if (token && profileStr) {
-          const profile = JSON.parse(profileStr);
-          if (profile.permissions && profile.permissions.length > 0) {
-            setInitialRoute('AdminHome');
-          } else {
-            setInitialRoute('CustomerHome');
-          }
+          setInitialRoute('CustomerHome');
         } else {
           setInitialRoute('Login');
         }
@@ -208,7 +101,6 @@ export default function AppNavigator() {
         setInitialRoute('Login');
       }
     };
-
     checkAuthStatus();
   }, []);
 
@@ -244,22 +136,8 @@ export default function AppNavigator() {
         <Stack.Screen name="ServiceHistory" component={ServiceHistoryScreen} />
         <Stack.Screen name="FinancialHub" component={FinancialHubScreen} />
         <Stack.Screen name="LegalProgress" component={LegalProgressScreen} />
-
-
-        {/* Admin Stack */}
-        <Stack.Screen name="AdminHome" component={AdminTabs} />
-        <Stack.Screen name="AdminProfile" component={AdminProfileScreen} />
-        <Stack.Screen name="AdminAppointments" component={AppointmentManageScreen} />
-        <Stack.Screen name="AdminAppointmentDetail" component={AdminAppointmentDetailScreen} />
-        <Stack.Screen name="AdminInventory" component={InventoryScreen} />
-        <Stack.Screen name="CashFlow" component={CashFlowScreen} />
-        <Stack.Screen name="AdminLeads" component={LeadScreen} />
-        <Stack.Screen name="SupportHub" component={SupportHubScreen} />
-        <Stack.Screen name="AdminOrders" component={OrderManageScreen} />
-        <Stack.Screen name="AdminMapTracking" component={MapTrackingScreen} />
       </Stack.Navigator>
       <GlobalSettingsModal />
     </NavigationContainer>
   );
 }
-

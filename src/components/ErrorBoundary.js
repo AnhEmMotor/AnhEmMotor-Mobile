@@ -1,37 +1,31 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
-class ErrorBoundary extends React.Component {
+export default function ErrorBoundary({ children }) {
+  if (!__DEV__) {
+    return <ErrorCatcher>{children}</ErrorCatcher>;
+  }
+  return children;
+}
+
+class ErrorCatcher extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // In development, log to console but don't show UI
-    if (__DEV__) {
-      console.log('Error caught by boundary:', error, errorInfo);
-    }
+  static getDerivedStateFromError() {
+    return { hasError: true };
   }
 
   render() {
     if (this.state.hasError) {
-      // In production, show fallback UI
-      if (!__DEV__) {
-        return (
-          <View style={styles.fallback}>
-            <Text style={styles.fallbackText}>Đã xảy ra lỗi</Text>
-          </View>
-        );
-      }
-      // In development, render children to allow other errors to show
-      return this.props.children;
+      return (
+        <View style={styles.fallback}>
+          <Text style={styles.fallbackText}>Đã xảy ra lỗi</Text>
+        </View>
+      );
     }
-
     return this.props.children;
   }
 }
@@ -48,5 +42,3 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 });
-
-export default ErrorBoundary;
