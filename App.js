@@ -13,6 +13,10 @@ import ErrorBoundary from './src/components/ErrorBoundary';
 LogBox.ignoreLogs([
   'props.pointerEvents is deprecated',
   'Failed to execute \'removeChild\' on \'Node\'',
+  'An error occurred in the <div> component',
+  'An error occurred in the <NativeSafeAreaProvider> component',
+  'An error occurred in the <ModalPortal> component',
+  '[Reanimated] Failed to create CSS stylesheet',
   'An iframe which has both allow-scripts and allow-same-origin',
 ]);
 

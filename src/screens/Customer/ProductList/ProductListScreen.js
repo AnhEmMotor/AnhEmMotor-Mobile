@@ -39,7 +39,7 @@ export default function ProductListScreen({ route, navigation }) {
             accessible
             accessibilityRole="button"
             accessibilityLabel="Giỏ hàng"
-            onPress={() => navigation.navigate('Cart')}
+            onPress={() => navigation.navigate('Catalog')}
             style={[styles.cartBtn, { marginRight: 10, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}
           >
             <ShoppingCart color={activeColors.text} size={24} />

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { Mail, Lock, Eye, EyeOff, ChevronRight, Moon, Sun, Square } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, ChevronRight, Moon, Sun } from 'lucide-react-native';
 import { Theme, useActiveColors, useTheme } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -64,7 +64,7 @@ export default function LoginScreen({ navigation }) {
 
     setLoading(true);
     const loginController = new AbortController();
-    const loginTimeoutId = setTimeout(() => loginController.abort(), 10000);
+    const loginTimeoutId = setTimeout(() => loginController.abort(), 30000);
 
     try {
       const loginResponse = await fetch(`${API_BASE_URL}/api/v1/Auth/login`, {
@@ -251,7 +251,7 @@ export default function LoginScreen({ navigation }) {
 
               <View style={styles.optionsRow}>
                 <Pressable style={styles.rememberMe} onPress={() => setRememberPassword(!rememberPassword)}>
-                  {rememberPassword ? <Eye size={moderateScale(18)} color={colors.primary} /> : <Square size={moderateScale(18)} color={colors.subtext} />}
+                  {rememberPassword ? <Eye size={moderateScale(18)} color={colors.primary} /> : <View style={{ width: moderateScale(18), height: moderateScale(18), borderRadius: moderateScale(3), borderWidth: 1.5, borderColor: colors.subtext, justifyContent: 'center', alignItems: 'center' }} />}
                   <Text style={[styles.rememberText, { color: colors.subtext }]}>Ghi nhớ mật khẩu</Text>
                 </Pressable>
                 <Pressable style={styles.forgotPassword} onPress={() => navigation.navigate('ForgotPassword')}>
