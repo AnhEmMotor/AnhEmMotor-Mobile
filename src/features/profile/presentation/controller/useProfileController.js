@@ -7,7 +7,8 @@ import * as Haptics from 'expo-haptics';
 import { UserProfile } from '../../domain/entities/UserProfile';
 import { useGlobalState } from '../../../../context/GlobalState';
 import { useDependency } from '../../../../di/DependencyContext';
-
+import { resetRoot } from '../../../../navigation/RootNavigation';
+import { tokenService } from '../../../../api/httpClient';
 
 // Vietnam address regions data (used for profile address editing UI)
 export const MOCK_REGIONS = {
@@ -41,10 +42,10 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
-  
+
   // Field editing state
-  const [activeField, setActiveField] = useState(null); // 'name' | 'email' | 'address' | 'license' | 'password' | 'language'
-  const [tempData, setTempData] = useState({}); // Stores changes currently being edited in bottom sheet
+  const [activeField, setActiveField] = useState(null);
+  const [tempData, setTempData] = useState({});
 
   // Password fields state
   const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
@@ -77,7 +78,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   const openEditField = (field) => {
     triggerHaptic();
     setActiveField(field);
-    
+
     if (field === 'profile') {
       setTempData({
         name: profile.name,
@@ -164,9 +165,8 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       } else if (activeField === 'theme') {
         const saved = await updateSettingsUseCase.execute({ theme: tempData.theme });
         setProfile(saved);
-        setThemeMode(tempData.theme); // Đồng bộ chủ đề toàn hệ thống
+        setThemeMode(tempData.theme);
       } else if (activeField === 'password') {
-        // Validate password change
         if (!passwordForm.oldPassword || !passwordForm.newPassword) {
           throw new Error('Vui lòng điền đầy đủ thông tin mật khẩu');
         }
@@ -176,7 +176,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
         if (passwordForm.newPassword.length < 6) {
           throw new Error('Mật khẩu mới phải từ 6 ký tự trở lên');
         }
-        await repository._simulateNetworkLatency(1000); // Simulate API check
+        await repository._simulateNetworkLatency(1000);
         Alert.alert('Thành công', 'Đã đổi mật khẩu thành công!');
       }
 
@@ -189,24 +189,22 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Auto-Save Toggle Switches immediately (Clean Architecture + Toggle UX)
+  // Auto-Save Toggle Switches immediately
   const handleToggleSetting = async (key, currentValue) => {
     triggerHaptic();
     try {
       const newValue = !currentValue;
-      
-      // Optimitic UI update
+
+      // Optimistic UI update
       setProfile(prev => {
         const cloned = prev.clone();
         cloned.settings[key] = newValue;
         return cloned;
       });
 
-      // Update in data layer
       await updateSettingsUseCase.execute({ [key]: newValue });
     } catch (error) {
       console.error(`Toggle ${key} failed:`, error);
-      // Rollback UI update
       setProfile(prev => {
         const cloned = prev.clone();
         cloned.settings[key] = currentValue;
@@ -234,11 +232,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       }
 
       let pickerResult;
-      const options = {
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-      };
+      const options = { allowsEditing: true, aspect: [1, 1], quality: 0.8 };
 
       if (type === 'camera') {
         pickerResult = await ImagePicker.launchCameraAsync(options);
@@ -249,13 +243,12 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
         setIsSaving(true);
         const uploadedUri = await uploadAvatarUseCase.execute(pickerResult.assets[0].uri);
-        
-        // Save to profile
+
         const updated = profile.clone();
-        updated.licenseImage = uploadedUri; // Or avatar depends
+        updated.licenseImage = uploadedUri;
         const saved = await updateProfileUseCase.execute(updated);
         setProfile(saved);
-        
+
         triggerHaptic();
       }
     } catch (error) {
@@ -266,15 +259,15 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Selecting cartoon avatars from mock sheet (Fast & engaging)
+  // Selecting cartoon avatars from mock sheet
   const handleSelectCartoonAvatar = async (url) => {
     triggerHaptic();
     try {
       setIsSaving(true);
       const savedUrl = await uploadAvatarUseCase.execute(url);
-      
+
       const updated = profile.clone();
-      updated.licenseImage = savedUrl; // Set locally
+      updated.licenseImage = savedUrl;
       const saved = await updateProfileUseCase.execute(updated);
       setProfile(saved);
     } catch (error) {
@@ -293,18 +286,19 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       'Hành động này không thể hoàn tác. Mọi thông tin xe máy, lịch bảo dưỡng, và điểm thưởng (12,500 điểm) sẽ bị xóa vĩnh viễn khỏi hệ thống Showroom Biên Hòa.',
       [
         { text: 'Hủy', style: 'cancel' },
-        { 
-          text: 'Xóa Vĩnh Viễn', 
+        {
+          text: 'Xóa Vĩnh Viễn',
           style: 'destructive',
           onPress: async () => {
             setIsLoading(true);
+            await tokenService.clearTokens();
             await repository.clearAllData();
             setIsLoading(false);
             Alert.alert('Thông báo', 'Tài khoản của bạn đã được xóa thành công khỏi hệ thống.', [
-              { text: 'OK', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' }] }) }
+              { text: 'OK', onPress: () => resetRoot('Login') }
             ]);
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -313,7 +307,13 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     triggerHaptic();
     Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng?', [
       { text: 'Hủy', style: 'cancel' },
-      { text: 'Đăng xuất', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' }] }) }
+      {
+        text: 'Đăng xuất',
+        onPress: async () => {
+          await tokenService.clearTokens();
+          resetRoot('Login');
+        },
+      },
     ]);
   };
 
