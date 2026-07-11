@@ -18,7 +18,7 @@ import { Mail, Lock, Eye, EyeOff, Check } from 'lucide-react-native';
 import { Theme, useActiveColors, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { API_BASE_URL } from '../../config';
+import { registerApi } from '../../api/customerApi';
 
 export default function RegisterScreen({ navigation }) {
   const theme = useTheme();
@@ -41,42 +41,19 @@ export default function RegisterScreen({ navigation }) {
     if (!canSubmit) return;
     
     setLoading(true);
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/Auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName: name.trim(),
-          email: email.trim(),
-          password: password
-        }),
-        signal: controller.signal,
+      await registerApi({
+        fullName: name.trim(),
+        email: email.trim(),
+        password,
       });
 
-      clearTimeout(timeoutId);
-      const data = await response.json();
-
-      if (response.ok && (data.isSuccess === undefined || data.isSuccess === true)) {
-        Alert.alert('Thành công', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.', [
-          { text: 'OK', onPress: () => navigation.navigate('Login') }
-        ]);
-      } else {
-        const errorMsg = data.error?.message || data.title || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin (Mật khẩu cần chữ hoa, thường, số, ký tự đặc biệt).';
-        Alert.alert('Lỗi đăng ký', errorMsg);
-      }
+      Alert.alert('Thành công', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.', [
+        { text: 'OK', onPress: () => navigation.navigate('Login') }
+      ]);
     } catch (error) {
-      clearTimeout(timeoutId);
-      if (error.name === 'AbortError') {
-        Alert.alert('Lỗi kết nối', 'Máy chủ không phản hồi. Vui lòng thử lại sau.');
-      } else {
-        Alert.alert('Lỗi hệ thống', 'Không thể kết nối đến máy chủ. Hãy chắc chắn backend đang chạy.');
-      }
+      Alert.alert('Lỗi đăng ký', error.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
     } finally {
       setLoading(false);
     }

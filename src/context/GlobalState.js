@@ -6,7 +6,7 @@ const GlobalStateContext = createContext();
 const STORAGE_KEY = '@AEM_Customer_Profile';
 
 export const GlobalStateProvider = ({ children }) => {
-  const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock 3 unread
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [isDataSyncing, setIsDataSyncing] = useState(false);
   const [themeMode, setThemeModeState] = useState(null); // Khởi tạo là null hoặc undefined để chỉ ra rằng theme chưa được tải
   const [isSettingsOpen, setSettingsOpen] = useState(false);

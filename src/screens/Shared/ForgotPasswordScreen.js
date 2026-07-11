@@ -9,6 +9,7 @@ import {
   Platform,
   Dimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -16,41 +17,61 @@ import { Mail, Lock, Eye, EyeOff, Check, Clock } from 'lucide-react-native';
 import { Theme, useActiveColors, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { forgotPasswordApi, resetPasswordApi } from '../../api/customerApi';
 
 export default function ForgotPasswordScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
   const activeColors = useActiveColors();
 
-  const [step, setStep] = useState(1); // 1: phone, 2: OTP, 3: reset password
-  const [phone, setPhone] = useState('');
+  const [step, setStep] = useState(1); // 1: email, 2: reset token, 3: reset password
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [activeInput, setActiveInput] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const canSendOtp = phone.length >= 9; // basic validation
+  const canSendOtp = /\S+@\S+\.\S+/.test(email);
   const canReset = newPass && newPass === confirmPass;
 
-  const handleSendOtp = () => {
-    if (canSendOtp) {
-      // TODO: call backend to send OTP
+  const handleSendOtp = async () => {
+    if (!canSendOtp) return;
+
+    setLoading(true);
+    try {
+      await forgotPasswordApi(email.trim());
+      Alert.alert('Thành công', 'Đã gửi yêu cầu đặt lại mật khẩu. Vui lòng kiểm tra email của bạn.');
       setStep(2);
+    } catch (error) {
+      Alert.alert('Lỗi', error.message || 'Không thể gửi yêu cầu đặt lại mật khẩu.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleVerifyOtp = () => {
     if (otp.length === 6) {
-      // TODO: verify OTP with backend
       setStep(3);
+    } else {
+      Alert.alert('Lỗi', 'Vui lòng nhập mã OTP gồm 6 chữ số.');
     }
   };
 
-  const handleResetPassword = () => {
-    if (canReset) {
-      // TODO: call backend to set new password
-      navigation.navigate('Login');
+  const handleResetPassword = async () => {
+    if (!canReset) return;
+
+    setLoading(true);
+    try {
+      await resetPasswordApi(email.trim(), otp.trim(), newPass);
+      Alert.alert('Thành công', 'Mật khẩu đã được cập nhật. Vui lòng đăng nhập lại.', [
+        { text: 'OK', onPress: () => navigation.navigate('Login') }
+      ]);
+    } catch (error) {
+      Alert.alert('Lỗi', error.message || 'Không thể đặt lại mật khẩu.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,7 +92,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             <BlurView intensity={theme.isDark ? 25 : 50} tint={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
             <View style={[styles.cardInner, { backgroundColor: colors.glassBg }]}>
               <Text style={[styles.formTitle, { color: colors.text }]}>Quên mật khẩu</Text>
-              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>Nhập số điện thoại để nhận OTP</Text>
+              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>Nhập email để nhận liên kết đặt lại mật khẩu</Text>
 
               {step === 1 && (
                 <>
@@ -84,18 +105,14 @@ export default function ForgotPasswordScreen({ navigation }) {
                     ]}
                   >
                     <Mail size={moderateScale(18)} color={activeInput === 'phone' ? colors.primary : colors.subtext} />
-                    {/* +84 prefix */}
-                    <View style={[styles.phonePrefixWrapper, { borderColor: colors.border }]}>
-                      <Text style={[styles.phonePrefix, { color: colors.text }]}>+84</Text>
-                    </View>
                     <TextInput
                       style={[styles.input, { color: colors.text }]}
-                      placeholder="9x xxx xxxx"
+                      placeholder="Email của bạn"
                       placeholderTextColor={colors.subtext}
-                      value={phone}
-                      onChangeText={(text) => setPhone(text.replace(/^0/, ''))}
-                      keyboardType="phone-pad"
-                      maxLength={9}
+                      value={email}
+                      onChangeText={setEmail}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
                       onFocus={() => setActiveInput('phone')}
                       onBlur={() => setActiveInput(null)}
                     />
@@ -111,7 +128,7 @@ export default function ForgotPasswordScreen({ navigation }) {
                       end={{ x: 1, y: 0 }}
                       style={styles.btnGradient}
                     >
-                      <Text style={styles.btnText}>Gửi OTP</Text>
+                      <Text style={styles.btnText}>{loading ? 'Đang xử lý...' : 'Gửi OTP'}</Text>
                     </LinearGradient>
                   </Pressable>
                 </>
@@ -212,7 +229,7 @@ export default function ForgotPasswordScreen({ navigation }) {
                       end={{ x: 1, y: 0 }}
                       style={styles.btnGradient}
                     >
-                      <Text style={styles.btnText}>Đặt lại mật khẩu</Text>
+                      <Text style={styles.btnText}>{loading ? 'Đang xử lý...' : 'Đặt lại mật khẩu'}</Text>
                     </LinearGradient>
                   </Pressable>
                 </>

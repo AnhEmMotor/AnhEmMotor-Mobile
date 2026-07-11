@@ -310,10 +310,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
           <View style={styles.titleRow}>
             <View style={{ flex: 1 }}>
               <Text style={[styles.name, { color: activeColors.text }]}>{motor?.name || 'Motorcycle'}</Text>
-              <Text style={[styles.category, { color: activeColors.isDark ? '#CBD5E1' : '#475569' }]}>{motor?.brand || 'Yamaha'} • Phiên bản Thể thao</Text>
+              <Text style={[styles.category, { color: activeColors.isDark ? '#CBD5E1' : '#475569' }]}>{motor?.brand || motor?.brandName || 'Yamaha'} • Phiên bản Thể thao</Text>
             </View>
             <View style={styles.priceContainer}>
-              <Text style={[styles.price, { color: activeColors.primary }]}>{motor?.price}</Text>
+              <Text style={[styles.price, { color: activeColors.primary }]}>{motor?.price || motor?.referencePrice || 'Liên hệ'}</Text>
               <Text style={[styles.msrp, { color: activeColors.subtext }]}>105.000.000đ</Text>
             </View>
           </View>

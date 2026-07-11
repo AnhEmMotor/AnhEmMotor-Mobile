@@ -2,7 +2,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React from 'react';
 import { Platform, LogBox } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { GlobalStateProvider } from './src/context/GlobalState';
 import { DependencyProvider } from './src/di/DependencyContext';
@@ -31,17 +31,6 @@ export default function App() {
       </GlobalStateProvider>
     </DependencyProvider>
   );
-
-  // For web: use initialMetrics to prevent removeChild errors
-  if (Platform.OS === 'web') {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          {RootContent}
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    );
-  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

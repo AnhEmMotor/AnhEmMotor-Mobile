@@ -11,7 +11,9 @@ export const useVehicleDetail = (motor, initialColor) => {
   const [loanTerm, setLoanTerm] = useState(12);
   
   const lastX = useRef(0);
-  const motorFrames = motor?.frames || [motor?.img];
+  const motorFrames = Array.isArray(motor?.frames) && motor.frames.length > 0
+    ? motor.frames
+    : [motor?.img || motor?.imageUrl || motor?.coverImageUrl];
 
   const handleTouchStart = (e) => {
     lastX.current = e.nativeEvent.pageX;
@@ -34,13 +36,16 @@ export const useVehicleDetail = (motor, initialColor) => {
   };
 
   const currentImage = useMemo(() => {
-    if (motor?.frames) return motorFrames[rotationIndex];
-    return motor?.colors?.find(c => c.id === selectedColor)?.img || motor?.img;
-  }, [rotationIndex, selectedColor, motor]);
+    if (Array.isArray(motor?.frames) && motor.frames.length > 0) return motorFrames[rotationIndex];
+    return motor?.colors?.find(c => c.id === selectedColor)?.img || motor?.img || motor?.imageUrl || motor?.coverImageUrl;
+  }, [rotationIndex, selectedColor, motor, motorFrames]);
 
   // Mock Finance Calculation
   const financeResults = useMemo(() => {
-    const priceRaw = parseInt(motor?.price?.replace(/\./g, '') || '0');
+    const priceValue = motor?.price ?? motor?.referencePrice ?? motor?.Price ?? motor?.ReferencePrice;
+    const priceRaw = typeof priceValue === 'number'
+      ? priceValue
+      : parseInt(String(priceValue || '').replace(/\./g, '').replace(/[^\d]/g, '') || '0');
     const downPayment = Math.floor(priceRaw * (downPaymentPercent / 100));
     const loanAmount = priceRaw - downPayment;
     const monthlyRate = 0.015; // 1.5% average

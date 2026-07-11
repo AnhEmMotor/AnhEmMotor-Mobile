@@ -41,12 +41,12 @@ function buildUrl(path) {
  return `${API_BASE_URL}${path}`;
 }
 
-async function sendRequest(path, options = {}, retryOnAuth = true, timeoutMs = 10000) {
+async function sendRequest(path, options = {}, retryOnAuth = true, timeoutMs = 30000) {
  const url = buildUrl(path);
  const authHeaders = await getAuthHeader();
 
  const controller = new AbortController();
- const timer = setTimeout(() => controller.abort(), timeoutMs);
+ const timer = setTimeout(() => controller.abort(), timeoutMs || 30000);
 
  try {
  const response = await fetch(url, {
@@ -101,9 +101,11 @@ async function tryRefreshToken() {
  if (!response.ok) return false;
 
  const data = await response.json();
- const newAccessToken = data.value?.accessToken || data.accessToken;
+ const payload = data.value || data;
+ const newAccessToken = payload?.accessToken || payload?.AccessToken;
+ const refreshedToken = payload?.refreshToken || payload?.RefreshToken || refreshToken;
  if (newAccessToken) {
- await tokenService.saveTokens(newAccessToken, refreshToken);
+ await tokenService.saveTokens(newAccessToken, refreshedToken);
  return true;
  }
  return false;

@@ -6,7 +6,6 @@ import {
 } from '../../../../api/customerApi';
 import { UserProfile } from '../../domain/entities/UserProfile';
 import { UserProfileModel } from '../models/UserProfileModel';
-import { API_BASE_URL } from '../../../../config';
 
 export class ProfileRepositoryImpl {
   async _simulateNetworkLatency(ms = 600) {
@@ -43,18 +42,7 @@ export class ProfileRepositoryImpl {
     if (localProfile) return localProfile;
 
     try {
-      const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 15000);
-      const response = await fetch(API_BASE_URL + '/api/v1/User/me', {
-        method: 'GET',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        signal: ctrl.signal,
-      });
-      clearTimeout(tid);
-
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      const data = await response.json();
-      const user = data.value || data;
+      const user = await getCurrentUserApi();
 
       if (user && (user.name || user.email || user.fullName)) {
         const profile = this._makeProfile(user);
@@ -62,9 +50,7 @@ export class ProfileRepositoryImpl {
         return profile;
       }
     } catch (error) {
-      if (error.name !== 'AbortError') {
-        console.warn('[ProfileRepo] Remote failed:', error.message);
-      }
+      console.warn('[ProfileRepo] Remote failed:', error.message);
     }
 
     return new UserProfile();

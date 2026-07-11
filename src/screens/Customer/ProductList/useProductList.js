@@ -2,29 +2,42 @@ import { useState, useEffect, useMemo } from 'react';
 import { getProductsApi } from '../../../api/customerApi';
 
 export const useProductList = (route) => {
-  const { brand, type } = route.params || {};
+  const { brand = 'Tất cả', type = 'Tất cả' } = route?.params || {};
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const data = await getProductsApi();
         const list = Array.isArray(data) ? data : [];
-        setProducts(list);
+
+        if (isMounted) {
+          setProducts(list);
+        }
       } catch (error) {
-        console.error('Failed to fetch products:', error);
-        setProducts([]);
+        console.warn('Failed to fetch products from backend:', error);
+        if (isMounted) {
+          setProducts([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
+
     fetchProducts();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((motor) => {
+    return (Array.isArray(products) ? products : []).filter((motor) => {
       const motorBrand = motor.brandName || motor.brand || '';
       const motorType = motor.typeName || motor.type || '';
       const matchesBrand = brand === 'Tất cả' || motorBrand === brand;

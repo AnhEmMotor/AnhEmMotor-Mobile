@@ -5,6 +5,7 @@ import {
 	View,
 	ScrollView,
 	ActivityIndicator,
+	TouchableOpacity,
 } from "react-native";
 import { ChevronLeft, Wrench, CheckCircle2 } from "lucide-react-native"; // Import useTheme
 import { useTheme } from "../../theme/Theme";
@@ -22,7 +23,7 @@ export default function ServiceHistoryScreen({ navigation, route }) {
 	const { theme, getStyles } = useTheme();
 	const styles = getStyles(theme);
 
-	const { history, reminders, loading } = useServiceHistoryController(
+	const { history, reminders, loading, error, refreshData } = useServiceHistoryController(
 		vehicle.id || "1",
 	);
 
@@ -58,7 +59,19 @@ export default function ServiceHistoryScreen({ navigation, route }) {
 						style={styles.sectionTitle}
 					>
 						Nhắc nhở sắp tới
-					</Animated.Text>{" "}
+					</Animated.Text>
+					{error ? (
+						<View style={{ marginBottom: 20, padding: 16, borderRadius: 16, backgroundColor: theme.colors.card, borderWidth: 1, borderColor: theme.colors.border }}>
+							<Text style={{ color: theme.colors.text, fontSize: 16, fontWeight: '700', marginBottom: 8 }}>Không thể tải lịch sử dịch vụ</Text>
+							<Text style={{ color: theme.colors.subtext, fontSize: 13, marginBottom: 12 }}>{error}</Text>
+							<TouchableOpacity onPress={refreshData} style={{ backgroundColor: theme.colors.primary, borderRadius: 14, paddingVertical: 12, alignItems: 'center' }}>
+								<Text style={{ color: '#fff', fontWeight: '700' }}>Thử lại</Text>
+							</TouchableOpacity>
+						</View>
+					) : null}
+					{!error && reminders.length === 0 ? (
+						<Text style={{ color: theme.colors.subtext, marginBottom: 16 }}>Không có nhắc nhở sắp tới.</Text>
+					) : null}
 					{/* Use getStyles for sectionTitle */}
 					{reminders.map((item, i) => (
 						<Animated.View

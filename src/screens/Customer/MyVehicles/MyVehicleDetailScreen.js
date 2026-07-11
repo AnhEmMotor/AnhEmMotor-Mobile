@@ -11,7 +11,8 @@ import {
   Modal,
   TextInput,
   Alert,
-  Platform
+  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import {
@@ -29,7 +30,7 @@ import {
   Edit2,
   CheckCircle2,
   FileDown,
-  Info
+  Info,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -37,6 +38,7 @@ import GlassCard from '../../../components/GlassCard';
 import ScalePress from '../../../components/ScalePress';
 import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
+import { useMyVehicleDetail } from './hooks/useMyVehicleDetail';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -51,7 +53,9 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
 
   // Vehicle data passed from navigation or default mock
   const { bike } = route.params || {};
-  const activeBike = bike || {
+  const { vehicle: loadedBike, loading, error, retry, saving, saveError, saveVehicle } = useMyVehicleDetail(bike);
+
+  const fallbackBike = {
     id: '1',
     name: 'Honda SH 125i',
     plate: '60-A1 555.55',
@@ -64,7 +68,25 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
     regDate: '15/05/2024',
     status: 'Hoạt động tốt',
     odo: '5.200 km',
+    warrantyUntil: '15/05/2027',
+    warrantyFrom: '15/05/2024',
+    insuranceUntil: '20/05/2026',
+    nextService: { odo: '6.500 km', date: '12/08/2026', items: ['Thay nhớt', 'Kiểm tra phanh'] },
   };
+
+  const formatDate = (value) => {
+    if (!value) return 'N/A';
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleDateString('vi-VN');
+  };
+
+  const activeBike = loadedBike || bike || fallbackBike;
+  const plateParts = (activeBike.plate || '').split(' ');
+  const plateHeader = plateParts[0] || '---';
+  const plateBody = plateParts.slice(1).join(' ') || activeBike.plate || '---';
+  const warrantyLabel = activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
+  const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
+  const nextService = activeBike.nextService || {};
 
   // State handles
   const [nickname, setNickname] = useState('Chiến mã của Khôi 🏍️');
@@ -72,6 +94,14 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
   const [tempNickname, setTempNickname] = useState(nickname);
   const [manualVisible, setManualVisible] = useState(false);
   const [invoiceVisible, setInvoiceVisible] = useState(false);
+  const [editVehicleVisible, setEditVehicleVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    plate: activeBike?.plate || '',
+    color: activeBike?.color || '',
+    vin: activeBike?.vin || '',
+    engine: activeBike?.engine || '',
+    currentOdo: (activeBike?.currentOdo ?? activeBike?.odo?.replace(/\D/g, '')) || '',
+  });
 
   const saveNickname = () => {
     if (tempNickname.trim()) {
@@ -80,6 +110,43 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
     }
     setIsEditingNickname(false);
   };
+
+  const openEditVehicle = () => {
+    setFormData({
+      plate: activeBike?.plate || '',
+      color: activeBike?.color || '',
+      vin: activeBike?.vin || '',
+      engine: activeBike?.engine || '',
+      currentOdo: (activeBike?.currentOdo ?? activeBike?.odo?.replace(/\D/g, '')) || '',
+    });
+    setEditVehicleVisible(true);
+  };
+
+  const handleSaveVehicle = async () => {
+    try {
+      const payload = {
+        licensePlate: formData.plate?.trim(),
+        color: formData.color?.trim(),
+        vinNumber: formData.vin?.trim(),
+        engineNumber: formData.engine?.trim(),
+        currentOdo: formData.currentOdo === '' ? null : Number(formData.currentOdo),
+      };
+
+      await saveVehicle(activeBike.id, payload);
+      toastRef.current?.show('Đã lưu thay đổi thông tin xe');
+      setEditVehicleVisible(false);
+    } catch (saveErr) {
+      toastRef.current?.show(saveErr?.message || 'Không thể lưu thông tin xe');
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: activeColors.background, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={activeColors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: activeColors.background }]}>
@@ -94,7 +161,9 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           <ChevronLeft color={activeColors.text} size={24} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: activeColors.text }]}>Chi tiết xe của tôi</Text>
-        <View style={{ width: 40 }} />
+        <TouchableOpacity onPress={openEditVehicle} style={[styles.backBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}> 
+          <Edit2 color={activeColors.text} size={20} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView 
@@ -149,11 +218,11 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               )}
             </View>
 
-            {/* Simulated License Plate Component */}
+            {/* License Plate Component */}
             <View style={styles.plateContainer}>
               <View style={styles.plateContent}>
-                <Text style={styles.plateHeader}>60-A1</Text>
-                <Text style={styles.plateBody}>555.55</Text>
+                <Text style={styles.plateHeader}>{plateHeader}</Text>
+                <Text style={styles.plateBody}>{plateBody}</Text>
               </View>
             </View>
           </View>
@@ -163,6 +232,23 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             style={[styles.idCard, { borderColor: activeColors.glassBorder, backgroundColor: activeColors.glassBg }]}
             tint={activeColors.isDark ? 'dark' : 'light'}
           >
+            {error ? (
+              <View style={[styles.errorBanner, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}> 
+                <Text style={[styles.errorTitle, { color: activeColors.text }]}>Không tải được chi tiết xe</Text>
+                <Text style={[styles.errorDescription, { color: activeColors.subtext }]}>{error}</Text>
+                <TouchableOpacity
+                  style={[styles.retryButton, { backgroundColor: activeColors.primary }]}
+                  onPress={retry}
+                >
+                  <Text style={styles.retryButtonText}>Thử lại</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+            {saveError ? (
+              <View style={styles.errorBanner2}> 
+                <Text style={styles.errorTitle2}>{saveError}</Text>
+              </View>
+            ) : null}
             <View style={styles.idRow}>
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Số khung</Text>
@@ -197,37 +283,34 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             <View style={[styles.liveCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
               <Gauge color={activeColors.primary} size={22} />
               <View style={{ marginLeft: 12 }}>
-                <Text style={[styles.liveLabel, { color: activeColors.subtext }]}>ODO Dự kiến</Text>
-                <Text style={[styles.liveValue, { color: activeColors.text }]}>{activeBike.odo}</Text>
-                <Text style={[styles.liveHint, { color: activeColors.subtext }]}>Hệ thống CRM ước tính</Text>
+                <Text style={[styles.liveLabel, { color: activeColors.subtext }]}>ODO hiện tại</Text>
+                <Text style={[styles.liveValue, { color: activeColors.text }]}>{activeBike.odo || 'N/A'}</Text>
+                <Text style={[styles.liveHint, { color: activeColors.subtext }]}>Dữ liệu từ hệ thống CRM</Text>
               </View>
             </View>
 
             {/* Warranty Status */}
-            <View style={[styles.liveCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
+            <View style={[styles.liveCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}> 
               <Calendar color="#10B981" size={22} />
               <View style={{ marginLeft: 12, flex: 1 }}>
-                <Text style={[styles.liveLabel, { color: activeColors.subtext }]}>Bảo hành gốc</Text>
-                <Text style={[styles.liveValue, { color: '#10B981' }]}>Còn 14 tháng</Text>
-                <Text style={[styles.liveHint, { color: activeColors.subtext }]}>Tương đương 425 ngày</Text>
+                <Text style={[styles.liveLabel, { color: activeColors.subtext }]}>Bảo hành còn lại</Text>
+                <Text style={[styles.liveValue, { color: '#10B981' }]}>{warrantyLabel}</Text>
+                <Text style={[styles.liveHint, { color: activeColors.subtext }]}>{warrantyUntilLabel}</Text>
               </View>
             </View>
           </View>
 
-          {/* Warranty Progress Bar */}
           <View style={[styles.progressWrapper, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', borderColor: activeColors.border }]}>
-            <View style={styles.progressLabelRow}>
-              <Text style={[styles.progressLabel, { color: activeColors.subtext }]}>Tiến trình hạn bảo hành</Text>
-              <Text style={[styles.progressPercent, { color: activeColors.text }]}>65%</Text>
+              <View style={styles.progressLabelRow}>
+                <Text style={[styles.progressLabel, { color: activeColors.subtext }]}>Tiến trình hạn bảo hành</Text>
+                <Text style={[styles.progressPercent, { color: activeColors.text }]}>{activeBike.warrantyRemainingDays != null ? `${Math.min(activeBike.warrantyRemainingDays, 100)}%` : 'N/A'}</Text>
+              </View>
+              <View style={styles.progressBarBg}>
+                <View style={[styles.progressBarFill, { backgroundColor: '#10B981', width: activeBike.warrantyRemainingDays != null ? `${Math.min(activeBike.warrantyRemainingDays, 100)}%` : '0%' }]} />
+              </View>
+              <Text style={[styles.warrantyDetailsText, { color: activeColors.subtext }]}>Hạn dùng đến: <Text style={{ color: activeColors.text, fontWeight: 'bold' }}>{warrantyUntilLabel}</Text> · Bảo hành chính hãng 5 sao tại AnhEmMotor</Text>
             </View>
-            <View style={styles.progressBarBg}>
-              <View style={[styles.progressBarFill, { backgroundColor: '#10B981', width: '65%' }]} />
-            </View>
-            <Text style={[styles.warrantyDetailsText, { color: activeColors.subtext }]}>
-              Hạn dùng đến: <Text style={{ color: activeColors.text, fontWeight: 'bold' }}>15/05/2027</Text> · Bảo hành chính hãng 5 sao tại AnhEmMotor
-            </Text>
-          </View>
-        </Animated.View>
+          </Animated.View>
 
         {/* TẦNG 3: SỨC KHỎE & NHẬT KÝ HAO MÒN (Health Monitor) */}
         <Animated.View entering={FadeInDown.duration(600).delay(300)} style={styles.sectionContainer}>
@@ -275,7 +358,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           {/* Lối tắt xem Bệnh Án */}
           <TouchableOpacity 
             style={[styles.historyShortcut, { backgroundColor: activeColors.isDark ? 'rgba(59,130,246,0.1)' : 'rgba(59,130,246,0.05)', borderColor: activeColors.isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.1)' }]}
-            onPress={() => navigation.navigate('ServiceHistory')}
+            onPress={() => navigation.navigate('ServiceHistory', { vehicle: activeBike })}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <Wrench color={activeColors.primary} size={20} />
@@ -380,6 +463,63 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
       </BlurView>
+
+      <Modal
+        visible={editVehicleVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setEditVehicleVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}> 
+            <Text style={[styles.modalTitle, { color: activeColors.text }]}>Cập nhật thông tin xe</Text>
+            <TextInput
+              style={[styles.modalInput, { color: activeColors.text, borderColor: activeColors.border }]}
+              value={formData.plate}
+              onChangeText={(value) => setFormData((prev) => ({ ...prev, plate: value }))}
+              placeholder="Biển số"
+              placeholderTextColor={activeColors.subtext}
+            />
+            <TextInput
+              style={[styles.modalInput, { color: activeColors.text, borderColor: activeColors.border }]}
+              value={formData.color}
+              onChangeText={(value) => setFormData((prev) => ({ ...prev, color: value }))}
+              placeholder="Màu sắc"
+              placeholderTextColor={activeColors.subtext}
+            />
+            <TextInput
+              style={[styles.modalInput, { color: activeColors.text, borderColor: activeColors.border }]}
+              value={formData.vin}
+              onChangeText={(value) => setFormData((prev) => ({ ...prev, vin: value }))}
+              placeholder="Số khung"
+              placeholderTextColor={activeColors.subtext}
+            />
+            <TextInput
+              style={[styles.modalInput, { color: activeColors.text, borderColor: activeColors.border }]}
+              value={formData.engine}
+              onChangeText={(value) => setFormData((prev) => ({ ...prev, engine: value }))}
+              placeholder="Số máy"
+              placeholderTextColor={activeColors.subtext}
+            />
+            <TextInput
+              style={[styles.modalInput, { color: activeColors.text, borderColor: activeColors.border }]}
+              value={String(formData.currentOdo)}
+              onChangeText={(value) => setFormData((prev) => ({ ...prev, currentOdo: value }))}
+              placeholder="ODO hiện tại"
+              keyboardType="numeric"
+              placeholderTextColor={activeColors.subtext}
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={[styles.modalBtn, styles.modalCancelBtn, { borderColor: activeColors.border }]} onPress={() => setEditVehicleVisible(false)}>
+                <Text style={[styles.modalBtnText, { color: activeColors.text }]}>Hủy</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modalBtn, styles.modalSaveBtn, { backgroundColor: activeColors.primary }]} onPress={handleSaveVehicle} disabled={saving}>
+                {saving ? <ActivityIndicator color="#fff" /> : <Text style={styles.modalBtnText}>Lưu</Text>}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* MODAL 1: SÁCH HƯỚNG DẪN SỬ DỤNG (User Manual) */}
       <Modal
@@ -604,6 +744,36 @@ const styles = StyleSheet.create({
   divider: { width: 1, height: 25, backgroundColor: 'rgba(255,255,255,0.08)', marginHorizontal: 12 },
   
   sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 12 },
+  loadingBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
+    marginBottom: 15,
+    borderRadius: 14,
+    borderWidth: 1,
+    gap: 10,
+  },
+  loadingText: { marginLeft: 8, fontSize: 13, fontWeight: '600' },
+  errorBanner: {
+    padding: 14,
+    marginBottom: 15,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  errorTitle: { fontSize: 14, fontWeight: '700', marginBottom: 6 },
+  errorBanner2: {
+    padding: 10,
+    marginBottom: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+  },
+  errorTitle2: { fontSize: 12, fontWeight: '600', color: '#DC2626' },
+  errorDescription: { fontSize: 12, lineHeight: 18 },
+  retryButton: { marginTop: 10, paddingVertical: 10, borderRadius: 14, alignItems: 'center' },
+  retryButtonText: { color: '#fff', fontWeight: '700' },
   
   liveGrid: { flexDirection: 'row', gap: 12, marginBottom: 12 },
   liveCard: { 
@@ -693,6 +863,13 @@ const styles = StyleSheet.create({
 
   // Modal styles
   modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  modalCard: { width: '100%', borderRadius: 20, padding: 18, borderWidth: 1 },
+  modalInput: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, marginTop: 10, fontSize: 14 },
+  modalActions: { flexDirection: 'row', justifyContent: 'flex-end', marginTop: 16, gap: 10 },
+  modalBtn: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10, minWidth: 90, alignItems: 'center' },
+  modalCancelBtn: { borderWidth: 1 },
+  modalSaveBtn: { },
+  modalBtnText: { fontSize: 13, fontWeight: '700' },
   modalContent: { width: '100%', borderRadius: 24, padding: 20, elevation: 5, ...Platform.select({ web: { boxShadow: '0px 10px 10px rgba(0,0,0,0.25)' }, default: { shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.25, shadowRadius: 10 } }) },
   modalHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 15 },
   modalTitle: { fontSize: 18, fontWeight: 'bold' },

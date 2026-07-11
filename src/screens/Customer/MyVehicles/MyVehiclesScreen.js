@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   QrCode,
@@ -39,7 +40,13 @@ export default function MyVehiclesScreen({ navigation, route }) {
     closeQR,
     selectBike,
     addNewVehicle,
+    registering,
+    registerError,
     handleNavigateToDetail,
+    loading,
+    error,
+    hasVehicles,
+    retryLoadVehicles,
   } = useMyVehicles();
 
   const activeColors = useActiveColors();
@@ -61,26 +68,40 @@ export default function MyVehiclesScreen({ navigation, route }) {
     }
   }, [route?.params?.openAddModal]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!newName.trim() || !newPlate.trim()) {
       Alert.alert('Lỗi', 'Vui lòng nhập Tên xe và Biển số xe.');
       return;
     }
-    addNewVehicle({
-      name: newName.trim(),
-      plate: newPlate.trim(),
-      vin: newVin.trim(),
-      color: newColor.trim(),
-    });
-    // Reset form states
-    setNewName('');
-    setNewPlate('');
-    setNewVin('');
-    setNewColor('');
-    setFormVisible(false);
-    Alert.alert('Thành công 🎉', `Đã thêm xe mới "${newName}" vào tài khoản của bạn!`);
+
+    try {
+      const registered = await addNewVehicle({
+        name: newName.trim(),
+        plate: newPlate.trim(),
+        vin: newVin.trim(),
+        color: newColor.trim(),
+        currentOdo: 0,
+      });
+
+      setNewName('');
+      setNewPlate('');
+      setNewVin('');
+      setNewColor('');
+      setFormVisible(false);
+
+      Alert.alert('Thành công 🎉', `Đã thêm xe mới "${registered.name || newName}" vào tài khoản của bạn!`);
+    } catch (registrationError) {
+      Alert.alert('Lỗi đăng ký xe', registrationError?.message || 'Đã có lỗi xảy ra khi đăng ký xe.');
+    }
   };
 
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: activeColors.background, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={activeColors.primary} />
+      </View>
+    );
+  }
   return (
     <View style={[styles.container, { backgroundColor: activeColors.background }]}>
       <ScrollView 
@@ -106,65 +127,91 @@ export default function MyVehiclesScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
-        {/* Horizontal Vehicle Switcher & Add Button */}
-        <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center' }}>
-            {bikes.map((bike) => {
-              const isSelected = bike.id === activeBike.id;
-              return (
-                <TouchableOpacity
-                  key={bike.id}
-                  onPress={() => selectBike(bike.id)}
-                  style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 10,
-                    borderRadius: 12,
-                    backgroundColor: isSelected 
-                      ? Theme.staticColors.primary 
-                      : (activeColors.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'),
-                    marginRight: 10,
-                    borderWidth: 1,
-                    borderColor: isSelected 
-                      ? Theme.staticColors.primary 
-                      : (activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'),
-                  }}
-                >
-                  <Text style={{ 
-                    color: isSelected ? '#FFFFFF' : activeColors.text, 
-                    fontWeight: 'bold', 
-                    fontSize: 13 
-                  }}>
-                    {bike.name} ({bike.plate.split(' ').pop() || bike.plate})
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-        
-        {/* Dynamic Active Bike Profile Card */}
-        <VehicleProfile 
-          bike={activeBike} 
-          onShowQR={openQR} 
-          onPress={() => handleNavigateToDetail(navigation)}
-        />
-        
-        <WarrantySection bike={activeBike} />
-        
-        <OperatingSpecs specs={activeBike.operatingSpecs} />
-        
-        <PredictionSection prediction={activeBike.nextService} />
- 
-        <View style={styles.openSection}>
-          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Nhật ký bảo trì 📅</Text>
-          {activeBike.timeline && activeBike.timeline.map((item, idx) => (
-            <TimelineItem 
-              key={item.id} 
-              item={item} 
-              isLast={idx === activeBike.timeline.length - 1} 
+        {error ? (
+          <View style={{ padding: 24, margin: 20, borderRadius: 20, backgroundColor: activeColors.card, borderWidth: 1, borderColor: activeColors.border }}>
+            <Text style={{ color: activeColors.text, fontSize: 18, fontWeight: '700', marginBottom: 10 }}>Có lỗi khi tải dữ liệu</Text>
+            <Text style={{ color: activeColors.subtext, fontSize: 14, marginBottom: 20 }}>{error}</Text>
+            <TouchableOpacity
+              onPress={retryLoadVehicles}
+              style={{ backgroundColor: activeColors.primary, paddingVertical: 14, borderRadius: 14, alignItems: 'center' }}
+            >
+              <Text style={{ color: '#fff', fontWeight: '700' }}>Thử lại</Text>
+            </TouchableOpacity>
+          </View>
+        ) : !hasVehicles ? (
+          <View style={{ padding: 24, margin: 20, borderRadius: 20, backgroundColor: activeColors.card, borderWidth: 1, borderColor: activeColors.border, alignItems: 'center' }}>
+            <Text style={{ color: activeColors.text, fontSize: 18, fontWeight: '700', marginBottom: 10 }}>Bạn chưa có xe nào</Text>
+            <Text style={{ color: activeColors.subtext, fontSize: 14, textAlign: 'center', marginBottom: 20 }}>Hãy thêm xe để quản lý bảo dưỡng, bảo hành và lịch sử dịch vụ từ AnhEmMotor.</Text>
+            <TouchableOpacity
+              onPress={() => setFormVisible(true)}
+              style={{ backgroundColor: activeColors.primary, paddingVertical: 14, paddingHorizontal: 32, borderRadius: 14, alignItems: 'center' }}
+            >
+              <Text style={{ color: '#fff', fontWeight: '700' }}>Thêm xe ngay</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            {/* Horizontal Vehicle Switcher & Add Button */}
+            <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center' }}>
+                {bikes.map((bike) => {
+                  const isSelected = activeBike && bike.id === activeBike.id;
+                  return (
+                    <TouchableOpacity
+                      key={bike.id}
+                      onPress={() => selectBike(bike.id)}
+                      style={{
+                        paddingHorizontal: 16,
+                        paddingVertical: 10,
+                        borderRadius: 12,
+                        backgroundColor: isSelected 
+                          ? Theme.staticColors.primary 
+                          : (activeColors.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'),
+                        marginRight: 10,
+                        borderWidth: 1,
+                        borderColor: isSelected 
+                          ? Theme.staticColors.primary 
+                          : (activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'),
+                      }}
+                    >
+                      <Text style={{ 
+                        color: isSelected ? '#FFFFFF' : activeColors.text, 
+                        fontWeight: 'bold', 
+                        fontSize: 13 
+                      }}>
+                        {bike.name} ({bike.plate.split(' ').pop() || bike.plate})
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+            
+            {/* Dynamic Active Bike Profile Card */}
+            <VehicleProfile 
+              bike={activeBike} 
+              onShowQR={openQR} 
+              onPress={() => handleNavigateToDetail(navigation)}
             />
-          ))}
-        </View>
+
+            <WarrantySection bike={activeBike} />
+            
+            <OperatingSpecs specs={activeBike.operatingSpecs} />
+            
+            <PredictionSection prediction={activeBike.nextService} />
+ 
+            <View style={styles.openSection}>
+              <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Nhật ký bảo trì 📅</Text>
+              {activeBike.timeline && activeBike.timeline.map((item, idx) => (
+                <TimelineItem 
+                  key={item.id} 
+                  item={item} 
+                  isLast={idx === activeBike.timeline.length - 1} 
+                />
+              ))}
+            </View>
+          </>
+        )}
  
         {/* Large Add New Vehicle Button at the Bottom */}
         <TouchableOpacity
@@ -331,13 +378,18 @@ export default function MyVehiclesScreen({ navigation, route }) {
                   justifyContent: 'center', 
                   alignItems: 'center', 
                   backgroundColor: activeColors.primary, 
-                  borderRadius: 12 
+                  borderRadius: 12,
+                  opacity: registering ? 0.65 : 1,
                 }} 
                 onPress={handleSubmit}
+                disabled={registering}
               >
-                <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Đăng ký</Text>
+                <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>{registering ? 'Đang đăng ký...' : 'Đăng ký'}</Text>
               </TouchableOpacity>
             </View>
+            {registerError ? (
+              <Text style={{ color: '#F97316', marginTop: 12, textAlign: 'center' }}>{registerError}</Text>
+            ) : null}
           </Animated.View>
         </BlurView>
       </Modal>

@@ -20,8 +20,9 @@ import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { horizontalScale, verticalScale, moderateScale } from '../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { API_BASE_URL } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginApi, getCurrentUserApi } from '../api/customerApi';
+import { tokenService } from '../api/httpClient';
 
 const { height } = Dimensions.get('window');
 
@@ -63,109 +64,53 @@ export default function LoginScreen({ navigation }) {
     }
 
     setLoading(true);
-    const loginController = new AbortController();
-    const loginTimeoutId = setTimeout(() => loginController.abort(), 30000);
 
     try {
-      const loginResponse = await fetch(`${API_BASE_URL}/api/v1/Auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          usernameOrEmail: email.trim(),
-          password: password,
-        }),
-        signal: loginController.signal,
-      });
+      const loginData = await loginApi(email.trim(), password);
+      const tokenData = loginData || {};
+      const accessToken = tokenData.accessToken;
+      const refreshToken = tokenData.refreshToken;
 
-      const loginData = await loginResponse.json();
-
-      if (loginResponse.ok && (loginData.isSuccess === undefined || loginData.isSuccess === true)) {
-        clearTimeout(loginTimeoutId);
-
-        const tokenData = loginData.value || loginData;
-        const accessToken = tokenData.accessToken;
-
-        if (rememberPassword) {
-          await AsyncStorage.setItem('@AEM_Remembered_Email', email.trim());
-          await AsyncStorage.setItem('@AEM_Remembered_Password', password);
-        } else {
-          await AsyncStorage.removeItem('@AEM_Remembered_Email');
-          await AsyncStorage.removeItem('@AEM_Remembered_Password');
-        }
-
-        if (accessToken) {
-          await AsyncStorage.setItem('accessToken', accessToken);
-        }
-        if (tokenData.refreshToken) {
-          await AsyncStorage.setItem('refreshToken', tokenData.refreshToken);
-        }
-
-        if (accessToken) {
-          const userController = new AbortController();
-          const userTimeoutId = setTimeout(() => userController.abort(), 10000);
-
-          try {
-            const userResponse = await fetch(`${API_BASE_URL}/api/v1/User/me`, {
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-              },
-              signal: userController.signal,
-            });
-
-            clearTimeout(userTimeoutId);
-
-            if (userResponse.ok) {
-              const userData = await userResponse.json();
-              const userProfile = userData.value || userData;
-
-              const mappedProfile = {
-                uid: userProfile.id,
-                name: userProfile.fullName || userProfile.userName,
-                email: userProfile.email,
-                phone: userProfile.phoneNumber,
-                gender: userProfile.gender,
-                avatar: userProfile.avatarUrl,
-                birthDate: userProfile.dateOfBirth,
-                settings: {
-                  theme: 'dark',
-                  language: 'vi',
-                  maintenanceNotifications: true,
-                  biometricLogin: false
-                }
-              };
-
-              await AsyncStorage.setItem('@AEM_Customer_Profile', JSON.stringify(mappedProfile));
-              navigation.navigate('CustomerHome');
-            } else {
-              navigation.navigate('CustomerHome');
-            }
-          } catch (userError) {
-            clearTimeout(userTimeoutId);
-            if (userError.name !== 'AbortError') {
-              navigation.navigate('CustomerHome');
-            }
-          }
-        } else {
-          navigation.navigate('CustomerHome');
-        }
+      if (rememberPassword) {
+        await AsyncStorage.setItem('@AEM_Remembered_Email', email.trim());
+        await AsyncStorage.setItem('@AEM_Remembered_Password', password);
       } else {
-        const errorMessage = loginData.error?.message || loginData.title || 'Đăng nhập thất bại. Vui lòng kiểm tra lại.';
-        Alert.alert('Lỗi đăng nhập', errorMessage);
+        await AsyncStorage.removeItem('@AEM_Remembered_Email');
+        await AsyncStorage.removeItem('@AEM_Remembered_Password');
       }
+
+      if (accessToken) {
+        await tokenService.saveTokens(accessToken, refreshToken);
+      }
+
+      try {
+        const userProfile = await getCurrentUserApi();
+        const mappedProfile = {
+          uid: userProfile.id,
+          name: userProfile.fullName || userProfile.userName,
+          email: userProfile.email,
+          phone: userProfile.phoneNumber,
+          gender: userProfile.gender,
+          avatar: userProfile.avatarUrl,
+          birthDate: userProfile.dateOfBirth,
+          settings: {
+            theme: 'dark',
+            language: 'vi',
+            maintenanceNotifications: true,
+            biometricLogin: false
+          }
+        };
+
+        await AsyncStorage.setItem('@AEM_Customer_Profile', JSON.stringify(mappedProfile));
+      } catch (userError) {
+        console.warn('Failed to fetch user profile after login', userError);
+      }
+
+      navigation.navigate('CustomerHome');
     } catch (error) {
       console.error('Login error:', error);
-      if (error.name === 'AbortError') {
-        Alert.alert('Lỗi quá thời gian', 'Máy chủ không phản hồi. Vui lòng kiểm tra lại kết nối mạng hoặc đảm bảo máy chủ Backend đang chạy.');
-      } else {
-        Alert.alert('Lỗi kết nối', 'Không thể kết nối đến máy chủ. Hãy chắc chắn rằng API_BASE_URL đang cấu hình đúng IP máy tính của bạn.');
-      }
+      Alert.alert('Lỗi đăng nhập', error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại.');
     } finally {
-      clearTimeout(loginTimeoutId);
       setLoading(false);
     }
   };

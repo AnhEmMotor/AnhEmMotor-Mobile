@@ -6,7 +6,12 @@ export async function loginApi(usernameOrEmail, password) {
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đăng nhập thất bại');
   }
-  return data.value || data;
+  const payload = data.value || data;
+  return {
+    ...payload,
+    accessToken: payload.accessToken || payload.AccessToken,
+    refreshToken: payload.refreshToken || payload.RefreshToken,
+  };
 }
 
 export async function registerApi(registerData) {
@@ -136,11 +141,41 @@ export async function getMyVehiclesApi() {
   return Array.isArray(data) ? data : data.value || data.data || [];
 }
 
+export async function getCustomerVehicleDetailApi(vehicleId) {
+  const response = await apiGet(`/api/v1/client/vehicles/${vehicleId}/detail`);
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error?.message || 'Không thể tải chi tiết xe');
+  }
+  const data = await response.json();
+  return data.value || data.data || data;
+}
+
+export async function getCustomerVehicleHistoryApi(vehicleId) {
+  const response = await apiGet(`/api/v1/client/vehicles/${vehicleId}/history`);
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error?.message || 'Không thể tải lịch sử xe');
+  }
+  const data = await response.json();
+  return data.value || data.data || data;
+}
+
 export async function registerVehicleApi(vehicleData) {
   const response = await apiPost('/api/v1/client/vehicles/register-odo', vehicleData);
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.error?.message || 'Đăng ký xe thất bại');
+  }
+  const data = await response.json();
+  return data.value || data;
+}
+
+export async function updateVehicleApi(vehicleId, vehicleData) {
+  const response = await apiPut(`/api/v1/client/vehicles/${vehicleId}`, vehicleData);
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error?.message || 'Cập nhật thông tin xe thất bại');
   }
   const data = await response.json();
   return data.value || data;
@@ -184,6 +219,52 @@ export async function cancelBookingApi(bookingId, reason) {
   return data.value || data;
 }
 
+function formatPrice(value) {
+  if (value == null || value === '') return 'Liên hệ';
+
+  const numericValue = typeof value === 'number'
+    ? value
+    : Number(String(value).replace(/[^\d.-]/g, ''));
+
+  if (!Number.isFinite(numericValue)) return 'Liên hệ';
+
+  return `${numericValue.toLocaleString('vi-VN')}đ`;
+}
+
+function normalizeProductItem(item) {
+  const variant = Array.isArray(item?.productVariants) ? item.productVariants[0] : null;
+  const imageUrl = item?.img
+    || item?.ImageUrl
+    || item?.imageUrl
+    || item?.coverImageUrl
+    || item?.CoverImageUrl
+    || variant?.coverImageUrl
+    || variant?.CoverImageUrl
+    || variant?.imageUrl
+    || variant?.ImageUrl
+    || '';
+
+  const priceValue = item?.price
+    ?? item?.Price
+    ?? item?.referencePrice
+    ?? item?.ReferencePrice
+    ?? variant?.price
+    ?? variant?.Price
+    ?? null;
+
+  return {
+    ...item,
+    id: item?.id ?? item?.Id,
+    name: item?.name ?? item?.Name ?? 'Sản phẩm',
+    img: imageUrl,
+    imageUrl,
+    price: formatPrice(priceValue),
+    referencePrice: priceValue,
+    brandName: item?.brandName ?? item?.BrandName ?? item?.brand ?? '',
+    typeName: item?.typeName ?? item?.TypeName ?? item?.type ?? '',
+  };
+}
+
 export async function getProductsApi(search = '', categoryId = null) {
   let url = '/api/v1/client/catalog/products?search=' + encodeURIComponent(search);
   if (categoryId) {
@@ -194,7 +275,9 @@ export async function getProductsApi(search = '', categoryId = null) {
     throw new Error('Không thể tải danh sách sản phẩm');
   }
   const data = await response.json();
-  return data.value || data.data || data;
+  const payload = data?.value ?? data?.data ?? data;
+  const list = Array.isArray(payload) ? payload : [];
+  return list.map(normalizeProductItem);
 }
 
 export async function getProductDetailApi(productId) {

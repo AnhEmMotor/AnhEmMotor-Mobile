@@ -97,13 +97,13 @@ export default function ProductListScreen({ route, navigation }) {
                 <Image
                   accessible
                   accessibilityLabel={`Hình ${item.name}`}
-                  source={item.img ? (typeof item.img === 'string' ? { uri: item.img } : item.img) : { uri: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070' }}
+                  source={item.img || item.imageUrl ? (typeof (item.img || item.imageUrl) === 'string' ? { uri: item.img || item.imageUrl } : (item.img || item.imageUrl)) : { uri: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070' }}
                   style={[styles.productImageOpen, { borderRadius: 8 }]}
                   resizeMode="cover"
                 />
                 <View style={styles.productInfoOpen}>
                   <Text style={[styles.productNameOpen, { color: activeColors.text }]} numberOfLines={2}>{item.name}</Text>
-                  <Text style={[styles.productPriceOpen, { color: activeColors.primary }]}>{item.price || 'Liên hệ'}</Text>
+                  <Text style={[styles.productPriceOpen, { color: activeColors.primary }]}>{item.price || item.referencePrice || 'Liên hệ'}</Text>
                 </View>
               </ScalePress>
             </Animated.View>
