@@ -132,9 +132,6 @@ export async function getMyVehiclesApi() {
   const response = await apiGet('/api/v1/client/vehicles');
   if (!response.ok) {
     const data = await response.json();
-    if (data.message === 'Endpoint temporarily unavailable') {
-      return [];
-    }
     throw new Error(data.error?.message || 'Không thể tải danh sách xe');
   }
   const data = await response.json();
@@ -224,7 +221,7 @@ function formatPrice(value) {
 
   const numericValue = typeof value === 'number'
     ? value
-    : Number(String(value).replace(/[^\d.-]/g, ''));
+    : Number(String(value).replace(/[^\d.\-]/g, ''));
 
   if (!Number.isFinite(numericValue)) return 'Liên hệ';
 
@@ -232,7 +229,8 @@ function formatPrice(value) {
 }
 
 function normalizeProductItem(item) {
-  const variant = Array.isArray(item?.productVariants) ? item.productVariants[0] : null;
+  const variant = Array.isArray(item?.productVariants)
+    ? item.productVariants[0] : null;
   const imageUrl = item?.img
     || item?.ImageUrl
     || item?.imageUrl
@@ -261,12 +259,15 @@ function normalizeProductItem(item) {
     price: formatPrice(priceValue),
     referencePrice: priceValue,
     brandName: item?.brandName ?? item?.BrandName ?? item?.brand ?? '',
-    typeName: item?.typeName ?? item?.TypeName ?? item?.type ?? '',
+    categoryName: item?.categoryName ?? item?.CategoryName ?? item?.category ?? '',
+    brandId: item?.brandId ?? item?.BrandId ?? null,
+    categoryId: item?.categoryId ?? item?.CategoryId ?? null,
   };
 }
 
 export async function getProductsApi(search = '', categoryId = null) {
-  let url = '/api/v1/client/catalog/products?search=' + encodeURIComponent(search);
+  const trimmedSearch = (search || '').trim();
+  let url = '/api/v1/client/catalog/products?search=' + encodeURIComponent(trimmedSearch || ' ');
   if (categoryId) {
     url += '&categoryId=' + categoryId;
   }
@@ -278,6 +279,26 @@ export async function getProductsApi(search = '', categoryId = null) {
   const payload = data?.value ?? data?.data ?? data;
   const list = Array.isArray(payload) ? payload : [];
   return list.map(normalizeProductItem);
+}
+
+export async function getBrandsApi() {
+  try {
+    const response = await apiGet('/api/v1/Brand?Page=1&PageSize=100');
+    if (!response.ok) throw new Error('load_brand_fail');
+    const data = await response.json();
+    const payload = data?.value ?? data?.items ?? data?.data ?? data;
+    const items = Array.isArray(payload) ? payload : (payload?.items ?? []);
+    return items
+      .filter((b) => !b.deletedAt)
+      .map((b) => ({
+        id: b.id ?? b.Id,
+        name: b.name ?? b.Name ?? '',
+        logoUrl: b.logoUrl ?? b.LogoUrl ?? '',
+        origin: b.origin ?? b.Origin ?? '',
+      }));
+  } catch {
+    return [];
+  }
 }
 
 export async function getProductDetailApi(productId) {
@@ -319,10 +340,11 @@ export async function submitFeedbackApi(rating, comment, mediaUrls = []) {
 
 export async function requestCallbackApi(phoneNumber, issueDescription) {
   const response = await apiPost('/api/v1/client/support/callback', { phoneNumber, issueDescription });
-  const data = await response.json();
   if (!response.ok) {
+    const data = await response.json();
     throw new Error(data.error?.message || 'Gửi yêu cầu thất bại');
   }
+  const data = await response.json();
   return data.value || data;
 }
 

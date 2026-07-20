@@ -1,94 +1,105 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import { useDependency } from '../../../di/DependencyContext';
-import { verticalScale } from '../../../utils/responsive';
-import { getProductsApi } from '../../../api/customerApi';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { getProductsApi, getBrandsApi } from '../../../api/customerApi';
+
+const CATEGORIES = [
+  { id: 8, name: 'Xe máy' },
+  { id: 13, name: 'Phụ tùng' },
+  { id: 12, name: 'Phụ kiện' },
+];
 
 export const useCatalog = () => {
-  const { api } = useDependency();
-  const [loading, setLoading] = useState(true);
-  const [quoteModal, setQuoteModal] = useState(false);
-  const [filterModal, setFilterModal] = useState(false);
-  const [selectedMotor, setSelectedMotor] = useState(null);
-  const [quotePhone, setQuotePhone] = useState('');
-  const [aiScanning, setAiScanning] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('Tất cả');
-  const [activeBrand, setActiveBrand] = useState('Tất cả');
-  const [activeType, setActiveType] = useState('Tất cả');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('Newest');
   const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [fetchError, setFetchError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategoryId, setActiveCategoryId] = useState(8);
+  const [activeBrandId, setActiveBrandId] = useState(null);
+  const [sortBy, setSortBy] = useState('Newest');
 
-  const scanPos = useSharedValue(0);
+  const initialized = useRef(false);
 
-  const BRANDS = [
-    { name: 'Tất cả', image: 'https://cdn-icons-png.flaticon.com/512/3089/3089918.png' },
-    { name: 'Honda', image: 'https://logos-world.net/wp-content/uploads/2020/04/Honda-Logo.png' },
-    { name: 'Yamaha', image: 'https://logos-world.net/wp-content/uploads/2020/04/Yamaha-Logo.png' },
-    { name: 'VinFast', image: 'https://seeklogo.com/images/V/vinfast-logo-5D19A801D3-seeklogo.com.png' },
-    { name: 'Piaggio', image: 'https://logos-world.net/wp-content/uploads/2021/08/Piaggio-Logo.png' },
-    { name: 'Suzuki', image: 'https://logos-world.net/wp-content/uploads/2020/04/Suzuki-Logo.png' },
-    { name: 'Sym', image: 'https://seeklogo.com/images/S/sym-logo-E722C1A1A8-seeklogo.com.png' },
-  ];
-
-  const MOTOR_TYPES = [
-    { name: 'Tất cả', image: 'https://cdn-icons-png.flaticon.com/512/3089/3089918.png' },
-    { name: 'Xe số', image: 'https://cdn-icons-png.flaticon.com/512/3362/3362028.png' },
-    { name: 'Xe tay ga', image: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' },
-    { name: 'Xe Điện', image: 'https://cdn-icons-png.flaticon.com/512/10573/10573426.png' },
-    { name: 'Xe phân khối lớn', image: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' },
-    { name: 'Xe côn tay', image: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' },
-  ];
-
-  const loadProducts = useCallback(async () => {
+  const loadProducts = useCallback(async (categoryId) => {
     try {
       setLoading(true);
-      const data = await getProductsApi();
+      setFetchError(null);
+      const data = await getProductsApi(searchQuery, categoryId);
       setProducts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setProducts([]);
+      setFetchError(error.message || 'Không thể tải danh sách sản phẩm');
     } finally {
       setLoading(false);
+    }
+  }, [searchQuery]);
+
+  const loadBrands = useCallback(async () => {
+    try {
+      const data = await getBrandsApi();
+      setBrands(Array.isArray(data) ? data : []);
+    } catch {
+      setBrands([]);
     }
   }, []);
 
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    if (!initialized.current) {
+      initialized.current = true;
+      loadProducts(activeCategoryId);
+      loadBrands();
+    }
+  }, [loadProducts, loadBrands, activeCategoryId]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 300);
-    scanPos.value = withRepeat(withTiming(verticalScale(250), { duration: 2000 }), -1, true);
-    return () => clearTimeout(timer);
-  }, [scanPos]);
+    if (initialized.current) {
+      loadProducts(activeCategoryId);
+    }
+  }, [searchQuery, activeCategoryId, loadProducts]);
 
-  const filteredMotors = products.filter((motor) => {
-    const product = motor.productName || motor.name || '';
-    const category = motor.categoryName || motor.category || '';
-    const brand = motor.brandName || motor.brand || '';
-    const type = motor.typeName || motor.type || '';
+  const filteredMotors = useMemo(() => {
+    let list = products;
 
-    const matchesCategory = activeCategory === 'Tất cả' || category === activeCategory;
-    const matchesBrand = activeBrand === 'Tất cả' || brand === activeBrand;
-    const matchesType = activeType === 'Tất cả' || type === activeType;
-    const matchesSearch = product.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesBrand && matchesType && matchesSearch;
-  });
+    if (activeBrandId !== null) {
+      list = list.filter((p) => {
+        if (typeof activeBrandId === 'number') {
+          return p.brandId === activeBrandId;
+        }
+        return p.brandName === activeBrandId;
+      });
+    }
 
-  const openQuote = (motor) => { setSelectedMotor(motor); setQuoteModal(true); };
-  const closeQuote = () => { setQuoteModal(false); setQuotePhone(''); };
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter((p) => {
+        const haystack = `${p.name} ${p.brandName || ''} ${p.categoryName || ''}`.toLowerCase();
+        return haystack.includes(q);
+      });
+    }
 
-  const handleAiSearch = () => {
-    setAiScanning(true);
-    setTimeout(() => setAiScanning(false), 3000);
-  };
+    if (sortBy === 'PriceAsc') {
+      list = [...list].sort((a, b) => (a.referencePrice ?? 0) - (b.referencePrice ?? 0));
+    } else if (sortBy === 'PriceDesc') {
+      list = [...list].sort((a, b) => (b.referencePrice ?? 0) - (a.referencePrice ?? 0));
+    }
+
+    return list;
+  }, [products, activeBrandId, searchQuery, sortBy]);
 
   return {
-    loading, quoteModal, filterModal, selectedMotor, quotePhone, setQuotePhone,
-    aiScanning, activeCategory, setActiveCategory, activeBrand, setActiveBrand,
-    activeType, setActiveType, searchQuery, setSearchQuery, sortBy, setSortBy,
-    scanPos, BRANDS, MOTOR_TYPES, filteredMotors, openQuote, closeQuote,
-    handleAiSearch, setFilterModal, refreshProducts: loadProducts,
+    loading,
+    fetchError,
+    searchQuery,
+    setSearchQuery,
+    sortBy,
+    setSortBy,
+    CATEGORIES,
+    BRANDS: brands,
+    activeCategoryId,
+    setActiveCategoryId,
+    activeBrandId,
+    setActiveBrandId,
+    filteredMotors,
+    refreshProducts: () => loadProducts(activeCategoryId),
   };
 };

@@ -1,206 +1,159 @@
-import React from 'react';
-import { 
-  Text, 
-  View, 
-  ScrollView, 
-  TouchableOpacity, 
-  TextInput, 
+import React, { useCallback } from 'react';
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
   Image,
-  Modal 
+  RefreshControl,
 } from 'react-native';
-import { Theme, useActiveColors } from '../../../theme/Theme';
+import { useFocusEffect } from '@react-navigation/native';
+import { useActiveColors } from '../../../theme/Theme';
 import { moderateScale } from '../../../utils/responsive';
-import { Search, Filter, Camera, Sparkles, ChevronRight, Settings } from 'lucide-react-native';
-import Skeleton from '../../../components/Skeleton';
+import { Search, Filter } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInDown, FadeInUp, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import ScalePress from '../../../components/ScalePress';
-import { styles } from './styles';
+import ProductMotorCard from '../../../components/ProductMotorCard';
+import Skeleton from '../../../components/Skeleton';
+import EmptyState from '../../../components/EmptyState';
+import { PackageOpen } from 'lucide-react-native';
 import { useCatalog } from './useCatalog';
-import { useGlobalState } from '../../../context/GlobalState';
 
-/**
- * @file CatalogScreen.js
- * @framework React Native (Clean Architecture - Presentation Layer)
- */
 export default function CatalogScreen({ navigation }) {
   const {
     loading,
-    quoteModal,
-    filterModal,
-    selectedMotor,
-    quotePhone,
-    setQuotePhone,
-    aiScanning,
-    activeCategory,
-    setActiveCategory,
-    activeBrand,
-    setActiveBrand,
-    activeType,
-    setActiveType,
+    fetchError,
     searchQuery,
     setSearchQuery,
     sortBy,
     setSortBy,
-    scanPos,
+    CATEGORIES,
     BRANDS,
-    MOTOR_TYPES,
     filteredMotors,
-    openQuote,
-    closeQuote,
-    handleAiSearch,
-    setFilterModal,
+    activeCategoryId,
+    setActiveCategoryId,
+    activeBrandId,
+    setActiveBrandId,
+    refreshProducts,
   } = useCatalog();
 
   const activeColors = useActiveColors();
-  const { setSettingsOpen } = useGlobalState();
 
-  const scanStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: scanPos.value }]
-  }));
+  useFocusEffect(
+    useCallback(() => {
+      refreshProducts();
+    }, [refreshProducts])
+  );
+
+  const showSkeleton = loading && filteredMotors.length === 0;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
-      <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
-        <View style={[styles.searchContainer, { backgroundColor: activeColors.card }]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: activeColors.background }} edges={['top']}>
+      <Animated.View entering={FadeInUp.duration(600).delay(100)} style={{ paddingHorizontal: moderateScale(16), paddingTop: moderateScale(12), backgroundColor: activeColors.card, flexDirection: 'row', alignItems: 'center', gap: moderateScale(8) }}>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: activeColors.background, borderRadius: moderateScale(10), paddingHorizontal: moderateScale(12), paddingVertical: moderateScale(8) }}>
           <Search color={activeColors.subtext} size={moderateScale(20)} />
-          <TextInput 
-            placeholder="Tìm phụ tùng, đồ chơi xe..." 
+          <TextInput
+            placeholder="Tìm phụ tùng, đồ chơi xe..."
             placeholderTextColor={activeColors.subtext}
-            style={[styles.searchInput, { color: activeColors.text }]}
+            style={{ flex: 1, color: activeColors.text, marginLeft: moderateScale(8), fontSize: moderateScale(14) }}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
-          <TouchableOpacity style={styles.aiBtn} onPress={handleAiSearch}>
-            <Camera color={activeColors.primary} size={moderateScale(18)} />
-          </TouchableOpacity>
         </View>
         <TouchableOpacity
-          style={[
-            styles.filterBtn,
-            { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)' },
-          ]}
-          onPress={() => setFilterModal(true)}
+          style={{ backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)', padding: moderateScale(10), borderRadius: moderateScale(10) }}
+          onPress={() => {
+            const modes = ['Newest', 'PriceAsc', 'PriceDesc'];
+            const idx = modes.indexOf(sortBy);
+            setSortBy(modes[(idx + 1) % modes.length]);
+          }}
         >
-          <Filter color={activeColors.isDark ? '#fff' : '#000'} size={moderateScale(20)} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.filterBtn,
-            { marginLeft: moderateScale(8), backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)' },
-          ]}
-          onPress={() => setSettingsOpen(true)}
-        >
-          <Settings color={activeColors.isDark ? '#fff' : '#000'} size={moderateScale(20)} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(4) }}>
+            <Filter color={activeColors.isDark ? '#fff' : '#000'} size={moderateScale(18)} />
+            <Text style={{ color: activeColors.isDark ? '#fff' : '#000', fontSize: moderateScale(11), fontWeight: '500' }}>
+              {sortBy === 'Newest' ? 'Mới' : sortBy === 'PriceAsc' ? 'Giá ↑' : 'Giá ↓'}
+            </Text>
+          </View>
         </TouchableOpacity>
       </Animated.View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: moderateScale(16), gap: moderateScale(14) }} refreshControl={<RefreshControl refreshing={loading} onRefresh={refreshProducts} tintColor={activeColors.primary} />}>
 
-        <View style={styles.filterSection}>
-          <Text style={[styles.filterGroupTitle, { color: activeColors.text }]}>Danh mục sản phẩm</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
-            {['Tất cả', 'Xe mới', 'Phụ tùng', 'Phụ kiện', 'Đồ bảo hộ'].map((cat, i) => (
-              <ScalePress 
-                key={i} 
-                style={[
-                  styles.chip, 
-                  { backgroundColor: activeColors.card, borderColor: activeColors.border },
-                  activeCategory === cat && [styles.activeChip, { backgroundColor: activeColors.primary, borderColor: activeColors.primary }]
-                ]}
-                onPress={() => setActiveCategory(cat)}
-              >
-                <Text style={[styles.chipText, { color: activeColors.text }, activeCategory === cat && [styles.activeChipText, { color: '#fff' }]]}>{cat}</Text>
+        <View>
+          <Text style={{ color: activeColors.text, fontWeight: '600', marginBottom: moderateScale(8), fontSize: moderateScale(14) }}>Danh mục</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {CATEGORIES.map((cat) => (
+              <ScalePress key={cat.id ?? 'all'} style={{ paddingHorizontal: moderateScale(14), paddingVertical: moderateScale(8), borderRadius: moderateScale(20), backgroundColor: activeCategoryId === cat.id ? activeColors.primary : activeColors.card, borderWidth: 1, borderColor: activeCategoryId === cat.id ? activeColors.primary : activeColors.border, marginRight: moderateScale(6) }} onPress={() => setActiveCategoryId(cat.id)}>
+                <Text style={{ color: activeCategoryId === cat.id ? '#fff' : activeColors.text, fontSize: moderateScale(13), fontWeight: activeCategoryId === cat.id ? '600' : '400' }}>{cat.name}</Text>
               </ScalePress>
             ))}
           </ScrollView>
         </View>
 
-        <View style={styles.filterSection}>
-          <Text style={[styles.filterGroupTitle, { color: activeColors.text }]}>Hãng xe</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
-            {BRANDS.map((brand, i) => (
-              <ScalePress 
-                key={i} 
-                style={[
-                  styles.brandChip, 
-                  { backgroundColor: activeColors.card, borderColor: 'transparent' },
-                  activeBrand === brand.name && [styles.activeBrandChip, { borderColor: activeColors.primary, backgroundColor: activeColors.isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)' }]
-                ]}
-                onPress={() => setActiveBrand(brand.name)}
-              >
-                <Image source={{ uri: brand.image }} style={styles.brandLogo} resizeMode="contain" />
-                <Text style={[styles.brandText, { color: activeColors.text }, activeBrand === brand.name && [styles.activeBrandText, { color: activeColors.primary }]]}>{brand.name}</Text>
-              </ScalePress>
-            ))}
+        <View>
+          <Text style={{ color: activeColors.text, fontWeight: '600', marginBottom: moderateScale(8), fontSize: moderateScale(14) }}>Thương hiệu</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <ScalePress style={{ paddingHorizontal: moderateScale(14), paddingVertical: moderateScale(8), borderRadius: moderateScale(20), backgroundColor: activeBrandId === 'Tất cả' || activeBrandId === null ? activeColors.primary : activeColors.card, borderWidth: 1, borderColor: (activeBrandId === 'Tất cả' || activeBrandId === null) ? activeColors.primary : activeColors.border, marginRight: moderateScale(6) }} onPress={() => setActiveBrandId(null)}>
+              <Text style={{ color: (activeBrandId === 'Tất cả' || activeBrandId === null) ? '#fff' : activeColors.text, fontSize: moderateScale(13), fontWeight: (activeBrandId === 'Tất cả' || activeBrandId === null) ? '600' : '400' }}>Tất cả</Text>
+            </ScalePress>
+            {BRANDS.map((brand) => {
+              const isActive = activeBrandId === brand.id || activeBrandId === brand.name;
+              return (
+                <ScalePress key={brand.id} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: moderateScale(12), paddingVertical: moderateScale(8), borderRadius: moderateScale(20), backgroundColor: isActive ? activeColors.primary : activeColors.card, borderWidth: 1, borderColor: isActive ? activeColors.primary : activeColors.border, marginRight: moderateScale(6), gap: moderateScale(6) }}>
+                  {brand.logoUrl ? (
+                    <Image source={{ uri: brand.logoUrl }} style={{ width: moderateScale(18), height: moderateScale(18) }} resizeMode="contain" />
+                  ) : null}
+                  <Text style={{ color: isActive ? '#fff' : activeColors.text, fontSize: moderateScale(13), fontWeight: isActive ? '600' : '400' }} numberOfLines={1}>
+                    {brand.name}
+                  </Text>
+                </ScalePress>
+              );
+            })}
           </ScrollView>
         </View>
 
-        <View style={styles.filterSection}>
-          <Text style={[styles.filterGroupTitle, { color: activeColors.text }]}>Loại xe</Text>
-          <View style={styles.verticalTypeContainer}>
-            {MOTOR_TYPES.map((type, i) => (
-              <ScalePress 
-                key={i} 
-                style={[
-                  styles.verticalTypeCard, 
-                  { backgroundColor: activeColors.card, borderColor: activeColors.border },
-                  activeType === type.name && [styles.activeTypeCard, { borderColor: activeColors.primary, backgroundColor: activeColors.isDark ? 'rgba(59, 130, 246, 0.05)' : 'rgba(59, 130, 246, 0.08)' }]
-                ]}
-                onPress={() => {
-                  setActiveType(type.name);
-                  navigation.navigate('ProductList', { brand: activeBrand, type: type.name });
-                }}
-              >
-                <View style={styles.typeCardInner}>
-                  <Image source={{ uri: type.image }} style={styles.typeIconSmall} resizeMode="contain" />
-                  <Text style={[styles.typeTextLarge, { color: activeColors.text }, activeType === type.name && [styles.activeTypeTextLarge, { color: activeColors.primary }]]}>{type.name}</Text>
-                </View>
-                <ChevronRight color={activeType === type.name ? activeColors.primary : activeColors.text} size={moderateScale(18)} />
-              </ScalePress>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.grid}>
-          {/* Product list removed as per user request */}
-        </View>
-      </ScrollView>
-
-      {/* MODALS */}
-      <Modal visible={aiScanning} transparent animationType="fade">
-        <View style={styles.scanOverlay}>
-          <View style={styles.scanFrame}>
-            <Animated.View style={[styles.scanLine, scanStyle]} />
-          </View>
-          <Text style={styles.scanText}>AI đang nhận diện phụ tùng...</Text>
-        </View>
-      </Modal>
-
-      <Modal visible={quoteModal} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeQuote} />
-          <Animated.View entering={FadeInDown.duration(400)} style={[styles.modalSheet, { backgroundColor: activeColors.card }]}>
-            <View style={[styles.modalHandle, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }]} />
-            <Text style={[styles.modalTitle, { color: activeColors.text }]}>Yêu cầu báo giá nhanh ⚡</Text>
-            <Text style={styles.modalMotorName}>{selectedMotor?.name}</Text>
-            <Text style={[styles.modalLabel, { color: activeColors.subtext }]}>Số điện thoại liên hệ</Text>
-            <View style={[styles.modalInputOpen, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}>
-              <TextInput
-                style={[styles.modalTextInput, { color: activeColors.text }]}
-                value={quotePhone}
-                onChangeText={setQuotePhone}
-                placeholder="Ví dụ: 0912 345 678"
-                placeholderTextColor={activeColors.subtext}
-                keyboardType="phone-pad"
-              />
-            </View>
-            <TouchableOpacity style={styles.modalSendBtn} onPress={closeQuote}>
-              <Text style={styles.modalSendText}>Gửi yêu cầu ngay</Text>
+        {fetchError ? (
+          <View style={{ alignItems: 'center', padding: moderateScale(32) }}>
+            <Text style={{ color: activeColors.subtext, textAlign: 'center', marginBottom: moderateScale(16) }}>
+              {fetchError}
+            </Text>
+            <TouchableOpacity style={{ backgroundColor: activeColors.primary, paddingHorizontal: moderateScale(24), paddingVertical: moderateScale(12), borderRadius: moderateScale(8) }} onPress={refreshProducts}>
+              <Text style={{ color: '#fff', fontWeight: '600' }}>Thử lại</Text>
             </TouchableOpacity>
-          </Animated.View>
-        </View>
-      </Modal>
+          </View>
+        ) : showSkeleton ? (
+          <View style={{ gap: moderateScale(12) }}>
+            {[1, 2, 3].map((i) => (
+              <View key={i} style={{ backgroundColor: activeColors.card, borderRadius: moderateScale(12), padding: moderateScale(12), gap: moderateScale(10) }}>
+                <Skeleton width="100%" height={moderateScale(130)} borderRadius={moderateScale(8)} />
+                <Skeleton width="80%" height={moderateScale(16)} borderRadius={4} />
+                <Skeleton width="40%" height={moderateScale(14)} borderRadius={4} />
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View style={{ gap: moderateScale(12) }}>
+            {filteredMotors.map((motor, idx) => (
+              <Animated.View key={motor.id} entering={FadeInUp.duration(500).delay(idx * 50)}>
+                <ProductMotorCard
+                  motor={motor}
+                  onPress={() => navigation.navigate('VehicleDetail', { motor })}
+                />
+              </Animated.View>
+            ))}
+          </View>
+        )}
+
+        {!fetchError && !showSkeleton && filteredMotors.length === 0 && (
+          <EmptyState
+            icon={PackageOpen}
+            title="Không tìm thấy sản phẩm"
+            message={searchQuery ? 'Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc' : 'Hiện tại chưa có sản phẩm phù hợp'}
+          />
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
