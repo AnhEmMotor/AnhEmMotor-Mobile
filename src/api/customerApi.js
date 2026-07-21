@@ -159,17 +159,27 @@ export async function getCustomerVehicleHistoryApi(vehicleId) {
 }
 
 export async function registerVehicleApi(vehicleData) {
-  const response = await apiPost('/api/v1/client/vehicles/register-odo', vehicleData);
+  const payload = {
+    name: vehicleData.name || '',
+    licensePlate: vehicleData.licensePlate,
+    vin: vehicleData.vin || '',
+    engineNumber: vehicleData.engineNumber || '',
+    color: vehicleData.color || '',
+    currentOdo: vehicleData.currentOdo ?? 0,
+  };
+  const response = await apiPost('/api/v1/client/vehicles', payload);
   if (!response.ok) {
     const data = await response.json();
-    throw new Error(data.error?.message || 'Đăng ký xe thất bại');
+    const msg = data?.error?.message || data?.message || 'Đăng ký xe thất bại';
+    throw new Error(msg);
   }
   const data = await response.json();
   return data.value || data;
 }
 
 export async function updateVehicleApi(vehicleId, vehicleData) {
-  const response = await apiPut(`/api/v1/client/vehicles/${vehicleId}`, vehicleData);
+  const payload = { ...vehicleData, vehicleId: Number(vehicleId) };
+  const response = await apiPut(`/api/v1/client/vehicles/${vehicleId}`, payload);
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.error?.message || 'Cập nhật thông tin xe thất bại');

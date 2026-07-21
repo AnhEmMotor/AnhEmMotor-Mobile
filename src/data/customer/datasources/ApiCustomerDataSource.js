@@ -24,22 +24,47 @@ export function mapBackendVehicleToMobile(b) {
     id: String(b.id ?? b.VehicleId ?? Math.random()),
     name:
       b.name ??
-      b.fullName ??
+      b.FullName ??
       b.VehicleName ??
       b.VariantName ??
       b.BrandName ??
       'Xe không tên',
-    plate: b.plate ?? b.PlateNumber ?? b.licensePlate ?? '',
-    vin: b.vin ?? b.Vin ?? b.vinNumber ?? '',
-    engine: b.engine ?? b.EngineNumber ?? b.engineNumber ?? '',
+    plate:
+      b.plate ??
+      b.LicensePlate ??
+      b.PlateNumber ??
+      b.licensePlate ??
+      '',
+    vin:
+      b.vin ??
+      b.VinNumber ??
+      b.Vin ??
+      b.vinNumber ??
+      '',
+    engine:
+      b.engine ??
+      b.EngineNumber ??
+      b.Engine ??
+      b.engineNumber ??
+      '',
     color: b.color ?? b.Color ?? b.colorName ?? '',
     type: b.type ?? b.VehicleType ?? b.variantName ?? b.BrandName ?? '',
-    version: b.version ?? b.Version ?? b.warrantyPeriod ?? b.variantName ?? '',
+    version:
+      b.version ??
+      b.Version ??
+      b.warrantyPeriod ??
+      b.variantName ??
+      '',
     capacity: b.capacity ?? b.Capacity ?? '',
-    regDate: b.regDate ?? b.RegistrationDate ?? b.purchaseDate ?? '',
+    regDate:
+      b.regDate ??
+      b.RegistrationDate ??
+      b.RegDate ??
+      b.purchaseDate ??
+      '',
     status: b.status ?? 'Hoạt động tốt',
     currentOdo: b.currentOdo ?? b.odo ?? '',
-    odo: formatOdo(b.odo ?? b.currentOdo ?? b.currentOdo ?? ''),
+    odo: formatOdo(b.odo ?? b.currentOdo ?? ''),
     warrantyUntil: b.warrantyUntil ?? b.warrantyDate ?? '',
     warrantyFrom: b.warrantyFrom ?? '',
     insuranceUntil: b.insuranceUntil ?? '',
@@ -71,8 +96,12 @@ export class ApiCustomerDataSource {
 
   async getServiceHistory(vehicleId) {
     const raw = await getCustomerVehicleHistoryApi(vehicleId);
-    const purchaseHistory = Array.isArray(raw.purchaseHistory) ? raw.purchaseHistory : [];
-    const warrantyHistory = Array.isArray(raw.warrantyHistory) ? raw.warrantyHistory : [];
+    const purchaseHistory = Array.isArray(raw.purchaseHistory)
+      ? raw.purchaseHistory
+      : [];
+    const warrantyHistory = Array.isArray(raw.warrantyHistory)
+      ? raw.warrantyHistory
+      : [];
 
     const mappedPurchaseHistory = purchaseHistory.map((entry) => ({
       id: String(entry.id),

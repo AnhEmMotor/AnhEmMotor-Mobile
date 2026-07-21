@@ -6,6 +6,8 @@ import { Theme, useActiveColors } from '../../../../theme/Theme';
 import { copyToClipboard } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
+const PLACEHOLDER_IMG = { uri: 'https://cdn-icons-png.flaticon.com/512/2001/2001567.png' };
+
 const getBikeImage = (bikeName) => {
   const name = bikeName ? bikeName.toLowerCase() : '';
   if (name.includes('sh') || name.includes('vario') || name.includes('scooter') || name.includes('vespa') || name.includes('vision') || name.includes('lead')) {
