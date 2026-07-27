@@ -241,9 +241,9 @@ function formatPrice(value) {
 function normalizeProductItem(item) {
   const variant = Array.isArray(item?.productVariants)
     ? item.productVariants[0] : null;
-  const imageUrl = item?.img
+  const imageUrl = item?.imageUrl
     || item?.ImageUrl
-    || item?.imageUrl
+    || item?.img
     || item?.coverImageUrl
     || item?.CoverImageUrl
     || variant?.coverImageUrl
@@ -252,10 +252,10 @@ function normalizeProductItem(item) {
     || variant?.ImageUrl
     || '';
 
-  const priceValue = item?.price
-    ?? item?.Price
-    ?? item?.referencePrice
+  const priceValue = item?.referencePrice
     ?? item?.ReferencePrice
+    ?? item?.price
+    ?? item?.Price
     ?? variant?.price
     ?? variant?.Price
     ?? null;
@@ -268,6 +268,7 @@ function normalizeProductItem(item) {
     imageUrl,
     price: formatPrice(priceValue),
     referencePrice: priceValue,
+    promotionText: item?.promotionText ?? item?.PromotionText ?? '',
     brandName: item?.brandName ?? item?.BrandName ?? item?.brand ?? '',
     categoryName: item?.categoryName ?? item?.CategoryName ?? item?.category ?? '',
     brandId: item?.brandId ?? item?.BrandId ?? null,
@@ -277,9 +278,16 @@ function normalizeProductItem(item) {
 
 export async function getProductsApi(search = '', categoryId = null) {
   const trimmedSearch = (search || '').trim();
-  let url = '/api/v1/client/catalog/products?search=' + encodeURIComponent(trimmedSearch || ' ');
-  if (categoryId) {
-    url += '&categoryId=' + categoryId;
+  let url = '/api/v1/client/catalog/products';
+  const params = [];
+  if (trimmedSearch) {
+    params.push('search=' + encodeURIComponent(trimmedSearch));
+  }
+  if (categoryId != null) {
+    params.push('categoryId=' + categoryId);
+  }
+  if (params.length > 0) {
+    url += '?' + params.join('&');
   }
   const response = await apiGet(url);
   if (!response.ok) {
@@ -320,14 +328,26 @@ export async function getProductDetailApi(productId) {
   return data.value || data.data || data;
 }
 
-export async function requestConsultationApi(productId, customerNote, preferredContactTime) {
-  const response = await apiPost('/api/v1/client/catalog/request-consultation', { productId, customerNote, preferredContactTime });
+export async function requestConsultationApi(productId, customerNote = '', preferredContactTime = '') {
+  const response = await apiPost('/api/v1/client/catalog/request-consultation', {
+    productId: Number(productId),
+    customerNote,
+    preferredContactTime,
+  });
   if (!response.ok) {
-    const data = await response.json();
-    throw new Error(data.error?.message || 'Gửi yêu cầu thất bại');
+    let msg = 'Gửi yêu cầu thất bại';
+    try {
+      const data = await response.json();
+      msg = data?.error?.message || data?.title || msg;
+    } catch {}
+    throw new Error(msg);
   }
-  const data = await response.json();
-  return data.value || data;
+  let data = true;
+  try {
+    const text = await response.text();
+    if (text) data = JSON.parse(text);
+  } catch {}
+  return data?.value ?? data;
 }
 
 export async function getFaqsApi(search = '') {

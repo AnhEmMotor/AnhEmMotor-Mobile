@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
+import { requestConsultationApi } from '../../../api/customerApi';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import {
   ChevronLeft,
@@ -39,6 +42,23 @@ export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};
   const logic = useVehicleDetail(motor);
   const activeColors = useActiveColors();
+  const [submittingConsultation, setSubmittingConsultation] = useState(false);
+
+  const handleRequestConsultation = async () => {
+    if (!motor?.id) {
+      Alert.alert('Thông báo', 'Vui lòng chọn sản phẩm hợp lệ để gửi yêu cầu tư vấn.');
+      return;
+    }
+    try {
+      setSubmittingConsultation(true);
+      await requestConsultationApi(motor.id, `Khách hàng quan tâm sản phẩm ${motor?.name || ''}`, 'Trong giờ hành chính');
+      Alert.alert('Thành công', 'Yêu cầu tư vấn của bạn đã được gửi. Nhân viên sẽ liên hệ lại trong thời gian sớm nhất!');
+    } catch (err) {
+      Alert.alert('Thất bại', err.message || 'Không thể gửi yêu cầu tư vấn. Vui lòng thử lại.');
+    } finally {
+      setSubmittingConsultation(false);
+    }
+  };
 
   const renderOverview = () => (
     <Animated.View entering={FadeInDown.duration(600)}>
@@ -374,9 +394,13 @@ export default function VehicleDetailScreen({ navigation, route }) {
         <ScalePress style={[styles.secondaryBtn, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]} onPress={() => navigation.navigate('Booking')}>
           <Text style={[styles.btnText, { color: activeColors.text }]}>Lái thử</Text>
         </ScalePress>
-        <ScalePress style={styles.primaryBtn} onPress={() => { }}>
+        <ScalePress style={styles.primaryBtn} onPress={handleRequestConsultation} disabled={submittingConsultation}>
           <LinearGradient colors={[activeColors.primary, '#1E3A8A']} style={styles.gradient}>
-            <Text style={styles.btnText}>Tư Vấn</Text>
+            {submittingConsultation ? (
+              <ActivityIndicator color="#fff" size="small" />
+            ) : (
+              <Text style={styles.btnText}>Tư Vấn</Text>
+            )}
           </LinearGradient>
         </ScalePress>
       </View>

@@ -14,63 +14,74 @@ import {
 } from '../../../api/customerApi';
 
 export function mapBackendVehicleToMobile(b) {
+  if (!b) return null;
   const formatOdo = (value) => {
     if (value == null || value === '') return '';
     if (typeof value === 'number') return `${value.toLocaleString()} km`;
     return String(value);
   };
 
+  const name =
+    b.name ??
+    b.Name ??
+    b.variantName ??
+    b.VariantName ??
+    (b.brandName || b.BrandName ? `${b.brandName || b.BrandName} ${b.variantName || b.VariantName || ''}`.trim() : null) ??
+    b.fullName ??
+    b.FullName ??
+    'Xe của tôi';
+
   return {
-    id: String(b.id ?? b.VehicleId ?? Math.random()),
-    name:
-      b.name ??
-      b.FullName ??
-      b.VehicleName ??
-      b.VariantName ??
-      b.BrandName ??
-      'Xe không tên',
+    id: String(b.id ?? b.Id ?? b.vehicleId ?? b.VehicleId ?? Math.random()),
+    name,
     plate:
-      b.plate ??
-      b.LicensePlate ??
-      b.PlateNumber ??
       b.licensePlate ??
+      b.LicensePlate ??
+      b.plate ??
+      b.Plate ??
+      b.plateNumber ??
+      b.PlateNumber ??
       '',
     vin:
-      b.vin ??
-      b.VinNumber ??
-      b.Vin ??
       b.vinNumber ??
+      b.VinNumber ??
+      b.vin ??
+      b.Vin ??
       '',
     engine:
-      b.engine ??
-      b.EngineNumber ??
-      b.Engine ??
       b.engineNumber ??
+      b.EngineNumber ??
+      b.engine ??
+      b.Engine ??
       '',
-    color: b.color ?? b.Color ?? b.colorName ?? '',
-    type: b.type ?? b.VehicleType ?? b.variantName ?? b.BrandName ?? '',
+    color: b.colorName ?? b.ColorName ?? b.color ?? b.Color ?? '',
+    type: b.type ?? b.Type ?? b.vehicleType ?? b.VehicleType ?? b.brandName ?? b.BrandName ?? 'Xe máy',
     version:
+      b.variantName ??
+      b.VariantName ??
       b.version ??
       b.Version ??
       b.warrantyPeriod ??
-      b.variantName ??
+      b.WarrantyPeriod ??
       '',
     capacity: b.capacity ?? b.Capacity ?? '',
     regDate:
-      b.regDate ??
-      b.RegistrationDate ??
-      b.RegDate ??
       b.purchaseDate ??
+      b.PurchaseDate ??
+      b.regDate ??
+      b.RegDate ??
+      b.registrationDate ??
+      b.RegistrationDate ??
       '',
-    status: b.status ?? 'Hoạt động tốt',
-    currentOdo: b.currentOdo ?? b.odo ?? '',
-    odo: formatOdo(b.odo ?? b.currentOdo ?? ''),
-    warrantyUntil: b.warrantyUntil ?? b.warrantyDate ?? '',
-    warrantyFrom: b.warrantyFrom ?? '',
-    insuranceUntil: b.insuranceUntil ?? '',
-    operatingSpecs: b.operatingSpecs ?? {},
-    nextService: b.nextService ?? {},
-    timeline: Array.isArray(b.timeline) ? b.timeline : [],
+    status: b.status ?? b.Status ?? (b.isActive !== false ? 'Hoạt động tốt' : 'Ngưng hoạt động'),
+    currentOdo: b.currentOdo ?? b.CurrentOdo ?? b.odo ?? b.Odo ?? 0,
+    odo: formatOdo(b.currentOdo ?? b.CurrentOdo ?? b.odo ?? b.Odo ?? ''),
+    warrantyUntil: b.warrantyUntil ?? b.WarrantyUntil ?? b.warrantyDate ?? b.WarrantyDate ?? '',
+    warrantyFrom: b.warrantyFrom ?? b.WarrantyFrom ?? '',
+    insuranceUntil: b.insuranceUntil ?? b.InsuranceUntil ?? '',
+    operatingSpecs: b.operatingSpecs ?? b.OperatingSpecs ?? {},
+    nextService: b.nextService ?? b.NextService ?? {},
+    timeline: Array.isArray(b.timeline) ? b.timeline : (Array.isArray(b.Timeline) ? b.Timeline : []),
   };
 }
 
