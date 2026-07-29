@@ -104,7 +104,8 @@ export default function HomeScreen({ navigation }) {
     selectedVoucher, 
     bottomSheetRef, 
     handleOpenVoucher,
-    handleCloseVoucher
+    handleCloseVoucher,
+    userName
   } = useHome();
 
   const colors = useActiveColors();
@@ -214,7 +215,7 @@ export default function HomeScreen({ navigation }) {
         <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
           <View style={styles.headerLeft}>
             <Text style={[styles.greeting, { color: colors.subtext }]}>Xin chào,</Text>
-            <Text style={[styles.userName, { color: colors.text }]} numberOfLines={1}>Anh Khôi</Text>
+            <Text style={[styles.userName, { color: colors.text }]} numberOfLines={1}>{userName || 'Khách hàng'}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <ScalePress style={[styles.iconBtn, { backgroundColor: colors.surface }]} onPress={() => setSettingsOpen(true)}>

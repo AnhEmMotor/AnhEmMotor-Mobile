@@ -16,7 +16,6 @@ const bottomSheetRef = useRef(null);
 const [activeRegionList, setActiveRegionList] = useState(null);
 const [settingsModalVisible, setSettingsModalVisible] = useState(false);
 const [voucherModalVisible, setVoucherModalVisible] = useState(false);
-const [liveWorkshopModalVisible, setLiveWorkshopModalVisible] = useState(false);
 
 const { profile, isLoading, isSaving, avatarModal, setAvatarModal, activeField, setActiveField, tempData, setTempData, passwordForm, setPasswordForm, openEditField, handleSaveField, handleToggleSetting, handleSelectPhoto, handleSelectCartoonAvatar, handleDeleteAccount, handleLogout, cartoonAvatars } = useProfileController(navigation, bottomSheetRef);
 
@@ -63,6 +62,12 @@ return (
 <Text style={[styles.headerName, { color: activeColors.text }]}>{profile.name || 'Khách hàng'}</Text>
 <Text style={[styles.headerRole, { color: activeColors.subtext }]}>Tài khoản khách hàng</Text>
 <View style={styles.scoreRow}><Award color={Theme.staticColors.primary} size={14} /><Text style={[styles.scoreText, { color: activeColors.primary }]}>Điểm thưởng: 12,500</Text></View>
+<TouchableOpacity 
+  onPress={() => openEditField('profile')} 
+  style={{ marginTop: 12, paddingHorizontal: 16, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: activeColors.primary, backgroundColor: activeColors.primary + '11', alignSelf: 'center' }}
+>
+  <Text style={{ color: activeColors.primary, fontSize: 13, fontWeight: '600' }}>Chỉnh sửa thông tin</Text>
+</TouchableOpacity>
 </View>
 
 {/* KHOI 1 */}
@@ -163,7 +168,6 @@ return (
 
 {/* FABs */}
 <TouchableOpacity style={[styles.fab, styles.voucherFab, { backgroundColor: activeColors.primary }]} onPress={() => setVoucherModalVisible(true)}><FileText color="#FFF" size={20} /></TouchableOpacity>
-<TouchableOpacity style={[styles.fab, styles.liveFab]} onPress={() => setLiveWorkshopModalVisible(true)}><View style={styles.liveDot} /></TouchableOpacity>
 
 {/* BOTTOM ACTIONS */}
 <View style={[styles.bottomActions, { borderTopColor: activeColors.border }]}>

@@ -140,8 +140,6 @@ export const styles = StyleSheet.create({
   shadowOpacity: 0.3, shadowRadius: 8,
  },
  voucherFab: { bottom: V(105), right: H(16), width: 56, height: 56, backgroundColor: PRIMARY },
- liveFab: { bottom: V(170), left: H(16), width: 48, height: 48, backgroundColor: '#EF4444' },
- liveDot: { width: 10, height: 10, borderRadius: 5 },
 
  /* ── BOTTOM SHEET ───────────────────────────── */
  bottomTitle: { fontSize: S(15), fontWeight: '600', marginBottom: V(12) },

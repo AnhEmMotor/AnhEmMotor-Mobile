@@ -1,9 +1,14 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { verticalScale } from '../../../utils/responsive';
+import { getProductDetailApi } from '../../../api/customerApi';
 
-export const useVehicleDetail = (motor, initialColor) => {
+export const useVehicleDetail = (motorSummary, initialColor) => {
+  const [motorDetail, setMotorDetail] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedColor, setSelectedColor] = useState(initialColor || motor?.colors?.[0]?.id || 'default');
+  const [selectedColor, setSelectedColor] = useState(initialColor || motorSummary?.colors?.[0]?.id || 'default');
   const [rotationIndex, setRotationIndex] = useState(0);
   
   // Finance State
@@ -11,6 +16,33 @@ export const useVehicleDetail = (motor, initialColor) => {
   const [loanTerm, setLoanTerm] = useState(12);
   
   const lastX = useRef(0);
+
+  const motor = motorDetail || motorSummary; // Fallback to summary while loading
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchDetail = async () => {
+      if (!motorSummary?.id) return;
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getProductDetailApi(motorSummary.id);
+        if (isMounted) {
+          setMotorDetail(data);
+          if (data?.colors?.length > 0 && selectedColor === 'default') {
+            setSelectedColor(data.colors[0].id);
+          }
+        }
+      } catch (err) {
+        if (isMounted) setError(err.message || 'Không thể tải chi tiết sản phẩm');
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    fetchDetail();
+    return () => { isMounted = false; };
+  }, [motorSummary?.id]);
+
   const motorFrames = Array.isArray(motor?.frames) && motor.frames.length > 0
     ? motor.frames
     : [motor?.img || motor?.imageUrl || motor?.coverImageUrl];
@@ -37,7 +69,7 @@ export const useVehicleDetail = (motor, initialColor) => {
 
   const currentImage = useMemo(() => {
     if (Array.isArray(motor?.frames) && motor.frames.length > 0) return motorFrames[rotationIndex];
-    return motor?.colors?.find(c => c.id === selectedColor)?.img || motor?.img || motor?.imageUrl || motor?.coverImageUrl;
+    return motor?.colors?.find(c => c.id === selectedColor)?.image || motor?.colors?.find(c => c.id === selectedColor)?.coverImageUrl || motor?.img || motor?.imageUrl || motor?.coverImageUrl;
   }, [rotationIndex, selectedColor, motor, motorFrames]);
 
   // Mock Finance Calculation
@@ -59,6 +91,9 @@ export const useVehicleDetail = (motor, initialColor) => {
   }, [downPaymentPercent, loanTerm, motor]);
 
   return {
+    motor, // This is the detailed motor if loaded, else summary
+    loading,
+    error,
     activeTab,
     setActiveTab,
     selectedColor,

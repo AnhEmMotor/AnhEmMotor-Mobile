@@ -77,20 +77,32 @@ export default function VehicleDetailScreen({ navigation, route }) {
       </View>
  
       {/* Key Highlights */}
-      <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tính năng đột phá</Text>
+      <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tính năng nổi bật</Text>
       <View style={styles.featureGrid}>
-        {[
-          { icon: <ShieldCheck color={activeColors.primary} size={20} />, title: 'Phanh ABS', desc: 'Khống chế lực phanh an toàn.' },
-          { icon: <Key color={activeColors.warning} size={20} />, title: 'Smartkey', desc: 'Chống trộm thông minh.' },
-          { icon: <Droplet color="#E31B23" size={20} />, title: 'Động cơ eSP+', desc: 'Tiết kiệm xăng tối đa.' },
-          { icon: <Usb color="#A855F7" size={20} />, title: 'Sạc USB', desc: 'Sạc điện thoại ngay trong cốp.' },
-        ].map((f, i) => (
-          <View key={i} style={[styles.featureCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
-            <View style={styles.featureIcon}>{f.icon}</View>
-            <Text style={[styles.featureTitle, { color: activeColors.text }]}>{f.title}</Text>
-            <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>{f.desc}</Text>
-          </View>
-        ))}
+        {logic.motor?.technologies?.length > 0 ? (
+          logic.motor.technologies.slice(0, 4).map((tech, i) => (
+            <View key={i} style={[styles.featureCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
+              <View style={styles.featureIcon}>
+                <ShieldCheck color={activeColors.primary} size={20} />
+              </View>
+              <Text style={[styles.featureTitle, { color: activeColors.text }]} numberOfLines={1}>{tech.title || 'Công nghệ'}</Text>
+              <Text style={[styles.featureDesc, { color: activeColors.subtext }]} numberOfLines={2}>{tech.description || 'Đang cập nhật'}</Text>
+            </View>
+          ))
+        ) : (
+          [
+            { icon: <ShieldCheck color={activeColors.primary} size={20} />, title: 'Phanh an toàn', desc: 'Đảm bảo an toàn tối đa.' },
+            { icon: <Key color={activeColors.warning} size={20} />, title: 'Smartkey', desc: 'Chống trộm thông minh.' },
+            { icon: <Droplet color="#E31B23" size={20} />, title: 'Tiết kiệm', desc: 'Tiết kiệm xăng tối đa.' },
+            { icon: <Zap color="#A855F7" size={20} />, title: 'Động cơ mạnh', desc: 'Vận hành êm ái.' },
+          ].map((f, i) => (
+            <View key={i} style={[styles.featureCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
+              <View style={styles.featureIcon}>{f.icon}</View>
+              <Text style={[styles.featureTitle, { color: activeColors.text }]}>{f.title}</Text>
+              <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>{f.desc}</Text>
+            </View>
+          ))
+        )}
       </View>
  
       {/* Finance Teaser */}
@@ -101,18 +113,20 @@ export default function VehicleDetailScreen({ navigation, route }) {
       </TouchableOpacity>
       <View style={styles.specGroup}>
         <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Khung sườn, Phuộc & An toàn</Text>
-        <SpecRow label="Phanh trước" value="Phanh đĩa tích hợp ABS" activeColors={activeColors} />
-        <SpecRow label="Phanh sau" value="Phanh đĩa" activeColors={activeColors} />
-        <SpecRow label="Phuộc trước" value="Ống lồng, giảm chấn thủy lực" activeColors={activeColors} />
-        <SpecRow label="Lốp sau" value="120/80-16 Lốp không săm" activeColors={activeColors} />
+        <SpecRow label="Phanh trước" value={logic.motor?.frontBrake || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Phanh sau" value={logic.motor?.rearBrake || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Phuộc trước" value={logic.motor?.frontSuspension || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Phuộc sau" value={logic.motor?.rearSuspension || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Lốp trước" value={logic.motor?.frontTireSize || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Lốp sau" value={logic.motor?.rearTireSize || logic.motor?.tireSize || 'Đang cập nhật'} activeColors={activeColors} />
       </View>
  
       <View style={styles.specGroup}>
         <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Tiện ích & Công nghệ</Text>
-        <SpecRow label="Hệ thống đèn" value="Toàn bộ LED" activeColors={activeColors} />
-        <SpecRow label="Hệ thống khóa" value="Smartkey thông minh" activeColors={activeColors} />
-        <SpecRow label="Cốp xe" value="28 Lít (Vừa 2 mũ bảo hiểm)" activeColors={activeColors} />
-        <SpecRow label="Cổng sạc" value="USB trong cốp xe" activeColors={activeColors} />
+        <SpecRow label="Hệ thống đèn" value={logic.motor?.lightingSystem || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Mặt đồng hồ" value={logic.motor?.dashboardType || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Hệ thống khóa" value={logic.motor?.starterSystem || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Bảo hành" value={logic.motor?.warrantyPeriod || 'Đang cập nhật'} activeColors={activeColors} />
       </View>
     </Animated.View>
   );
@@ -121,18 +135,21 @@ export default function VehicleDetailScreen({ navigation, route }) {
     <Animated.View entering={FadeInDown.duration(600)}>
       <View style={styles.specGroup}>
         <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Động cơ & Vận hành</Text>
-        <SpecRow label="Loại động cơ" value="eSP+, 4 van, SOHC" activeColors={activeColors} />
-        <SpecRow label="Dung tích xy-lanh" value="156.9cc" activeColors={activeColors} />
-        <SpecRow label="Công suất tối đa" value="12.4 kW / 8.500 v/p" activeColors={activeColors} />
-        <SpecRow label="Mức tiêu thụ" value="2.24 lít/100km" activeColors={activeColors} />
+        <SpecRow label="Loại động cơ" value={logic.motor?.engineType || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Dung tích xy-lanh" value={logic.motor?.displacement ? `${logic.motor.displacement}cc` : 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Công suất tối đa" value={logic.motor?.maxPower || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Mô-men xoắn cực đại" value={logic.motor?.maxTorque || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Mức tiêu thụ" value={logic.motor?.fuelConsumption || 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Loại truyền động" value={logic.motor?.transmissionType || 'Đang cập nhật'} activeColors={activeColors} />
       </View>
  
       <View style={styles.specGroup}>
         <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>Kích thước & Trọng lượng</Text>
-        <SpecRow label="Khối lượng" value="133kg" activeColors={activeColors} />
-        <SpecRow label="Dài x Rộng x Cao" value="2.090 x 739 x 1.129 mm" activeColors={activeColors} />
-        <SpecRow label="Độ cao yên" value="799mm" activeColors={activeColors} />
-        <SpecRow label="Dung tích bình xăng" value="7.8 lít" activeColors={activeColors} />
+        <SpecRow label="Khối lượng" value={logic.motor?.weight ? `${logic.motor.weight}kg` : 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Dài x Rộng x Cao" value={logic.motor?.length ? `${logic.motor.length} x ${logic.motor.width} x ${logic.motor.height} mm` : 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Độ cao yên" value={logic.motor?.seatHeight ? `${logic.motor.seatHeight}mm` : 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Khoảng sáng gầm" value={logic.motor?.groundClearance ? `${logic.motor.groundClearance}mm` : 'Đang cập nhật'} activeColors={activeColors} />
+        <SpecRow label="Dung tích bình xăng" value={logic.motor?.fuelCapacity || 'Đang cập nhật'} activeColors={activeColors} />
       </View>
     </Animated.View>
   );

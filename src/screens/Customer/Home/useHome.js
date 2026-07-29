@@ -1,11 +1,26 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useGlobalState } from '../../../context/GlobalState';
+import { ProfileLocalDataSource } from '../../../features/profile/data/datasources/ProfileLocalDataSource';
 
 export const useHome = () => {
   const { unreadNotifications } = useGlobalState();
   const [vehicleStatus] = useState('has_vehicle');
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const bottomSheetRef = useRef(null);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const dataSource = new ProfileLocalDataSource();
+      const profile = await dataSource.getProfile();
+      if (profile && profile.name) {
+        setUserName(profile.getFormattedName());
+      } else {
+        setUserName('Khách hàng');
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleOpenVoucher = (voucher) => {
     setSelectedVoucher(voucher);
@@ -24,6 +39,7 @@ export const useHome = () => {
     vehicleStatus,
     selectedVoucher,
     bottomSheetRef,
+    userName,
     handleOpenVoucher,
     handleCloseVoucher,
   };

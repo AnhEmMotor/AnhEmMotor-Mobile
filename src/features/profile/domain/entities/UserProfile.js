@@ -5,17 +5,17 @@
  */
 export class UserProfile {
   constructor({
-    uid = 'AEM-6899',
-    name = 'Nguyễn Khôi',
-    phone = '0901234567',
-    email = 'nguyenkhoi.ae@gmail.com',
-    birthDate = '17/05/1995',
-    gender = 'Nam',
-    province = 'Đồng Nai',
-    district = 'Thành phố Biên Hòa',
-    ward = 'Phường Quyết Thắng',
-    specificAddress = '123 Cách Mạng Tháng 8',
-    licenseTier = 'A1',
+    uid = '',
+    name = '',
+    phone = '',
+    email = '',
+    birthDate = '',
+    gender = '',
+    province = '',
+    district = '',
+    ward = '',
+    specificAddress = '',
+    licenseTier = '',
     licenseImage = null,
     settings = {
       maintenanceNotifications: true,

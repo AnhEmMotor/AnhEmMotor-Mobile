@@ -81,27 +81,27 @@ export const useProfileController = (navigation, bottomSheetRef) => {
 
     if (field === 'profile') {
       setTempData({
-        name: profile.name,
-        email: profile.email,
-        birthDate: profile.birthDate || '17/05/1995',
-        gender: profile.gender || 'Nam',
-        province: profile.province || 'Đồng Nai',
-        district: profile.district || 'Thành phố Biên Hòa',
-        ward: profile.ward || 'Phường Quyết Thắng',
+        name: profile.name || '',
+        email: profile.email || '',
+        birthDate: profile.birthDate || '',
+        gender: profile.gender || '',
+        province: profile.province || '',
+        district: profile.district || '',
+        ward: profile.ward || '',
         specificAddress: profile.specificAddress || '',
-        licenseTier: profile.licenseTier || 'A1',
+        licenseTier: profile.licenseTier || '',
         licenseImage: profile.licenseImage || null,
       });
     } else if (field === 'address') {
       setTempData({
-        province: profile.province || 'Đồng Nai',
-        district: profile.district || 'Thành phố Biên Hòa',
-        ward: profile.ward || 'Phường Quyết Thắng',
+        province: profile.province || '',
+        district: profile.district || '',
+        ward: profile.ward || '',
         specificAddress: profile.specificAddress || '',
       });
     } else if (field === 'license') {
       setTempData({
-        licenseTier: profile.licenseTier || 'A1',
+        licenseTier: profile.licenseTier || '',
         licenseImage: profile.licenseImage || null,
       });
     } else if (field === 'name') {
@@ -130,7 +130,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
         updatedProfile.name = tempData.name;
         updatedProfile.email = tempData.email;
         updatedProfile.birthDate = tempData.birthDate;
-        updatedProfile.gender = tempData.gender || 'Nam';
+        updatedProfile.gender = tempData.gender;
         updatedProfile.province = tempData.province;
         updatedProfile.district = tempData.district;
         updatedProfile.ward = tempData.ward;

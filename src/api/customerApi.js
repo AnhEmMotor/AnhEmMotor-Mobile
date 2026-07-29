@@ -239,31 +239,60 @@ function formatPrice(value) {
 }
 
 function normalizeProductItem(item) {
-  const variant = Array.isArray(item?.productVariants)
-    ? item.productVariants[0] : null;
+  if (!item || typeof item !== 'object') return null;
+
+  const variants = Array.isArray(item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants)
+    ? (item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants).map((v) => ({
+        id: v.id ?? v.Id,
+        productId: v.productId ?? v.ProductId,
+        urlSlug: v.urlSlug ?? v.UrlSlug ?? '',
+        price: v.price ?? v.Price,
+        coverImageUrl: v.coverImageUrl ?? v.CoverImageUrl ?? '',
+        variantName: v.variantName ?? v.VariantName ?? '',
+        optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
+        photos: Array.isArray(v.photos ?? v.Photos) ? (v.photos ?? v.Photos) : [],
+        colors: (v.colors ?? v.Colors ?? []).map((c) => ({
+          id: c.id ?? c.Id ?? null,
+          name: c.name ?? c.ColorName ?? c.Name ?? '',
+          colorName: c.colorName ?? c.ColorName ?? c.name ?? '',
+          colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
+          code: c.code ?? c.ColorCode ?? '#ccc',
+          coverImageUrl: c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
+          image: c.image ?? c.CoverImageUrl ?? '',
+        })),
+      }))
+    : [];
+
+  const technologies = Array.isArray(item?.technologies ?? item?.Technologies ?? item?.productTechnologies ?? item?.ProductTechnologies)
+    ? (item?.technologies ?? item?.Technologies ?? item?.productTechnologies ?? item?.ProductTechnologies).map((t) => ({
+        technologyId: t.technologyId ?? t.TechnologyId ?? null,
+        title: t.title ?? t.Title ?? t.customTitle ?? t.CustomTitle ?? '',
+        description: t.description ?? t.Description ?? t.customDescription ?? t.CustomDescription ?? '',
+        imageUrl: t.imageUrl ?? t.ImageUrl ?? t.customImageUrl ?? t.CustomImageUrl ?? '',
+      }))
+    : [];
+
+  const firstVariant = variants[0];
   const imageUrl = item?.imageUrl
     || item?.ImageUrl
     || item?.img
     || item?.coverImageUrl
     || item?.CoverImageUrl
-    || variant?.coverImageUrl
-    || variant?.CoverImageUrl
-    || variant?.imageUrl
-    || variant?.ImageUrl
+    || firstVariant?.coverImageUrl
+    || firstVariant?.imageUrl
     || '';
 
   const priceValue = item?.referencePrice
     ?? item?.ReferencePrice
     ?? item?.price
     ?? item?.Price
-    ?? variant?.price
-    ?? variant?.Price
+    ?? firstVariant?.price
     ?? null;
 
   return {
     ...item,
     id: item?.id ?? item?.Id,
-    name: item?.name ?? item?.Name ?? 'Sản phẩm',
+    name: item?.name ?? item?.Name ?? item?.productName ?? 'Sản phẩm',
     img: imageUrl,
     imageUrl,
     price: formatPrice(priceValue),
@@ -273,6 +302,46 @@ function normalizeProductItem(item) {
     categoryName: item?.categoryName ?? item?.CategoryName ?? item?.category ?? '',
     brandId: item?.brandId ?? item?.BrandId ?? null,
     categoryId: item?.categoryId ?? item?.CategoryId ?? null,
+    
+    // Technical specs
+    weight: item?.weight ?? item?.Weight ?? null,
+    length: item?.length ?? item?.Length ?? null,
+    width: item?.width ?? item?.Width ?? null,
+    height: item?.height ?? item?.Height ?? null,
+    seatHeight: item?.seatHeight ?? item?.SeatHeight ?? null,
+    wheelbase: item?.wheelbase ?? item?.Wheelbase ?? null,
+    groundClearance: item?.groundClearance ?? item?.GroundClearance ?? null,
+    fuelCapacity: item?.fuelCapacity ?? item?.FuelCapacity ?? null,
+    tireSize: item?.tireSize ?? item?.TireSize ?? null,
+    frontSuspension: item?.frontSuspension ?? item?.FrontSuspension ?? null,
+    rearSuspension: item?.rearSuspension ?? item?.RearSuspension ?? null,
+    engineType: item?.engineType ?? item?.EngineType ?? null,
+    maxPower: item?.maxPower ?? item?.MaxPower ?? null,
+    oilCapacity: item?.oilCapacity ?? item?.OilCapacity ?? null,
+    fuelConsumption: item?.fuelConsumption ?? item?.FuelConsumption ?? null,
+    transmissionType: item?.transmissionType ?? item?.TransmissionType ?? null,
+    starterSystem: item?.starterSystem ?? item?.StarterSystem ?? null,
+    maxTorque: item?.maxTorque ?? item?.MaxTorque ?? null,
+    displacement: item?.displacement ?? item?.Displacement ?? null,
+    boreStroke: item?.boreStroke ?? item?.BoreStroke ?? null,
+    compressionRatio: item?.compressionRatio ?? item?.CompressionRatio ?? null,
+    fuelSystem: item?.fuelSystem ?? item?.FuelSystem ?? null,
+    frameType: item?.frameType ?? item?.FrameType ?? null,
+    frontTireSize: item?.frontTireSize ?? item?.FrontTireSize ?? null,
+    rearTireSize: item?.rearTireSize ?? item?.RearTireSize ?? null,
+    frontBrake: item?.frontBrake ?? item?.FrontBrake ?? null,
+    rearBrake: item?.rearBrake ?? item?.RearBrake ?? null,
+    batteryType: item?.batteryType ?? item?.BatteryType ?? null,
+    lightingSystem: item?.lightingSystem ?? item?.LightingSystem ?? null,
+    dashboardType: item?.dashboardType ?? item?.DashboardType ?? null,
+    material: item?.material ?? item?.Material ?? null,
+    origin: item?.origin ?? item?.Origin ?? null,
+    warrantyPeriod: item?.warrantyPeriod ?? item?.WarrantyPeriod ?? null,
+    
+    // Arrays
+    variants,
+    technologies,
+    colors: variants.flatMap(v => v.colors || []),
   };
 }
 
@@ -325,7 +394,8 @@ export async function getProductDetailApi(productId) {
     throw new Error('Không thể tải chi tiết sản phẩm');
   }
   const data = await response.json();
-  return data.value || data.data || data;
+  const rawData = data.value || data.data || data;
+  return normalizeProductItem(rawData);
 }
 
 export async function requestConsultationApi(productId, customerNote = '', preferredContactTime = '') {

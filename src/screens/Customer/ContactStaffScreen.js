@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet, Text, View, ScrollView, TextInput,
   KeyboardAvoidingView, Platform, Alert, Linking
@@ -8,6 +8,7 @@ import { ChevronLeft, Send, Mail, Phone, Clock, CheckCircle, Settings } from 'lu
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useDependency } from '../../di/DependencyContext';
 
 const STAFF_EMAIL = 'support@anhemmotor.vn';
 
@@ -44,12 +45,29 @@ export default function ContactStaffScreen({ navigation }) {
   const theme = useTheme(); // Use the useTheme hook
   const activeColors = useActiveColors();
 
+  const [userName, setUserName] = useState('Khách hàng');
+  const { getProfileUseCase } = useDependency();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const profile = await getProfileUseCase.execute();
+        if (profile && profile.name) {
+          setUserName(profile.name);
+        }
+      } catch (e) {
+        console.warn('Failed to load profile for ContactStaffScreen', e);
+      }
+    };
+    fetchUser();
+  }, [getProfileUseCase]);
+
   const handleSendEmail = () => {
     if (!message.trim()) {
       Alert.alert('Thông báo', 'Bạn chưa nhập nội dung tin nhắn.');
       return;
     }
-    const subject = encodeURIComponent('[AnhEmMotor] Yêu cầu hỗ trợ từ Nguyễn Khôi');
+    const subject = encodeURIComponent(`[AnhEmMotor] Yêu cầu hỗ trợ từ ${userName}`);
     const body = encodeURIComponent(message);
     Linking.openURL(`mailto:${STAFF_EMAIL}?subject=${subject}&body=${body}`);
     setMessage('');
