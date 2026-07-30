@@ -15,6 +15,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from './styles';
 import { useHome } from './useHome';
+import { API_BASE_URL } from '../../../config';
 import { shortcuts, alerts, vouchers, promoItems, newsItems } from './constants';
 
 const BANNERS = [
@@ -105,7 +106,8 @@ export default function HomeScreen({ navigation }) {
     bottomSheetRef, 
     handleOpenVoucher,
     handleCloseVoucher,
-    userName
+    userName,
+    newsList
   } = useHome();
 
   const colors = useActiveColors();
@@ -424,7 +426,7 @@ export default function HomeScreen({ navigation }) {
               <Text style={[styles.viewAll, { color: colors.primary }]}>Xem thêm</Text>
             </TouchableOpacity>
           </View>
-          {newsItems.map((news) => (
+          {(newsList?.length > 0 ? newsList : newsItems).slice(0, 3).map((news) => (
             <ScalePress 
               key={news.id} 
               style={styles.blogItem}
