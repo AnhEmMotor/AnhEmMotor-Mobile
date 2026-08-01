@@ -4,6 +4,7 @@ import { VehicleDetail } from '../../../domain/customer/entities/VehicleDetail';
 import { ServiceHistoryEntry } from '../../../domain/customer/entities/ServiceHistoryEntry';
 import { ServiceReminder } from '../../../domain/customer/entities/ServiceReminder';
 import { mapBackendVehicleToMobile } from '../datasources/ApiCustomerDataSource';
+import { API_BASE_URL } from '../../../config';
 
 export class CustomerRepositoryImpl extends ICustomerRepository {
   constructor(customerDataSource) {
@@ -70,6 +71,11 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
       operatingSpecs: rawVehicle.operatingSpecs,
       timeline: rawVehicle.timeline,
       documents: rawVehicle.documents,
+      image: (rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image) 
+        ? ((rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image).startsWith('http') 
+            ? (rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image) 
+            : `${API_BASE_URL}${rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image}`)
+        : null,
     });
   }
 

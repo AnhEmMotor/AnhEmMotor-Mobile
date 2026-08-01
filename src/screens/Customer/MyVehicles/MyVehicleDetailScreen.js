@@ -173,7 +173,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         {/* TẦNG 1: ĐỊNH DANH TÀI SẢN (Vehicle Identity) */}
         <Animated.View entering={FadeInUp.duration(600)} style={styles.imageContainer}>
           <Image 
-            source={{ uri: 'https://images.unsplash.com/photo-1620939511593-299312d1666c?q=80&w=1070' }} 
+            source={activeBike.image ? { uri: activeBike.image } : { uri: 'https://images.unsplash.com/photo-1620939511593-299312d1666c?q=80&w=1070' }} 
             style={styles.vehicleImage}
             resizeMode="cover"
           />

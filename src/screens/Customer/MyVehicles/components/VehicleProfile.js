@@ -42,7 +42,7 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
         </View>
         <View style={styles.bikeImageContainer}>
           <Image 
-            source={getBikeImage(bike.name)} 
+            source={bike.image ? { uri: bike.image } : getBikeImage(bike.name)} 
             style={styles.bikeThumb} 
             resizeMode="contain"
           />

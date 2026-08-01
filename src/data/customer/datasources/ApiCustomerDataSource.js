@@ -12,6 +12,7 @@ import {
   getProfileApi,
   getCustomerProfileApi,
 } from '../../../api/customerApi';
+import { API_BASE_URL } from '../../../config';
 
 export function mapBackendVehicleToMobile(b) {
   if (!b) return null;
@@ -21,15 +22,17 @@ export function mapBackendVehicleToMobile(b) {
     return String(value);
   };
 
-  const name =
-    b.name ??
-    b.Name ??
-    b.variantName ??
-    b.VariantName ??
-    (b.brandName || b.BrandName ? `${b.brandName || b.BrandName} ${b.variantName || b.VariantName || ''}`.trim() : null) ??
-    b.fullName ??
-    b.FullName ??
-    'Xe của tôi';
+    const name =
+      b.productName ??
+      b.ProductName ??
+      b.name ??
+      b.Name ??
+      b.variantName ??
+      b.VariantName ??
+      (b.brandName || b.BrandName ? `${b.brandName || b.BrandName} ${b.variantName || b.VariantName || ''}`.trim() : null) ??
+      b.fullName ??
+      b.FullName ??
+      'Xe của tôi';
 
   return {
     id: String(b.id ?? b.Id ?? b.vehicleId ?? b.VehicleId ?? Math.random()),
@@ -55,7 +58,7 @@ export function mapBackendVehicleToMobile(b) {
       b.Engine ??
       '',
     color: b.colorName ?? b.ColorName ?? b.color ?? b.Color ?? '',
-    type: b.type ?? b.Type ?? b.vehicleType ?? b.VehicleType ?? b.brandName ?? b.BrandName ?? 'Xe máy',
+    type: b.categoryName ?? b.CategoryName ?? b.type ?? b.Type ?? b.vehicleType ?? b.VehicleType ?? b.brandName ?? b.BrandName ?? 'Xe máy',
     version:
       b.variantName ??
       b.VariantName ??
@@ -79,9 +82,12 @@ export function mapBackendVehicleToMobile(b) {
     warrantyUntil: b.warrantyUntil ?? b.WarrantyUntil ?? b.warrantyDate ?? b.WarrantyDate ?? '',
     warrantyFrom: b.warrantyFrom ?? b.WarrantyFrom ?? '',
     insuranceUntil: b.insuranceUntil ?? b.InsuranceUntil ?? '',
-    operatingSpecs: b.operatingSpecs ?? b.OperatingSpecs ?? {},
-    nextService: b.nextService ?? b.NextService ?? {},
     timeline: Array.isArray(b.timeline) ? b.timeline : (Array.isArray(b.Timeline) ? b.Timeline : []),
+    image: (b.imageUrl || b.ImageUrl || b.image || b.Image) 
+      ? ((b.imageUrl || b.ImageUrl || b.image || b.Image).startsWith('http') 
+          ? (b.imageUrl || b.ImageUrl || b.image || b.Image) 
+          : `${API_BASE_URL}${b.imageUrl || b.ImageUrl || b.image || b.Image}`)
+      : null,
   };
 }
 

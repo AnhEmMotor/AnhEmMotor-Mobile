@@ -135,6 +135,14 @@ export async function getMyVehiclesApi() {
     throw new Error(data.error?.message || 'Không thể tải danh sách xe');
   }
   const data = await response.json();
+  
+  if (data?.value?.items) {
+    return data.value.items;
+  }
+  if (data?.items) {
+    return data.items;
+  }
+  
   return Array.isArray(data) ? data : data.value || data.data || [];
 }
 
