@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiDelete } from './httpClient';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete, apiPostFormData } from './httpClient';
 
 export async function loginApi(usernameOrEmail, password) {
   const response = await apiPost('/api/v1/Auth/login', { usernameOrEmail, password });

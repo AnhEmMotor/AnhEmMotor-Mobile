@@ -10,7 +10,6 @@ import {
   getActiveShipmentsApi,
   getFaqsApi,
   getProfileApi,
-  getCustomerProfileApi,
 } from '../../../api/customerApi';
 import { API_BASE_URL } from '../../../config';
 
