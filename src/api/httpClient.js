@@ -114,24 +114,24 @@ async function tryRefreshToken() {
  }
 }
 
-export async function apiGet(path, timeoutMs) {
- return sendRequest(path, { method: 'GET' }, true, timeoutMs);
+export async function apiGet(path, timeoutMs, retryOnAuth = true) {
+ return sendRequest(path, { method: 'GET' }, retryOnAuth, timeoutMs);
 }
 
-export async function apiPost(path, body, timeoutMs) {
- return sendRequest(path, { method: 'POST', body: JSON.stringify(body) }, true, timeoutMs);
+export async function apiPost(path, body, timeoutMs, retryOnAuth = true) {
+ return sendRequest(path, { method: 'POST', body: JSON.stringify(body) }, retryOnAuth, timeoutMs);
 }
 
-export async function apiPut(path, body, timeoutMs) {
- return sendRequest(path, { method: 'PUT', body: JSON.stringify(body) }, true, timeoutMs);
+export async function apiPut(path, body, timeoutMs, retryOnAuth = true) {
+ return sendRequest(path, { method: 'PUT', body: JSON.stringify(body) }, retryOnAuth, timeoutMs);
 }
 
-export async function apiPatch(path, body, timeoutMs) {
- return sendRequest(path, { method: 'PATCH', body: JSON.stringify(body) }, true, timeoutMs);
+export async function apiPatch(path, body, timeoutMs, retryOnAuth = true) {
+ return sendRequest(path, { method: 'PATCH', body: JSON.stringify(body) }, retryOnAuth, timeoutMs);
 }
 
-export async function apiDelete(path, timeoutMs) {
- return sendRequest(path, { method: 'DELETE' }, true, timeoutMs);
+export async function apiDelete(path, timeoutMs, retryOnAuth = true) {
+ return sendRequest(path, { method: 'DELETE' }, retryOnAuth, timeoutMs);
 }
 
 export async function apiPostFormData(path, formData, timeoutMs) {

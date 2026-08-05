@@ -1,7 +1,8 @@
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete, apiPostFormData } from './httpClient';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete, apiPostFormData, tokenService } from './httpClient';
 
 export async function loginApi(usernameOrEmail, password) {
-  const response = await apiPost('/api/v1/Auth/login', { usernameOrEmail, password });
+  await tokenService.clearTokens();
+  const response = await apiPost('/api/v1/Auth/login', { usernameOrEmail, password }, undefined, false);
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đăng nhập thất bại');
@@ -15,7 +16,7 @@ export async function loginApi(usernameOrEmail, password) {
 }
 
 export async function registerApi(registerData) {
-  const response = await apiPost('/api/v1/Auth/register', registerData);
+  const response = await apiPost('/api/v1/Auth/register', registerData, undefined, false);
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đăng ký thất bại');
@@ -24,7 +25,7 @@ export async function registerApi(registerData) {
 }
 
 export async function forgotPasswordApi(email) {
-  const response = await apiPost('/api/v1/Auth/forgot-password', { email });
+  const response = await apiPost('/api/v1/Auth/forgot-password', { email }, undefined, false);
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Gửi yêu cầu thất bại');
@@ -33,7 +34,7 @@ export async function forgotPasswordApi(email) {
 }
 
 export async function resetPasswordApi(email, token, newPassword) {
-  const response = await apiPost('/api/v1/Auth/reset-password', { email, token, newPassword });
+  const response = await apiPost('/api/v1/Auth/reset-password', { email, token, newPassword }, undefined, false);
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đặt lại mật khẩu thất bại');

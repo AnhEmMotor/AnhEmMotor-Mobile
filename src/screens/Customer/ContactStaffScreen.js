@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet, Text, View, ScrollView, TextInput,
   KeyboardAvoidingView, Platform, Alert, Linking
@@ -9,44 +9,63 @@ import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useDependency } from '../../di/DependencyContext';
+import { contactApi } from '../../api/contactApi';
 
 const STAFF_EMAIL = 'support@anhemmotor.vn';
 
-const THREAD_HISTORY = [
-  {
-    id: 1,
-    from: 'staff',
-    name: 'Kỹ thuật viên Minh',
-    message: 'Xin chào anh Khôi! Xe của anh đã được kiểm tra xong. Bộ lọc gió cần thay mới, chi phí dự kiến ~150.000đ. Anh xác nhận để tụi em tiến hành nhé.',
-    time: '10:30 - 08/05/2026',
-    isRead: true,
-  },
-  {
-    id: 2,
-    from: 'customer',
-    name: 'Nguyễn Khôi',
-    message: 'Ok bạn, cứ tiến hành đi nhé. Xe mình để lại đến 5h chiều.',
-    time: '10:45 - 08/05/2026',
-    isRead: true,
-  },
-  {
-    id: 3,
-    from: 'staff',
-    name: 'Kỹ thuật viên Minh',
-    message: 'Dạ em đã thay xong. Xe anh đã sẵn sàng. Hóa đơn sẽ được gửi qua email.',
-    time: '16:20 - 08/05/2026',
-    isRead: false,
-  },
-];
-
-export default function ContactStaffScreen({ navigation }) {
+export default function ContactStaffScreen({ route, navigation }) {
+  const ticketId = route?.params?.ticketId;
+  const trackingToken = route?.params?.trackingToken;
+  
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState('thread');
+  const [activeTab, setActiveTab] = useState(ticketId ? 'thread' : 'compose');
+  const [threadHistory, setThreadHistory] = useState([]);
+  const [isReplying, setIsReplying] = useState(false);
+  const [ticketStatus, setTicketStatus] = useState('');
   const theme = useTheme(); // Use the useTheme hook
   const activeColors = useActiveColors();
 
   const [userName, setUserName] = useState('Khách hàng');
   const { getProfileUseCase } = useDependency();
+
+  const loadTicketHistory = useCallback(async () => {
+    try {
+      const tracking = await contactApi.getSupportTracking(ticketId, trackingToken);
+      if (tracking) {
+        setTicketStatus(tracking.statusLabel || tracking.status);
+        
+        // Convert to thread history format
+        const history = [];
+        
+        // Add original request
+        history.push({
+          id: 'req',
+          from: 'customer',
+          name: userName || 'Khách hàng',
+          message: tracking.content,
+          time: new Date(tracking.createdAt).toLocaleString('vi-VN'),
+          isRead: true
+        });
+        
+        if (tracking.replies && tracking.replies.length > 0) {
+          tracking.replies.forEach((reply, idx) => {
+            history.push({
+              id: `rep_${idx}`,
+              from: 'staff',
+              name: 'CRM Admin', // We could use reply.repliedBy or similar if available
+              message: reply.message,
+              time: new Date(reply.repliedAt || Date.now()).toLocaleString('vi-VN'),
+              isRead: true
+            });
+          });
+        }
+        
+        setThreadHistory(history);
+      }
+    } catch (e) {
+      console.warn('Failed to load ticket history', e);
+    }
+  }, [ticketId, trackingToken, userName]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -60,7 +79,17 @@ export default function ContactStaffScreen({ navigation }) {
       }
     };
     fetchUser();
-  }, [getProfileUseCase]);
+    
+    if (ticketId && trackingToken) {
+      loadTicketHistory();
+    }
+  }, [getProfileUseCase, ticketId, trackingToken, loadTicketHistory]);
+
+  // Temporarily fallback for reply: we don't have a public endpoint to add reply via tracking token.
+  // The user should use email or call for further discussion, or we mock it.
+  const handleSendReply = () => {
+    Alert.alert('Thông báo', 'Tính năng trả lời trực tiếp đang được cập nhật. Vui lòng gửi email hoặc gọi hotline để thảo luận thêm.');
+  };
 
   const handleSendEmail = () => {
     if (!message.trim()) {
@@ -82,27 +111,27 @@ export default function ContactStaffScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={[getStyles(activeColors).container, { backgroundColor: activeColors.background }]}
+      style={[getStyles({ ...theme, ...theme.colors }).container, { backgroundColor: activeColors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
-      <Animated.View entering={FadeInUp.duration(500)} style={getStyles(activeColors).header}>
-        <ScalePress style={[getStyles(activeColors).backBtn, { backgroundColor: activeColors.card }]} onPress={() => navigation.goBack()}>
+      <Animated.View entering={FadeInUp.duration(500)} style={getStyles({ ...theme, ...theme.colors }).header}>
+        <ScalePress style={[getStyles({ ...theme, ...theme.colors }).backBtn, { backgroundColor: activeColors.card }]} onPress={() => navigation.goBack()}>
           <ChevronLeft color={activeColors.text} size={24} />
         </ScalePress>
-        <View style={getStyles(activeColors).headerCenter}>
-          <Text style={[getStyles(activeColors).headerTitle, { color: activeColors.text }]}>Liên hệ nhân viên</Text>
-          <View style={getStyles(activeColors).onlineDot}>
-            <View style={[getStyles(activeColors).dot, { backgroundColor: theme.colors.success }]} />
-            <Text style={[getStyles(activeColors).onlineText, { color: theme.colors.success }]}>Đang hoạt động</Text>
+        <View style={getStyles({ ...theme, ...theme.colors }).headerCenter}>
+          <Text style={[getStyles({ ...theme, ...theme.colors }).headerTitle, { color: activeColors.text }]}>Liên hệ nhân viên</Text>
+          <View style={getStyles({ ...theme, ...theme.colors }).onlineDot}>
+            <View style={[getStyles({ ...theme, ...theme.colors }).dot, { backgroundColor: theme.colors.success }]} />
+            <Text style={[getStyles({ ...theme, ...theme.colors }).onlineText, { color: theme.colors.success }]}>Đang hoạt động</Text>
           </View>
         </View>
-        <View style={getStyles(activeColors).headerRight}>
-          <ScalePress style={[getStyles(activeColors).callBtn, { borderColor: activeColors.isDark ? theme.colors.primary + '4D' : theme.colors.primary + '26' }]} onPress={() => Linking.openURL('tel:19001234')}>
+        <View style={getStyles({ ...theme, ...theme.colors }).headerRight}>
+          <ScalePress style={[getStyles({ ...theme, ...theme.colors }).callBtn, { borderColor: activeColors.isDark ? theme.colors.primary + '4D' : theme.colors.primary + '26' }]} onPress={() => Linking.openURL('tel:19001234')}>
             <Phone color={activeColors.primary} size={20} />
           </ScalePress>
           <ScalePress
-            style={[getStyles(activeColors).callBtn, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}
+            style={[getStyles({ ...theme, ...theme.colors }).callBtn, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}
             onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
           >
             <Settings color={activeColors.text} size={20} />
@@ -111,59 +140,64 @@ export default function ContactStaffScreen({ navigation }) {
       </Animated.View>
 
       {/* Tabs */}
-      <View style={getStyles(activeColors).tabs}>
+      <View style={getStyles({ ...theme, ...theme.colors }).tabs}>
         <ScalePress
-          style={[getStyles(activeColors).tab, activeTab === 'thread' && { borderBottomColor: activeColors.primary }]}
+          style={[getStyles({ ...theme, ...theme.colors }).tab, activeTab === 'thread' && { borderBottomColor: activeColors.primary }]}
           onPress={() => setActiveTab('thread')}
         >
-          <Text style={[getStyles(activeColors).tabText, { color: activeColors.subtext }, activeTab === 'thread' && { color: activeColors.primary }]}>Lịch sử trao đổi</Text>
+          <Text style={[getStyles({ ...theme, ...theme.colors }).tabText, { color: activeColors.subtext }, activeTab === 'thread' && { color: activeColors.primary }]}>Lịch sử trao đổi</Text>
         </ScalePress>
         <ScalePress
-          style={[getStyles(activeColors).tab, activeTab === 'compose' && { borderBottomColor: activeColors.primary }]}
+          style={[getStyles({ ...theme, ...theme.colors }).tab, activeTab === 'compose' && { borderBottomColor: activeColors.primary }]}
           onPress={() => setActiveTab('compose')}
         >
-          <Text style={[getStyles(activeColors).tabText, { color: activeColors.subtext }, activeTab === 'compose' && { color: activeColors.primary }]}>Gửi Email mới</Text>
+          <Text style={[getStyles({ ...theme, ...theme.colors }).tabText, { color: activeColors.subtext }, activeTab === 'compose' && { color: activeColors.primary }]}>Gửi Email mới</Text>
         </ScalePress>
       </View>
 
       {activeTab === 'thread' ? (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles(activeColors).threadList}>
-          <Text style={[getStyles(activeColors).sectionHint, { color: activeColors.subtext }]}>Trao đổi về: Kawasaki Z1000 - Bảo dưỡng 08/05</Text>
-          {THREAD_HISTORY.map((msg, index) => {
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles({ ...theme, ...theme.colors }).threadList}>
+          {ticketId ? (
+            <Text style={[getStyles({ ...theme, ...theme.colors }).sectionHint, { color: activeColors.subtext }]}>Mã yêu cầu: {ticketId} - Trạng thái: {ticketStatus}</Text>
+          ) : (
+            <Text style={[getStyles({ ...theme, ...theme.colors }).sectionHint, { color: activeColors.subtext }]}>Chưa có yêu cầu hỗ trợ nào được chọn.</Text>
+          )}
+          
+          {(threadHistory).map((msg, index) => {
             const isCustomer = msg.from === 'customer';
             return (
               <Animated.View
                 key={msg.id}
                 entering={FadeInDown.duration(500).delay(index * 100)}
-                style={[getStyles(activeColors).bubbleWrapper, isCustomer && getStyles(activeColors).bubbleRight]}
+                style={[getStyles({ ...theme, ...theme.colors }).bubbleWrapper, isCustomer && getStyles({ ...theme, ...theme.colors }).bubbleRight]}
               >
                 {!isCustomer && (
-                  <View style={[getStyles(activeColors).avatarCircle, { backgroundColor: activeColors.primary }]}>
-                    <Text style={getStyles(activeColors).avatarText}>AE</Text>
+                  <View style={[getStyles({ ...theme, ...theme.colors }).avatarCircle, { backgroundColor: activeColors.primary }]}>
+                    <Text style={getStyles({ ...theme, ...theme.colors }).avatarText}>AE</Text>
                   </View>
                 )}
                 <View style={[
-                  getStyles(activeColors).bubble,
+                  getStyles({ ...theme, ...theme.colors }).bubble,
                   isCustomer
-                    ? [getStyles(activeColors).customerBubble, { backgroundColor: activeColors.primary }]
-                    : [getStyles(activeColors).staffBubble, { backgroundColor: activeColors.card }]
+                    ? [getStyles({ ...theme, ...theme.colors }).customerBubble, { backgroundColor: activeColors.primary }]
+                    : [getStyles({ ...theme, ...theme.colors }).staffBubble, { backgroundColor: activeColors.card }]
                 ]}>
                   <Text style={[
-                    getStyles(activeColors).bubbleName,
+                    getStyles({ ...theme, ...theme.colors }).bubbleName,
                     { color: isCustomer ? 'rgba(255,255,255,0.7)' : activeColors.subtext }
                   ]}>
                     {msg.name}
                   </Text>
                   <Text style={[
-                    getStyles(activeColors).bubbleText,
+                    getStyles({ ...theme, ...theme.colors }).bubbleText,
                     { color: isCustomer ? '#FFFFFF' : activeColors.text }
                   ]}>
                     {msg.message}
                   </Text>
-                  <View style={getStyles(activeColors).bubbleMeta}>
+                  <View style={getStyles({ ...theme, ...theme.colors }).bubbleMeta}>
                     <Clock size={10} color={isCustomer ? 'rgba(255,255,255,0.6)' : activeColors.subtext} />
                     <Text style={[
-                      getStyles(activeColors).bubbleTime,
+                      getStyles({ ...theme, ...theme.colors }).bubbleTime,
                       { color: isCustomer ? 'rgba(255,255,255,0.5)' : activeColors.subtext }
                     ]}>
                       {msg.time}
@@ -183,26 +217,26 @@ export default function ContactStaffScreen({ navigation }) {
           <View style={{ height: 80 }} />
         </ScrollView>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles(activeColors).composeContainer}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles({ ...theme, ...theme.colors }).composeContainer}>
           <Animated.View entering={FadeInDown.duration(500)}> {/* This is fine */}
             <GlassCard
-              style={[getStyles(activeColors).recipientCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+              style={[getStyles({ ...theme, ...theme.colors }).recipientCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
               tint={activeColors.isDark ? 'dark' : 'light'} // This is fine
             >
               <Mail color={activeColors.primary} size={18} />
               <View style={{ marginLeft: 12, flex: 1 }}>
-                <Text style={[getStyles(activeColors).recipientLabel, { color: activeColors.subtext }]}>Gửi đến</Text>
-                <Text style={[getStyles(activeColors).recipientEmail, { color: activeColors.primary }]}>{STAFF_EMAIL}</Text>
+                <Text style={[getStyles({ ...theme, ...theme.colors }).recipientLabel, { color: activeColors.subtext }]}>Gửi đến</Text>
+                <Text style={[getStyles({ ...theme, ...theme.colors }).recipientEmail, { color: activeColors.primary }]}>{STAFF_EMAIL}</Text>
               </View>
             </GlassCard>
 
-            <Text style={[getStyles(activeColors).composeLabel, { color: activeColors.text }]}>Nội dung</Text>
+            <Text style={[getStyles({ ...theme, ...theme.colors }).composeLabel, { color: activeColors.text }]}>Nội dung</Text>
             <GlassCard
-              style={[getStyles(activeColors).textAreaCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+              style={[getStyles({ ...theme, ...theme.colors }).textAreaCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
               tint={activeColors.isDark ? 'dark' : 'light'}
             >
               <TextInput
-                style={[getStyles(activeColors).textArea, { color: activeColors.text }]}
+                style={[getStyles({ ...theme, ...theme.colors }).textArea, { color: activeColors.text }]}
                 value={message}
                 onChangeText={setMessage}
                 placeholder="Nhập nội dung cần trao đổi với nhân viên AnhEmMotor..."
@@ -213,24 +247,24 @@ export default function ContactStaffScreen({ navigation }) {
               />
             </GlassCard>
 
-            <Text style={[getStyles(activeColors).composeLabel, { color: activeColors.text }]}>Mẫu câu hỏi nhanh</Text>
+            <Text style={[getStyles({ ...theme, ...theme.colors }).composeLabel, { color: activeColors.text }]}>Mẫu câu hỏi nhanh</Text>
             {quickTemplates.map((tmpl, i) => (
               <ScalePress key={i} onPress={() => setMessage(tmpl)}>
                 <GlassCard
-                  style={[getStyles(activeColors).templateCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+                  style={[getStyles({ ...theme, ...theme.colors }).templateCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
                   tint={activeColors.isDark ? 'dark' : 'light'}
                 >
-                  <Text style={[getStyles(activeColors).templateText, { color: activeColors.subtext }]}>{tmpl}</Text>
+                  <Text style={[getStyles({ ...theme, ...theme.colors }).templateText, { color: activeColors.subtext }]}>{tmpl}</Text>
                 </GlassCard>
               </ScalePress>
             ))}
 
             <ScalePress
-              style={[getStyles(activeColors).sendBtn, { backgroundColor: activeColors.primary }]}
+              style={[getStyles({ ...theme, ...theme.colors }).sendBtn, { backgroundColor: activeColors.primary }]}
               onPress={handleSendEmail}
             >
               <Send color="#fff" size={18} />
-              <Text style={getStyles(activeColors).sendBtnText}>Mở ứng dụng Email & Gửi</Text>
+              <Text style={getStyles({ ...theme, ...theme.colors }).sendBtnText}>Mở ứng dụng Email & Gửi</Text>
             </ScalePress>
           </Animated.View>
           <View style={{ height: 60 }} />

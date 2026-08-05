@@ -1,6 +1,10 @@
 import { useState, useRef, useCallback } from 'react';
 import { Linking, Alert } from 'react-native';
 import { ISSUE_TYPES, INITIAL_TICKETS, FAQ_CATEGORIES } from './constants';
+import { contactApi } from '../../../api/contactApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDependency } from '../../../di/DependencyContext';
+import { useEffect } from 'react';
 
 export const useSupport = () => {
   // Trạng thái Form phản hồi
@@ -21,10 +25,43 @@ export const useSupport = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [isIssueSheetVisible, setIsIssueSheetVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const issueSheetRef = useRef(null);
   const ticketDetailSheetRef = useRef(null);
   const faqDetailSheetRef = useRef(null);
+
+  const { getProfileUseCase } = useDependency();
+
+  // Load tickets from AsyncStorage on mount
+  useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('anhem-mobile-support-tickets');
+        if (stored) {
+          const parsedTickets = JSON.parse(stored);
+          setTickets(parsedTickets);
+          
+          // Optionally, we could fetch tracking for all of them here to update status
+          // But to keep it simple, we'll just show them as stored and update when clicked
+        } else {
+          setTickets([]);
+        }
+      } catch (e) {
+        console.warn('Failed to load tickets', e);
+      }
+    };
+    loadTickets();
+  }, []);
+
+  const saveTickets = async (newTickets) => {
+    setTickets(newTickets);
+    try {
+      await AsyncStorage.setItem('anhem-mobile-support-tickets', JSON.stringify(newTickets));
+    } catch (e) {
+      console.warn('Failed to save tickets', e);
+    }
+  };
 
   // Mở/Đóng Bottom Sheet chọn loại vấn đề
   const handleOpenIssueSheet = useCallback(() => {
@@ -47,8 +84,27 @@ export const useSupport = () => {
   }, []);
 
   // Mở/Đóng Bottom Sheet chi tiết Ticket
-  const handleOpenTicketDetail = useCallback((ticket) => {
-    setSelectedTicket(ticket);
+  const handleOpenTicketDetail = useCallback(async (ticket) => {
+    // Try to fetch latest tracking status
+    try {
+      const tracking = await contactApi.getSupportTracking(ticket.id, ticket.trackingToken);
+      if (tracking) {
+        // Update ticket with latest tracking data
+        const updatedTicket = {
+          ...ticket,
+          status: tracking.status,
+          statusLabel: tracking.statusLabel || (tracking.status === 'Resolved' ? '✓ Đã giải quyết' : '⏱️ Đang xử lý'),
+          reply: tracking.replies && tracking.replies.length > 0 ? tracking.replies[0].message : ticket.reply
+        };
+        setSelectedTicket(updatedTicket);
+      } else {
+        setSelectedTicket(ticket);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch tracking', e);
+      setSelectedTicket(ticket);
+    }
+    
     setTimeout(() => {
       ticketDetailSheetRef.current?.show();
     }, 50);
@@ -78,28 +134,59 @@ export const useSupport = () => {
   }, []);
 
   // Gửi phản hồi lên CRM
-  const handleSubmitFeedback = useCallback(() => {
-    if (!feedbackText.trim()) return;
+  const handleSubmitFeedback = useCallback(async () => {
+    if (!feedbackText.trim() || isSubmitting) return;
 
-    const newTicket = {
-      id: `t_${Date.now()}`,
-      issueType: selectedIssue,
-      content: feedbackText,
-      date: new Date().toLocaleDateString('vi-VN'),
-      status: 'pending',
-      statusLabel: '⏱️ Đang xử lý',
-      reply: 'Hệ thống CRM của AnhEmMotor đã ghi nhận phản hồi của bạn. Một chuyên viên hỗ trợ tại chi nhánh Biên Hòa đang được điều phối để xử lý yêu cầu của bạn.'
-    };
+    setIsSubmitting(true);
+    try {
+      let userProfile = {};
+      try {
+        const profile = await getProfileUseCase.execute();
+        if (profile) userProfile = profile;
+      } catch (e) {
+        // Ignore if user not logged in or profile fetch fails
+      }
 
-    setTickets((prev) => [newTicket, ...prev]);
-    setFeedbackText('');
-    setAttachedImages([]);
-    
-    Alert.alert(
-      'Gửi thành công! 🎉',
-      `Ý kiến về vấn đề "${selectedIssue}" của bạn đã được gửi trực tiếp đến hệ thống CRM chăm sóc khách hàng.`
-    );
-  }, [feedbackText, selectedIssue]);
+      const response = await contactApi.submitSupportRequest({
+        fullName: userProfile.name || 'Khách hàng',
+        phoneNumber: userProfile.phone || '',
+        email: userProfile.email || 'guest@anhemmotor.vn',
+        subject: `Yêu cầu hỗ trợ: ${selectedIssue}`,
+        category: selectedIssue,
+        content: feedbackText,
+      });
+
+      if (response && response.value && response.value.id) {
+        const data = response.value;
+        const newTicket = {
+          id: data.id,
+          trackingToken: data.trackingToken,
+          issueType: selectedIssue,
+          content: feedbackText,
+          date: new Date().toLocaleDateString('vi-VN'),
+          status: 'pending',
+          statusLabel: '⏱️ Đang xử lý',
+          reply: 'Hệ thống CRM của AnhEmMotor đã ghi nhận phản hồi của bạn. Một chuyên viên hỗ trợ đang được điều phối để xử lý yêu cầu của bạn.'
+        };
+
+        saveTickets([newTicket, ...tickets]);
+        setFeedbackText('');
+        setAttachedImages([]);
+        
+        Alert.alert(
+          'Gửi thành công! 🎉',
+          `Ý kiến của bạn đã được gửi trực tiếp đến hệ thống CRM. Mã theo dõi: ${data.id}`
+        );
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (error) {
+      console.error('Submit feedback error', error);
+      Alert.alert('Lỗi', 'Không thể gửi phản hồi. Vui lòng thử lại sau.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [feedbackText, selectedIssue, tickets, isSubmitting, getProfileUseCase]);
 
   // Gọi Cố vấn trực tiếp qua số hotline
   const handleCallAdvisor = useCallback(async () => {
@@ -161,19 +248,30 @@ export const useSupport = () => {
   }, []);
 
   // Khách hàng Duyệt đóng ca trong tương tác 2 chiều
-  const handleApproveCloseTicket = useCallback((ticketId) => {
-    setTickets(prev => prev.map(t => {
-      if (t.id === ticketId) {
-        return { ...t, status: 'resolved', statusLabel: '✓ Đã giải quyết' };
-      }
-      return t;
-    }));
-    ticketDetailSheetRef.current?.hide();
-    setTimeout(() => {
-      setSelectedTicket(null);
-      Alert.alert('Thành công 🎉', 'Bạn đã duyệt đóng ca hỗ trợ này. Cảm ơn ý kiến của bạn!');
-    }, 300);
-  }, []);
+  const handleApproveCloseTicket = useCallback(async (ticketId) => {
+    const ticketToClose = tickets.find(t => t.id === ticketId);
+    if (!ticketToClose) return;
+
+    try {
+      // Opt-in: send rating to backend
+      await contactApi.rateSupportEmployee(ticketId, ticketToClose.trackingToken, 5, 'Đã đóng yêu cầu');
+      
+      const newTickets = tickets.map(t => {
+        if (t.id === ticketId) {
+          return { ...t, status: 'resolved', statusLabel: '✓ Đã giải quyết' };
+        }
+        return t;
+      });
+      saveTickets(newTickets);
+      ticketDetailSheetRef.current?.hide();
+      setTimeout(() => {
+        setSelectedTicket(null);
+        Alert.alert('Thành công 🎉', 'Bạn đã duyệt đóng ca hỗ trợ này. Cảm ơn ý kiến của bạn!');
+      }, 300);
+    } catch (e) {
+      Alert.alert('Lỗi', 'Không thể đóng yêu cầu lúc này.');
+    }
+  }, [tickets]);
 
   return {
     selectedIssue,
@@ -187,6 +285,7 @@ export const useSupport = () => {
     selectedTicket,
     selectedFaq,
     isIssueSheetVisible,
+    isSubmitting,
     
     issueSheetRef,
     ticketDetailSheetRef,

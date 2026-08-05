@@ -413,7 +413,7 @@ export default function SupportScreen({ navigation }) {
                   style={[styles.sheetDiscussBtn, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)', borderColor: activeColors.border }]}
                   onPress={() => {
                     handleCloseTicketDetail();
-                    navigation.navigate('ContactStaff');
+                    navigation.navigate('ContactStaff', { ticketId: selectedTicket.id, trackingToken: selectedTicket.trackingToken });
                   }}
                   activeOpacity={0.8}
                 >
