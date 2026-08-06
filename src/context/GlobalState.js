@@ -22,7 +22,7 @@ export const GlobalStateProvider = ({ children }) => {
             setThemeModeState(parsed.settings.theme); // Sử dụng theme đã lưu
           } else {
             // Nếu không có theme đã lưu, đặt mặc định
-            setThemeModeState('dark'); // Mặc định là tối theo chuẩn AEM
+            setThemeModeState('light'); // Mặc định là sáng theo yêu cầu
           }
         }
       } catch (err) {

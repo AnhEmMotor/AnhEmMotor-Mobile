@@ -118,7 +118,7 @@ const lightPalette = {
 // Hook to get active colors based on theme mode
 export const useActiveColors = () => {
   const globalState = useGlobalState();
-  const themeMode = globalState?.themeMode || 'dark';
+  const themeMode = globalState?.themeMode || 'light';
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
 

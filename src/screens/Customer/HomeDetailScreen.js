@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -41,6 +41,7 @@ import {
   CalendarClock,
   ShieldAlert
 } from 'lucide-react-native';
+import RenderHtml from 'react-native-render-html';
 import { useActiveColors, Theme, useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
 import { styles } from './Home/styles';
@@ -83,6 +84,24 @@ export default function HomeDetailScreen({ route, navigation }) {
   const [copied, setCopied] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [newsContent, setNewsContent] = useState('');
+
+  useEffect(() => {
+    if (activeType === 'news' && activeItem?.slug) {
+      const fetchNewsDetail = async () => {
+        try {
+          const { getNewsDetailApi } = require('../../api/customerApi');
+          const detail = await getNewsDetailApi(activeItem.slug);
+          if (detail && detail.content) {
+            setNewsContent(detail.content);
+          }
+        } catch (error) {
+          console.error("Lỗi lấy chi tiết tin tức:", error);
+        }
+      };
+      fetchNewsDetail();
+    }
+  }, [activeType, activeItem]);
 
   // States cho Booking Modal tích hợp trực tiếp
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
@@ -643,17 +662,37 @@ export default function HomeDetailScreen({ route, navigation }) {
             </GlassCard>
 
             {/* Body bài viết */}
-            <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 26, marginTop: 20 }]}>
-              {activeItem.desc || 'Đời sống xe và tin tức nóng hổi luôn được cập nhật liên tục hàng giờ. AnhEmMotor cam kết mang lại cho khách hàng những thông tin bổ ích nhất về bảo dưỡng xe, kỹ năng lái xe an toàn, luật giao thông đường bộ mới nhất.'}
-            </Text>
+            {newsContent ? (
+              <View style={{ marginTop: 20 }}>
+                <RenderHtml
+                  contentWidth={width - 40}
+                  source={{ html: newsContent }}
+                  baseStyle={{ color: colors.text, fontSize: 15, lineHeight: 26 }}
+                  tagsStyles={{
+                    p: { color: colors.text, fontSize: 15, lineHeight: 26, marginVertical: 8 },
+                    img: { borderRadius: 10, marginVertical: 10, maxWidth: '100%' },
+                    h1: { color: colors.text, marginVertical: 10 },
+                    h2: { color: colors.text, marginVertical: 10 },
+                    h3: { color: colors.text, marginVertical: 10 },
+                    li: { color: colors.text, fontSize: 15, lineHeight: 26 },
+                  }}
+                />
+              </View>
+            ) : (
+              <View>
+                <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 26, marginTop: 20 }]}>
+                  {activeItem.desc || 'Đời sống xe và tin tức nóng hổi luôn được cập nhật liên tục hàng giờ. AnhEmMotor cam kết mang lại cho khách hàng những thông tin bổ ích nhất về bảo dưỡng xe, kỹ năng lái xe an toàn, luật giao thông đường bộ mới nhất.'}
+                </Text>
 
-            <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 26, marginTop: 15 }]}>
-              Theo nghiên cứu mới nhất của Hiệp hội Motor Việt Nam, việc bảo dưỡng xe định kỳ giúp tăng tuổi thọ động cơ lên đến 35%, đồng thời giảm mức tiêu hao nhiên liệu khoảng 12% so với thông thường. Đây là lý do vì sao người sử dụng xe máy nên chú trọng mốc km thay dầu và vệ sinh lọc gió định kỳ để có trải nghiệm lái êm ái nhất.
-            </Text>
+                <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 26, marginTop: 15 }]}>
+                  Theo nghiên cứu mới nhất của Hiệp hội Motor Việt Nam, việc bảo dưỡng xe định kỳ giúp tăng tuổi thọ động cơ lên đến 35%, đồng thời giảm mức tiêu hao nhiên liệu khoảng 12% so với thông thường. Đây là lý do vì sao người sử dụng xe máy nên chú trọng mốc km thay dầu và vệ sinh lọc gió định kỳ để có trải nghiệm lái êm ái nhất.
+                </Text>
 
-            <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 26, marginTop: 15, fontStyle: 'italic', fontWeight: '500' }]}>
-              "Chiếc xe chính là người bạn đường trung thành. Chăm chút kỹ càng cho khối động cơ sẽ mang lại sự an tâm tuyệt đối trên mọi nẻo đường hành trình của bạn."
-            </Text>
+                <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 26, marginTop: 15, fontStyle: 'italic', fontWeight: '500' }]}>
+                  "Chiếc xe chính là người bạn đường trung thành. Chăm chút kỹ càng cho khối động cơ sẽ mang lại sự an tâm tuyệt đối trên mọi nẻo đường hành trình của bạn."
+                </Text>
+              </View>
+            )}
 
             {/* TẦNG ĐẶC SẮC 3: BỘ PHẢN ỨNG THẢ TIM TƯƠNG TÁC (INTERACTIVE REACTIONS CHIPS) */}
             <View style={[getStyles(theme).reactionContainer, { borderTopColor: colors.border, borderBottomColor: colors.border }]}>
