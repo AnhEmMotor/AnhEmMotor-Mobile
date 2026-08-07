@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDependency } from '../../../di/DependencyContext';
 
 export const useMyVehicles = () => {
-	const { getCustomerVehiclesUseCase, registerCustomerVehicleUseCase } = useDependency();
+	const { getCustomerVehiclesUseCase, registerCustomerVehicleUseCase, getCustomerVehicleDetailUseCase } = useDependency();
 	const isMountedRef = useRef(true);
 
 	const [bikes, setBikes] = useState([]);
@@ -22,6 +22,12 @@ export const useMyVehicles = () => {
 			if (Array.isArray(vehicles) && vehicles.length > 0) {
 				setBikes(vehicles);
 				setActiveBike(vehicles[0]);
+				try {
+					const details = await getCustomerVehicleDetailUseCase.execute(vehicles[0].id);
+					setActiveBike(prev => prev ? { ...prev, ...details } : prev);
+				} catch (detailError) {
+					console.error('Error fetching details for first vehicle:', detailError);
+				}
 			} else {
 				setBikes([]);
 				setActiveBike(null);
@@ -48,10 +54,16 @@ export const useMyVehicles = () => {
 		};
 	}, []);
 
-	const selectBike = (bikeId) => {
+	const selectBike = async (bikeId) => {
 		const found = bikes.find((b) => b.id === bikeId);
 		if (found) {
 			setActiveBike(found);
+			try {
+				const details = await getCustomerVehicleDetailUseCase.execute(bikeId);
+				setActiveBike(prev => prev ? { ...prev, ...details } : prev);
+			} catch (detailError) {
+				console.error('Error fetching details for selected vehicle:', detailError);
+			}
 		}
 	};
 

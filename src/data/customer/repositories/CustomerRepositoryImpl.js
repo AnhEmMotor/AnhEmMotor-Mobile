@@ -14,7 +14,18 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
 
   async getVehicles() {
     const rawVehicles = await this.customerDataSource.getVehicles();
-    return rawVehicles.map((vehicle) => new CustomerVehicle(vehicle));
+    return rawVehicles.map((vehicle) => {
+      const img = vehicle.imageUrl || vehicle.ImageUrl || vehicle.image || vehicle.Image;
+      const parsedImage = img 
+        ? (img.startsWith('http') ? img : `${API_BASE_URL}${img}`)
+        : null;
+        
+      return new CustomerVehicle({
+        ...vehicle,
+        type: vehicle.type || vehicle.categoryName || vehicle.CategoryName || vehicle.variantName,
+        image: parsedImage,
+      });
+    });
   }
 
   async registerVehicle(vehicleData) {

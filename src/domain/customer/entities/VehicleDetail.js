@@ -29,6 +29,7 @@ export class VehicleDetail {
     operatingSpecs,
     timeline,
     documents,
+    image,
   }) {
     this.id = id;
     this.name = name;
@@ -63,5 +64,6 @@ export class VehicleDetail {
     this.operatingSpecs = operatingSpecs || {};
     this.timeline = timeline || [];
     this.documents = documents || [];
+    this.image = image;
   }
 }
