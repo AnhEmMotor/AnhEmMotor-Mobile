@@ -513,3 +513,21 @@ export async function getShipmentTrackingApi(searchQuery) {
   const data = await response.json();
   return data.data || data;
 }
+
+export async function createSupportRequestApi(body) {
+  const response = await apiPost('/api/v1/Contacts/support-request', body, undefined, false);
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || data.title || 'Gửi yêu cầu thất bại');
+  }
+  return data.value || data;
+}
+
+export async function getMyFinanceContractsApi() {
+  const response = await apiGet('/api/v1/client/finance-contracts');
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || data.title || 'Không thể tải hợp đồng tài chính');
+  }
+  return data;
+}

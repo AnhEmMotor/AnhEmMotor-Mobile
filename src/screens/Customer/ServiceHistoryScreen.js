@@ -20,7 +20,7 @@ export default function ServiceHistoryScreen({ navigation, route }) {
 		name: "Kawasaki Z1000",
 		plate: "59-A3 123.45",
 	};
-	const { theme, getStyles } = useTheme();
+	const theme = useTheme();
 	const styles = getStyles(theme);
 
 	const { history, reminders, loading, error, refreshData } = useServiceHistoryController(

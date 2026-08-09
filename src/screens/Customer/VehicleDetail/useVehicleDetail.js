@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { verticalScale } from '../../../utils/responsive';
-import { getProductDetailApi } from '../../../api/customerApi';
+import { ProductDataSource } from '../../../data/product/datasources/ProductDataSource';
 
 export const useVehicleDetail = (motorSummary, initialColor) => {
   const [motorDetail, setMotorDetail] = useState(null);
@@ -26,7 +26,7 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getProductDetailApi(motorSummary.id);
+        const data = await ProductDataSource.fetchProductDetail(motorSummary.id);
         if (isMounted) {
           setMotorDetail(data);
           if (data?.colors?.length > 0 && selectedColor === 'default') {

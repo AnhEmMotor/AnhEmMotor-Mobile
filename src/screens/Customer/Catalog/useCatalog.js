@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { getProductsApi, getBrandsApi } from '../../../api/customerApi';
+import { getBrandsApi } from '../../../api/customerApi';
+import { ProductDataSource } from '../../../data/product/datasources/ProductDataSource';
 
 const CATEGORIES = [
   { id: 8, name: 'Xe máy' },
@@ -23,8 +24,8 @@ export const useCatalog = () => {
     try {
       setLoading(true);
       setFetchError(null);
-      const data = await getProductsApi(searchQuery, categoryId);
-      setProducts(Array.isArray(data) ? data : []);
+      const data = await ProductDataSource.fetchCatalogProducts(searchQuery, categoryId);
+      setProducts(data.items || []);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setProducts([]);

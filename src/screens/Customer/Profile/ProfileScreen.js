@@ -75,10 +75,8 @@ return (
 <Text style={[styles.blockTitle, { color: activeColors.text }]}>DỊCH VỤ & BẢO HÀNH</Text>
 <View style={styles.gridRowInner}>
 {[
-{ i: Shield, c: '#E31B23', bg: 'rgba(227,27,35,0.1)', l: 'Sổ bảo hành', a: () => Alert.alert('Sổ bảo hành', 'Chi tiết bảo hành toàn diện.') },
 { i: Wrench, c: '#10B981', bg: 'rgba(16,185,129,0.1)', l: 'Lịch sử dịch vụ', a: () => navigation.navigate('ServiceHistory') },
-{ i: Clock, c: '#F59E0B', bg: 'rgba(245,158,11,0.1)', l: 'Lịch hẹn', a: () => navigation.navigate('ServiceHistory') },
-{ i: Calendar, c: '#3B82F6', bg: 'rgba(59,130,246,0.1)', l: 'Bảo dưỡng', a: () => Alert.alert('Bảo dưỡng', 'Đặt lịch theo km thông minh.') },
+{ i: Clock, c: '#F59E0B', bg: 'rgba(245,158,11,0.1)', l: 'Lịch hẹn', a: () => navigation.navigate('AppointmentBooking') },
 ].map(({i:Icon,c,bg,l,a}) => (
 <TouchableOpacity key={l} style={styles.gridCol} onPress={a}><View style={[styles.gridIcon,{backgroundColor:bg}]}><Icon color={c} size={21} /></View><Text style={[styles.gridLabel,{color:activeColors.text}]}>{l}</Text></TouchableOpacity>
 ))}
@@ -91,9 +89,7 @@ return (
 <View style={styles.gridRowInner}>
 {[
 { i: FileText, c: '#E31B23', bg: 'rgba(227,27,35,0.1)', l: 'Hóa đơn', a: () => navigation.navigate('InvoiceScreen') },
-{ i: CircleDollarSign, c: '#10B981', bg: 'rgba(16,185,129,0.1)', l: 'Dự toán trả góp', a: () => navigation.navigate('FinancialHub') },
-{ i: CreditCard, c: '#A855F7', bg: 'rgba(168,85,247,0.1)', l: 'Hợp đồng TC', a: () => navigation.navigate('InvoiceScreen') },
-{ i: Check, c: '#F59E0B', bg: 'rgba(245,158,11,0.1)', l: 'Thanh toán', a: () => Alert.alert('Thanh toán','Quét QR hoặc chuyển khoản.') },
+{ i: CreditCard, c: '#A855F7', bg: 'rgba(168,85,247,0.1)', l: 'Hợp đồng TC', a: () => navigation.navigate('FinanceContract') },
 ].map(({i:Icon,c,bg,l,a}) => (
 <TouchableOpacity key={l} style={styles.gridCol} onPress={a}><View style={[styles.gridIcon,{backgroundColor:bg}]}><Icon color={c} size={21} /></View><Text style={[styles.gridLabel,{color:activeColors.text}]}>{l}</Text></TouchableOpacity>
 ))}
@@ -146,22 +142,6 @@ return (
 </View>
 </View>
 
-{/* KHOI 6 */}
-<View style={[styles.block, blockBg]}>
-<Text style={[styles.blockTitle, { color: activeColors.text }]}>CHỨNG NHẬN & CHIẾN DỊCH</Text>
-<View style={styles.iconRow}>
-{[
-{ I: Star, l: 'Racing', badge: 'Hot', bg: '#EF4444', c: '#EF4444', m: 'Đăng ký giải đấu Racing Edition 2025.' },
-{ I: Shield, l: 'Gói BH', badge: null, c: '#F59E0B', m: 'Gói bảo hiểm năm 2025 – đề xuất.' },
-{ I: Award, l: 'Dealer', badge: null, c: '#EC4899', m: 'Tính nhất khu vực Đông Nam Bộ.' },
-].map(({I:Icon,l,badge,bg,c,m}) => (
-<TouchableOpacity key={l} style={styles.iconCol} onPress={() => Alert.alert(l, m)}>
-<View style={[styles.iconCircle,{backgroundColor:activeColors.listIconBg}]}><Icon color={c} size={22} />{badge && <View style={[styles.badge,{backgroundColor:bg||'#EF4444'}]}><Text style={styles.badgeText}>{badge}</Text></View>}</View>
-<Text style={[styles.iconLabel,{color:activeColors.subtext}]}>{l}</Text>
-</TouchableOpacity>
-))}
-</View>
-</View>
 
 <View style={{ height: 20 }} />
 </ScrollView>

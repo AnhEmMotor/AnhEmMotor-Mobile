@@ -149,9 +149,19 @@ export default function InvoiceScreen({ navigation }) {
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.pdfBtn, { backgroundColor: Theme.staticColors.secondary }]} onPress={() => setDetailModal(false)}>
+            <TouchableOpacity
+              style={[styles.pdfBtn, { backgroundColor: activeColors.primary }]}
+              onPress={() => setDetailModal(false)}
+            >
               <FileText color="#fff" size={20} />
               <Text style={styles.pdfText}>Tải file PDF hóa đơn</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.closeBtn, { borderColor: activeColors.border }]}
+              onPress={() => setDetailModal(false)}
+            >
+              <Text style={[styles.closeBtnText, { color: activeColors.subtext }]}>Đóng</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>
@@ -193,7 +203,7 @@ const styles = StyleSheet.create({
 
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)' },
-  modalSheet: { backgroundColor: '#050505', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: 60 },
+  modalSheet: { borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: 40 },
   modalHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.1)', alignSelf: 'center', marginBottom: 24 },
   modalTitle: { fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
   modalSub: { fontSize: 14, marginBottom: 30 },
@@ -206,7 +216,9 @@ const styles = StyleSheet.create({
   totalFinalLabel: { fontSize: 16, fontWeight: '900' },
   totalFinalVal: { fontSize: 20, fontWeight: 'bold' },
 
-  pdfBtn: { backgroundColor: Theme.staticColors.secondary, height: 60, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  pdfText: { color: '#fff', fontSize: 16, fontWeight: 'bold', marginLeft: 12 }
+  pdfBtn: { height: 56, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+  pdfText: { color: '#fff', fontSize: 16, fontWeight: 'bold', marginLeft: 12 },
+  closeBtn: { height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+  closeBtnText: { fontSize: 15, fontWeight: '600' },
 });
 

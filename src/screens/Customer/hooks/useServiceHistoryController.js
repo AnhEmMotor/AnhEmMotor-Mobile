@@ -17,6 +17,12 @@ export function useServiceHistoryController(vehicleId) {
         getServiceHistoryUseCase.execute(vehicleId),
         getUpcomingRemindersUseCase.execute(vehicleId),
       ]);
+      console.log('HISTORY DATA RETURNED:', historyData);
+      
+      if (historyData && historyData.error) {
+        throw new Error(historyData.error.message);
+      }
+      
       setHistory(historyData);
       setReminders(remindersData);
     } catch (error) {

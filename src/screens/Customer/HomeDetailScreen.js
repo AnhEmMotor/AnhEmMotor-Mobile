@@ -44,7 +44,7 @@ import {
 import RenderHtml from 'react-native-render-html';
 import { useActiveColors, Theme, useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
-import { styles } from './Home/styles';
+import { styles } from '../../features/home/presentation/styles';
 import ScalePress from '../../components/ScalePress';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 
