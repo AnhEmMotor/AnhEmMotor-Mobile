@@ -91,10 +91,10 @@ files.forEach((file) => {
         /<script([^>]*)>([\s\S]*?)<\/script>/g,
         (match, attrs, scriptContent) => {
           try {
-            return `<script${attrs}>${decomment(scriptContent)}<\/script>`;
+            return `<script${attrs}>${decomment(scriptContent)}</script>`;
           } catch {
             try {
-              return `<script${attrs}>${stripComments(scriptContent)}<\/script>`;
+              return `<script${attrs}>${stripComments(scriptContent)}</script>`;
             } catch {
               return match;
             }
@@ -105,7 +105,7 @@ files.forEach((file) => {
         /<style([^>]*)>([\s\S]*?)<\/style>/g,
         (match, attrs, styleContent) => {
           try {
-            return `<style${attrs}>${decomment.text(styleContent)}<\/style>`;
+            return `<style${attrs}>${decomment.text(styleContent)}</style>`;
           } catch {
             return match;
           }
