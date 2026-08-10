@@ -54,7 +54,12 @@ files.forEach((file) => {
 
   try {
     const content = fs.readFileSync(file, 'utf8');
-    const stripped = decomment(content);
+    const lines = content.split('\n');
+        const eslintComments = lines.filter(l => l.includes('eslint-disable') || l.includes('eslint-enable'));
+        let stripped = decomment(content);
+        if (eslintComments.length > 0) {
+            stripped = eslintComments.join('\n') + '\n' + stripped;
+        }
 
     if (content !== stripped) {
       fs.writeFileSync(file, stripped, 'utf8');
