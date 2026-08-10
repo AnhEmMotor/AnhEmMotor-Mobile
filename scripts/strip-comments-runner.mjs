@@ -2,6 +2,7 @@ import process from 'process';
 import fs from 'fs';
 import path from 'path';
 import decomment from 'decomment';
+import stripComments from 'strip-comments';
 
 function getAllFiles(dir, fileList = []) {
   if (!fs.existsSync(dir)) return fileList;
@@ -81,19 +82,27 @@ files.forEach((file) => {
 
     let stripped = temp;
     if (file.endsWith('.vue')) {
-      stripped = decomment.html(stripped);
+      try {
+        stripped = decomment.html(stripped);
+      } catch (e) {
+        stripped = stripComments(stripped);
+      }
       stripped = stripped.replace(/<script([^>]*)>([\s\S]*?)<\/script>/g, (match, attrs, scriptContent) => {
-        try { return `<script${attrs}>${decomment(scriptContent)}<\/script>`; } catch(e) { return match; }
+        try { 
+            return `<script${attrs}>${decomment(scriptContent)}<\/script>`; 
+        } catch(e) { 
+            try { return `<script${attrs}>${stripComments(scriptContent)}<\/script>`; } catch (e2) { return match; }
+        }
       });
       stripped = stripped.replace(/<style([^>]*)>([\s\S]*?)<\/style>/g, (match, attrs, styleContent) => {
         try { return `<style${attrs}>${decomment.text(styleContent)}<\/style>`; } catch(e) { return match; }
       });
     } else if (file.endsWith('.html')) {
-      stripped = decomment.html(stripped);
+      try { stripped = decomment.html(stripped); } catch (e) { stripped = stripComments(stripped); }
     } else if (file.endsWith('.css') || file.endsWith('.scss') || file.endsWith('.less')) {
-      stripped = decomment.text(stripped);
+      try { stripped = decomment.text(stripped); } catch (e) { stripped = stripComments(stripped); }
     } else {
-      stripped = decomment(stripped);
+      try { stripped = decomment(stripped); } catch (e) { stripped = stripComments(stripped); }
     }
 
     directives.forEach((directive, index) => {
