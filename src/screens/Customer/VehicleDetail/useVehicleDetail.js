@@ -12,8 +12,8 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
   );
   const [rotationIndex, setRotationIndex] = useState(0);
 
-  
-  const [downPaymentPercent, setDownPaymentPercent] = useState(30);
+
+    const [downPaymentPercent, setDownPaymentPercent] = useState(30);
   const [loanTerm, setLoanTerm] = useState(12);
 
   const lastX = useRef(0);
@@ -85,8 +85,8 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
     );
   }, [rotationIndex, selectedColor, motor, motorFrames]);
 
-  
-  const financeResults = useMemo(() => {
+
+    const financeResults = useMemo(() => {
     const priceValue =
       motor?.price ?? motor?.referencePrice ?? motor?.Price ?? motor?.ReferencePrice;
     const priceRaw =

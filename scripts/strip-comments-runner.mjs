@@ -29,7 +29,12 @@ function getAllFiles(dir, fileList = []) {
       filePath.endsWith('.js') ||
       filePath.endsWith('.jsx') ||
       filePath.endsWith('.ts') ||
-      filePath.endsWith('.tsx')
+      filePath.endsWith('.tsx') ||
+      filePath.endsWith('.vue') ||
+      filePath.endsWith('.html') ||
+      filePath.endsWith('.css') ||
+      filePath.endsWith('.scss') ||
+      filePath.endsWith('.less')
     ) {
       fileList.push(filePath);
     }
@@ -41,7 +46,16 @@ const args = process.argv.slice(2);
 let files = [];
 if (args.length > 0) {
   files = args.filter(
-    (f) => f.endsWith('.js') || f.endsWith('.jsx') || f.endsWith('.ts') || f.endsWith('.tsx')
+    (f) =>
+      f.endsWith('.js') ||
+      f.endsWith('.jsx') ||
+      f.endsWith('.ts') ||
+      f.endsWith('.tsx') ||
+      f.endsWith('.vue') ||
+      f.endsWith('.html') ||
+      f.endsWith('.css') ||
+      f.endsWith('.scss') ||
+      f.endsWith('.less')
   );
 } else {
   files = getAllFiles(process.cwd());
@@ -54,12 +68,37 @@ files.forEach((file) => {
 
   try {
     const content = fs.readFileSync(file, 'utf8');
-    const lines = content.split('\n');
-        const eslintComments = lines.filter(l => l.includes('eslint-disable') || l.includes('eslint-enable'));
-        let stripped = decomment(content);
-        if (eslintComments.length > 0) {
-            stripped = eslintComments.join('\n') + '\n' + stripped;
+
+    const directives = [];
+    let temp = content.replace(/\/\*[\s\S]*?\*\/|\/\/.*|<!--[\s\S]*?-->/g, (match) => {
+        if (/eslint|stylelint|prettier|@ts-/.test(match)) {
+            const id = `__DIRECTIVE_${directives.length}__`;
+            directives.push(match);
+            return id;
         }
+        return match;
+    });
+
+    let stripped = temp;
+    if (file.endsWith('.vue')) {
+      stripped = decomment.html(stripped);
+      stripped = stripped.replace(/<script([^>]*)>([\s\S]*?)<\/script>/g, (match, attrs, scriptContent) => {
+        try { return `<script${attrs}>${decomment(scriptContent)}<\/script>`; } catch(e) { return match; }
+      });
+      stripped = stripped.replace(/<style([^>]*)>([\s\S]*?)<\/style>/g, (match, attrs, styleContent) => {
+        try { return `<style${attrs}>${decomment.text(styleContent)}<\/style>`; } catch(e) { return match; }
+      });
+    } else if (file.endsWith('.html')) {
+      stripped = decomment.html(stripped);
+    } else if (file.endsWith('.css') || file.endsWith('.scss') || file.endsWith('.less')) {
+      stripped = decomment.text(stripped);
+    } else {
+      stripped = decomment(stripped);
+    }
+
+    directives.forEach((directive, index) => {
+        stripped = stripped.replace(`__DIRECTIVE_${index}__`, directive);
+    });
 
     if (content !== stripped) {
       fs.writeFileSync(file, stripped, 'utf8');

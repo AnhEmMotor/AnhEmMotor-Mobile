@@ -4,13 +4,13 @@ export class UpdateProfileUseCase {
   }
 
     async execute(userProfile) {
-    
-    if (!userProfile.name || userProfile.name.trim() === '') {
+
+        if (!userProfile.name || userProfile.name.trim() === '') {
       throw new Error('Họ và tên không được để trống');
     }
 
-    
-    const formattedName = userProfile.getFormattedName();
+
+        const formattedName = userProfile.getFormattedName();
     userProfile.name = formattedName;
 
     if (userProfile.email) {
@@ -20,7 +20,7 @@ export class UpdateProfileUseCase {
       }
     }
 
-    
-    return await this.profileRepository.updateProfile(userProfile);
+
+        return await this.profileRepository.updateProfile(userProfile);
   }
 }

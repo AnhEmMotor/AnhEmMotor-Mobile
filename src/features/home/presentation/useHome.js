@@ -24,8 +24,8 @@ export const useHome = () => {
 
   const handleOpenVoucher = (voucher) => {
     setSelectedVoucher(voucher);
-    
-    setTimeout(() => {
+
+        setTimeout(() => {
       bottomSheetRef.current?.show();
     }, 50);
   };
@@ -50,8 +50,8 @@ export const useHome = () => {
           return `${API_BASE_URL}/${cleanUrl}`;
         };
 
-        
-        const formattedNews = (news || []).map((item) => ({
+
+                const formattedNews = (news || []).map((item) => ({
           id: item.id || item.Id,
           title: item.title || item.Title,
           desc:
@@ -96,6 +96,6 @@ export const useHome = () => {
 };
 
 export const shortcuts = [
-  
-  
-];
+
+
+    ];

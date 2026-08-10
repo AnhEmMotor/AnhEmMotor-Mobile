@@ -3,12 +3,12 @@ import { useColorScheme } from 'react-native';
 import { useGlobalState } from '../context/GlobalState';
 
 export const Theme = {
-  
-  staticColors: {
+
+    staticColors: {
     primary: '#E31B23', 
     secondary: '#FFFFFF', 
-    
-    success: '#22C55E',
+
+        success: '#22C55E',
     warning: '#F59E0B',
     error: '#DC2626',
     info: '#F8FAFC',

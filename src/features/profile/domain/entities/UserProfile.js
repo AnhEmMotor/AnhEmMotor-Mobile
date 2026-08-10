@@ -43,9 +43,6 @@ export class UserProfile {
       .join(' ');
   }
 
-  /**
-   * Get full string address
-   */
   getFullAddress() {
     const parts = [this.specificAddress, this.ward, this.district, this.province].filter(Boolean);
     return parts.join(', ');

@@ -16,8 +16,8 @@ export const styles = StyleSheet.create({
   scrollView: { flex: 1, minHeight: '100vh' },
   scrollContent: { paddingBottom: 100 },
 
-  
-  header: {
+
+    header: {
     height: verticalScale(380),
     backgroundColor: '#fff',
     position: 'relative',
@@ -50,11 +50,11 @@ export const styles = StyleSheet.create({
   },
   rotationText: { color: '#fff', fontSize: 11, marginLeft: 6, fontWeight: 'bold' },
 
-  
-  content: { paddingHorizontal: horizontalScale(20), paddingTop: verticalScale(25) },
 
-  
-  titleRow: {
+    content: { paddingHorizontal: horizontalScale(20), paddingTop: verticalScale(25) },
+
+
+    titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -90,8 +90,8 @@ export const styles = StyleSheet.create({
   statusDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#10B981', marginRight: 6 },
   statusText: { color: '#10B981', fontSize: moderateScale(11), fontWeight: 'bold' },
 
-  
-  colorSection: { marginBottom: verticalScale(25) },
+
+    colorSection: { marginBottom: verticalScale(25) },
   colorGrid: { flexDirection: 'row', alignItems: 'center' },
   colorCircle: {
     width: 34,
@@ -106,8 +106,8 @@ export const styles = StyleSheet.create({
   activeColorCircle: { borderColor: Theme.staticColors.primary },
   colorInner: { width: 24, height: 24, borderRadius: 12 },
 
-  
-  rewardCard: {
+
+    rewardCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -139,8 +139,8 @@ export const styles = StyleSheet.create({
   tabText: { color: DEFAULT_SUBTEXT, fontWeight: 'bold', fontSize: 13, letterSpacing: 0.5 },
   activeTabText: { color: Theme.staticColors.primary },
 
-  
-  sectionTitle: {
+
+    sectionTitle: {
     color: DEFAULT_TEXT,
     fontSize: moderateScale(18),
     fontWeight: 'bold',
@@ -179,8 +179,8 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(13),
   },
 
-  
-  specGroup: { marginBottom: verticalScale(25) },
+
+    specGroup: { marginBottom: verticalScale(25) },
   specGroupTitle: {
     color: Theme.staticColors.primary,
     fontSize: moderateScale(15),
@@ -203,8 +203,8 @@ export const styles = StyleSheet.create({
     textAlign: 'right',
   },
 
-  
-  calculator: { marginBottom: verticalScale(30) },
+
+    calculator: { marginBottom: verticalScale(30) },
   calcLabel: { color: DEFAULT_SUBTEXT, fontSize: moderateScale(14), marginBottom: 15 },
   calcValue: { color: Theme.staticColors.primary, fontWeight: 'bold' },
   slider: { width: '100%', height: 40, marginBottom: 20 },
@@ -244,8 +244,8 @@ export const styles = StyleSheet.create({
   },
   checkItem: { color: DEFAULT_SUBTEXT, fontSize: 13, marginBottom: 8 },
 
-  
-  ratingSummary: { flexDirection: 'row', alignItems: 'center', marginBottom: 25 },
+
+    ratingSummary: { flexDirection: 'row', alignItems: 'center', marginBottom: 25 },
   avgScore: { fontSize: 40, fontWeight: 'bold', color: '#fff', marginRight: 20 },
   filterTag: {
     backgroundColor: 'rgba(255,255,255,0.05)',
@@ -282,8 +282,8 @@ export const styles = StyleSheet.create({
   },
   replyContent: { color: DEFAULT_SUBTEXT, fontSize: 12, fontStyle: 'italic' },
 
-  
-  galleryContainer: { marginBottom: verticalScale(25) },
+
+    galleryContainer: { marginBottom: verticalScale(25) },
   galleryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -319,8 +319,8 @@ export const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-  
-  stickyActions: {
+
+    stickyActions: {
     position: 'absolute',
     bottom: 0,
     left: 0,
