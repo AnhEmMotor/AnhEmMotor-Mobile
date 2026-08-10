@@ -49,6 +49,7 @@
     "@babel/eslint-parser": "^8.0.1",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~57.0.1",
+    "decomment": "^0.9.5",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-expo": "~57.0.0",
@@ -62,12 +63,16 @@
     "typescript": "^7.0.2"
   },
   "lint-staged": {
-    "**/*.{js,jsx}": [
-      "prettier --write",
-      "node scripts/strip-comments-runner.js",
-      "eslint --fix"
+    "*.{js,mjs,cjs,jsx,ts,tsx}": [
+      "node scripts/strip-comments-runner.mjs",
+      "eslint --fix",
+      "prettier --write"
     ],
-    "**/*.{json,md,yml,yaml}": [
+    "*.vue": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss,less,html}": [
       "prettier --write"
     ]
   }
