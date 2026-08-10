@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Alert, Platform } from 'react-native';
+// eslint-disable-next-line import/namespace
 import * as ImagePicker from 'expo-image-picker';
+// eslint-disable-next-line import/namespace
 import * as Haptics from 'expo-haptics';
 
 // Clean Architecture Layers
@@ -50,7 +52,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   // Password fields state
   const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
 
-  const loadProfileData = React.useCallback(async () => {
+  const loadProfileData = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getProfileUseCase.execute();

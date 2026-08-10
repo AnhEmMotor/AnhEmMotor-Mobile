@@ -12,6 +12,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+// eslint-disable-next-line import/namespace
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '../../theme/Theme'; // Import useTheme
 import { ChevronLeft, User, Phone, Mail, MapPin, Camera, Save } from 'lucide-react-native';
@@ -49,7 +50,7 @@ export default function ProfileEditScreen({ navigation }) {
         email: entity.email,
         specificAddress: entity.specificAddress,
       });
-    } catch (error) {
+    } catch (_error) {
       Alert.alert('Lỗi', 'Không thể tải thông tin cá nhân');
     } finally {
       setIsLoading(false);
@@ -138,7 +139,7 @@ export default function ProfileEditScreen({ navigation }) {
       await updateProfileUseCase.execute(updatedEntity);
       setProfileEntity(updatedEntity);
       Alert.alert('Thành công', 'Đã cập nhật ảnh đại diện!');
-    } catch (error) {
+    } catch (_error) {
       Alert.alert('Lỗi', 'Không thể cập nhật ảnh đại diện');
     } finally {
       setIsSaving(false);
