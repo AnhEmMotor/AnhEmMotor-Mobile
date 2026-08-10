@@ -10,8 +10,11 @@ export default function ProductMotorCard({ motor, onPress }) {
   const name = motor.name || motor.productName || 'San pham';
   const price = motor.price || 'Lien he';
   const brand = motor.brandName || '';
-  const type = motor.typeName || '';
+  const type = motor.displacement
+    ? `${motor.displacement}cc`
+    : motor.categoryName || motor.typeName || '';
   const img = motor.img || motor.imageUrl || '';
+  const promotion = motor.promotionText || '';
 
   return (
     <ScalePress onPress={onPress}>
@@ -20,13 +23,28 @@ export default function ProductMotorCard({ motor, onPress }) {
           <Image source={{ uri: img }} style={styles.image} resizeMode="contain" />
         ) : (
           <View style={[styles.imagePlaceholder, { backgroundColor: activeColors.background }]}>
-            <Text style={{ color: activeColors.subtext, fontSize: moderateScale(12) }}>Khong co anh</Text>
+            <Text style={{ color: activeColors.subtext, fontSize: moderateScale(12) }}>
+              Không có ảnh
+            </Text>
           </View>
         )}
-        <Text style={[styles.name, { color: activeColors.text }]} numberOfLines={2}>{name}</Text>
+        {promotion ? (
+          <View style={[styles.promotionBadge, { backgroundColor: activeColors.primary + '15' }]}>
+            <Text style={[styles.promotionText, { color: activeColors.primary }]} numberOfLines={1}>
+              {promotion}
+            </Text>
+          </View>
+        ) : null}
+        <Text style={[styles.name, { color: activeColors.text }]} numberOfLines={2}>
+          {name}
+        </Text>
         <View style={styles.metaRow}>
-          {brand ? <Text style={[styles.meta, { color: activeColors.subtext }]}>{brand}</Text> : null}
-          {brand && type ? <Text style={[styles.dot, { color: activeColors.border }]}> | </Text> : null}
+          {brand ? (
+            <Text style={[styles.meta, { color: activeColors.subtext }]}>{brand}</Text>
+          ) : null}
+          {brand && type ? (
+            <Text style={[styles.dot, { color: activeColors.border }]}> | </Text>
+          ) : null}
           {type ? <Text style={[styles.meta, { color: activeColors.subtext }]}>{type}</Text> : null}
         </View>
         <Text style={[styles.price, { color: activeColors.primary }]}>{price}</Text>
@@ -53,6 +71,17 @@ const styles = StyleSheet.create({
     marginBottom: moderateScale(8),
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  promotionBadge: {
+    paddingHorizontal: moderateScale(6),
+    paddingVertical: moderateScale(2),
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginBottom: moderateScale(6),
+  },
+  promotionText: {
+    fontSize: moderateScale(10),
+    fontWeight: '600',
   },
   name: {
     fontSize: moderateScale(13),

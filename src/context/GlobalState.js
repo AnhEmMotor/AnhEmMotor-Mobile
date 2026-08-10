@@ -8,10 +8,10 @@ const STORAGE_KEY = '@AEM_Customer_Profile';
 export const GlobalStateProvider = ({ children }) => {
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [isDataSyncing, setIsDataSyncing] = useState(false);
-  const [themeMode, setThemeModeState] = useState(null); // Khởi tạo là null hoặc undefined để chỉ ra rằng theme chưa được tải
+  const [themeMode, setThemeModeState] = useState(null); 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
-  // Tải chủ đề toàn hệ thống từ AsyncStorage khi ứng dụng khởi chạy
+  
   useEffect(() => {
     const loadGlobalTheme = async () => {
       try {
@@ -19,10 +19,10 @@ export const GlobalStateProvider = ({ children }) => {
         if (storedProfile) {
           const parsed = JSON.parse(storedProfile);
           if (parsed && parsed.settings && parsed.settings.theme) {
-            setThemeModeState(parsed.settings.theme); // Sử dụng theme đã lưu
+            setThemeModeState(parsed.settings.theme); 
           } else {
-            // Nếu không có theme đã lưu, đặt mặc định
-            setThemeModeState('dark'); // Mặc định là tối theo chuẩn AEM
+            
+            setThemeModeState('light'); 
           }
         }
       } catch (err) {
@@ -32,7 +32,7 @@ export const GlobalStateProvider = ({ children }) => {
     loadGlobalTheme();
   }, []);
 
-  // Cập nhật chủ đề toàn hệ thống và lưu trữ xuống AsyncStorage
+  
   const setThemeMode = async (newTheme) => {
     setThemeModeState(newTheme);
     try {
@@ -43,19 +43,19 @@ export const GlobalStateProvider = ({ children }) => {
           ...parsed,
           settings: {
             ...(parsed.settings || {}),
-            theme: newTheme
-          }
+            theme: newTheme,
+          },
         };
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       } else {
-        // Nếu chưa có profile trong máy, tạo mới bản ghi lưu cài đặt
+        
         const dummyProfile = {
           settings: {
             theme: newTheme,
             notifications: true,
             biometrics: false,
-            language: 'vi'
-          }
+            language: 'vi',
+          },
         };
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(dummyProfile));
       }
@@ -67,17 +67,19 @@ export const GlobalStateProvider = ({ children }) => {
   const markAllAsRead = () => setUnreadNotifications(0);
 
   return (
-    <GlobalStateContext.Provider value={{
-      unreadNotifications,
-      setUnreadNotifications,
-      markAllAsRead,
-      isDataSyncing,
-      setIsDataSyncing,
-      themeMode,
-      setThemeMode,
-      isSettingsOpen,
-      setSettingsOpen
-    }}>
+    <GlobalStateContext.Provider
+      value={{
+        unreadNotifications,
+        setUnreadNotifications,
+        markAllAsRead,
+        isDataSyncing,
+        setIsDataSyncing,
+        themeMode,
+        setThemeMode,
+        isSettingsOpen,
+        setSettingsOpen,
+      }}
+    >
       {children}
     </GlobalStateContext.Provider>
   );

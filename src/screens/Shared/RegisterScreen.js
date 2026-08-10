@@ -7,15 +7,14 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
   ScrollView,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Mail, Lock, Eye, EyeOff, Check } from 'lucide-react-native';
-import { Theme, useActiveColors, useTheme } from '../../theme/Theme';
+import { Theme, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { registerApi } from '../../api/customerApi';
@@ -23,7 +22,6 @@ import { registerApi } from '../../api/customerApi';
 export default function RegisterScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
-  const activeColors = useActiveColors();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -34,12 +32,11 @@ export default function RegisterScreen({ navigation }) {
   const [activeInput, setActiveInput] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const canSubmit =
-    name && email && password && password === confirmPassword && termsAccepted;
+  const canSubmit = name && email && password && password === confirmPassword && termsAccepted;
 
   const handleRegister = async () => {
     if (!canSubmit) return;
-    
+
     setLoading(true);
 
     try {
@@ -50,10 +47,13 @@ export default function RegisterScreen({ navigation }) {
       });
 
       Alert.alert('Thành công', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') }
+        { text: 'OK', onPress: () => navigation.navigate('Login') },
       ]);
     } catch (error) {
-      Alert.alert('Lỗi đăng ký', error.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
+      Alert.alert(
+        'Lỗi đăng ký',
+        error.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.'
+      );
     } finally {
       setLoading(false);
     }
@@ -61,13 +61,15 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Background gradient */}
+      {}
       <LinearGradient
-        colors={theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']}
+        colors={
+          theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']
+        }
         style={StyleSheet.absoluteFill}
       />
 
-      {/* Ambient glows */}
+      {}
       <View style={[styles.glowTop, { backgroundColor: theme.staticColors.primary + '18' }]} />
       <View style={[styles.glowBottom, { backgroundColor: theme.staticColors.secondary + '14' }]} />
 
@@ -75,23 +77,41 @@ export default function RegisterScreen({ navigation }) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
           <Animated.View entering={FadeInDown.duration(800)} style={styles.card}>
-            <BlurView intensity={theme.isDark ? 25 : 50} tint={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
+            <BlurView
+              intensity={theme.isDark ? 25 : 50}
+              tint={theme.isDark ? 'dark' : 'light'}
+              style={StyleSheet.absoluteFill}
+            />
             <View style={[styles.cardInner, { backgroundColor: colors.glassBg }]}>
               <Text style={[styles.formTitle, { color: colors.text }]}>Tạo tài khoản</Text>
-              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>Điền thông tin để bắt đầu</Text>
+              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>
+                Điền thông tin để bắt đầu
+              </Text>
 
-              {/* Name Input */}
+              {}
               <Animated.View entering={FadeInUp.duration(600).delay(100)}>
                 <View
                   style={[
                     styles.inputWrapper,
                     { backgroundColor: colors.inputBg, borderColor: colors.border },
-                    activeInput === 'name' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                    activeInput === 'name' && [
+                      styles.inputActive,
+                      {
+                        borderColor: colors.primary + '80',
+                        backgroundColor: colors.primary + '10',
+                      },
+                    ],
                   ]}
                 >
-                  <Mail size={moderateScale(18)} color={activeInput === 'name' ? colors.primary : colors.subtext} />
+                  <Mail
+                    size={moderateScale(18)}
+                    color={activeInput === 'name' ? colors.primary : colors.subtext}
+                  />
                   <TextInput
                     style={[styles.input, { color: colors.text }]}
                     placeholder="Tên của bạn"
@@ -104,16 +124,25 @@ export default function RegisterScreen({ navigation }) {
                 </View>
               </Animated.View>
 
-              {/* Email Input */}
+              {}
               <Animated.View entering={FadeInUp.duration(600).delay(200)}>
                 <View
                   style={[
                     styles.inputWrapper,
                     { backgroundColor: colors.inputBg, borderColor: colors.border },
-                    activeInput === 'email' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                    activeInput === 'email' && [
+                      styles.inputActive,
+                      {
+                        borderColor: colors.primary + '80',
+                        backgroundColor: colors.primary + '10',
+                      },
+                    ],
                   ]}
                 >
-                  <Mail size={moderateScale(18)} color={activeInput === 'email' ? colors.primary : colors.subtext} />
+                  <Mail
+                    size={moderateScale(18)}
+                    color={activeInput === 'email' ? colors.primary : colors.subtext}
+                  />
                   <TextInput
                     style={[styles.input, { color: colors.text }]}
                     placeholder="Email của bạn"
@@ -129,15 +158,21 @@ export default function RegisterScreen({ navigation }) {
                 </View>
               </Animated.View>
 
-              {/* Password Input */}
+              {}
               <View
                 style={[
                   styles.inputWrapper,
                   { backgroundColor: colors.inputBg, borderColor: colors.border },
-                  activeInput === 'password' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                  activeInput === 'password' && [
+                    styles.inputActive,
+                    { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' },
+                  ],
                 ]}
               >
-                <Lock size={moderateScale(18)} color={activeInput === 'password' ? colors.primary : colors.subtext} />
+                <Lock
+                  size={moderateScale(18)}
+                  color={activeInput === 'password' ? colors.primary : colors.subtext}
+                />
                 <TextInput
                   style={[styles.input, { color: colors.text }]}
                   placeholder="Mật khẩu"
@@ -149,19 +184,29 @@ export default function RegisterScreen({ navigation }) {
                   onBlur={() => setActiveInput(null)}
                 />
                 <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
-                  {showPassword ? <EyeOff size={moderateScale(18)} color={colors.subtext} /> : <Eye size={moderateScale(18)} color={colors.subtext} />}
+                  {showPassword ? (
+                    <EyeOff size={moderateScale(18)} color={colors.subtext} />
+                  ) : (
+                    <Eye size={moderateScale(18)} color={colors.subtext} />
+                  )}
                 </Pressable>
               </View>
 
-              {/* Confirm Password Input */}
+              {}
               <View
                 style={[
                   styles.inputWrapper,
                   { backgroundColor: colors.inputBg, borderColor: colors.border },
-                  activeInput === 'confirm' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                  activeInput === 'confirm' && [
+                    styles.inputActive,
+                    { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' },
+                  ],
                 ]}
               >
-                <Lock size={moderateScale(18)} color={activeInput === 'confirm' ? colors.primary : colors.subtext} />
+                <Lock
+                  size={moderateScale(18)}
+                  color={activeInput === 'confirm' ? colors.primary : colors.subtext}
+                />
                 <TextInput
                   style={[styles.input, { color: colors.text }]}
                   placeholder="Xác nhận mật khẩu"
@@ -173,19 +218,30 @@ export default function RegisterScreen({ navigation }) {
                   onBlur={() => setActiveInput(null)}
                 />
                 <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
-                  {showPassword ? <EyeOff size={moderateScale(18)} color={colors.subtext} /> : <Eye size={moderateScale(18)} color={colors.subtext} />}
+                  {showPassword ? (
+                    <EyeOff size={moderateScale(18)} color={colors.subtext} />
+                  ) : (
+                    <Eye size={moderateScale(18)} color={colors.subtext} />
+                  )}
                 </Pressable>
               </View>
 
-              {/* Terms Checkbox */}
-              <Pressable onPress={() => setTermsAccepted(!termsAccepted)} style={styles.checkboxContainer}>
-                <View style={[styles.checkboxBox, termsAccepted && { backgroundColor: colors.primary }]}>
+              {}
+              <Pressable
+                onPress={() => setTermsAccepted(!termsAccepted)}
+                style={styles.checkboxContainer}
+              >
+                <View
+                  style={[styles.checkboxBox, termsAccepted && { backgroundColor: colors.primary }]}
+                >
                   {termsAccepted && <Check size={moderateScale(14)} color={colors.glassBg} />}
                 </View>
-                <Text style={[styles.checkboxText, { color: colors.subtext }]}>Tôi đồng ý với các điều khoản</Text>
+                <Text style={[styles.checkboxText, { color: colors.subtext }]}>
+                  Tôi đồng ý với các điều khoản
+                </Text>
               </Pressable>
 
-              {/* Register Button */}
+              {}
               <Pressable
                 style={[styles.btnPrimary, (!canSubmit || loading) && styles.btnDisabled]}
                 disabled={!canSubmit || loading}
@@ -205,9 +261,11 @@ export default function RegisterScreen({ navigation }) {
                 </LinearGradient>
               </Pressable>
 
-              {/* Link back to login */}
+              {}
               <View style={styles.footer}>
-                <Text style={[styles.footerText, { color: colors.subtext }]}>Đã có tài khoản? </Text>
+                <Text style={[styles.footerText, { color: colors.subtext }]}>
+                  Đã có tài khoản?{' '}
+                </Text>
                 <Pressable onPress={() => navigation.navigate('Login')}>
                   <Text style={[styles.signupText, { color: colors.primary }]}>Đăng nhập</Text>
                 </Pressable>
@@ -296,7 +354,11 @@ const styles = StyleSheet.create({
     marginRight: horizontalScale(8),
   },
   checkboxText: { fontSize: moderateScale(13) },
-  btnPrimary: { borderRadius: Theme.radius.md, overflow: 'hidden', marginBottom: verticalScale(16) },
+  btnPrimary: {
+    borderRadius: Theme.radius.md,
+    overflow: 'hidden',
+    marginBottom: verticalScale(16),
+  },
   btnDisabled: { opacity: 0.5 },
   btnGradient: {
     height: verticalScale(52),
@@ -304,7 +366,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  btnText: { color: '#fff', fontSize: moderateScale(15), fontWeight: '600', marginRight: horizontalScale(6) },
+  btnText: {
+    color: '#fff',
+    fontSize: moderateScale(15),
+    fontWeight: '600',
+    marginRight: horizontalScale(6),
+  },
   footer: { flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(12) },
   footerText: { fontSize: moderateScale(14) },
   signupText: { fontSize: moderateScale(14), fontWeight: '600' },

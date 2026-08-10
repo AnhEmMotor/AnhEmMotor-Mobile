@@ -12,11 +12,11 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
   const activeIndicator = activeColors.isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
   const activeBorder = activeColors.border;
 
-  // Cấu hình Snap Points cố định để tránh giật lag (Priority 1 & 3)
+  
   const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
 
   const show = useCallback(() => {
-    bottomSheetRef.current?.expand(); // Mở rộng bảng
+    bottomSheetRef.current?.expand(); 
   }, []);
 
   const hide = useCallback(() => {
@@ -25,18 +25,13 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
 
   useImperativeHandle(ref, () => ({
     show,
-    hide
+    hide,
   }));
 
-  // Render backdrop (nền mờ khi mở bảng)
+  
   const renderBackdrop = useCallback(
     (props) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        opacity={0.5}
-      />
+      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />
     ),
     []
   );
@@ -44,14 +39,17 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={-1} // Mặc định đóng
+      index={-1} 
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       backdropComponent={renderBackdrop}
-      backgroundStyle={[styles.background, { backgroundColor: activeBg, borderColor: activeBorder }]}
+      backgroundStyle={[
+        styles.background,
+        { backgroundColor: activeBg, borderColor: activeBorder },
+      ]}
       handleIndicatorStyle={[styles.handleIndicator, { backgroundColor: activeIndicator }]}
       enableContentPanningGesture={true}
-      enableOverdrag={false} // Tránh lỗi kéo quá đà trên Web
+      enableOverdrag={false} 
       onChange={(index) => {
         if (index === -1 && onClose) {
           onClose();
@@ -65,10 +63,8 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
         <View style={styles.header}>
           <Text style={[styles.headerTitle, { color: activeTitle }]}>{title}</Text>
         </View>
-        <View style={styles.content}>
-          {children}
-        </View>
-        {/* Padding Bottom 40px as suggested (Mẹo kiểm tra) */}
+        <View style={styles.content}>{children}</View>
+        {}
         <View style={{ height: 60 }} />
       </BottomSheetScrollView>
     </BottomSheet>
@@ -76,12 +72,13 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
 });
 
 const styles = StyleSheet.create({
-  background: { // This style is applied via `backgroundStyle` prop, which already uses `activeBg` and `activeBorder`.
-    // backgroundColor: Theme.colors.card, // Remove this, it's redundant
+  background: {
+    
+    
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderWidth: 1,
-    // borderColor: 'rgba(255,255,255,0.1)', // Remove this, it's redundant
+    
   },
   handleIndicator: {
     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -94,7 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    // color: Theme.colors.text, // Remove this, it's overridden by inline style
+    
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -103,7 +100,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  }
+  },
 });
 
+CustomBottomSheet.displayName = 'CustomBottomSheet';
 export default CustomBottomSheet;

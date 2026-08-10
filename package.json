@@ -7,7 +7,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --port 8081 --web",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@expo/metro-runtime": "~57.0.2",
@@ -36,6 +37,7 @@
     "react-native-gesture-handler": "~2.32.0",
     "react-native-maps": "1.27.2",
     "react-native-reanimated": "4.5.0",
+    "react-native-render-html": "^6.3.4",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
     "react-native-svg": "15.15.4",
@@ -44,9 +46,41 @@
   },
   "private": true,
   "devDependencies": {
+    "@babel/eslint-parser": "^8.0.1",
+    "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~57.0.1",
+    "decomment": "^0.9.5",
     "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-expo": "~57.0.0",
-    "expo-module-scripts": "^56.0.2"
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "expo-module-scripts": "^56.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
+    "strip-comments": "^2.0.1",
+    "typescript": "^7.0.2"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,jsx,ts,tsx}": [
+      "node scripts/strip-comments-runner.mjs",
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.vue": [
+      "node scripts/strip-comments-runner.mjs",
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,less,html}": [
+      "node scripts/strip-comments-runner.mjs",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

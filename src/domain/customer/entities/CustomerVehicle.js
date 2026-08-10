@@ -18,6 +18,7 @@ export class CustomerVehicle {
     operatingSpecs,
     nextService,
     timeline,
+    image,
   }) {
     this.id = id;
     this.name = name;
@@ -37,5 +38,6 @@ export class CustomerVehicle {
     this.operatingSpecs = operatingSpecs || { oil: '', tirePressure: '' };
     this.nextService = nextService || { odo: '', date: '', items: [] };
     this.timeline = timeline || [];
+    this.image = image;
   }
 }

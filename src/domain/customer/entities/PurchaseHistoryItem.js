@@ -1,14 +1,5 @@
 export class PurchaseHistoryItem {
-  constructor({
-    id,
-    vehicleId,
-    userId,
-    purchaseDate,
-    invoiceNumber,
-    amount,
-    sellerName,
-    notes,
-  }) {
+  constructor({ id, vehicleId, userId, purchaseDate, invoiceNumber, amount, sellerName, notes }) {
     this.id = id;
     this.vehicleId = vehicleId;
     this.userId = userId;

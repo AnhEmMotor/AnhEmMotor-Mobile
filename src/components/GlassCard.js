@@ -6,7 +6,6 @@ import { Theme, useActiveColors } from '../theme/Theme';
 
 export default function GlassCard({ children, style, contentStyle, intensity = 20, tint }) {
   const activeColors = useActiveColors();
-  const evaluatedTint = tint || (activeColors.isDark ? 'dark' : 'light');
 
   const flattened = StyleSheet.flatten(style) || {};
   const layoutStyle = {};
@@ -16,16 +15,34 @@ export default function GlassCard({ children, style, contentStyle, intensity = 2
   if (flattened.flexWrap) layoutStyle.flexWrap = flattened.flexWrap;
 
   return (
-    <View style={[styles.container, { backgroundColor: activeColors.isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.85)', borderColor: activeColors.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)' }, style]}>
-      <BlurView intensity={intensity} tint={tint || (activeColors.isDark ? 'dark' : 'light')} style={StyleSheet.absoluteFill} />
-      <LinearGradient
-        colors={activeColors.isDark ? ['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0)'] : ['rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 0.2)']}
-        start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: activeColors.isDark
+            ? 'rgba(30, 41, 59, 0.5)'
+            : 'rgba(255, 255, 255, 0.85)',
+          borderColor: activeColors.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+        },
+        style,
+      ]}
+    >
+      <BlurView
+        intensity={intensity}
+        tint={tint || (activeColors.isDark ? 'dark' : 'light')}
         style={StyleSheet.absoluteFill}
       />
-      <View style={[styles.content, contentStyle, layoutStyle]}>
-        {children}
-      </View>
+      <LinearGradient
+        colors={
+          activeColors.isDark
+            ? ['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0)']
+            : ['rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 0.2)']
+        }
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <View style={[styles.content, contentStyle, layoutStyle]}>{children}</View>
     </View>
   );
 }

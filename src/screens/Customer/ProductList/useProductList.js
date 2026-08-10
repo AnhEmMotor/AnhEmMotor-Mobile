@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getProductsApi } from '../../../api/customerApi';
+import { ProductDataSource } from '../../../data/product/datasources/ProductDataSource';
 
 export const useProductList = (route) => {
   const { brand = 'Tất cả', type = 'Tất cả' } = route?.params || {};
@@ -12,8 +12,8 @@ export const useProductList = (route) => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const data = await getProductsApi();
-        const list = Array.isArray(data) ? data : [];
+        const data = await ProductDataSource.fetchCatalogProducts();
+        const list = data.items || [];
 
         if (isMounted) {
           setProducts(list);

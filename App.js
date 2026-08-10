@@ -1,7 +1,7 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React from 'react';
-import { Platform, LogBox } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { LogBox } from 'react-native';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { GlobalStateProvider } from './src/context/GlobalState';
@@ -9,10 +9,9 @@ import { DependencyProvider } from './src/di/DependencyContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import ErrorBoundary from './src/components/ErrorBoundary';
 
-// Ignore development warnings from third-party libraries
 LogBox.ignoreLogs([
   'props.pointerEvents is deprecated',
-  'Failed to execute \'removeChild\' on \'Node\'',
+  "Failed to execute 'removeChild' on 'Node'",
   'An error occurred in the <div> component',
   'An error occurred in the <NativeSafeAreaProvider> component',
   'An error occurred in the <ModalPortal> component',
@@ -21,6 +20,7 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+  const { StatusBar } = require('expo-status-bar');
   const RootContent = (
     <DependencyProvider>
       <GlobalStateProvider>
@@ -34,9 +34,7 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        {RootContent}
-      </SafeAreaProvider>
+      <SafeAreaProvider>{RootContent}</SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

@@ -1,7 +1,13 @@
-import { apiGet, apiPost, apiPut, apiDelete } from './httpClient';
+import { apiGet, apiPost, apiPut, apiPatch, apiPostFormData, tokenService } from './httpClient';
 
 export async function loginApi(usernameOrEmail, password) {
-  const response = await apiPost('/api/v1/Auth/login', { usernameOrEmail, password });
+  await tokenService.clearTokens();
+  const response = await apiPost(
+    '/api/v1/Auth/login',
+    { usernameOrEmail, password },
+    undefined,
+    false
+  );
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đăng nhập thất bại');
@@ -15,7 +21,7 @@ export async function loginApi(usernameOrEmail, password) {
 }
 
 export async function registerApi(registerData) {
-  const response = await apiPost('/api/v1/Auth/register', registerData);
+  const response = await apiPost('/api/v1/Auth/register', registerData, undefined, false);
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đăng ký thất bại');
@@ -24,7 +30,7 @@ export async function registerApi(registerData) {
 }
 
 export async function forgotPasswordApi(email) {
-  const response = await apiPost('/api/v1/Auth/forgot-password', { email });
+  const response = await apiPost('/api/v1/Auth/forgot-password', { email }, undefined, false);
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Gửi yêu cầu thất bại');
@@ -33,7 +39,12 @@ export async function forgotPasswordApi(email) {
 }
 
 export async function resetPasswordApi(email, token, newPassword) {
-  const response = await apiPost('/api/v1/Auth/reset-password', { email, token, newPassword });
+  const response = await apiPost(
+    '/api/v1/Auth/reset-password',
+    { email, token, newPassword },
+    undefined,
+    false
+  );
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đặt lại mật khẩu thất bại');
@@ -135,6 +146,14 @@ export async function getMyVehiclesApi() {
     throw new Error(data.error?.message || 'Không thể tải danh sách xe');
   }
   const data = await response.json();
+
+  if (data?.value?.items) {
+    return data.value.items;
+  }
+  if (data?.items) {
+    return data.items;
+  }
+
   return Array.isArray(data) ? data : data.value || data.data || [];
 }
 
@@ -190,7 +209,9 @@ export async function updateVehicleApi(vehicleId, vehicleData) {
 
 export async function getAvailableSlotsApi(date) {
   const dateStr = date instanceof Date ? date.toISOString() : date;
-  const response = await apiGet('/api/v1/client/bookings/available-slots?date=' + encodeURIComponent(dateStr));
+  const response = await apiGet(
+    '/api/v1/client/bookings/available-slots?date=' + encodeURIComponent(dateStr)
+  );
   if (!response.ok) {
     throw new Error('Không thể tải lịch trống');
   }
@@ -229,9 +250,8 @@ export async function cancelBookingApi(bookingId, reason) {
 function formatPrice(value) {
   if (value == null || value === '') return 'Liên hệ';
 
-  const numericValue = typeof value === 'number'
-    ? value
-    : Number(String(value).replace(/[^\d.\-]/g, ''));
+  const numericValue =
+    typeof value === 'number' ? value : Number(String(value).replace(/[^\d.\-]/g, ''));
 
   if (!Number.isFinite(numericValue)) return 'Liên hệ';
 
@@ -239,47 +259,137 @@ function formatPrice(value) {
 }
 
 function normalizeProductItem(item) {
-  const variant = Array.isArray(item?.productVariants)
-    ? item.productVariants[0] : null;
-  const imageUrl = item?.img
-    || item?.ImageUrl
-    || item?.imageUrl
-    || item?.coverImageUrl
-    || item?.CoverImageUrl
-    || variant?.coverImageUrl
-    || variant?.CoverImageUrl
-    || variant?.imageUrl
-    || variant?.ImageUrl
-    || '';
+  if (!item || typeof item !== 'object') return null;
 
-  const priceValue = item?.price
-    ?? item?.Price
-    ?? item?.referencePrice
-    ?? item?.ReferencePrice
-    ?? variant?.price
-    ?? variant?.Price
-    ?? null;
+  const variants = Array.isArray(
+    item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants
+  )
+    ? (item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants).map(
+        (v) => ({
+          id: v.id ?? v.Id,
+          productId: v.productId ?? v.ProductId,
+          urlSlug: v.urlSlug ?? v.UrlSlug ?? '',
+          price: v.price ?? v.Price,
+          coverImageUrl: v.coverImageUrl ?? v.CoverImageUrl ?? '',
+          variantName: v.variantName ?? v.VariantName ?? '',
+          optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
+          photos: Array.isArray(v.photos ?? v.Photos) ? (v.photos ?? v.Photos) : [],
+          colors: (v.colors ?? v.Colors ?? []).map((c) => ({
+            id: c.id ?? c.Id ?? null,
+            name: c.name ?? c.ColorName ?? c.Name ?? '',
+            colorName: c.colorName ?? c.ColorName ?? c.name ?? '',
+            colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
+            code: c.code ?? c.ColorCode ?? '#ccc',
+            coverImageUrl: c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
+            image: c.image ?? c.CoverImageUrl ?? '',
+          })),
+        })
+      )
+    : [];
+
+  const technologies = Array.isArray(
+    item?.technologies ??
+      item?.Technologies ??
+      item?.productTechnologies ??
+      item?.ProductTechnologies
+  )
+    ? (
+        item?.technologies ??
+        item?.Technologies ??
+        item?.productTechnologies ??
+        item?.ProductTechnologies
+      ).map((t) => ({
+        technologyId: t.technologyId ?? t.TechnologyId ?? null,
+        title: t.title ?? t.Title ?? t.customTitle ?? t.CustomTitle ?? '',
+        description:
+          t.description ?? t.Description ?? t.customDescription ?? t.CustomDescription ?? '',
+        imageUrl: t.imageUrl ?? t.ImageUrl ?? t.customImageUrl ?? t.CustomImageUrl ?? '',
+      }))
+    : [];
+
+  const firstVariant = variants[0];
+  const imageUrl =
+    item?.imageUrl ||
+    item?.ImageUrl ||
+    item?.img ||
+    item?.coverImageUrl ||
+    item?.CoverImageUrl ||
+    firstVariant?.coverImageUrl ||
+    firstVariant?.imageUrl ||
+    '';
+
+  const priceValue =
+    item?.referencePrice ??
+    item?.ReferencePrice ??
+    item?.price ??
+    item?.Price ??
+    firstVariant?.price ??
+    null;
 
   return {
     ...item,
     id: item?.id ?? item?.Id,
-    name: item?.name ?? item?.Name ?? 'Sản phẩm',
+    name: item?.name ?? item?.Name ?? item?.productName ?? 'Sản phẩm',
     img: imageUrl,
     imageUrl,
     price: formatPrice(priceValue),
     referencePrice: priceValue,
+    promotionText: item?.promotionText ?? item?.PromotionText ?? '',
     brandName: item?.brandName ?? item?.BrandName ?? item?.brand ?? '',
     categoryName: item?.categoryName ?? item?.CategoryName ?? item?.category ?? '',
     brandId: item?.brandId ?? item?.BrandId ?? null,
     categoryId: item?.categoryId ?? item?.CategoryId ?? null,
+    weight: item?.weight ?? item?.Weight ?? null,
+    length: item?.length ?? item?.Length ?? null,
+    width: item?.width ?? item?.Width ?? null,
+    height: item?.height ?? item?.Height ?? null,
+    seatHeight: item?.seatHeight ?? item?.SeatHeight ?? null,
+    wheelbase: item?.wheelbase ?? item?.Wheelbase ?? null,
+    groundClearance: item?.groundClearance ?? item?.GroundClearance ?? null,
+    fuelCapacity: item?.fuelCapacity ?? item?.FuelCapacity ?? null,
+    tireSize: item?.tireSize ?? item?.TireSize ?? null,
+    frontSuspension: item?.frontSuspension ?? item?.FrontSuspension ?? null,
+    rearSuspension: item?.rearSuspension ?? item?.RearSuspension ?? null,
+    engineType: item?.engineType ?? item?.EngineType ?? null,
+    maxPower: item?.maxPower ?? item?.MaxPower ?? null,
+    oilCapacity: item?.oilCapacity ?? item?.OilCapacity ?? null,
+    fuelConsumption: item?.fuelConsumption ?? item?.FuelConsumption ?? null,
+    transmissionType: item?.transmissionType ?? item?.TransmissionType ?? null,
+    starterSystem: item?.starterSystem ?? item?.StarterSystem ?? null,
+    maxTorque: item?.maxTorque ?? item?.MaxTorque ?? null,
+    displacement: item?.displacement ?? item?.Displacement ?? null,
+    boreStroke: item?.boreStroke ?? item?.BoreStroke ?? null,
+    compressionRatio: item?.compressionRatio ?? item?.CompressionRatio ?? null,
+    fuelSystem: item?.fuelSystem ?? item?.FuelSystem ?? null,
+    frameType: item?.frameType ?? item?.FrameType ?? null,
+    frontTireSize: item?.frontTireSize ?? item?.FrontTireSize ?? null,
+    rearTireSize: item?.rearTireSize ?? item?.RearTireSize ?? null,
+    frontBrake: item?.frontBrake ?? item?.FrontBrake ?? null,
+    rearBrake: item?.rearBrake ?? item?.RearBrake ?? null,
+    batteryType: item?.batteryType ?? item?.BatteryType ?? null,
+    lightingSystem: item?.lightingSystem ?? item?.LightingSystem ?? null,
+    dashboardType: item?.dashboardType ?? item?.DashboardType ?? null,
+    material: item?.material ?? item?.Material ?? null,
+    origin: item?.origin ?? item?.Origin ?? null,
+    warrantyPeriod: item?.warrantyPeriod ?? item?.WarrantyPeriod ?? null,
+    variants,
+    technologies,
+    colors: variants.flatMap((v) => v.colors || []),
   };
 }
 
 export async function getProductsApi(search = '', categoryId = null) {
   const trimmedSearch = (search || '').trim();
-  let url = '/api/v1/client/catalog/products?search=' + encodeURIComponent(trimmedSearch || ' ');
-  if (categoryId) {
-    url += '&categoryId=' + categoryId;
+  let url = '/api/v1/client/catalog/products';
+  const params = [];
+  if (trimmedSearch) {
+    params.push('search=' + encodeURIComponent(trimmedSearch));
+  }
+  if (categoryId != null) {
+    params.push('categoryId=' + categoryId);
+  }
+  if (params.length > 0) {
+    url += '?' + params.join('&');
   }
   const response = await apiGet(url);
   if (!response.ok) {
@@ -317,17 +427,34 @@ export async function getProductDetailApi(productId) {
     throw new Error('Không thể tải chi tiết sản phẩm');
   }
   const data = await response.json();
-  return data.value || data.data || data;
+  const rawData = data.value || data.data || data;
+  return normalizeProductItem(rawData);
 }
 
-export async function requestConsultationApi(productId, customerNote, preferredContactTime) {
-  const response = await apiPost('/api/v1/client/catalog/request-consultation', { productId, customerNote, preferredContactTime });
+export async function requestConsultationApi(
+  productId,
+  customerNote = '',
+  preferredContactTime = ''
+) {
+  const response = await apiPost('/api/v1/client/catalog/request-consultation', {
+    productId: Number(productId),
+    customerNote,
+    preferredContactTime,
+  });
   if (!response.ok) {
-    const data = await response.json();
-    throw new Error(data.error?.message || 'Gửi yêu cầu thất bại');
+    let msg = 'Gửi yêu cầu thất bại';
+    try {
+      const data = await response.json();
+      msg = data?.error?.message || data?.title || msg;
+    } catch {}
+    throw new Error(msg);
   }
-  const data = await response.json();
-  return data.value || data;
+  let data = true;
+  try {
+    const text = await response.text();
+    if (text) data = JSON.parse(text);
+  } catch {}
+  return data?.value ?? data;
 }
 
 export async function getFaqsApi(search = '') {
@@ -349,7 +476,10 @@ export async function submitFeedbackApi(rating, comment, mediaUrls = []) {
 }
 
 export async function requestCallbackApi(phoneNumber, issueDescription) {
-  const response = await apiPost('/api/v1/client/support/callback', { phoneNumber, issueDescription });
+  const response = await apiPost('/api/v1/client/support/callback', {
+    phoneNumber,
+    issueDescription,
+  });
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.error?.message || 'Gửi yêu cầu thất bại');
@@ -413,4 +543,22 @@ export async function getShipmentTrackingApi(searchQuery) {
   }
   const data = await response.json();
   return data.data || data;
+}
+
+export async function createSupportRequestApi(body) {
+  const response = await apiPost('/api/v1/Contacts/support-request', body, undefined, false);
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || data.title || 'Gửi yêu cầu thất bại');
+  }
+  return data.value || data;
+}
+
+export async function getMyFinanceContractsApi() {
+  const response = await apiGet('/api/v1/client/finance-contracts');
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || data.title || 'Không thể tải hợp đồng tài chính');
+  }
+  return data;
 }

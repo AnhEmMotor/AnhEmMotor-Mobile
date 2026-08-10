@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, useColorScheme, View, ActivityIndicator } from 'react-native';
+import { Platform, View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { LayoutGrid, User, LifeBuoy, Motorbike, Package, Bell } from 'lucide-react-native';
 import { Theme, useActiveColors } from '../theme/Theme';
-import { useGlobalState } from '../context/GlobalState';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import LoginScreen from '../screens/LoginScreen';
@@ -32,6 +32,8 @@ import InvoiceScreen from '../screens/Customer/InvoiceScreen';
 import ServiceHistoryScreen from '../screens/Customer/ServiceHistoryScreen';
 import FinancialHubScreen from '../screens/Customer/FinancialHubScreen';
 import LegalProgressScreen from '../screens/Customer/LegalProgressScreen';
+import AppointmentBookingScreen from '../screens/Customer/Appointment/AppointmentBookingScreen';
+import FinanceContractScreen from '../screens/Customer/FinanceContract/FinanceContractScreen';
 
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
 import { navigationRef } from './RootNavigation';
@@ -41,9 +43,7 @@ const Tab = createBottomTabNavigator();
 
 function CustomerTabs() {
   const activeColors = useActiveColors();
-  const { themeMode } = useGlobalState();
-  const systemScheme = useColorScheme();
-  const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
+
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
   const barHeight = 55 + bottomInset;
@@ -55,30 +55,74 @@ function CustomerTabs() {
   const tabBorderTop = activeColors.border;
 
   return (
-    <Tab.Navigator screenOptions={{
-      headerShown: false,
-      tabBarStyle: {
-        backgroundColor: tabBg,
-        borderTopWidth: 1,
-        borderTopColor: tabBorderTop,
-        height: barHeight,
-        paddingBottom: paddingBottom,
-        paddingTop: 10,
-        elevation: 0,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      },
-      tabBarActiveTintColor: tabActiveText,
-      tabBarInactiveTintColor: tabInactiveText,
-    }}>
-      <Tab.Screen name="Hub" component={HomeScreen} options={{ tabBarIcon: ({color}) => <LayoutGrid color={color} size={22} />, tabBarLabel: 'Trang chủ' }} />
-      <Tab.Screen name="Catalog" component={CatalogScreen} options={{ tabBarIcon: ({color}) => <Package color={color} size={22} />, tabBarLabel: 'Sản phẩm' }} />
-      <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{ tabBarIcon: ({color}) => <Motorbike color={color} size={22} />, tabBarLabel: 'Xe của tôi' }} />
-      <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarIcon: ({color}) => <Bell color={color} size={22} />, tabBarLabel: 'Thông báo' }} />
-      <Tab.Screen name="Support" component={SupportScreen} options={{ tabBarIcon: ({color}) => <LifeBuoy color={color} size={22} />, tabBarLabel: 'Hỗ trợ' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarIcon: ({color}) => <User color={color} size={22} />, tabBarLabel: 'Cá nhân' }} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: tabBg,
+          borderTopWidth: 1,
+          borderTopColor: tabBorderTop,
+          height: barHeight,
+          paddingBottom: paddingBottom,
+          paddingTop: 10,
+          elevation: 0,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+        },
+        tabBarActiveTintColor: tabActiveText,
+        tabBarInactiveTintColor: tabInactiveText,
+      }}
+    >
+      <Tab.Screen
+        name="Hub"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => <LayoutGrid color={color} size={22} />,
+          tabBarLabel: 'Trang chủ',
+        }}
+      />
+      <Tab.Screen
+        name="Catalog"
+        component={CatalogScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Package color={color} size={22} />,
+          tabBarLabel: 'Sản phẩm',
+        }}
+      />
+      <Tab.Screen
+        name="MyVehicles"
+        component={MyVehiclesScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Motorbike color={color} size={22} />,
+          tabBarLabel: 'Xe của tôi',
+        }}
+      />
+      <Tab.Screen
+        name="Notification"
+        component={NotificationScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Bell color={color} size={22} />,
+          tabBarLabel: 'Thông báo',
+        }}
+      />
+      <Tab.Screen
+        name="Support"
+        component={SupportScreen}
+        options={{
+          tabBarIcon: ({ color }) => <LifeBuoy color={color} size={22} />,
+          tabBarLabel: 'Hỗ trợ',
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color }) => <User color={color} size={22} />,
+          tabBarLabel: 'Cá nhân',
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -106,7 +150,14 @@ export default function AppNavigator() {
 
   if (initialRoute === null) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#050505', justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#050505',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <ActivityIndicator size="large" color="#E31B23" />
       </View>
     );
@@ -114,7 +165,13 @@ export default function AppNavigator() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false, animation: Platform.OS === 'web' ? 'none' : 'slide_from_right' }}>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        screenOptions={{
+          headerShown: false,
+          animation: Platform.OS === 'web' ? 'none' : 'slide_from_right',
+        }}
+      >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
@@ -136,6 +193,8 @@ export default function AppNavigator() {
         <Stack.Screen name="ServiceHistory" component={ServiceHistoryScreen} />
         <Stack.Screen name="FinancialHub" component={FinancialHubScreen} />
         <Stack.Screen name="LegalProgress" component={LegalProgressScreen} />
+        <Stack.Screen name="AppointmentBooking" component={AppointmentBookingScreen} />
+        <Stack.Screen name="FinanceContract" component={FinanceContractScreen} />
       </Stack.Navigator>
       <GlobalSettingsModal />
     </NavigationContainer>

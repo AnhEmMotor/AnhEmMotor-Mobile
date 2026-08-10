@@ -1,13 +1,5 @@
 export class ServiceHistoryEntry {
-  constructor({
-    id,
-    date,
-    title,
-    items,
-    cost,
-    technician,
-    status,
-  }) {
+  constructor({ id, date, title, items, cost, technician, status }) {
     this.id = id;
     this.date = date;
     this.title = title;

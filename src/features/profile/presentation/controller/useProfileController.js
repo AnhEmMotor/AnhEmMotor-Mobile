@@ -1,16 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Alert, Platform } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as Haptics from 'expo-haptics';
 
-// Clean Architecture Layers
 import { UserProfile } from '../../domain/entities/UserProfile';
 import { useGlobalState } from '../../../../context/GlobalState';
 import { useDependency } from '../../../../di/DependencyContext';
 import { resetRoot } from '../../../../navigation/RootNavigation';
 import { tokenService } from '../../../../api/httpClient';
 
-// Vietnam address regions data (used for profile address editing UI)
 export const MOCK_REGIONS = {
   provinces: ['Hồ Chí Minh', 'Đồng Nai', 'Hà Nội', 'Bình Dương'],
   districts: {
@@ -20,16 +16,33 @@ export const MOCK_REGIONS = {
     'Bình Dương': ['Thành phố Thủ Dầu Một', 'Thành phố Thuận An', 'Thành phố Dĩ An'],
   },
   wards: {
-    'Quận 9': ['Phường Hiệp Phú', 'Phường Tăng Nhơn Phú A', 'Phường Tăng Nhơn Phú B', 'Phường Long Thạnh Mỹ'],
-    'Thành phố Thủ Đức': ['Phường Thảo Điền', 'Phường An Phú', 'Phường Bình An', 'Phường Linh Trung'],
-    'Thành phố Biên Hòa': ['Phường Quyết Thắng', 'Phường Tân Phong', 'Phường Trung Dũng', 'Phường Trảng Dài'],
+    'Quận 9': [
+      'Phường Hiệp Phú',
+      'Phường Tăng Nhơn Phú A',
+      'Phường Tăng Nhơn Phú B',
+      'Phường Long Thạnh Mỹ',
+    ],
+    'Thành phố Thủ Đức': [
+      'Phường Thảo Điền',
+      'Phường An Phú',
+      'Phường Bình An',
+      'Phường Linh Trung',
+    ],
+    'Thành phố Biên Hòa': [
+      'Phường Quyết Thắng',
+      'Phường Tân Phong',
+      'Phường Trung Dũng',
+      'Phường Trảng Dài',
+    ],
     'Huyện Long Thành': ['Thị trấn Long Thành', 'Xã An Phước', 'Xã Lộc An', 'Xã Long Đức'],
     'Quận Hoàn Kiếm': ['Phường Hàng Bạc', 'Phường Tràng Tiền', 'Phường Đồng Xuân'],
     'Thành phố Thủ Dầu Một': ['Phường Phú Cường', 'Phường Hiệp Thành', 'Phường Chánh Nghĩa'],
-  }
+  },
 };
 
 export const useProfileController = (navigation, bottomSheetRef) => {
+  const ImagePicker = require('expo-image-picker');
+  const Haptics = require('expo-haptics');
   const {
     getProfileUseCase,
     updateProfileUseCase,
@@ -43,25 +56,16 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   const [isSaving, setIsSaving] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
 
-  // Field editing state
   const [activeField, setActiveField] = useState(null);
   const [tempData, setTempData] = useState({});
 
-  // Password fields state
-  const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
 
-  // Load Profile on mount
-  useEffect(() => {
-    loadProfileData();
-  }, []);
-
-  const triggerHaptic = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }
-  };
-
-  const loadProfileData = async () => {
+  const loadProfileData = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getProfileUseCase.execute();
@@ -72,36 +76,48 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     } finally {
       setIsLoading(false);
     }
+  }, [getProfileUseCase]);
+
+  const triggerHaptic = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
   };
 
-  // Open Bottom Sheet to Edit a Field
+  useEffect(() => {
+    const init = async () => {
+      await loadProfileData();
+    };
+    init();
+  }, [loadProfileData]);
+
   const openEditField = (field) => {
     triggerHaptic();
     setActiveField(field);
 
     if (field === 'profile') {
       setTempData({
-        name: profile.name,
-        email: profile.email,
-        birthDate: profile.birthDate || '17/05/1995',
-        gender: profile.gender || 'Nam',
-        province: profile.province || 'Đồng Nai',
-        district: profile.district || 'Thành phố Biên Hòa',
-        ward: profile.ward || 'Phường Quyết Thắng',
+        name: profile.name || '',
+        email: profile.email || '',
+        birthDate: profile.birthDate || '',
+        gender: profile.gender || '',
+        province: profile.province || '',
+        district: profile.district || '',
+        ward: profile.ward || '',
         specificAddress: profile.specificAddress || '',
-        licenseTier: profile.licenseTier || 'A1',
+        licenseTier: profile.licenseTier || '',
         licenseImage: profile.licenseImage || null,
       });
     } else if (field === 'address') {
       setTempData({
-        province: profile.province || 'Đồng Nai',
-        district: profile.district || 'Thành phố Biên Hòa',
-        ward: profile.ward || 'Phường Quyết Thắng',
+        province: profile.province || '',
+        district: profile.district || '',
+        ward: profile.ward || '',
         specificAddress: profile.specificAddress || '',
       });
     } else if (field === 'license') {
       setTempData({
-        licenseTier: profile.licenseTier || 'A1',
+        licenseTier: profile.licenseTier || '',
         licenseImage: profile.licenseImage || null,
       });
     } else if (field === 'name') {
@@ -119,7 +135,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     bottomSheetRef.current?.show();
   };
 
-  // Save the field being edited
   const handleSaveField = async () => {
     triggerHaptic();
     try {
@@ -130,7 +145,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
         updatedProfile.name = tempData.name;
         updatedProfile.email = tempData.email;
         updatedProfile.birthDate = tempData.birthDate;
-        updatedProfile.gender = tempData.gender || 'Nam';
+        updatedProfile.gender = tempData.gender;
         updatedProfile.province = tempData.province;
         updatedProfile.district = tempData.district;
         updatedProfile.ward = tempData.ward;
@@ -189,14 +204,12 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Auto-Save Toggle Switches immediately
   const handleToggleSetting = async (key, currentValue) => {
     triggerHaptic();
     try {
       const newValue = !currentValue;
 
-      // Optimistic UI update
-      setProfile(prev => {
+      setProfile((prev) => {
         const cloned = prev.clone();
         cloned.settings[key] = newValue;
         return cloned;
@@ -205,7 +218,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       await updateSettingsUseCase.execute({ [key]: newValue });
     } catch (error) {
       console.error(`Toggle ${key} failed:`, error);
-      setProfile(prev => {
+      setProfile((prev) => {
         const cloned = prev.clone();
         cloned.settings[key] = currentValue;
         return cloned;
@@ -214,7 +227,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Upload Photo via Camera or Gallery
   const handleSelectPhoto = async (type) => {
     setAvatarModal(false);
     triggerHaptic();
@@ -227,7 +239,10 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       }
 
       if (!permissionResult.granted) {
-        Alert.alert('Quyền truy cập', 'AnhEmMotor cần quyền truy cập máy ảnh hoặc thư viện để đổi ảnh.');
+        Alert.alert(
+          'Quyền truy cập',
+          'AnhEmMotor cần quyền truy cập máy ảnh hoặc thư viện để đổi ảnh.'
+        );
         return;
       }
 
@@ -259,7 +274,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Selecting cartoon avatars from mock sheet
   const handleSelectCartoonAvatar = async (url) => {
     triggerHaptic();
     try {
@@ -278,7 +292,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Delete Account flow
   const handleDeleteAccount = () => {
     triggerHaptic();
     Alert.alert(
@@ -295,7 +308,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
             await repository.clearAllData();
             setIsLoading(false);
             Alert.alert('Thông báo', 'Tài khoản của bạn đã được xóa thành công khỏi hệ thống.', [
-              { text: 'OK', onPress: () => resetRoot('Login') }
+              { text: 'OK', onPress: () => resetRoot('Login') },
             ]);
           },
         },
@@ -323,7 +336,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     'https://img.freepik.com/free-vector/cute-robot-pixel-art-style_475147-152.jpg',
     'https://img.freepik.com/free-vector/cute-cat-pixel-art-style_475147-151.jpg',
     'https://img.freepik.com/free-vector/cute-dog-pixel-art-style_475147-153.jpg',
-    'https://img.freepik.com/free-vector/cute-panda-pixel-art-style_475147-150.jpg'
+    'https://img.freepik.com/free-vector/cute-panda-pixel-art-style_475147-150.jpg',
   ];
 
   return {

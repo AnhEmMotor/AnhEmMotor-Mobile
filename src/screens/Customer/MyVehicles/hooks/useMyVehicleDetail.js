@@ -24,38 +24,44 @@ export function useMyVehicleDetail(initialBike) {
         setLoading(false);
       }
     },
-    [getCustomerVehicleDetailUseCase],
+    [getCustomerVehicleDetailUseCase]
   );
 
   useEffect(() => {
-    if (initialBike?.id) {
-      loadVehicleDetail(initialBike.id);
-    }
-  }, [initialBike?.id, loadVehicleDetail]);
+    const init = async () => {
+      if (initialBike && initialBike.id) {
+        await loadVehicleDetail(initialBike.id);
+      }
+    };
+    init();
+  }, [initialBike, loadVehicleDetail]);
 
   const retry = useCallback(() => {
-    if (initialBike?.id) {
+    if (initialBike && initialBike.id) {
       loadVehicleDetail(initialBike.id);
     }
-  }, [initialBike?.id, loadVehicleDetail]);
+  }, [initialBike, loadVehicleDetail]);
 
-  const saveVehicle = useCallback(async (vehicleId, updates) => {
-    if (!vehicleId) return null;
-    setSaving(true);
-    setSaveError(null);
-    try {
-      const updatedVehicle = await updateCustomerVehicleUseCase.execute(vehicleId, updates);
-      setVehicle((prev) => ({ ...(prev || {}), ...(updatedVehicle || {}), id: vehicleId }));
-      return updatedVehicle;
-    } catch (saveError) {
-      console.error('Lỗi cập nhật xe:', saveError);
-      const message = saveError?.message || 'Không thể cập nhật thông tin xe.';
-      setSaveError(message);
-      throw new Error(message);
-    } finally {
-      setSaving(false);
-    }
-  }, [updateCustomerVehicleUseCase]);
+  const saveVehicle = useCallback(
+    async (vehicleId, updates) => {
+      if (!vehicleId) return null;
+      setSaving(true);
+      setSaveError(null);
+      try {
+        const updatedVehicle = await updateCustomerVehicleUseCase.execute(vehicleId, updates);
+        setVehicle((prev) => ({ ...(prev || {}), ...(updatedVehicle || {}), id: vehicleId }));
+        return updatedVehicle;
+      } catch (saveError) {
+        console.error('Lỗi cập nhật xe:', saveError);
+        const message = saveError?.message || 'Không thể cập nhật thông tin xe.';
+        setSaveError(message);
+        throw new Error(message);
+      } finally {
+        setSaving(false);
+      }
+    },
+    [updateCustomerVehicleUseCase]
+  );
 
   return {
     vehicle,

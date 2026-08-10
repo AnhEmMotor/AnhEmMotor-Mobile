@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import Animated, { 
-  useAnimatedStyle, 
-  useSharedValue, 
-  withRepeat, 
-  withTiming, 
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
   withSequence,
-  interpolate
 } from 'react-native-reanimated';
 
 export default function PulseView({ children, style, pulseScale = 1.05, duration = 1500 }) {
@@ -20,7 +19,7 @@ export default function PulseView({ children, style, pulseScale = 1.05, duration
       -1,
       true
     );
-  }, []);
+  }, [duration, pulseScale, scale]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -28,9 +27,5 @@ export default function PulseView({ children, style, pulseScale = 1.05, duration
     };
   });
 
-  return (
-    <Animated.View style={[style, animatedStyle]}>
-      {children}
-    </Animated.View>
-  );
+  return <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>;
 }

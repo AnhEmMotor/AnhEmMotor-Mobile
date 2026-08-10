@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { getProductsApi, getBrandsApi } from '../../../api/customerApi';
+import { getBrandsApi } from '../../../api/customerApi';
+import { ProductDataSource } from '../../../data/product/datasources/ProductDataSource';
 
 const CATEGORIES = [
   { id: 8, name: 'Xe máy' },
@@ -19,20 +20,23 @@ export const useCatalog = () => {
 
   const initialized = useRef(false);
 
-  const loadProducts = useCallback(async (categoryId) => {
-    try {
-      setLoading(true);
-      setFetchError(null);
-      const data = await getProductsApi(searchQuery, categoryId);
-      setProducts(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
-      setProducts([]);
-      setFetchError(error.message || 'Không thể tải danh sách sản phẩm');
-    } finally {
-      setLoading(false);
-    }
-  }, [searchQuery]);
+  const loadProducts = useCallback(
+    async (categoryId) => {
+      try {
+        setLoading(true);
+        setFetchError(null);
+        const data = await ProductDataSource.fetchCatalogProducts(searchQuery, categoryId);
+        setProducts(data.items || []);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        setProducts([]);
+        setFetchError(error.message || 'Không thể tải danh sách sản phẩm');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [searchQuery]
+  );
 
   const loadBrands = useCallback(async () => {
     try {
