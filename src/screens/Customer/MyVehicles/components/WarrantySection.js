@@ -30,7 +30,7 @@ export const WarrantySection = ({ bike }) => {
         <View style={styles.periodItem}>
           <Text style={[styles.periodLabel, { color: activeColors.subtext }]}>Từ ngày</Text>
           <Text style={[styles.periodValue, { color: activeColors.text }]}>
-            {formatDate(bike.warrantyFrom)}
+            {formatDate(bike.warrantyFrom || bike.purchaseDate)}
           </Text>
         </View>
         <View style={[styles.periodDivider, { backgroundColor: activeColors.border }]} />

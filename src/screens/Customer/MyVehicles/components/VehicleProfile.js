@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { QrCode, Copy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useActiveColors } from '../../../../theme/Theme';
-import { copyToClipboard } from '../../../../utils/bikeHelpers';
+import { copyToClipboard, formatDate } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
 const getBikeImage = (bikeName) => {
@@ -112,7 +112,7 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>
               Đăng ký lần đầu
             </Text>
-            <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.regDate}</Text>
+            <Text style={[styles.detailValue, { color: activeColors.text }]}>{formatDate(bike.regDate)}</Text>
           </View>
           <View style={styles.detailItem}>
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Phiên bản</Text>

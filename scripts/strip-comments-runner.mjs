@@ -71,16 +71,7 @@ files.forEach((file) => {
     const content = fs.readFileSync(file, 'utf8');
 
     const directives = [];
-    let temp = content.replace(/\/\*[\s\S]*?\*\/|\/\/.*|<!--[\s\S]*?-->/g, (match) => {
-      if (/eslint|stylelint|prettier|@ts-/.test(match)) {
-        const id = `__DIRECTIVE_${directives.length}__`;
-        directives.push(match);
-        return id;
-      }
-      return match;
-    });
-
-    let stripped = temp;
+    let stripped = content;
     if (file.endsWith('.vue')) {
       try {
         stripped = decomment.html(stripped);

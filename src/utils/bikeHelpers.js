@@ -15,5 +15,14 @@ export const copyToClipboard = (text, label) => {
 
 export const formatDate = (dateString) => {
   if (!dateString) return '';
+  const parsed = new Date(dateString);
+  if (!isNaN(parsed.getTime())) {
+    return parsed.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  }
+  // fallback: try simple dd-mm-yyyy split
   return dateString.split('-').reverse().join('/');
 };
