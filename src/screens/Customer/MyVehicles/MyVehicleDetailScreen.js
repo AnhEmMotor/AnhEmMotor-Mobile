@@ -80,7 +80,6 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
   const warrantyLabel =
     activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
   const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
-  const warrantyFromLabel = formatDate(activeBike.warrantyFrom || activeBike.purchaseDate);
 
   const [nickname, setNickname] = useState('Chiến mã của Khôi 🏍️');
   const [isEditingNickname, setIsEditingNickname] = useState(false);
