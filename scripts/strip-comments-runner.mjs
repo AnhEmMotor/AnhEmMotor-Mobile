@@ -72,41 +72,67 @@ files.forEach((file) => {
 
     const directives = [];
     let temp = content.replace(/\/\*[\s\S]*?\*\/|\/\/.*|<!--[\s\S]*?-->/g, (match) => {
-        if (/eslint|stylelint|prettier|@ts-/.test(match)) {
-            const id = `__DIRECTIVE_${directives.length}__`;
-            directives.push(match);
-            return id;
-        }
-        return match;
+      if (/eslint|stylelint|prettier|@ts-/.test(match)) {
+        const id = `__DIRECTIVE_${directives.length}__`;
+        directives.push(match);
+        return id;
+      }
+      return match;
     });
 
     let stripped = temp;
     if (file.endsWith('.vue')) {
       try {
         stripped = decomment.html(stripped);
-      } catch (e) {
+      } catch {
         stripped = stripComments(stripped);
       }
-      stripped = stripped.replace(/<script([^>]*)>([\s\S]*?)<\/script>/g, (match, attrs, scriptContent) => {
-        try { 
-            return `<script${attrs}>${decomment(scriptContent)}<\/script>`; 
-        } catch(e) { 
-            try { return `<script${attrs}>${stripComments(scriptContent)}<\/script>`; } catch (e2) { return match; }
+      stripped = stripped.replace(
+        /<script([^>]*)>([\s\S]*?)<\/script>/g,
+        (match, attrs, scriptContent) => {
+          try {
+            return `<script${attrs}>${decomment(scriptContent)}<\/script>`;
+          } catch {
+            try {
+              return `<script${attrs}>${stripComments(scriptContent)}<\/script>`;
+            } catch {
+              return match;
+            }
+          }
         }
-      });
-      stripped = stripped.replace(/<style([^>]*)>([\s\S]*?)<\/style>/g, (match, attrs, styleContent) => {
-        try { return `<style${attrs}>${decomment.text(styleContent)}<\/style>`; } catch(e) { return match; }
-      });
+      );
+      stripped = stripped.replace(
+        /<style([^>]*)>([\s\S]*?)<\/style>/g,
+        (match, attrs, styleContent) => {
+          try {
+            return `<style${attrs}>${decomment.text(styleContent)}<\/style>`;
+          } catch {
+            return match;
+          }
+        }
+      );
     } else if (file.endsWith('.html')) {
-      try { stripped = decomment.html(stripped); } catch (e) { stripped = stripComments(stripped); }
+      try {
+        stripped = decomment.html(stripped);
+      } catch {
+        stripped = stripComments(stripped);
+      }
     } else if (file.endsWith('.css') || file.endsWith('.scss') || file.endsWith('.less')) {
-      try { stripped = decomment.text(stripped); } catch (e) { stripped = stripComments(stripped); }
+      try {
+        stripped = decomment.text(stripped);
+      } catch {
+        stripped = stripComments(stripped);
+      }
     } else {
-      try { stripped = decomment(stripped); } catch (e) { stripped = stripComments(stripped); }
+      try {
+        stripped = decomment(stripped);
+      } catch {
+        stripped = stripComments(stripped);
+      }
     }
 
     directives.forEach((directive, index) => {
-        stripped = stripped.replace(`__DIRECTIVE_${index}__`, directive);
+      stripped = stripped.replace(`__DIRECTIVE_${index}__`, directive);
     });
 
     if (content !== stripped) {
