@@ -133,7 +133,7 @@ export const useSupport = () => {
       try {
         const profile = await getProfileUseCase.execute();
         if (profile) userProfile = profile;
-      } catch (e) {}
+      } catch (_e) {}
 
       const response = await contactApi.submitSupportRequest({
         fullName: userProfile.name || 'Khách hàng',
@@ -257,7 +257,7 @@ export const useSupport = () => {
           setSelectedTicket(null);
           Alert.alert('Thành công 🎉', 'Bạn đã duyệt đóng ca hỗ trợ này. Cảm ơn ý kiến của bạn!');
         }, 300);
-      } catch (e) {
+      } catch (_e) {
         Alert.alert('Lỗi', 'Không thể đóng yêu cầu lúc này.');
       }
     },

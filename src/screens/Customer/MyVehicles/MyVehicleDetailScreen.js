@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Dimensions,
   Modal,
   TextInput,
   Platform,
@@ -33,8 +32,6 @@ import GlassCard from '../../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
 import { useMyVehicleDetail } from './hooks/useMyVehicleDetail';
-
-const { width: _screenWidth } = Dimensions.get('window');
 
 export default function MyVehicleDetailScreen({ navigation, route }) {
   const activeColors = useActiveColors();

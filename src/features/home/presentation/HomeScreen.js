@@ -114,12 +114,8 @@ export default function HomeScreen({ navigation }) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const {
     unreadNotifications,
-    
-    _vehicleStatus,
     selectedVoucher,
     bottomSheetRef,
-    
-    _handleOpenVoucher,
     handleCloseVoucher,
     userName,
     newsList,
@@ -128,10 +124,9 @@ export default function HomeScreen({ navigation }) {
   const colors = useActiveColors();
   const { themeMode, setSettingsOpen } = useGlobalState();
 
-  
-  const BANNER_WIDTH = width * 0.78; 
-  const BANNER_SPACING = 12; 
-  const BANNER_PADDING = (width - BANNER_WIDTH) / 2; 
+  const BANNER_WIDTH = width * 0.78;
+  const BANNER_SPACING = 12;
+  const BANNER_PADDING = (width - BANNER_WIDTH) / 2;
 
   const scrollViewRef = useRef(null);
   const intervalRef = useRef(null);
@@ -139,7 +134,6 @@ export default function HomeScreen({ navigation }) {
   const isSnappingRef = useRef(false);
   const isUserInitiatedRef = useRef(false);
 
-  
   useEffect(() => {
     if (isAutoPlaying) {
       intervalRef.current = setInterval(() => {
@@ -154,14 +148,13 @@ export default function HomeScreen({ navigation }) {
     };
   }, [isAutoPlaying]);
 
-  
   const handleMomentumEnd = (e) => {
     if (isSnappingRef.current) return;
     const offset = e.nativeEvent.contentOffset.x;
     const index = Math.round(offset / (BANNER_WIDTH + BANNER_SPACING));
     const clampedIndex = Math.min(Math.max(index, 0), BANNERS.length - 1);
     setActiveBanner(clampedIndex);
-    
+
     const targetX = clampedIndex * (BANNER_WIDTH + BANNER_SPACING);
     if (Math.abs(offset - targetX) > 1) {
       isSnappingRef.current = true;
@@ -175,12 +168,10 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-  
   const handleScrollBeginDrag = () => {
     setIsAutoPlaying(false);
   };
 
-  
   const handleScrollEndDrag = () => {
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     resumeTimeoutRef.current = setTimeout(() => {
@@ -189,14 +180,12 @@ export default function HomeScreen({ navigation }) {
     }, 2000);
   };
 
-  
   useEffect(() => {
     return () => {
       if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     };
   }, []);
 
-  
   const scrollToBanner = useCallback(
     (index) => {
       const scrollView = scrollViewRef.current;
@@ -210,7 +199,6 @@ export default function HomeScreen({ navigation }) {
     [BANNER_WIDTH, BANNER_SPACING]
   );
 
-  
   useEffect(() => {
     if (isUserInitiatedRef.current) {
       scrollToBanner(activeBanner);

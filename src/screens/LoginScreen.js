@@ -7,7 +7,6 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
   ScrollView,
   Alert,
   ActivityIndicator,
@@ -23,9 +22,6 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginApi, getCurrentUserApi } from '../api/customerApi';
 import { tokenService } from '../api/httpClient';
-
-
-const { _height } = Dimensions.get('window');
 
 export default function LoginScreen({ navigation }) {
   const theme = useTheme();

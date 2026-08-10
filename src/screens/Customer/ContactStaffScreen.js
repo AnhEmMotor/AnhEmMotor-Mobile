@@ -93,13 +93,6 @@ export default function ContactStaffScreen({ route, navigation }) {
     initTicket();
   }, [getProfileUseCase, ticketId, trackingToken, loadTicketHistory]);
 
-  const _handleSendReply = () => {
-    Alert.alert(
-      'Thông báo',
-      'Tính năng trả lời trực tiếp đang được cập nhật. Vui lòng gửi email hoặc gọi hotline để thảo luận thêm.'
-    );
-  };
-
   const handleSendEmail = () => {
     if (!message.trim()) {
       Alert.alert('Thông báo', 'Bạn chưa nhập nội dung tin nhắn.');

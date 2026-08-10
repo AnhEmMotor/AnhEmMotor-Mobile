@@ -33,7 +33,7 @@ const STORAGE_KEY = '@AEM_Customer_Profile';
 export default function GlobalSettingsModal() {
   const Haptics = require('expo-haptics');
 
-  const { isSettingsOpen, setSettingsOpen, _themeMode, setThemeMode } = useGlobalState();
+  const { isSettingsOpen, setSettingsOpen, setThemeMode } = useGlobalState();
   const theme = useTheme();
 
   const [loading, setLoading] = useState(false);

@@ -45,10 +45,7 @@ export default function ProfileScreen({ navigation, route }) {
   const bottomSheetRef = useRef(null);
   const [activeRegionList, setActiveRegionList] = useState(null);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  
-  const [_voucherModalVisible, setVoucherModalVisible] = useState(false);
 
-  
   const {
     profile,
     isLoading,
@@ -56,14 +53,12 @@ export default function ProfileScreen({ navigation, route }) {
     avatarModal,
     setAvatarModal,
     activeField,
-    _setActiveField,
     tempData,
     setTempData,
     passwordForm,
     setPasswordForm,
     openEditField,
     handleSaveField,
-    _handleToggleSetting,
     handleSelectPhoto,
     handleSelectCartoonAvatar,
     handleDeleteAccount,
@@ -394,14 +389,6 @@ export default function ProfileScreen({ navigation, route }) {
 
         <View style={{ height: 20 }} />
       </ScrollView>
-
-      {}
-      <TouchableOpacity
-        style={[styles.fab, styles.voucherFab, { backgroundColor: activeColors.primary }]}
-        onPress={() => setVoucherModalVisible(true)}
-      >
-        <FileText color="#FFF" size={20} />
-      </TouchableOpacity>
 
       {}
       <View style={[styles.bottomActions, { borderTopColor: activeColors.border }]}>

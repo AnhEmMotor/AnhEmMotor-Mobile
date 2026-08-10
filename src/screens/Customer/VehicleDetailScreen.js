@@ -1,14 +1,6 @@
 import React, { useState, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-  StatusBar,
-} from 'react-native';
-import { useTheme } from '../../theme/Theme'; 
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { useTheme } from '../../theme/Theme';
 import { ChevronLeft, ShieldCheck, Zap, RotateCcw } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -18,13 +10,10 @@ import ScalePress from '../../components/ScalePress';
 import FinanceCalculator from '../../components/FinanceCalculator';
 import Toast from '../../components/Toast';
 
-
-const { width: _screenWidth, height: _screenHeight } = Dimensions.get('window');
-
 export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};
   const theme = useTheme();
-  const styles = getStyles(theme); 
+  const styles = getStyles(theme);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedColor, setSelectedColor] = useState(motor?.colors?.[0]?.id || 'default');
   const [rotationIndex, setRotationIndex] = useState(0);
@@ -33,7 +22,6 @@ export default function VehicleDetailScreen({ navigation, route }) {
   const lastX = useRef(0);
   const motorFrames = motor?.frames || [motor?.img];
 
-  
   const handleTouchStart = (e) => {
     lastX.current = e.nativeEvent.pageX;
   };
@@ -81,7 +69,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
             onResponderMove={handleTouchMove}
           >
             <Animated.Image
-              entering={FadeIn.duration(800)} 
+              entering={FadeIn.duration(800)}
               source={currentImage}
               style={getStyles(theme).mainImage}
               resizeMode="contain"
@@ -155,8 +143,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
                 onPress={() => setActiveTab(tab)}
               >
                 <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
-                  {tab === 'overview' ? 'Tổng quan' : tab === 'specs' ? 'Thông số' : 'Trả góp'}{' '}
-                  {}
+                  {tab === 'overview' ? 'Tổng quan' : tab === 'specs' ? 'Thông số' : 'Trả góp'} {}
                 </Text>
               </TouchableOpacity>
             ))}

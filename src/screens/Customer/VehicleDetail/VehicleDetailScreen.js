@@ -29,8 +29,7 @@ import { styles } from './styles';
 import { useVehicleDetail } from './useVehicleDetail';
 
 export default function VehicleDetailScreen({ navigation, route }) {
-  
-  const { motor, _isOwned } = route.params || {};
+  const { motor } = route.params || {};
   const logic = useVehicleDetail(motor);
   const activeColors = useActiveColors();
   const [submittingConsultation, setSubmittingConsultation] = useState(false);

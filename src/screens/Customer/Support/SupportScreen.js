@@ -39,8 +39,7 @@ export default function SupportScreen({ navigation }) {
     attachedImages,
     searchQuery,
     setSearchQuery,
-    
-    _activeFaqId,
+
     tickets,
     selectedTicket,
     selectedFaq,
@@ -66,7 +65,6 @@ export default function SupportScreen({ navigation }) {
     handleApproveCloseTicket,
   } = useSupport();
 
-  
   const filteredFaqCategories = FAQ_CATEGORIES.map((category) => {
     const matchedItems = category.items.filter(
       (item) =>
