@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Mail, Lock, Eye, EyeOff, Check } from 'lucide-react-native';
-import { Theme, useActiveColors, useTheme } from '../../theme/Theme';
+import { Theme, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { registerApi } from '../../api/customerApi';
@@ -22,8 +22,8 @@ import { registerApi } from '../../api/customerApi';
 export default function RegisterScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
-// eslint-disable-next-line no-unused-vars
-  const _activeColors = useActiveColors();
+
+  
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -61,13 +61,13 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Background gradient */}
+      {}
       <LinearGradient
         colors={theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']}
         style={StyleSheet.absoluteFill}
       />
 
-      {/* Ambient glows */}
+      {}
       <View style={[styles.glowTop, { backgroundColor: theme.staticColors.primary + '18' }]} />
       <View style={[styles.glowBottom, { backgroundColor: theme.staticColors.secondary + '14' }]} />
 
@@ -82,7 +82,7 @@ export default function RegisterScreen({ navigation }) {
               <Text style={[styles.formTitle, { color: colors.text }]}>Tạo tài khoản</Text>
               <Text style={[styles.formSubtitle, { color: colors.subtext }]}>Điền thông tin để bắt đầu</Text>
 
-              {/* Name Input */}
+              {}
               <Animated.View entering={FadeInUp.duration(600).delay(100)}>
                 <View
                   style={[
@@ -104,7 +104,7 @@ export default function RegisterScreen({ navigation }) {
                 </View>
               </Animated.View>
 
-              {/* Email Input */}
+              {}
               <Animated.View entering={FadeInUp.duration(600).delay(200)}>
                 <View
                   style={[
@@ -129,7 +129,7 @@ export default function RegisterScreen({ navigation }) {
                 </View>
               </Animated.View>
 
-              {/* Password Input */}
+              {}
               <View
                 style={[
                   styles.inputWrapper,
@@ -153,7 +153,7 @@ export default function RegisterScreen({ navigation }) {
                 </Pressable>
               </View>
 
-              {/* Confirm Password Input */}
+              {}
               <View
                 style={[
                   styles.inputWrapper,
@@ -177,7 +177,7 @@ export default function RegisterScreen({ navigation }) {
                 </Pressable>
               </View>
 
-              {/* Terms Checkbox */}
+              {}
               <Pressable onPress={() => setTermsAccepted(!termsAccepted)} style={styles.checkboxContainer}>
                 <View style={[styles.checkboxBox, termsAccepted && { backgroundColor: colors.primary }]}>
                   {termsAccepted && <Check size={moderateScale(14)} color={colors.glassBg} />}
@@ -185,7 +185,7 @@ export default function RegisterScreen({ navigation }) {
                 <Text style={[styles.checkboxText, { color: colors.subtext }]}>Tôi đồng ý với các điều khoản</Text>
               </Pressable>
 
-              {/* Register Button */}
+              {}
               <Pressable
                 style={[styles.btnPrimary, (!canSubmit || loading) && styles.btnDisabled]}
                 disabled={!canSubmit || loading}
@@ -205,7 +205,7 @@ export default function RegisterScreen({ navigation }) {
                 </LinearGradient>
               </Pressable>
 
-              {/* Link back to login */}
+              {}
               <View style={styles.footer}>
                 <Text style={[styles.footerText, { color: colors.subtext }]}>Đã có tài khoản? </Text>
                 <Pressable onPress={() => navigation.navigate('Login')}>

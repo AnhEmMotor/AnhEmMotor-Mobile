@@ -7,7 +7,7 @@ import { useDependency } from '../../../di/DependencyContext';
 import { useEffect } from 'react';
 
 export const useSupport = () => {
-  // Trạng thái Form phản hồi
+  
   const [selectedIssue, setSelectedIssue] = useState(ISSUE_TYPES[0]);
   const [feedbackText, setFeedbackText] = useState('');
   const [attachedImages, setAttachedImages] = useState([]);
@@ -43,8 +43,8 @@ export const useSupport = () => {
           const parsedTickets = JSON.parse(stored);
           setTickets(parsedTickets);
           
-          // Optionally, we could fetch tracking for all of them here to update status
-          // But to keep it simple, we'll just show them as stored and update when clicked
+          
+          
         } else {
           setTickets([]);
         }
@@ -64,7 +64,7 @@ export const useSupport = () => {
     }
   };
 
-  // Mở/Đóng Bottom Sheet chọn loại vấn đề
+  
   const handleOpenIssueSheet = useCallback(() => {
     setIsIssueSheetVisible(true);
     setTimeout(() => {
@@ -84,13 +84,13 @@ export const useSupport = () => {
     setIsIssueSheetVisible(false);
   }, []);
 
-  // Mở/Đóng Bottom Sheet chi tiết Ticket
+  
   const handleOpenTicketDetail = useCallback(async (ticket) => {
-    // Try to fetch latest tracking status
+    
     try {
       const tracking = await contactApi.getSupportTracking(ticket.id, ticket.trackingToken);
       if (tracking) {
-        // Update ticket with latest tracking data
+        
         const updatedTicket = {
           ...ticket,
           status: tracking.status,
@@ -115,13 +115,13 @@ export const useSupport = () => {
     setSelectedTicket(null);
   }, []);
 
-  // Chụp ảnh đính kèm giả lập
+  
   const handleAttachImage = useCallback(() => {
     const fakeImages = [
       'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=200',
       'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=200'
     ];
-    // Đính kèm ngẫu nhiên
+    
     const randomImg = fakeImages[Math.floor(Math.random() * fakeImages.length)];
     if (attachedImages.length >= 3) {
       Alert.alert('Giới hạn ảnh', 'Bạn chỉ được đính kèm tối đa 3 hình ảnh minh chứng.');
@@ -134,7 +134,7 @@ export const useSupport = () => {
     setAttachedImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   }, []);
 
-  // Gửi phản hồi lên CRM
+  
   const handleSubmitFeedback = useCallback(async () => {
     if (!feedbackText.trim() || isSubmitting) return;
 
@@ -144,9 +144,9 @@ export const useSupport = () => {
       try {
         const profile = await getProfileUseCase.execute();
         if (profile) userProfile = profile;
-// eslint-disable-next-line no-unused-vars
+
       } catch (e) {
-        // Ignore if user not logged in or profile fetch fails
+        
       }
 
       const response = await contactApi.submitSupportRequest({
@@ -190,7 +190,7 @@ export const useSupport = () => {
     }
   }, [feedbackText, selectedIssue, tickets, isSubmitting, getProfileUseCase]);
 
-  // Gọi Cố vấn trực tiếp qua số hotline
+  
   const handleCallAdvisor = useCallback(async () => {
     const url = 'tel:0912345678';
     try {
@@ -205,7 +205,7 @@ export const useSupport = () => {
     }
   }, []);
 
-  // Gửi Email hỗ trợ
+  
   const handleEmailSupport = useCallback(async () => {
     const url = 'mailto:support@anhemmotor.vn';
     try {
@@ -215,13 +215,13 @@ export const useSupport = () => {
     }
   }, []);
 
-  // Chỉ đường Google Maps đến Showroom Biên Hòa
+  
   const handleNavigateMaps = useCallback(async () => {
-    // Showroom AnhEmMotor Biên Hòa: 10.9575, 106.8427
+    
     const lat = 10.9575;
     const lng = 106.8427;
-// eslint-disable-next-line no-unused-vars
-    const _label = 'Showroom AnhEmMotor Bien Hoa';
+
+    
     
     const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
     try {
@@ -231,12 +231,12 @@ export const useSupport = () => {
     }
   }, []);
 
-  // Mở/Đóng Bottom Sheet chi tiết FAQ (trượt từ dưới lên theo quy tắc vàng)
+  
   const handleCloseFaqDetail = useCallback(() => {
     setSelectedFaq(null);
   }, []);
 
-  // Bấm vào FAQ sẽ mở Bottom Sheet trượt từ dưới lên
+  
   const handleToggleFaq = useCallback((id) => {
     for (const category of FAQ_CATEGORIES) {
       const found = category.items.find(item => item.id === id);
@@ -250,13 +250,13 @@ export const useSupport = () => {
     }
   }, []);
 
-  // Khách hàng Duyệt đóng ca trong tương tác 2 chiều
+  
   const handleApproveCloseTicket = useCallback(async (ticketId) => {
     const ticketToClose = tickets.find(t => t.id === ticketId);
     if (!ticketToClose) return;
 
     try {
-      // Opt-in: send rating to backend
+      
       await contactApi.rateSupportEmployee(ticketId, ticketToClose.trackingToken, 5, 'Đã đóng yêu cầu');
       
       const newTickets = tickets.map(t => {
@@ -271,7 +271,7 @@ export const useSupport = () => {
         setSelectedTicket(null);
         Alert.alert('Thành công 🎉', 'Bạn đã duyệt đóng ca hỗ trợ này. Cảm ơn ý kiến của bạn!');
       }, 300);
-// eslint-disable-next-line no-unused-vars
+
     } catch (e) {
       Alert.alert('Lỗi', 'Không thể đóng yêu cầu lúc này.');
     }

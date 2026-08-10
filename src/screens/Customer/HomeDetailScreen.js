@@ -43,7 +43,7 @@ import { verticalScale, moderateScale } from '../../utils/responsive';
 
 const { width } = Dimensions.get('window');
 
-// Danh sách bài viết liên quan (Mock data cho Carousel)
+
 const MOCK_RELATED_NEWS = [
   {
     id: 'n1',
@@ -67,10 +67,10 @@ export default function HomeDetailScreen({ route, navigation }) {
   const { type: initialType, item: initialItem } = route.params || {};
   const colors = useActiveColors();
   const theme = useTheme();
-  const styles = getStyles(theme); // Use the useTheme hook
+  const styles = getStyles(theme); 
   const isDark = colors.isDark;
 
-  // Hỗ trợ chuyển đổi bài viết khi nhấn vào Tin liên quan
+  
   const [activeType, setActiveType] = useState(initialType);
   const [activeItem, setActiveItem] = useState(initialItem);
 
@@ -96,12 +96,12 @@ export default function HomeDetailScreen({ route, navigation }) {
     }
   }, [activeType, activeItem]);
 
-  // States cho Booking Modal tích hợp trực tiếp
+  
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('18/05/2026');
   const [selectedTime, setSelectedTime] = useState('09:30');
 
-  // States cho Phản ứng (Reactions) trên Tin tức
+  
   const [reactions, setReactions] = useState({
     likes: 42,
     hearts: 28,
@@ -115,14 +115,14 @@ export default function HomeDetailScreen({ route, navigation }) {
     helpful: false
   });
 
-  // State cho phần bình luận bài viết
+  
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([
     { id: '1', author: 'Thành Đạt', text: 'Bài viết hữu ích quá, cuối tuần này mình phải đi bảo dưỡng định kỳ ngay!', time: '10 phút trước', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' },
     { id: '2', author: 'Quốc Bảo', text: 'Cho mình hỏi cửa hàng có phủ bóng Nano cho xe phân phối lớn không ạ?', time: '30 phút trước', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&q=80' }
   ]);
 
-  // Bộ đếm thời gian khuyến mãi thực tế (Ticking Countdown)
+  
   const [countdown, setCountdown] = useState({
     days: 2,
     hours: 14,
@@ -131,7 +131,7 @@ export default function HomeDetailScreen({ route, navigation }) {
   });
 
   useEffect(() => {
-    // Chỉ tạo bộ đếm thời gian cho Ưu đãi
+    
     if (activeType !== 'promo') return;
 
     const timer = setInterval(() => {
@@ -158,9 +158,9 @@ export default function HomeDetailScreen({ route, navigation }) {
     return (
       <SafeAreaView style={[getStyles(theme).container, { backgroundColor: colors.background }]} edges={['top']}>
         <View style={getStyles(theme).centerContainer}>
-          <Text style={{ color: colors.text }}>Không tìm thấy dữ liệu chi tiết.</Text> {/* This is fine */}
+          <Text style={{ color: colors.text }}>Không tìm thấy dữ liệu chi tiết.</Text> {}
           <TouchableOpacity onPress={() => navigation.goBack()} style={[getStyles(theme).backIconBtn, { marginTop: 20, backgroundColor: colors.card }]}>
-            <Text style={{ color: colors.primary }}>Quay lại</Text> {/* This is fine */}
+            <Text style={{ color: colors.primary }}>Quay lại</Text> {}
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -212,14 +212,14 @@ export default function HomeDetailScreen({ route, navigation }) {
   // Render Alert Details (Nhắc nhở quan trọng)
   const renderAlertDetail = () => {
     const isCritical = activeItem.type === 'critical';
-// eslint-disable-next-line no-unused-vars
-    const _alertColor = isCritical ? colors.error : '#F59E0B'; // Soft orange for warn alerts
-    const alertImg = 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=600&q=80'; // Modern maintenance bay image
+
+     
+    const alertImg = 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=600&q=80'; 
 
     return (
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <GlassCard style={[getStyles(theme).contentCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]} intensity={15}>
-          {/* Featured Alert Banner Image */}
+          {}
           <View style={getStyles(theme).voucherImageWrapper}>
             <Image source={{ uri: alertImg }} style={getStyles(theme).voucherImageBanner} resizeMode="cover" />
             <View style={[getStyles(theme).voucherImageOverlayBadge, { backgroundColor: theme.colors.warning }]}>
@@ -227,7 +227,7 @@ export default function HomeDetailScreen({ route, navigation }) {
             </View>
           </View>
 
-          {/* Header với Icon */}
+          {}
           <View style={[styles.alertHeader, { borderBottomColor: colors.border }]}>
             <View style={[styles.iconWrapper, { backgroundColor: isCritical ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)' }]}>
               {isCritical ? <AlertTriangle color="#EF4444" size={moderateScale(32)} /> : <ShieldAlert color="#F59E0B" size={moderateScale(32)} />}
@@ -241,22 +241,22 @@ export default function HomeDetailScreen({ route, navigation }) {
           </View>
 
           <View style={styles.alertBody}>
-            {/* 1. KHỐI ĐỊNH DANH XE */}
+            {}
             <View style={[getStyles(theme).vehicleInfoBox, { borderColor: colors.border, backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : '#F8FAFC' }]}>
               <Text style={[getStyles(theme).vehicleInfoTitle, { color: colors.subtext }]}>Phương tiện cảnh báo:</Text>
               <Text style={[getStyles(theme).vehicleInfoName, { color: colors.primary }]}>Honda SH 125i</Text>
               <Text style={[getStyles(theme).vehicleInfoPlate, { color: colors.text, fontWeight: '600' }]}>Biển số: 60-A1 555.55</Text>
             </View>
-            {/* Use getStyles for bodyText */}
-            {/* Thông báo số km */}
+            {}
+            {}
             <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 22, marginTop: 15, marginBottom: 15 }]}>
               Xe của bạn đã đi được <Text style={{ fontWeight: 'bold', color: colors.primary }}>5,000 km</Text> kể từ lần bảo dưỡng định kỳ trước.
             </Text>
 
-            {/* Dải phân cách mỏng */}
+            {}
             <View style={[styles.alertDivider, { backgroundColor: colors.border }]} />
 
-            {/* 2. KHỐI HẠNG MỤC KHUYẾN NGHỊ */}
+            {}
             <View style={getStyles(theme).alertRecommendations}>
               <Text style={[getStyles(theme).recommendationHeading, { color: colors.text }]}>
                 Tại mốc 5,000km, để đảm bảo xe vận hành bốc, tiết kiệm xăng và đạt chuẩn Xe Sạch, kỹ thuật viên khuyến nghị bạn cần thực hiện:
@@ -285,11 +285,11 @@ export default function HomeDetailScreen({ route, navigation }) {
                 </View>
               </View>
             </View>
-            {/* Use getStyles for metaRow */}
-            {/* Dải phân cách mỏng */}
+            {}
+            {}
             <View style={[styles.alertDivider, { backgroundColor: colors.border }]} />
 
-            {/* Nguồn gửi tin */}
+            {}
             <View style={[styles.metaRow, { marginTop: 15, justifyContent: 'center' }]}>
               <Clock color={colors.subtext} size={15} />
               <Text style={[styles.metaText, { color: colors.subtext }]}>Hôm nay • Gửi từ hệ thống CRM</Text>
@@ -297,7 +297,7 @@ export default function HomeDetailScreen({ route, navigation }) {
           </View>
         </GlassCard>
 
-        {/* 3. KHỐI NÚT BẤM THAY ĐỔI HÀNH ĐỘNG */}
+        {}
         <View style={getStyles(theme).alertActionContainer}>
           <TouchableOpacity
             style={[getStyles(theme).actionBtn, { backgroundColor: colors.primary, width: '100%' }]}
@@ -351,7 +351,7 @@ export default function HomeDetailScreen({ route, navigation }) {
     }
   };
 
-  // Render Voucher Details (Voucher dành riêng cho bạn)
+  
   const renderVoucherDetail = () => {
     const benefits = getVoucherBenefits(activeItem.title);
     const voucherImg = getVoucherImage(activeItem.title);
@@ -359,7 +359,7 @@ export default function HomeDetailScreen({ route, navigation }) {
     return (
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <GlassCard style={[getStyles(theme).contentCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]} intensity={15}>
-          {/* Featured Voucher Banner Image */}
+          {}
           <View style={getStyles(theme).voucherImageWrapper}>
             <Image source={{ uri: voucherImg }} style={getStyles(theme).voucherImageBanner} resizeMode="cover" />
             <View style={[getStyles(theme).voucherImageOverlayBadge, { backgroundColor: theme.colors.primary }]}>
@@ -367,7 +367,7 @@ export default function HomeDetailScreen({ route, navigation }) {
             </View>
           </View>
 
-          {/* Header */}
+          {}
           <View style={[getStyles(theme).voucherHeader, { borderBottomColor: colors.border }]}>
             <View style={[getStyles(theme).voucherIconCircle, { backgroundColor: theme.colors.primary + '1A' }]}>
               <Gift color={theme.colors.primary} size={30} />
@@ -377,9 +377,9 @@ export default function HomeDetailScreen({ route, navigation }) {
           </View>
 
           <View style={styles.voucherBody}>
-            {/* 1. THỜI GIAN, ĐỐI TƯỢNG, ĐỊA ĐIỂM (STRUCTURED INFO BOARD) */}
+            {}
             <View style={[getStyles(theme).voucherInfoBoard, { borderColor: colors.border, backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)' }]}>
-              {/* Row 1: Thời gian */}
+              {}
               <View style={getStyles(theme).infoBoardRow}>
                 <View style={[getStyles(theme).infoIconBg, { backgroundColor: 'rgba(59,130,246,0.1)' }]}>
                   <Calendar color="#E31B23" size={16} />
@@ -390,7 +390,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 </View>
               </View>
 
-              {/* Row 2: Đối tượng */}
+              {}
               <View style={[getStyles(theme).infoBoardRow, { borderTopWidth: 1, borderTopColor: colors.border }]}>
                 <View style={[getStyles(theme).infoIconBg, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
                   <User color="#10B981" size={16} />
@@ -403,7 +403,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 </View>
               </View>
 
-              {/* Row 3: Địa điểm */}
+              {}
               <View style={[getStyles(theme).infoBoardRow, { borderTopWidth: 1, borderTopColor: colors.border }]}>
                 <View style={[getStyles(theme).infoIconBg, { backgroundColor: 'rgba(245,158,11,0.1)' }]}>
                   <MapPin color="#F59E0B" size={16} />
@@ -415,7 +415,7 @@ export default function HomeDetailScreen({ route, navigation }) {
               </View>
             </View>
 
-            {/* 2. MÔ TẢ LỢI ÍCH DÀNH CHO KHÁCH HÀNG */}
+            {}
             <View style={getStyles(theme).benefitsSection}>
               <View style={getStyles(theme).benefitHeaderRow}>
                 <Sparkles color={colors.primary} size={18} />
@@ -434,14 +434,14 @@ export default function HomeDetailScreen({ route, navigation }) {
               </View>
             </View>
 
-            {/* HIỆU ỨNG ĐẶC SẮC: ĐƯỜNG RÃNH BẤM VÉ VẬT LÝ DẠNG TICKET (COUPON DIVIDER) */}
+            {}
             <View style={getStyles(theme).couponDividerContainer}>
               <View style={[getStyles(theme).couponDividerLeftCircle, { backgroundColor: colors.background, borderColor: colors.border }]} />
               <View style={[getStyles(theme).couponDividerDashLine, { borderColor: colors.border }]} />
               <View style={[getStyles(theme).couponDividerRightCircle, { backgroundColor: colors.background, borderColor: colors.border }]} />
             </View>
 
-            {/* 3. QR CODE & BARCODE SCANNER */}
+            {}
             <View style={getStyles(theme).qrSection}>
               <Text style={[getStyles(theme).sectionHeading, { color: colors.text, textAlign: 'center', marginBottom: 12 }]}>Mã QR thanh toán tại quầy</Text>
               <View style={[getStyles(theme).qrContainer, { backgroundColor: '#FFFFFF' }]}>
@@ -450,8 +450,8 @@ export default function HomeDetailScreen({ route, navigation }) {
               <Text style={{ color: colors.subtext, fontSize: 11, marginTop: 10, textAlign: 'center' }}>Đưa mã này cho lễ tân của showroom AnhEmMotor trước khi thanh toán.</Text>
             </View>
 
-            {/* 4. PROMO CODE COPY BOX */}
-            {!!activeItem.code && ( // Use getStyles for codeBox
+            {}
+            {!!activeItem.code && ( 
               <View style={[getStyles(theme).codeBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', borderColor: colors.border, borderStyle: 'dashed' }]}>
                 <Text style={[getStyles(theme).codeLabel, { color: colors.subtext }]}>MÃ VOUCHER ĐỂ SAO CHÉP</Text>
                 <View style={getStyles(theme).codeRow}>
@@ -463,7 +463,7 @@ export default function HomeDetailScreen({ route, navigation }) {
               </View>
             )}
 
-            {/* 5. TÌNH TRẠNG & ĐIỀU KHOẢN KHÁC */}
+            {}
             <View style={[getStyles(theme).rulesSection, { borderTopColor: colors.border }]}>
               <Text style={[getStyles(theme).sectionHeading, { color: colors.text, fontSize: 13 }]}>Điều khoản bổ sung:</Text>
               <Text style={[getStyles(theme).ruleItem, { color: colors.subtext }]}>• Vui lòng xuất trình mã ưu đãi trước khi lập hóa đơn thanh toán.</Text>
@@ -476,10 +476,10 @@ export default function HomeDetailScreen({ route, navigation }) {
     );
   };
 
-  // Render Promo Details (Khám phá ưu đãi - HIỆU ỨNG CAO CẤP TƯƠNG TÁC)
+  
   const renderPromoDetail = () => {
     return (
-      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}> {/* This is fine */}
+      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}> {}
         {!!activeItem.image && (
           <View style={getStyles(theme).heroContainer}>
             <Image source={{ uri: activeItem.image }} style={getStyles(theme).heroImage} />
@@ -492,7 +492,7 @@ export default function HomeDetailScreen({ route, navigation }) {
         <View style={styles.detailsBody}>
           <Text style={[styles.detailTitle, { color: colors.text, fontSize: 22, lineHeight: 28, marginBottom: 15 }]}>{activeItem.title}</Text>
 
-          {/* TẦNG ĐẶC SẮC 1: BỘ ĐẾM THỜI GIAN NGƯỢC THỜI GIAN THỰC */}
+          {}
           <GlassCard style={[getStyles(theme).countdownCard, { borderColor: theme.colors.secondary + '33', backgroundColor: theme.colors.card }]} intensity={15}>
             <View style={getStyles(theme).countdownTitleRow}>
               <Clock color={theme.colors.secondary} size={16} />
@@ -521,7 +521,7 @@ export default function HomeDetailScreen({ route, navigation }) {
             </View>
           </GlassCard>
 
-          {/* TẦNG ĐẶC SẮC 2: THANH TIẾN TRÌNH GIỚI HẠN LƯỢT ĐĂNG KÝ */}
+          {}
           <View style={styles.limitContainer}>
             <View style={styles.limitTextRow}>
               <Text style={[styles.limitLabel, { color: colors.text }]}>Lượt đăng ký ưu đãi còn lại:</Text>
@@ -533,7 +533,7 @@ export default function HomeDetailScreen({ route, navigation }) {
             <Text style={{ color: colors.subtext, fontSize: 11, marginTop: 5 }}>Ưu đãi áp dụng giới hạn, vui lòng đăng ký sớm!</Text>
           </View>
 
-          {/* Nội dung chương trình */}
+          {}
           <GlassCard style={styles.promoDescCard}>
             <Text style={[styles.bodyText, { color: colors.text, fontSize: 15, lineHeight: 24 }]}>
               Chương trình khuyến mãi đặc biệt dành riêng cho các hội viên của AnhEmMotor. Cơ hội nâng cấp, bảo trì xe máy của bạn với mức phí ưu đãi cực tốt cùng quà tặng đi kèm có giá trị.
@@ -545,7 +545,7 @@ export default function HomeDetailScreen({ route, navigation }) {
             </Text>
           </GlassCard>
 
-          {/* TẦNG ĐẶC SẮC 3: QUY TRÌNH 3 BƯỚC NHẬN QUÀ DỄ HIỂU */}
+          {}
           <Text style={[getStyles(theme).sectionTitleDetail, { color: colors.text, marginTop: 25, marginBottom: 15 }]}>Quy trình nhận ưu đãi:</Text>
           <View style={getStyles(theme).stepsContainer}>
             <View style={getStyles(theme).stepItem}>
@@ -596,11 +596,11 @@ export default function HomeDetailScreen({ route, navigation }) {
     );
   };
 
-  // Render News Details (Tin tức & Đời sống xe - HIỆU ỨNG TRANG BÁO HIỆN ĐẠI BẬC NHẤT)
+  
   const renderNewsDetail = () => {
     return (
-      <View style={{ flex: 1 }}> {/* This is fine */}
-        {/* TẦNG ĐẶC SẮC 1: THANH ĐỌC TIẾN TRÌNH SCROLL PHÍA TRÊN CÙNG */}
+      <View style={{ flex: 1 }}> {}
+        {}
         <View style={[getStyles(theme).progressIndicatorBg, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#E2E8F0' }]}>
           <View style={[getStyles(theme).progressIndicatorFill, { width: `${scrollProgress * 100}%`, backgroundColor: colors.primary }]} />
         </View>
@@ -609,13 +609,13 @@ export default function HomeDetailScreen({ route, navigation }) {
           contentContainerStyle={{ paddingBottom: 50 }}
           onScroll={(event) => {
             const { y } = event.nativeEvent.contentOffset;
-            const height = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height; // This is fine
+            const height = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height; 
             if (height > 0) {
               setScrollProgress(Math.min(Math.max(y / height, 0), 1));
             }
           }}
           scrollEventThrottle={16}
-        > {/* This is fine */}
+        > {}
           {!!activeItem.image && (
             <View style={styles.heroContainer}>
               <Image source={{ uri: activeItem.image }} style={styles.heroImage} />
@@ -635,14 +635,14 @@ export default function HomeDetailScreen({ route, navigation }) {
             <View style={[getStyles(theme).authorCard, { borderBottomColor: colors.border, borderTopColor: colors.border }]}>
               <View style={[getStyles(theme).authorAvatar, { backgroundColor: theme.colors.border + '1A' }]}>
                 <User color={theme.colors.subtext} size={18} />
-              </View> {/* Use getStyles for authorAvatar */}
+              </View> {}
               <View>
                 <Text style={[styles.authorName, { color: colors.text }]}>{activeItem.author || 'AnhEmMotor Editor'}</Text>
                 <Text style={{ color: colors.subtext, fontSize: 11 }}>Biên tập viên đời sống xe • 5 phút đọc</Text>
               </View>
             </View>
 
-            {/* TẦNG ĐẶC SẮC 2: HỘP TÓM TẮT THÔNG MINH BẰNG AI (AI SUMMARY BOX) */}
+            {}
             <GlassCard style={[getStyles(theme).aiSummaryCard, { borderColor: theme.colors.info + '33', backgroundColor: theme.colors.card }]} intensity={15}>
               <View style={getStyles(theme).aiSummaryHeader}>
                 <Sparkles color="#A855F7" size={18} />
@@ -655,7 +655,7 @@ export default function HomeDetailScreen({ route, navigation }) {
               </View>
             </GlassCard>
 
-            {/* Body bài viết */}
+            {}
             {newsContent ? (
               <View style={{ marginTop: 20 }}>
                 <RenderHtml
@@ -688,7 +688,7 @@ export default function HomeDetailScreen({ route, navigation }) {
               </View>
             )}
 
-            {/* TẦNG ĐẶC SẮC 3: BỘ PHẢN ỨNG THẢ TIM TƯƠNG TÁC (INTERACTIVE REACTIONS CHIPS) */}
+            {}
             <View style={[getStyles(theme).reactionContainer, { borderTopColor: colors.border, borderBottomColor: colors.border }]}>
               <Text style={[getStyles(theme).reactionHeading, { color: colors.text }]}>Bài viết này có hữu ích không?</Text>
               <View style={getStyles(theme).reactionRow}>
@@ -702,7 +702,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 >
                   <ThumbsUp color={userReactions.likes ? theme.colors.primary : colors.subtext} size={15} />
                   <Text style={[getStyles(theme).reactionCountText, { color: userReactions.likes ? theme.colors.primary : colors.text }]}>{reactions.likes}</Text>
-                </TouchableOpacity> {/* Use getStyles for reactionChip, reactionCountText */}
+                </TouchableOpacity> {}
 
                 <TouchableOpacity
                   style={[
@@ -714,7 +714,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 >
                   <Heart color={userReactions.hearts ? theme.colors.secondary : colors.subtext} size={15} />
                   <Text style={[getStyles(theme).reactionCountText, { color: userReactions.hearts ? theme.colors.secondary : colors.text }]}>{reactions.hearts}</Text>
-                </TouchableOpacity> {/* Use getStyles for reactionChip, reactionCountText */}
+                </TouchableOpacity> {}
 
                 <TouchableOpacity
                   style={[
@@ -726,7 +726,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 >
                   <Bike color={userReactions.bikes ? theme.colors.success : colors.subtext} size={15} />
                   <Text style={[getStyles(theme).reactionCountText, { color: userReactions.bikes ? theme.colors.success : colors.text }]}>{reactions.bikes}</Text>
-                </TouchableOpacity> {/* Use getStyles for reactionChip, reactionCountText */}
+                </TouchableOpacity> {}
 
                 <TouchableOpacity
                   style={[
@@ -738,18 +738,18 @@ export default function HomeDetailScreen({ route, navigation }) {
                 >
                   <Sparkles color={userReactions.helpful ? theme.colors.info : colors.subtext} size={15} />
                   <Text style={[getStyles(theme).reactionCountText, { color: userReactions.helpful ? theme.colors.info : colors.text }]}>{reactions.helpful}</Text>
-                </TouchableOpacity> {/* Use getStyles for reactionChip, reactionCountText */}
+                </TouchableOpacity> {}
               </View>
             </View>
 
-            {/* TẦNG ĐẶC SẮC 4: BÌNH LUẬN TRỰC TIẾP HÀNH ĐỘNG (COMMUNITY COMMENTS FEED) */}
+            {}
             <View style={getStyles(theme).commentSection}>
               <Text style={[getStyles(theme).sectionTitleDetail, { color: colors.text, marginBottom: 15 }]}>Bình luận cộng đồng ({comments.length})</Text>
 
-              {/* Ô Nhập bình luận */}
+              {}
               <View style={[getStyles(theme).commentInputBox, { backgroundColor: isDark ? theme.colors.border + '33' : theme.colors.border + '1A', borderColor: colors.border }]}>
                 <TextInput
-                  style={[getStyles(theme).commentTextInput, { color: colors.text }]} // This is fine
+                  style={[getStyles(theme).commentTextInput, { color: colors.text }]} 
                   placeholder="Gửi ý kiến đóng góp của bạn..."
                   placeholderTextColor={colors.subtext}
                   value={commentText}
@@ -758,10 +758,10 @@ export default function HomeDetailScreen({ route, navigation }) {
                 <TouchableOpacity onPress={handlePostComment} style={[styles.postCommentBtn, { backgroundColor: colors.primary }]}>
                   <ArrowRight color="#fff" size={16} />
                 </TouchableOpacity>
-              </View> {/* Use getStyles for postCommentBtn */}
+              </View> {}
 
-              {/* Danh sách bình luận */}
-              {comments.map((comment) => ( // Use getStyles for commentItem
+              {}
+              {comments.map((comment) => ( 
                 <View key={comment.id} style={[styles.commentItem, { borderBottomColor: colors.border }]}>
                   <Image source={{ uri: comment.avatar }} style={styles.commentAvatar} />
                   <View style={styles.commentTextCol}>
@@ -775,11 +775,11 @@ export default function HomeDetailScreen({ route, navigation }) {
               ))}
             </View>
 
-            {/* TẦNG ĐẶC SẮC 5: CAROUSEL NGANG - BÀI VIẾT LIÊN QUAN */}
+            {}
             <View style={[getStyles(theme).relatedSection, { borderTopColor: colors.border }]}>
               <Text style={[getStyles(theme).sectionTitleDetail, { color: colors.text, marginBottom: 15 }]}>Bài viết liên quan:</Text>
               <ScrollView
-                horizontal // This is fine
+                horizontal 
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.relatedCarousel}
               >
@@ -787,11 +787,11 @@ export default function HomeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     key={item.id}
                     style={[styles.relatedCard, { backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : '#FFFFFF', borderColor: colors.border }]}
-                    onPress={() => { // This is fine
-                      // Cập nhật lại tin đang xem
+                    onPress={() => { 
+                      
                       setActiveItem(item);
                       setActiveType('news');
-                      // Reset reading progress
+                      
                       setScrollProgress(0);
                     }}
                   >
@@ -813,7 +813,7 @@ export default function HomeDetailScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={[getStyles(theme).container, { backgroundColor: colors.background }]} edges={['top']}>
-      {/* Dynamic Header - Use getStyles for header */}
+      {}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={[styles.backIconBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }]}
@@ -847,19 +847,19 @@ export default function HomeDetailScreen({ route, navigation }) {
         </View>
       </View>
 
-      {/* Dynamic Detail Body Renderer */}
+      {}
       {activeType === 'alert' && renderAlertDetail()}
       {activeType === 'voucher' && renderVoucherDetail()}
       {activeType === 'promo' && renderPromoDetail()}
       {activeType === 'news' && renderNewsDetail()}
 
-      {/* INTEGRATED INTERACTIVE BOOKING MODAL */}
+      {}
       <Modal
         visible={bookingModalVisible}
         transparent
         animationType="slide"
         onRequestClose={() => setBookingModalVisible(false)}
-      > {/* This is fine */}
+      > {}
         <View style={getStyles(theme).modalOverlay}>
           <TouchableOpacity style={getStyles(theme).modalBackdrop} activeOpacity={1} onPress={() => setBookingModalVisible(false)} />
           <View style={[getStyles(theme).modalSheet, { backgroundColor: isDark ? theme.colors.card : '#FFFFFF', borderColor: colors.border }]}>
@@ -874,12 +874,12 @@ export default function HomeDetailScreen({ route, navigation }) {
 
             <Text style={[styles.modalSub, { color: colors.subtext }]}>Honda SH 160i (60-A1 555.55)</Text>
 
-            {/* Date selection list */}
+            {}
             <Text style={[styles.bookingSectionTitle, { color: colors.text, marginTop: 5 }]}>1. Chọn ngày đến xưởng:</Text>
             <View style={getStyles(theme).bookingDateRow}>
               {[
                 { date: '18/05/2026', label: 'T2', day: '18', desc: 'Mai' },
-                { date: '19/05/2026', label: 'T3', day: '19', desc: 'Kia' }, // This is fine
+                { date: '19/05/2026', label: 'T3', day: '19', desc: 'Kia' }, 
                 { date: '20/05/2026', label: 'T4', day: '20', desc: '20/05' },
                 { date: '21/05/2026', label: 'T5', day: '21', desc: '21/05' },
               ].map(item => (
@@ -890,7 +890,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                     {
                       backgroundColor: isDark ? theme.colors.border + '33' : theme.colors.border + '1A',
                       borderColor: colors.border
-                    }, // This is fine
+                    }, 
                     selectedDate === item.date && { backgroundColor: colors.primary, borderColor: colors.primary }
                   ]}
                   onPress={() => setSelectedDate(item.date)}
@@ -902,11 +902,11 @@ export default function HomeDetailScreen({ route, navigation }) {
               ))}
             </View>
 
-            {/* Time selection list */}
+            {}
             <Text style={[getStyles(theme).bookingSectionTitle, { color: colors.text }]}>2. Chọn khung giờ:</Text>
             <View style={getStyles(theme).bookingTimeGrid}>
               {['08:00', '09:30', '11:00', '14:00', '15:30', '17:00'].map(time => (
-                <TouchableOpacity // This is fine
+                <TouchableOpacity 
                   key={time}
                   style={[
                     styles.bookingTimeCard,
@@ -934,7 +934,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 );
               }}
             >
-              <CalendarClock color="#fff" size={20} /> {/* This is fine */}
+              <CalendarClock color="#fff" size={20} /> {}
               <Text style={styles.modalActionText}>Xác nhận & Đặt chỗ</Text>
             </TouchableOpacity>
           </View>
@@ -982,7 +982,7 @@ const getStyles = (theme) => StyleSheet.create({
     borderRadius: Theme.radius.lg,
     padding: moderateScale(20),
   },
-  // Alert styles
+  
   alertHeader: {
     alignItems: 'center',
     paddingBottom: 20,
@@ -1036,7 +1036,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // Voucher styles
+  
   voucherHeader: {
     alignItems: 'center',
     paddingBottom: 20,
@@ -1103,7 +1103,7 @@ const getStyles = (theme) => StyleSheet.create({
     marginBottom: 6,
   },
 
-  // Promo & News common Hero styles
+  
   heroContainer: {
     width: '100%',
     height: 220,
@@ -1134,7 +1134,7 @@ const getStyles = (theme) => StyleSheet.create({
     borderRadius: 12,
   },
 
-  // News specific styles
+  
   newsMeta: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1172,9 +1172,9 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  /* ================== PREMIUM FEATURES STYLES ================== */
+  
 
-  // Progress Reading scroll indicator
+  
   progressIndicatorBg: {
     width: '100%',
     height: 3,
@@ -1187,7 +1187,7 @@ const getStyles = (theme) => StyleSheet.create({
     height: '100%',
   },
 
-  // Promo Timer Styles
+  
   countdownCard: {
     borderWidth: 1,
     padding: 15,
@@ -1231,7 +1231,7 @@ const getStyles = (theme) => StyleSheet.create({
     marginHorizontal: 8,
   },
 
-  // Limit indicators (Vouchers / Promos)
+  
   limitContainer: {
     marginBottom: 20,
   },
@@ -1258,7 +1258,7 @@ const getStyles = (theme) => StyleSheet.create({
     borderRadius: 4,
   },
 
-  // Step Indicators (Promotion Claim workflow)
+  
   stepsContainer: {
     paddingLeft: 10,
   },
@@ -1296,7 +1296,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // AI Summary Styles
+  
   aiSummaryCard: {
     padding: 16,
     borderWidth: 1,
@@ -1324,7 +1324,7 @@ const getStyles = (theme) => StyleSheet.create({
     marginBottom: 8,
   },
 
-  // Reaction Container
+  
   reactionContainer: {
     borderTopWidth: 1,
     borderBottomWidth: 1,
@@ -1356,7 +1356,7 @@ const getStyles = (theme) => StyleSheet.create({
     marginLeft: 6,
   },
 
-  // Comment Section Styles
+  
   commentSection: {
     marginTop: 10,
   },
@@ -1411,7 +1411,7 @@ const getStyles = (theme) => StyleSheet.create({
     lineHeight: 18,
   },
 
-  // Related Section
+  
   relatedSection: {
     borderTopWidth: 1,
     paddingTop: 20,
@@ -1439,7 +1439,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: '600',
     lineHeight: 16,
   },
-  /* ================== EXTRA VOUCHER DETAILS STYLES ================== */
+  
   voucherInfoBoard: {
     borderWidth: 1,
     borderRadius: 12,
@@ -1503,7 +1503,7 @@ const getStyles = (theme) => StyleSheet.create({
     lineHeight: 18,
     flex: 1,
   },
-  /* ================== DYNAMIC PHYSICAL COUPON TICKET DIVIDER ================== */
+  
   couponDividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1517,7 +1517,7 @@ const getStyles = (theme) => StyleSheet.create({
     height: 20,
     borderRadius: 10,
     position: 'absolute',
-    left: -31, // exact half overlap with card padding
+    left: -31, 
     borderWidth: 1,
   },
   couponDividerRightCircle: {
@@ -1525,7 +1525,7 @@ const getStyles = (theme) => StyleSheet.create({
     height: 20,
     borderRadius: 10,
     position: 'absolute',
-    right: -31, // exact half overlap with card padding
+    right: -31, 
     borderWidth: 1,
   },
   couponDividerDashLine: {
@@ -1534,7 +1534,7 @@ const getStyles = (theme) => StyleSheet.create({
     borderWidth: 1,
     height: 1,
   },
-  /* ================== VOUCHER BANNER IMAGE STYLES ================== */
+  
   voucherImageWrapper: {
     width: '100%',
     height: 150,
@@ -1561,7 +1561,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
-  /* ================== EXTRA ALERT DETAILS STYLES ================== */
+  
   vehicleInfoBox: {
     borderWidth: 1,
     borderRadius: 12,
@@ -1626,7 +1626,7 @@ const getStyles = (theme) => StyleSheet.create({
     textDecorationLine: 'underline',
   },
 
-  // Modals Styling
+  
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)' },
   modalSheet: { borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: 40, borderWidth: 1, borderBottomWidth: 0 },
@@ -1638,7 +1638,7 @@ const getStyles = (theme) => StyleSheet.create({
   modalActionBtn: { height: 55, borderRadius: 16, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', width: '100%' },
   modalActionText: { color: '#fff', fontSize: moderateScale(15), fontWeight: 'bold', marginLeft: 10 },
 
-  // Booking Modal styling
+  
   bookingSectionTitle: { fontSize: moderateScale(14), fontWeight: 'bold', marginTop: 18, marginBottom: 12 },
   bookingDateRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
   bookingDateCard: { flex: 1, borderWidth: 1, borderRadius: 12, paddingVertical: 10, alignItems: 'center', marginHorizontal: 3 },

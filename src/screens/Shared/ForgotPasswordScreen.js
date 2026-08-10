@@ -13,7 +13,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Mail, Lock, Eye, EyeOff, Clock } from 'lucide-react-native';
-import { Theme, useActiveColors, useTheme } from '../../theme/Theme';
+import { Theme, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { forgotPasswordApi, resetPasswordApi } from '../../api/customerApi';
@@ -21,10 +21,10 @@ import { forgotPasswordApi, resetPasswordApi } from '../../api/customerApi';
 export default function ForgotPasswordScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
-// eslint-disable-next-line no-unused-vars
-  const _activeColors = useActiveColors();
 
-  const [step, setStep] = useState(1); // 1: email, 2: reset token, 3: reset password
+  
+
+  const [step, setStep] = useState(1); 
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPass, setNewPass] = useState('');
@@ -96,7 +96,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
               {step === 1 && (
                 <>
-                  {/* Phone Input */}
+                  {}
                   <View
                     style={[
                       styles.inputWrapper,
@@ -136,7 +136,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
               {step === 2 && (
                 <>
-                  {/* OTP Input */}
+                  {}
                   <View
                     style={[
                       styles.inputWrapper,
@@ -172,7 +172,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
               {step === 3 && (
                 <>
-                  {/* New Password */}
+                  {}
                   <View
                     style={[
                       styles.inputWrapper,
@@ -195,7 +195,7 @@ export default function ForgotPasswordScreen({ navigation }) {
                       {showPassword ? <EyeOff size={moderateScale(18)} color={colors.subtext} /> : <Eye size={moderateScale(18)} color={colors.subtext} />}
                     </Pressable>
                   </View>
-                  {/* Confirm Password */}
+                  {}
                   <View
                     style={[
                       styles.inputWrapper,

@@ -6,18 +6,18 @@ import { useActiveColors } from '../../../../theme/Theme';
 import { copyToClipboard } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
-// eslint-disable-next-line no-unused-vars
-const _PLACEHOLDER_IMG = { uri: 'https://cdn-icons-png.flaticon.com/512/2001/2001567.png' };
+
+
 
 const getBikeImage = (bikeName) => {
   const name = bikeName ? bikeName.toLowerCase() : '';
   if (name.includes('sh') || name.includes('vario') || name.includes('scooter') || name.includes('vespa') || name.includes('vision') || name.includes('lead')) {
-    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' }; // Xe tay ga (Scooter) - 100% Transparent
+    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' }; 
   }
   if (name.includes('exciter') || name.includes('winner') || name.includes('côn tay') || name.includes('underbone') || name.includes('raider')) {
-    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' }; // Xe côn tay (Underbone) - 100% Transparent
+    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' }; 
   }
-  return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' }; // Xe phân khối lớn (Superbike) - 100% Transparent
+  return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' }; 
 };
 
 export const VehicleProfile = ({ bike, onShowQR, onPress }) => {

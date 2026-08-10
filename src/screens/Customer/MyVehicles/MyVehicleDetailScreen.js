@@ -34,19 +34,15 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
 import { useMyVehicleDetail } from './hooks/useMyVehicleDetail';
 
-// eslint-disable-next-line no-unused-vars
+
 const { width: _screenWidth } = Dimensions.get('window');
 
-/**
- * @file MyVehicleDetailScreen.js
- * @framework React Native (Clean Architecture - Presentation Layer)
- * @description Beautiful personal vehicle details page fulfilling Feedback.md.
- */
+
 export default function MyVehicleDetailScreen({ navigation, route }) {
   const activeColors = useActiveColors();
   const toastRef = useRef(null);
 
-  // Vehicle data passed from navigation or default mock
+  
   const { bike } = route.params || {};
   const { vehicle: loadedBike, loading, error, retry, saving, saveError, saveVehicle } = useMyVehicleDetail(bike);
 
@@ -81,10 +77,10 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
   const plateBody = plateParts.slice(1).join(' ') || activeBike.plate || '---';
   const warrantyLabel = activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
   const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
-// eslint-disable-next-line no-unused-vars
-  const _nextService = activeBike.nextService || {};
 
-  // State handles
+  
+
+  
   const [nickname, setNickname] = useState('Chiến mã của Khôi 🏍️');
   const [isEditingNickname, setIsEditingNickname] = useState(false);
   const [tempNickname, setTempNickname] = useState(nickname);
@@ -148,7 +144,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
     <View style={[styles.container, { backgroundColor: activeColors.background }]}>
       <StatusBar barStyle={activeColors.isDark ? 'light-content' : 'dark-content'} />
 
-      {/* FIXED HEADER */}
+      {}
       <View style={[styles.header, { borderBottomColor: activeColors.border }]}>
         <TouchableOpacity 
           onPress={() => navigation.goBack()} 
@@ -166,7 +162,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* TẦNG 1: ĐỊNH DANH TÀI SẢN (Vehicle Identity) */}
+        {}
         <Animated.View entering={FadeInUp.duration(600)} style={styles.imageContainer}>
           <Image 
             source={activeBike.image ? { uri: activeBike.image } : { uri: 'https://images.unsplash.com/photo-1620939511593-299312d1666c?q=80&w=1070' }} 
@@ -180,13 +176,13 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.duration(600).delay(100)} style={styles.sectionContainer}>
-          {/* Brand & Name */}
+          {}
           <View style={styles.titleRow}>
             <View style={{ flex: 1 }}>
               <Text style={[styles.brandText, { color: activeColors.primary }]}>HONDA MOTORCYCLE</Text>
               <Text style={[styles.nameText, { color: activeColors.text }]}>{activeBike.name}</Text>
               
-              {/* Custom Nickname Input/Display */}
+              {}
               {isEditingNickname ? (
                 <View style={styles.nicknameEditContainer}>
                   <TextInput 
@@ -214,7 +210,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               )}
             </View>
 
-            {/* License Plate Component */}
+            {}
             <View style={styles.plateContainer}>
               <View style={styles.plateContent}>
                 <Text style={styles.plateHeader}>{plateHeader}</Text>
@@ -223,7 +219,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             </View>
           </View>
 
-          {/* Legal Vehicle IDs (Số khung / Số máy) */}
+          {}
           <GlassCard 
             style={[styles.idCard, { borderColor: activeColors.glassBorder, backgroundColor: activeColors.glassBg }]}
             tint={activeColors.isDark ? 'dark' : 'light'}
@@ -270,12 +266,12 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           </GlassCard>
         </Animated.View>
 
-        {/* TẦNG 2: TRẠNG THÁI VẬN HÀNH & BẢO HÀNH (Live Status) */}
+        {}
         <Animated.View entering={FadeInDown.duration(600).delay(200)} style={styles.sectionContainer}>
           <Text style={[styles.sectionTitle, { color: activeColors.text }]}>⏳ Trạng thái Vận hành & Bảo hành</Text>
           
           <View style={styles.liveGrid}>
-            {/* ODO Estimator */}
+            {}
             <View style={[styles.liveCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
               <Gauge color={activeColors.primary} size={22} />
               <View style={{ marginLeft: 12 }}>
@@ -285,7 +281,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               </View>
             </View>
 
-            {/* Warranty Status */}
+            {}
             <View style={[styles.liveCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}> 
               <Calendar color="#10B981" size={22} />
               <View style={{ marginLeft: 12, flex: 1 }}>
@@ -308,13 +304,13 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             </View>
           </Animated.View>
 
-        {/* TẦNG 3: SỨC KHỎE & NHẬT KÝ HAO MÒN (Health Monitor) */}
+        {}
         <Animated.View entering={FadeInDown.duration(600).delay(300)} style={styles.sectionContainer}>
           <Text style={[styles.sectionTitle, { color: activeColors.text }]}>🩺 Sức khỏe phụ tùng & Hao mòn</Text>
           
           <View style={[styles.healthCard, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}>
             
-            {/* Part 1: Nhớt máy (Warning) */}
+            {}
             <View style={styles.partItem}>
               <View style={styles.partHeaderRow}>
                 <Text style={[styles.partName, { color: activeColors.text }]}>Nhớt động cơ máy</Text>
@@ -326,7 +322,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               <Text style={[styles.partDetail, { color: activeColors.subtext }]}>Còn khoảng <Text style={{ color: '#EF4444', fontWeight: 'bold' }}>300 km</Text> lăn bánh. Lần thay nhớt cuối tại ODO 4.000 km.</Text>
             </View>
 
-            {/* Part 2: Má phanh (Tốt) */}
+            {}
             <View style={[styles.partItem, { marginTop: 18 }]}>
               <View style={styles.partHeaderRow}>
                 <Text style={[styles.partName, { color: activeColors.text }]}>Má phanh an toàn (Trước/Sau)</Text>
@@ -338,7 +334,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               <Text style={[styles.partDetail, { color: activeColors.subtext }]}>Độ dày má phanh an toàn. Dự báo sử dụng thêm <Text style={{ color: activeColors.text, fontWeight: 'bold' }}>8.000 km</Text>.</Text>
             </View>
 
-            {/* Part 3: Lọc gió (Sắp đến hạn) */}
+            {}
             <View style={[styles.partItem, { marginTop: 18 }]}>
               <View style={styles.partHeaderRow}>
                 <Text style={[styles.partName, { color: activeColors.text }]}>Lọc gió động cơ</Text>
@@ -351,7 +347,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             </View>
           </View>
 
-          {/* Lối tắt xem Bệnh Án */}
+          {}
           <TouchableOpacity 
             style={[styles.historyShortcut, { backgroundColor: activeColors.isDark ? 'rgba(59,130,246,0.1)' : 'rgba(59,130,246,0.05)', borderColor: activeColors.isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.1)' }]}
             onPress={() => navigation.navigate('ServiceHistory', { vehicle: activeBike })}
@@ -367,7 +363,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           </TouchableOpacity>
         </Animated.View>
 
-        {/* TẦNG 4: HỒ SƠ PHÁP LÝ & HÀNH CHÍNH (Legal Documents) */}
+        {}
         <Animated.View entering={FadeInDown.duration(600).delay(400)} style={styles.sectionContainer}>
           <Text style={[styles.sectionTitle, { color: activeColors.text }]}>📄 Giấy tờ & Hồ sơ pháp lý xe</Text>
           
@@ -375,7 +371,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             style={[styles.docsCard, { borderColor: activeColors.glassBorder, backgroundColor: activeColors.glassBg }]}
             tint={activeColors.isDark ? 'dark' : 'light'}
           >
-            {/* Bảo hiểm dân sự */}
+            {}
             <View style={styles.docItem}>
               <View style={styles.docLeft}>
                 <View style={[styles.docIconBg, { backgroundColor: 'rgba(239,68,68,0.1)' }]}>
@@ -394,7 +390,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               </TouchableOpacity>
             </View>
 
-            {/* Hóa đơn điện tử PDF */}
+            {}
             <TouchableOpacity 
               style={[styles.docItem, { marginTop: 15, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 15 }]}
               onPress={() => setInvoiceVisible(true)}
@@ -411,7 +407,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               <ChevronRight color={activeColors.subtext} size={18} />
             </TouchableOpacity>
 
-            {/* Trạng thái duyệt hồ sơ */}
+            {}
             <View style={[styles.docItem, { marginTop: 15, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', paddingTop: 15 }]}>
               <View style={styles.docLeft}>
                 <View style={[styles.docIconBg, { backgroundColor: 'rgba(16,185,129,0.1)' }]}>
@@ -432,10 +428,10 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         <View style={{ height: 10 }} />
       </ScrollView>
 
-      {/* TẦNG 5: CỤM HÀNH ĐỘNG NHANH CỐ ĐỊNH Ở ĐÁY (Sticky Bottom Actions) */}
+      {}
       <BlurView intensity={35} tint={activeColors.isDark ? 'dark' : 'light'} style={styles.stickyFooter}>
         <View style={styles.footerRow}>
-          {/* Nút Phụ: Sách HDSD */}
+          {}
           <TouchableOpacity 
             style={[styles.manualBtn, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
             onPress={() => setManualVisible(true)}
@@ -444,7 +440,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             <Text style={[styles.manualBtnText, { color: activeColors.text }]}>SÁCH HDSD</Text>
           </TouchableOpacity>
 
-          {/* Nút Chính: Đặt lịch sửa chữa */}
+          {}
           <TouchableOpacity 
             style={styles.bookingBtn}
             onPress={() => navigation.navigate('Booking', { prefillVehicle: activeBike })}
@@ -517,7 +513,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         </View>
       </Modal>
 
-      {/* MODAL 1: SÁCH HƯỚNG DẪN SỬ DỤNG (User Manual) */}
+      {}
       <Modal
         visible={manualVisible}
         animationType="slide"
@@ -558,7 +554,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         </View>
       </Modal>
 
-      {/* MODAL 2: HÓA ĐƠN MUA XE PDF */}
+      {}
       <Modal
         visible={invoiceVisible}
         animationType="fade"
@@ -857,7 +853,7 @@ const styles = StyleSheet.create({
   gradientBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
   bookingBtnText: { color: '#FFF', fontSize: 13, fontWeight: 'bold' },
 
-  // Modal styles
+  
   modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
   modalCard: { width: '100%', borderRadius: 20, padding: 18, borderWidth: 1 },
   modalInput: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, marginTop: 10, fontSize: 14 },

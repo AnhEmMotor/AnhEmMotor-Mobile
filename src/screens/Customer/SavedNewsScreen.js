@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-	StyleSheet,
 	Text,
 	View,
 	ScrollView,
@@ -9,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Trash2, Bookmark, Settings } from "lucide-react-native";
-import { useTheme } from "../../theme/Theme"; // Import useTheme
+import { useTheme } from "../../theme/Theme"; 
 import GlassCard from "../../components/GlassCard";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -175,58 +174,5 @@ export default function SavedNewsScreen({ navigation }) {
 	);
 }
 
-// eslint-disable-next-line no-unused-vars
-const _getStyles = (theme) =>
-	StyleSheet.create({
-		container: { flex: 1 },
-		header: {
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-			paddingHorizontal: theme.spacing.md,
-			height: 60,
-		},
-		backBtn: {
-			width: 44,
-			height: 44,
-			justifyContent: "center",
-			alignItems: "center",
-			borderRadius: theme.radius.md,
-		},
-		headerTitle: { fontSize: 18, fontWeight: "bold" },
 
-		scrollContent: { padding: theme.spacing.md, flexGrow: 1 },
 
-		emptyState: {
-			flex: 1,
-			alignItems: "center",
-			justifyContent: "center",
-			marginTop: 100,
-		},
-		emptyText: { fontSize: 16, marginTop: 20 },
-		exploreBtn: {
-			marginTop: 20,
-			paddingHorizontal: 25,
-			paddingVertical: 12,
-			borderRadius: theme.radius.full,
-		},
-		exploreBtnText: { fontWeight: "bold" },
-
-		newsCard: {
-			marginBottom: 20,
-			overflow: "hidden",
-			padding: 0,
-			borderRadius: theme.radius.lg,
-		},
-		newsImage: { width: "100%", height: 150 },
-		newsContent: { padding: theme.spacing.md },
-		newsTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10 },
-		newsFooter: {
-			flexDirection: "row",
-			justifyContent: "flex-end",
-			borderTopWidth: 1,
-			paddingTop: 10,
-		},
-		removeBtn: { flexDirection: "row", alignItems: "center" },
-		removeText: { fontSize: 12, fontWeight: "bold", marginLeft: 6 },
-	});

@@ -12,32 +12,33 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LogOut, Trash2, ChevronRight, Settings, Bell, Shield, Languages, Eye } from 'lucide-react-native';
-// eslint-disable-next-line import/namespace
-import * as Haptics from 'expo-haptics';
+
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { resetRoot, navigationRef } from '../navigation/RootNavigation';
 import { useGlobalState } from '../context/GlobalState';
-import { useTheme } from '../theme/Theme'; // Import the new useTheme hook
+import { useTheme } from '../theme/Theme'; 
 import GlassCard from './GlassCard';
 
 const STORAGE_KEY = '@AEM_Customer_Profile';
 
 export default function GlobalSettingsModal() {
-// eslint-disable-next-line no-unused-vars
-  const { isSettingsOpen, setSettingsOpen, _themeMode, setThemeMode } = useGlobalState();
-  const theme = useTheme(); // Use the new useTheme hook
+  const Haptics = require('expo-haptics');
 
-  // Local settings state
+  const { isSettingsOpen, setSettingsOpen, _themeMode, setThemeMode } = useGlobalState();
+  const theme = useTheme(); 
+
+  
   const [loading, setLoading] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [profileSettings, setProfileSettings] = useState({
     maintenanceNotifications: true,
     biometricLogin: false,
     language: 'vi',
-    theme: theme.isDark ? 'dark' : 'light' // Initialize with current theme
+    theme: theme.isDark ? 'dark' : 'light' 
   });
 
-  // Haptic feedback
+  
   const triggerHaptic = () => {
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => { });
@@ -66,7 +67,7 @@ export default function GlobalSettingsModal() {
     }
   };
 
-  // Load settings when modal is opened
+  
   useEffect(() => {
     const init = async () => {
       if (isSettingsOpen) {
@@ -76,12 +77,12 @@ export default function GlobalSettingsModal() {
     init();
   }, [isSettingsOpen]);
 
-  // Save specific settings key
+  
   const handleToggleSetting = async (key, currentValue) => {
     triggerHaptic();
     const newValue = !currentValue;
 
-    // Optimistic state update
+    
     const updatedSettings = {
       ...profileSettings,
       [key]: newValue
@@ -99,12 +100,12 @@ export default function GlobalSettingsModal() {
     } catch (err) {
       console.error('[GlobalSettingsModal] Lỗi lưu cấu hình:', err);
       Alert.alert('Lỗi', 'Không thể lưu cài đặt.');
-      // Rollback
+      
       setProfileSettings(prev => ({ ...prev, [key]: currentValue }));
     }
   };
 
-  // Handle language switch
+  
   const handleLanguageSelect = () => {
     triggerHaptic();
     Alert.alert(
@@ -124,7 +125,7 @@ export default function GlobalSettingsModal() {
     );
   };
 
-  // Handle theme toggle between light and dark
+  
   const handleThemeToggle = async () => {
     triggerHaptic();
     const nextTheme = profileSettings.theme === 'dark' ? 'light' : 'dark';
@@ -169,7 +170,7 @@ export default function GlobalSettingsModal() {
     }
   };
 
-  // Logout flow
+  
   const handleLogout = () => {
     triggerHaptic();
     setLogoutModalVisible(true);
@@ -204,7 +205,7 @@ export default function GlobalSettingsModal() {
     }, 100);
   };
 
-  // Delete Account flow
+  
   const handleDeleteAccount = () => {
     triggerHaptic();
     Alert.alert(
@@ -241,10 +242,10 @@ export default function GlobalSettingsModal() {
       <View style={styles.modalOverlay}>
         <BlurView intensity={35} tint={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
 
-        {/* Backdrop Tap closer */}
+        {}
         <TouchableOpacity style={styles.modalBackdrop} onPress={() => setSettingsOpen(false)} />
 
-        {/* Modal Container Card */}
+        {}
         <View style={[styles.modalSheet, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
           <View style={[styles.modalHandle, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' }]} />
 
@@ -259,10 +260,10 @@ export default function GlobalSettingsModal() {
             </View>
           ) : (
             <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }}>
-              {/* Use theme.colors.card for background, or a specific modal card background if defined in theme.colors */}
+              {}
               <GlassCard style={{ padding: 6, borderRadius: theme.radius.lg, backgroundColor: theme.colors.card }} intensity={theme.isDark ? 8 : 0}>
 
-                {/* 1. Maintenance notifications */}
+                {}
                 <View style={[styles.settingRow, { borderBottomColor: theme.colors.border }]}>
                   <View style={[styles.rowIcon, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : theme.staticColors.primary + '48' }]}>
                     <Bell color={theme.colors.primary} size={18} />
@@ -279,7 +280,7 @@ export default function GlobalSettingsModal() {
                   </TouchableOpacity>
                 </View>
 
-                {/* 2. Biometrics check */}
+                {}
                 <View style={[styles.settingRow, { borderBottomColor: theme.colors.border }]}>
                   <View style={[styles.rowIcon, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : theme.staticColors.primary + '48' }]}>
                     <Shield color="#10B981" size={18} />
@@ -296,7 +297,7 @@ export default function GlobalSettingsModal() {
                   </TouchableOpacity>
                 </View>
 
-                {/* 3. Ngôn ngữ */}
+                {}
                 <TouchableOpacity style={[styles.settingRow, { borderBottomColor: theme.colors.border }]} onPress={handleLanguageSelect}>
                   <View style={[styles.rowIcon, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : theme.staticColors.primary + '48' }]}>
                     <Languages color="#F59E0B" size={18} />
@@ -308,7 +309,7 @@ export default function GlobalSettingsModal() {
                   <ChevronRight color={theme.colors.subtext} size={18} />
                 </TouchableOpacity>
 
-                {/* 4. Giao diện theme */}
+                {}
                 <View style={[styles.settingRow, styles.settingRowLast]}>
                   <View style={[styles.rowIcon, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : theme.staticColors.primary + '48' }]}>
                     <Eye color="#EC4899" size={18} />
@@ -328,7 +329,7 @@ export default function GlobalSettingsModal() {
                 </View>
               </GlassCard>
 
-              {/* Danger Zone */}
+              {}
               <View style={{ marginTop: 25 }}>
                 <TouchableOpacity style={[styles.logoutBtn, { backgroundColor: theme.colors.primary }]} onPress={handleLogout}>
                   <LogOut color="#FFF" size={16} style={{ marginRight: 8 }} />
@@ -466,7 +467,7 @@ const styles = StyleSheet.create({
   logoutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', // This is already present, no change needed
+    justifyContent: 'center', 
     paddingVertical: 14,
     borderRadius: 12,
     marginBottom: 10,
@@ -479,7 +480,7 @@ const styles = StyleSheet.create({
   deleteBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', // This is already present, no change needed
+    justifyContent: 'center', 
     backgroundColor: 'rgba(239, 68, 68, 0.08)',
     borderWidth: 1,
     paddingVertical: 14,

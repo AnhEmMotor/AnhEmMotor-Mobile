@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Dimensions, Platform } from "react-native";
-import { useActiveColors } from "../theme/Theme"; // Import useTheme
+import { useActiveColors } from "../theme/Theme"; 
 import {
 	ClipboardCheck,
 	Wrench,
@@ -42,8 +42,8 @@ const ServiceTracker = ({ currentStep = 2 }) => {
 						const isCompleted = step.id < currentStep;
 						const Icon = step.icon;
 
-// eslint-disable-next-line no-unused-vars
-						const _styles = getStyles();
+
+						
 						return (
 							<View key={step.id} style={getStyles(activeColors).stepItem}>
 								<View style={getStyles(activeColors).iconWrapper}>
@@ -86,7 +86,7 @@ const ServiceTracker = ({ currentStep = 2 }) => {
 									{index < steps.length - 1 && (
 										<View
 											style={[
-												// Use getStyles for connector
+												
 												getStyles(activeColors).connector,
 												isCompleted
 													? [
@@ -107,7 +107,7 @@ const ServiceTracker = ({ currentStep = 2 }) => {
 								</View>
 								<Text
 									style={[
-										// Use getStyles for stepTitle
+										
 										getStyles(activeColors).stepTitle,
 										isActive
 											? [

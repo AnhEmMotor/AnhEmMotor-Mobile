@@ -5,10 +5,11 @@ import Animated, {
   useSharedValue, 
   withSpring,
 } from 'react-native-reanimated';
-// eslint-disable-next-line import/namespace
-import * as Haptics from 'expo-haptics';
+
+
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const Haptics = require("expo-haptics");
 
 const setScaleValue = (sharedValue, val) => {
   sharedValue.value = val;

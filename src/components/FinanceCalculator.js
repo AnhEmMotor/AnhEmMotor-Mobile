@@ -1,34 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-// eslint-disable-next-line import/namespace
-import * as Haptics from 'expo-haptics';
+
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowRight, MessageSquare } from 'lucide-react-native';
 import GlassCard from './GlassCard';
-import { useTheme } from '../theme/Theme'; // Import useTheme
+import { useTheme } from '../theme/Theme'; 
 
-// eslint-disable-next-line no-unused-vars
-const { _width } = Dimensions.get('window');
+
+
 
 const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
   const theme = useTheme();
+  const Haptics = require("expo-haptics");
   const [downPaymentPercent, setDownPaymentPercent] = useState(30);
   const [months, setMonths] = useState(24);
   const [monthlyInstallment, setMonthlyInstallment] = useState(0);
 
-  const interestRate = 0.08; // 8% yearly
+  const interestRate = 0.08; 
 
   const calculateFinance = React.useCallback(() => {
     const downPayment = (vehiclePrice * downPaymentPercent) / 100;
     const principal = vehiclePrice - downPayment;
 
-    // Monthly interest rate
+    
     const i = interestRate / 12;
-    // Number of months
+    
     const n = months;
 
-    // Standard Amortization Formula: M = P * [ i * (1 + i)^n ] / [ (1 + i)^n – 1 ]
+    
     const monthlyPayment = principal * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
 
     setMonthlyInstallment(Math.round(monthlyPayment));
@@ -119,7 +120,7 @@ const getStyles = (theme) => StyleSheet.create({
   container: { marginTop: 20 },
   title: { color: theme.colors.text, fontSize: 20, fontWeight: 'bold', marginBottom: 5 },
   subtitle: { color: theme.colors.subtext, fontSize: 14, marginBottom: 20 },
-  card: { padding: 20, borderRadius: theme.radius.lg }, // Added borderRadius for consistency
+  card: { padding: 20, borderRadius: theme.radius.lg }, 
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   label: { color: theme.colors.subtext, fontSize: 13 },
   value: { color: theme.colors.text, fontSize: 15, fontWeight: 'bold' },

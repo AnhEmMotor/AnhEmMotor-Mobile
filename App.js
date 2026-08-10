@@ -1,8 +1,8 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React from 'react';
 import { LogBox } from 'react-native';
-// eslint-disable-next-line import/namespace
-import { StatusBar } from 'expo-status-bar';
+
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { GlobalStateProvider } from './src/context/GlobalState';
@@ -10,7 +10,7 @@ import { DependencyProvider } from './src/di/DependencyContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import ErrorBoundary from './src/components/ErrorBoundary';
 
-// Ignore development warnings from third-party libraries
+
 LogBox.ignoreLogs([
   'props.pointerEvents is deprecated',
   'Failed to execute \'removeChild\' on \'Node\'',
@@ -22,6 +22,7 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+  const { StatusBar } = require("expo-status-bar");
   const RootContent = (
     <DependencyProvider>
       <GlobalStateProvider>

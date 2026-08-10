@@ -2,35 +2,35 @@ import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
-// eslint-disable-next-line no-unused-vars
+
 const { _width } = Dimensions.get('window');
 
-// Use dark theme as default fallback since background colors are dynamic
+
 const DEFAULT_BG = '#0B0F19';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_CARD = '#111111';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_TEXT = '#F8FAFC';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_SUBTEXT = '#94A3B8';
+
+
+
+
+
+
 
 export const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: DEFAULT_BG },
   
-  // Header
+  
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: horizontalScale(20), marginTop: verticalScale(10), marginBottom: verticalScale(15) },
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: Theme.staticColors.card, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   headerTitle: { color: Theme.staticColors.text, fontSize: moderateScale(22), fontWeight: 'bold' },
   markReadText: { color: Theme.staticColors.primary, fontSize: moderateScale(14), fontWeight: 'bold' },
   
-  // Sub-header controls (Unread Filter)
+  
   controlsRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: horizontalScale(20), marginBottom: verticalScale(15) },
   filterBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.03)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   filterBadgeActive: { backgroundColor: 'rgba(46, 91, 255, 0.1)', borderColor: 'rgba(46, 91, 255, 0.3)' },
   filterBadgeText: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), fontWeight: '600' },
   filterBadgeTextActive: { color: Theme.staticColors.primary, fontWeight: 'bold' },
 
-  // Scrollable horizontal tab bar
+  
   tabBarScroll: { marginBottom: verticalScale(12), height: 64, marginHorizontal: horizontalScale(8) },
   tabBarContent: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 18, padding: 6, alignItems: 'center', height: '100%' },
   tab: { flexDirection: 'row', paddingHorizontal: horizontalScale(18), height: '100%', alignItems: 'center', borderRadius: 14, marginHorizontal: 4, flexShrink: 0 },
@@ -40,16 +40,16 @@ export const styles = StyleSheet.create({
   tabBadge: { backgroundColor: Theme.staticColors.primary, borderRadius: 10, paddingHorizontal: 8, paddingVertical: 4, marginLeft: 8, flexShrink: 0 },
   tabBadgeText: { color: '#fff', fontSize: moderateScale(10), fontWeight: '900' },
  
-  // Notification List
+  
   list: { paddingHorizontal: horizontalScale(16), paddingBottom: 80 },
   card: { flexDirection: 'row', paddingVertical: verticalScale(10), paddingHorizontal: horizontalScale(12), marginBottom: verticalScale(10), borderRadius: Theme.radius.md, borderLeftWidth: 3, borderLeftColor: 'transparent', position: 'relative' },
   unreadCard: { backgroundColor: 'rgba(46, 91, 255, 0.03)', borderColor: 'rgba(46, 91, 255, 0.12)', borderLeftColor: Theme.staticColors.primary },
   readCard: { borderColor: 'rgba(255,255,255,0.03)' },
   unreadDot: { position: 'absolute', top: 10, right: 10, width: 6, height: 6, borderRadius: 3, backgroundColor: Theme.staticColors.primary },
   
-  // Icon and backgrounds
+  
   iconBox: { width: 38, height: 38, borderRadius: 19, justifyContent: 'center', alignItems: 'center', marginRight: horizontalScale(10) },
-  // Category specific pastel backdrops
+  
   iconService: { backgroundColor: 'rgba(245, 158, 11, 0.1)' },
   iconLoyalty: { backgroundColor: 'rgba(168, 85, 247, 0.1)' },
   iconSystem: { backgroundColor: 'rgba(239, 68, 68, 0.1)' },
@@ -60,13 +60,13 @@ export const styles = StyleSheet.create({
   time: { color: 'rgba(255,255,255,0.3)', fontSize: moderateScale(9) },
   desc: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), lineHeight: 17, marginBottom: 4 },
   
-  // Action Buttons
+  
   actionRow: { flexDirection: 'row', alignItems: 'center' },
   actionBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.05)', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6, alignSelf: 'flex-start' },
   actionBtnActive: { backgroundColor: 'rgba(46, 91, 255, 0.08)' },
   actionText: { color: Theme.staticColors.primary, fontSize: moderateScale(11), fontWeight: 'bold' },
 
-  // Modals Styling
+  
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)' },
   modalSheet: { backgroundColor: '#050505', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingBottom: verticalScale(40), borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', borderBottomWidth: 0 },
@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
   modalTitle: { color: Theme.staticColors.text, fontSize: moderateScale(22), fontWeight: 'bold' },
   modalSub: { color: Theme.staticColors.subtext, fontSize: moderateScale(13), marginBottom: 25 },
 
-  // Map Tracking Modal
+  
   mapContainer: { width: '100%', height: 220, backgroundColor: '#111111', borderRadius: 20, overflow: 'hidden', marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
   mapGrid: { ...StyleSheet.absoluteFillObject, opacity: 0.15 },
   roadLine: { position: 'absolute', width: '80%', height: 3, backgroundColor: 'rgba(255,255,255,0.1)', top: '50%' },
@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
   nodeLabel: { color: '#fff', fontSize: moderateScale(9), fontWeight: 'bold', marginTop: 4 },
   mapStatusText: { position: 'absolute', bottom: 12, left: 16, color: '#10B981', fontSize: moderateScale(12), fontWeight: 'bold' },
 
-  // Live Workshop Modal
+  
   workshopCard: { backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: 20, padding: 18, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   workshopTitle: { color: '#fff', fontSize: moderateScale(15), fontWeight: 'bold', marginBottom: 12 },
   techRow: { flexDirection: 'row', alignItems: 'center', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)', marginBottom: 12 },
@@ -99,19 +99,19 @@ export const styles = StyleSheet.create({
   partDone: { color: '#10B981', fontSize: moderateScale(12), fontWeight: 'bold' },
   partPending: { color: Theme.staticColors.warning, fontSize: moderateScale(12), fontWeight: 'bold' },
 
-  // Coupon / Referral Card Modal
+  
   couponCard: { width: '100%', backgroundColor: '#1E1B4B', padding: 20, borderRadius: 20, borderWidth: 2, borderColor: 'rgba(168, 85, 247, 0.3)', borderStyle: 'dashed', alignItems: 'center', marginBottom: 20 },
   couponLabel: { color: 'rgba(168, 85, 247, 0.8)', fontSize: moderateScale(11), fontWeight: 'bold', letterSpacing: 1, marginBottom: 6 },
   couponCodeText: { color: '#fff', fontSize: moderateScale(26), fontWeight: '900', letterSpacing: 2, marginBottom: 15 },
   couponDesc: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), textAlign: 'center', lineHeight: 18 },
 
-  // Barcode Voucher Modal
+  
   barcodeContainer: { backgroundColor: '#fff', padding: 18, borderRadius: 15, alignItems: 'center', marginBottom: 20 },
   barcodeFake: { width: '90%', height: 60, marginVertical: 10, justifyContent: 'space-around', flexDirection: 'row' },
   barcodeBar: { width: 2, height: '100%', backgroundColor: '#000' },
   barcodeText: { color: '#000', fontSize: moderateScale(12), letterSpacing: 4, fontWeight: 'bold' },
 
-  // e-Invoice PDF Modal
+  
   invoiceSheet: { backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 20, borderTopWidth: 5, borderTopColor: Theme.staticColors.primary },
   invoiceHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#E2E8F0', paddingBottom: 15, marginBottom: 15 },
   invoiceLogo: { color: '#1E3A8A', fontSize: moderateScale(16), fontWeight: '900' },
@@ -122,7 +122,7 @@ export const styles = StyleSheet.create({
   invoiceTotalRow: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: '#E2E8F0', paddingTop: 12, marginTop: 12 },
   invoiceTotalVal: { color: '#1E3A8A', fontSize: moderateScale(18), fontWeight: 'bold' },
 
-  // Feedback Letter Modal
+  
   letterPaper: { backgroundColor: '#FEFBF3', borderRadius: 20, padding: 20, borderWidth: 1, borderColor: '#E5E0D8', marginBottom: 20, ...Platform.select({ web: { boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }, default: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 10 } }) },
   letterHeader: { borderBottomWidth: 1, borderBottomColor: '#EBE5DA', paddingBottom: 10, marginBottom: 15 },
   letterLogo: { color: '#8B5A2B', fontSize: moderateScale(14), fontWeight: 'bold', letterSpacing: 1 },
@@ -130,12 +130,12 @@ export const styles = StyleSheet.create({
   letterBody: { color: '#4A3E31', fontSize: moderateScale(13), lineHeight: 22, fontStyle: 'italic', marginBottom: 20 },
   letterFooter: { color: '#8B5A2B', fontSize: moderateScale(12), fontWeight: 'bold', textAlign: 'right' },
 
-  // Buttons in Modal
+  
   closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
   modalActionBtn: { height: 55, borderRadius: 16, backgroundColor: Theme.staticColors.primary, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', width: '100%' },
   modalActionText: { color: '#fff', fontSize: moderateScale(15), fontWeight: 'bold', marginLeft: 10 },
 
-  // Demo Toggle Switch
+  
   demoToggleContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(255,255,255,0.02)', padding: 12, borderRadius: 12, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   demoToggleText: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), fontWeight: '600' },
   demoToggleButton: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
@@ -143,7 +143,7 @@ export const styles = StyleSheet.create({
   demoToggleButtonInactive: { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.1)' },
   demoToggleButtonLabel: { color: '#fff', fontSize: moderateScale(10), fontWeight: 'bold', letterSpacing: 0.5 },
 
-  // Block 1: Workshop Live Card
+  
   workshopLiveCard: { backgroundColor: 'rgba(16, 185, 129, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(16, 185, 129, 0.15)' },
   workshopLiveHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   workshopLiveTitle: { color: '#10B981', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -158,7 +158,7 @@ export const styles = StyleSheet.create({
   ktvName: { color: '#fff', fontSize: moderateScale(13), fontWeight: 'bold' },
   ktvSub: { color: Theme.staticColors.subtext, fontSize: moderateScale(11), marginTop: 1 },
 
-  // Steppers vertical
+  
   stepperContainer: { paddingLeft: 6 },
   stepItem: { flexDirection: 'row', minHeight: 60, position: 'relative' },
   stepLine: { position: 'absolute', left: 10, top: 20, bottom: -10, width: 2 },
@@ -180,7 +180,7 @@ export const styles = StyleSheet.create({
   stepDesc: { color: 'rgba(255,255,255,0.25)', fontSize: moderateScale(11), marginTop: 2, lineHeight: 15 },
   stepDescActive: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), fontWeight: '500' },
 
-  // Block 2: Maintenance alert card
+  
   alertCard: { backgroundColor: 'rgba(217, 119, 6, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(217, 119, 6, 0.15)' },
   alertHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   alertTitle: { color: Theme.staticColors.warning, fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -197,7 +197,7 @@ export const styles = StyleSheet.create({
   alertCtaButton: { height: 48, borderRadius: 14, backgroundColor: Theme.staticColors.primary, justifyContent: 'center', alignItems: 'center', elevation: 4, ...Platform.select({ web: { boxShadow: `0px 4px 8px ${Theme.staticColors.primary}33` }, default: { shadowColor: Theme.staticColors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 } }) },
   alertCtaText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
 
-  // Block 3: History section
+  
   historySection: { marginTop: 10 },
   historyHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
   historyTitle: { color: '#10B981', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -217,7 +217,7 @@ export const styles = StyleSheet.create({
   historyCost: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), marginBottom: 4 },
   historyWarranty: { color: 'rgba(255,255,255,0.35)', fontSize: moderateScale(11) },
 
-  // Booking Modal styling
+  
   bookingSectionTitle: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold', marginTop: 18, marginBottom: 12 },
   bookingDateRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
   bookingDateCard: { flex: 1, backgroundColor: 'rgba(255,255,255,0.02)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)', borderRadius: 12, paddingVertical: 10, alignItems: 'center', marginHorizontal: 3 },
@@ -233,7 +233,7 @@ export const styles = StyleSheet.create({
   bookingTimeText: { color: Theme.staticColors.subtext, fontSize: moderateScale(12), fontWeight: 'bold' },
   bookingTimeTextActive: { color: '#fff' },
 
-  // Block 1: Loyalty member card styles
+  
   loyaltyMemberCard: { backgroundColor: 'rgba(168, 85, 247, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(168, 85, 247, 0.15)' },
   loyaltyMemberHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   loyaltyMemberTitle: { color: '#A855F7', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -254,7 +254,7 @@ export const styles = StyleSheet.create({
   loyaltyCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#A855F7', justifyContent: 'center', alignItems: 'center', elevation: 4, ...Platform.select({ web: { boxShadow: '0px 4px 8px rgba(168, 85, 247, 0.2)' }, default: { shadowColor: '#A855F7', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 } }) },
   loyaltyCtaText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
 
-  // Block 2: Voucher ticket styles
+  
   loyaltyVoucherCard: { backgroundColor: 'rgba(59, 130, 246, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)' },
   loyaltyVoucherHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   loyaltyVoucherTitle: { color: Theme.staticColors.primary, fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -270,7 +270,7 @@ export const styles = StyleSheet.create({
   voucherCodeLabel: { color: Theme.staticColors.subtext, fontSize: moderateScale(11), marginTop: 4, letterSpacing: 0.5 },
   loyaltyVoucherDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
-  // Block 3: Birthday styles
+  
   loyaltyBirthdayCard: { backgroundColor: 'rgba(236, 72, 153, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(236, 72, 153, 0.15)' },
   loyaltyBirthdayHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   loyaltyBirthdayTitle: { color: '#EC4899', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -282,7 +282,7 @@ export const styles = StyleSheet.create({
   birthdayGiftSub: { color: Theme.staticColors.subtext, fontSize: moderateScale(11), marginTop: 2 },
   loyaltyBirthdayDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
-  // Block 4: Referral styles
+  
   loyaltyReferralCard: { backgroundColor: 'rgba(59, 130, 246, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)' },
   loyaltyReferralHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   loyaltyReferralTitle: { color: '#E31B23', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -294,7 +294,7 @@ export const styles = StyleSheet.create({
   referralCodeSubText: { color: Theme.staticColors.subtext, fontSize: moderateScale(10), marginTop: 6, textAlign: 'center' },
   loyaltyReferralDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
-  // Block 1: Recall Card
+  
   systemRecallCard: { backgroundColor: 'rgba(239, 68, 68, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.15)' },
   systemRecallHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   systemRecallTitle: { color: '#EF4444', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -305,7 +305,7 @@ export const styles = StyleSheet.create({
   systemCtaButton: { height: 48, borderRadius: 14, backgroundColor: '#EF4444', justifyContent: 'center', alignItems: 'center', elevation: 4, ...Platform.select({ web: { boxShadow: '0px 4px 8px rgba(239, 68, 68, 0.2)' }, default: { shadowColor: '#EF4444', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 } }) },
   systemCtaText: { color: '#fff', fontSize: moderateScale(14), fontWeight: 'bold' },
 
-  // Block 2: Insurance Card
+  
   systemInsuranceCard: { backgroundColor: 'rgba(217, 119, 6, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(217, 119, 6, 0.15)' },
   systemInsuranceHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   systemInsuranceTitle: { color: Theme.staticColors.warning, fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -313,7 +313,7 @@ export const styles = StyleSheet.create({
   insuranceWarningBadgeText: { color: Theme.staticColors.warning, fontSize: moderateScale(9), fontWeight: '900', letterSpacing: 0.5 },
   systemInsuranceDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
-  // Block 3: Invoice Card
+  
   systemInvoiceCard: { backgroundColor: 'rgba(16, 185, 129, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(16, 185, 129, 0.15)' },
   systemInvoiceHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   systemInvoiceTitle: { color: '#10B981', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -326,7 +326,7 @@ export const styles = StyleSheet.create({
   invoiceSummaryVal: { color: '#fff', fontSize: moderateScale(12), fontWeight: 'bold' },
   systemInvoiceDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
-  // Block 4: Feedback Card
+  
   systemFeedbackCard: { backgroundColor: 'rgba(59, 130, 246, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)' },
   systemFeedbackHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   systemFeedbackTitle: { color: '#E31B23', fontSize: moderateScale(15), fontWeight: 'bold' },
@@ -337,7 +337,7 @@ export const styles = StyleSheet.create({
   feedbackParchmentBody: { color: 'rgba(255,255,255,0.6)', fontSize: moderateScale(12), fontStyle: 'italic', lineHeight: 18 },
   systemFeedbackDesc: { color: Theme.staticColors.text, fontSize: moderateScale(13), lineHeight: 19, marginBottom: 15 },
 
-  // Block 5: Security Card
+  
   systemSecurityCard: { backgroundColor: 'rgba(225, 29, 72, 0.03)', borderRadius: 20, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(225, 29, 72, 0.15)' },
   systemSecurityHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   systemSecurityTitle: { color: '#E11D48', fontSize: moderateScale(15), fontWeight: 'bold' },

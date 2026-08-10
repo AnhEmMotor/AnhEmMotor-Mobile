@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, useColorScheme, View, ActivityIndicator } from 'react-native';
+import { Platform, View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { LayoutGrid, User, LifeBuoy, Motorbike, Package, Bell } from 'lucide-react-native';
 import { Theme, useActiveColors } from '../theme/Theme';
-import { useGlobalState } from '../context/GlobalState';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import LoginScreen from '../screens/LoginScreen';
@@ -43,12 +43,12 @@ const Tab = createBottomTabNavigator();
 
 function CustomerTabs() {
   const activeColors = useActiveColors();
-// eslint-disable-next-line no-unused-vars
-  const { themeMode } = useGlobalState();
-// eslint-disable-next-line no-unused-vars
-  const systemScheme = useColorScheme();
-// eslint-disable-next-line no-unused-vars
-  const _isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
+
+  
+
+  
+
+  
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
   const barHeight = 55 + bottomInset;

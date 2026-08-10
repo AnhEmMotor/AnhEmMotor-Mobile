@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalState } from '../../../context/GlobalState';
 import { Theme } from '../../../theme/Theme';
 import { 
-  Bell, 
+  
   Wrench, 
   FileText, 
   ChevronLeft, 
@@ -55,54 +55,6 @@ export default function NotificationScreen({ navigation }) {
   const logic = useNotification(navigation);
   const [copied, setCopied] = useState(false);
 
-// eslint-disable-next-line no-unused-vars
-  const _getIcon = (type) => {
-    switch (type) {
-      case 'delivery':
-        return <Truck color={Theme.staticColors.warning} size={22} />;
-      case 'process':
-        return <FileText color={Theme.staticColors.primary} size={22} />;
-      case 'maintenance':
-        return <Wrench color={Theme.staticColors.warning} size={22} />;
-      case 'workshop':
-        return <Wrench color="#10B981" size={22} />;
-      case 'cleancar':
-        return <ShieldCheck color="#10B981" size={22} />;
-      case 'loyalty_level':
-        return <Gift color="#A855F7" size={22} />;
-      case 'voucher_expiry':
-      case 'birthday':
-        return <Gift color={Theme.staticColors.primary} size={22} />;
-      case 'referral':
-        return <Gift color="#E31B23" size={22} />;
-      case 'recall':
-      case 'paperwork':
-        return <AlertTriangle color={Theme.staticColors.error} size={22} />;
-      case 'invoice':
-        return <FileText color="#10B981" size={22} />;
-      case 'feedback':
-        return <MessageSquare color="#E31B23" size={22} />;
-      case 'security':
-        return <Lock color={Theme.staticColors.error} size={22} />;
-      default:
-        return <Bell color={Theme.staticColors.primary} size={22} />;
-    }
-  };
-
-// eslint-disable-next-line no-unused-vars
-  const _getIconBg = (category) => {
-    switch (category) {
-      case 'service':
-        return styles.iconService;
-      case 'loyalty':
-        return styles.iconLoyalty;
-      case 'system':
-        return styles.iconSystem;
-      default:
-        return { backgroundColor: 'rgba(255,255,255,0.05)' };
-    }
-  };
-
   const handleCopy = (_text) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -116,14 +68,14 @@ export default function NotificationScreen({ navigation }) {
         return (
           <View>
             <View style={[styles.mapContainer, { backgroundColor: isDark ? '#111111' : '#F1F5F9', borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: activeColors.border }]}>
-              {/* Fake Map Grid */}
+              {}
               <View style={[styles.mapGrid, { opacity: isDark ? 0.15 : 0.08 }]} />
               
-              {/* Delivery Route */}
+              {}
               <View style={styles.roadLine} />
               <View style={[styles.roadActiveLine, { width: '70%', backgroundColor: Theme.staticColors.warning }]} />
               
-              {/* Warehouse Node */}
+              {}
               <View style={styles.warehouseNode}>
                 <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)', justifyContent: 'center', alignItems: 'center', marginBottom: 4 }}>
                   <Map color={isDark ? '#94A3B8' : '#64748B'} size={16} />
@@ -131,7 +83,7 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={[styles.nodeLabel, { color: activeColors.text }]}>Kho Tổng</Text>
               </View>
 
-              {/* Truck Node */}
+              {}
               <View style={[styles.truckNode, { left: '55%' }]}>
                 <Animated.View entering={FadeInDown.delay(300)} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(217, 119, 6, 0.15)', justifyContent: 'center', alignItems: 'center', marginBottom: 4, borderWidth: 1, borderColor: Theme.staticColors.warning }}>
                   <Truck color={Theme.staticColors.warning} size={18} />
@@ -139,7 +91,7 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={[styles.nodeLabel, { color: Theme.staticColors.warning, fontWeight: 'bold' }]}>Đang chở</Text>
               </View>
 
-              {/* Showroom Biên Hòa */}
+              {}
               <View style={styles.showroomNode}>
                 <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(16, 185, 129, 0.15)', justifyContent: 'center', alignItems: 'center', marginBottom: 4, borderWidth: 1, borderColor: '#10B981' }}>
                   <Map color="#10B981" size={16} />
@@ -235,7 +187,7 @@ export default function NotificationScreen({ navigation }) {
             <View style={[styles.barcodeContainer, { backgroundColor: '#FFFFFF', borderRadius: 16, width: '100%', padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12, elevation: 4, borderWidth: 1, borderColor: '#E2E8F0' }]}>
               <Text style={{ color: '#475569', fontSize: moderateScale(9), fontWeight: '900', marginBottom: 15, letterSpacing: 0.8, textAlign: 'center' }}>QUÉT MÃ TẠI QUẦY GIAO DỊCH SHOWROOM</Text>
               
-              {/* Mock Barcode lines */}
+              {}
               <View style={[styles.barcodeFake, { height: 50, marginBottom: 15, flexDirection: 'row', justifyContent: 'space-around', width: '90%' }]}>
                 {[1,3,2,1,4,2,3,1,2,4,1,2,3,2,1,3,4,1,2,3,1,2,1,3,1].map((w, i) => (
                   <View key={i} style={[styles.barcodeBar, { width: w, backgroundColor: '#000000', height: '100%' }]} />
@@ -407,7 +359,7 @@ export default function NotificationScreen({ navigation }) {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
-      {/* HEADER SECTION */}
+      {}
       <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
         <ScalePress style={[styles.backBtn, { backgroundColor: activeColors.cardBg, borderColor: activeColors.border }]} onPress={() => navigation.goBack()}>
           <ChevronLeft color={activeColors.text} size={24} />
@@ -426,7 +378,7 @@ export default function NotificationScreen({ navigation }) {
         </View>
       </Animated.View>
 
-      {/* FILTER ROW (Unread Toggle) */}
+      {}
       <View style={styles.controlsRow}>
         <TouchableOpacity 
           style={[styles.filterBadge, { backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', borderColor: activeColors.border }, logic.unreadOnly && styles.filterBadgeActive]}
@@ -438,7 +390,7 @@ export default function NotificationScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* TABS SELECTOR */}
+      {}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -480,11 +432,11 @@ export default function NotificationScreen({ navigation }) {
         })}
       </ScrollView>
 
-      {/* NOTIFICATIONS STREAM */}
+      {}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
         {logic.activeTab === 'service' ? (
           <View>
-            {/* Switch to toggle Active Workshop for demonstration */}
+            {}
             <View style={[styles.demoToggleContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderColor: activeColors.border }]}>
               <Text style={[styles.demoToggleText, { color: activeColors.subtext }]}>Mô phỏng xe tại xưởng Biên Hòa:</Text>
               <TouchableOpacity 
@@ -500,7 +452,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            {/* Block 1: Trạng thái Sửa chữa Trực tuyến */}
+            {}
             {logic.hasActiveWorkshop && (
               <Animated.View entering={FadeInDown.duration(500)} style={styles.workshopLiveCard}>
                 <View style={styles.workshopLiveHeader}>
@@ -516,7 +468,7 @@ export default function NotificationScreen({ navigation }) {
 
                 <Text style={[styles.vehicleInfoText, { color: activeColors.text }]}>Xe Honda SH 160i (Biển số: 60-A1 555.55)</Text>
 
-                {/* KTV Info */}
+                {}
                 <View style={[styles.ktvRow, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderColor: activeColors.border }]}>
                   <View style={styles.ktvAvatar}>
                     <Text style={styles.ktvAvatarText}>H</Text>
@@ -527,7 +479,7 @@ export default function NotificationScreen({ navigation }) {
                   </View>
                 </View>
 
-                {/* Steppers */}
+                {}
                 <View style={styles.stepperContainer}>
                   {[
                     { step: 1, label: '1. Đang khám xe', desc: 'Kiểm tra lỗi tổng quát bằng máy đọc lỗi OBD chính hãng' },
@@ -541,7 +493,7 @@ export default function NotificationScreen({ navigation }) {
 
                     return (
                       <View key={item.step} style={styles.stepItem}>
-                        {/* Step Line */}
+                        {}
                         {item.step < 4 && (
                           <View style={[
                             styles.stepLine, 
@@ -549,7 +501,7 @@ export default function NotificationScreen({ navigation }) {
                           ]} />
                         )}
 
-                        {/* Step Indicator Dot */}
+                        {}
                         <View style={[
                           styles.stepIndicator,
                           isCompleted && styles.stepIndicatorCompleted,
@@ -565,7 +517,7 @@ export default function NotificationScreen({ navigation }) {
                           )}
                         </View>
 
-                        {/* Step Content */}
+                        {}
                         <View style={styles.stepContent}>
                           <Text style={[
                             styles.stepLabel,
@@ -590,7 +542,7 @@ export default function NotificationScreen({ navigation }) {
               </Animated.View>
             )}
 
-            {/* Block 2: Nhắc lịch Bảo dưỡng Thông minh */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.alertCard}>
               <View style={styles.alertHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -624,7 +576,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 3: Nhật ký "Xe Sạch" */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(200)} style={styles.historySection}>
               <View style={styles.historyHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -660,7 +612,7 @@ export default function NotificationScreen({ navigation }) {
           </View>
         ) : logic.activeTab === 'loyalty' ? (
           <View>
-            {/* Block 1: Loyalty Member Card */}
+            {}
             <Animated.View entering={FadeInDown.duration(500)} style={styles.loyaltyMemberCard}>
               <View style={styles.loyaltyMemberHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -673,7 +625,7 @@ export default function NotificationScreen({ navigation }) {
               </View>
 
               <View style={styles.memberCardContainer}>
-                {/* Virtual Metal Membership Card */}
+                {}
                 <GlassCard style={styles.virtualMemberCard} intensity={25}>
                   <View style={styles.virtualCardHeader}>
                     <Text style={styles.virtualCardBrand}>AnhEmMotor 🏍️</Text>
@@ -699,7 +651,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 2: Active Voucher Card */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.loyaltyVoucherCard}>
               <View style={styles.loyaltyVoucherHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -734,7 +686,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 3: Birthday Gift Card */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(200)} style={styles.loyaltyBirthdayCard}>
               <View style={styles.loyaltyBirthdayHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -763,7 +715,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 4: Referral Card */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.loyaltyReferralCard}>
               <View style={styles.loyaltyReferralHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -794,7 +746,7 @@ export default function NotificationScreen({ navigation }) {
           </View>
         ) : logic.activeTab === 'system' ? (
           <View>
-            {/* Block 1: Recall safety */}
+            {}
             <Animated.View entering={FadeInDown.duration(500)} style={styles.systemRecallCard}>
               <View style={styles.systemRecallHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -818,7 +770,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 2: Insurance expired */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.systemInsuranceCard}>
               <View style={styles.systemInsuranceHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -842,7 +794,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 3: e-Invoice */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(200)} style={styles.systemInvoiceCard}>
               <View style={styles.systemInvoiceHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -877,7 +829,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 5: Security login */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.systemSecurityCard}>
               <View style={styles.systemSecurityHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -903,7 +855,7 @@ export default function NotificationScreen({ navigation }) {
           </View>
         ) : (
           <View>
-            {/* Block 1: Feedback resolved */}
+            {}
             <Animated.View entering={FadeInDown.duration(500)} style={styles.systemFeedbackCard}>
               <View style={styles.systemFeedbackHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -933,7 +885,7 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Block 2: Feedback clean car delay resolved */}
+            {}
             <Animated.View entering={FadeInDown.duration(500).delay(100)} style={[styles.systemFeedbackCard, { borderColor: 'rgba(16, 185, 129, 0.15)', backgroundColor: 'rgba(16, 185, 129, 0.03)' }]}>
               <View style={styles.systemFeedbackHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
@@ -966,7 +918,7 @@ export default function NotificationScreen({ navigation }) {
         )}
       </ScrollView>
 
-      {/* INTERACTIVE MODAL DETAIL SHEET */}
+      {}
       <Modal 
         visible={logic.activeModal !== null} 
         transparent 
@@ -1004,7 +956,7 @@ export default function NotificationScreen({ navigation }) {
         </View>
       </Modal>
 
-      {/* CUSTOM BOOKING MODAL */}
+      {}
       <Modal
         visible={logic.bookingModalVisible}
         transparent
@@ -1025,7 +977,7 @@ export default function NotificationScreen({ navigation }) {
             
             <Text style={[styles.modalSub, { color: activeColors.subtext }]}>Honda SH 160i (60-A1 555.55)</Text>
 
-            {/* Date selection list */}
+            {}
             <Text style={[styles.bookingSectionTitle, { color: activeColors.text, marginTop: 5 }]}>1. Chọn ngày đến xưởng:</Text>
             <View style={styles.bookingDateRow}>
               {[
@@ -1053,7 +1005,7 @@ export default function NotificationScreen({ navigation }) {
               ))}
             </View>
 
-            {/* Time selection list */}
+            {}
             <Text style={[styles.bookingSectionTitle, { color: activeColors.text }]}>2. Chọn khung giờ:</Text>
             <View style={styles.bookingTimeGrid}>
               {['08:00', '09:30', '11:00', '14:00', '15:30', '17:00'].map(time => (

@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Alert, Platform } from 'react-native';
-// eslint-disable-next-line import/namespace
-import * as ImagePicker from 'expo-image-picker';
-// eslint-disable-next-line import/namespace
-import * as Haptics from 'expo-haptics';
 
-// Clean Architecture Layers
+
+
+
+
+
 import { UserProfile } from '../../domain/entities/UserProfile';
 import { useGlobalState } from '../../../../context/GlobalState';
 import { useDependency } from '../../../../di/DependencyContext';
 import { resetRoot } from '../../../../navigation/RootNavigation';
 import { tokenService } from '../../../../api/httpClient';
 
-// Vietnam address regions data (used for profile address editing UI)
+
 export const MOCK_REGIONS = {
   provinces: ['Hồ Chí Minh', 'Đồng Nai', 'Hà Nội', 'Bình Dương'],
   districts: {
@@ -32,6 +32,8 @@ export const MOCK_REGIONS = {
 };
 
 export const useProfileController = (navigation, bottomSheetRef) => {
+  const ImagePicker = require("expo-image-picker");
+  const Haptics = require("expo-haptics");
   const {
     getProfileUseCase,
     updateProfileUseCase,
@@ -45,11 +47,11 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   const [isSaving, setIsSaving] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
 
-  // Field editing state
+  
   const [activeField, setActiveField] = useState(null);
   const [tempData, setTempData] = useState({});
 
-  // Password fields state
+  
   const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
 
   const loadProfileData = useCallback(async () => {
@@ -78,7 +80,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     init();
   }, [loadProfileData]);
 
-  // Open Bottom Sheet to Edit a Field
+  
   const openEditField = (field) => {
     triggerHaptic();
     setActiveField(field);
@@ -123,7 +125,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     bottomSheetRef.current?.show();
   };
 
-  // Save the field being edited
+  
   const handleSaveField = async () => {
     triggerHaptic();
     try {
@@ -193,13 +195,13 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Auto-Save Toggle Switches immediately
+  
   const handleToggleSetting = async (key, currentValue) => {
     triggerHaptic();
     try {
       const newValue = !currentValue;
 
-      // Optimistic UI update
+      
       setProfile(prev => {
         const cloned = prev.clone();
         cloned.settings[key] = newValue;
@@ -218,7 +220,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Upload Photo via Camera or Gallery
+  
   const handleSelectPhoto = async (type) => {
     setAvatarModal(false);
     triggerHaptic();
@@ -263,7 +265,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Selecting cartoon avatars from mock sheet
+  
   const handleSelectCartoonAvatar = async (url) => {
     triggerHaptic();
     try {
@@ -282,7 +284,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  // Delete Account flow
+  
   const handleDeleteAccount = () => {
     triggerHaptic();
     Alert.alert(

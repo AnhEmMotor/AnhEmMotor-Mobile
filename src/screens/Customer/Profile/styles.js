@@ -2,16 +2,16 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
-// eslint-disable-next-line no-unused-vars
+
 const { _width } = Dimensions.get('window');
 
 const DEFAULT_BG = '#0B0F19';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_CARD = '#111111';
+
+
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
+
+
 const PRIMARY = Theme.staticColors.primary;
 const SECONDARY = Theme.staticColors.secondary;
 
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
 
  scrollContent: { paddingHorizontal: PAD, paddingTop: V(8), paddingBottom: V(170) },
 
- /* ── HEADER ─────────────────────────────────── */
+ 
  headerBlock: {
   alignItems: 'center',
   paddingVertical: V(22),
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
  scoreRow: { flexDirection: 'row', alignItems: 'center', marginTop: V(8), gap: 6 },
  scoreText: { color: PRIMARY, fontSize: S(13), fontWeight: '600' },
 
- /* ── SHARED BLOCK ───────────────────────────── */
+ 
  block: {
   backgroundColor: 'rgba(255,255,255,0.02)',
   borderRadius: RADIUS,
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
   opacity: 0.9,
  },
 
- /* ── 2-col GRID (dịch vụ / tài chính) ──────── */
+ 
  gridRow: {
   flexDirection: 'row', flexWrap: 'wrap',
   justifyContent: 'space-between', gap: GAP,
@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
  gridIcon: { width: H(40), height: H(40), borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
  gridLabel: { color: DEFAULT_TEXT, fontSize: S(13), fontWeight: '500', flex: 1 },
 
- /* ── 4-col ICON ROW ─────────────────────────── */
+ 
  iconRow: { flexDirection: 'row', justifyContent: 'space-between' },
  iconCol: { alignItems: 'center', width: '23%' },
  iconCircle: {
@@ -112,11 +112,11 @@ export const styles = StyleSheet.create({
   borderWidth: 1.5, borderColor: DEFAULT_BG,
  },
 
- /* ── RATING ROW ─────────────────────────────── */
+ 
  ratingRow: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: V(6) },
  ratingItem: { alignItems: 'center' },
 
- /* ── BOTTOM ACTIONS ─────────────────────────── */
+ 
  bottomActions: {
   position: 'absolute', bottom: 0, left: 0, right: 0,
   flexDirection: 'row', gap: H(10),
@@ -135,7 +135,7 @@ export const styles = StyleSheet.create({
  logoutText: { color: '#E31B23' },
  deleteText: { color: SECONDARY },
 
- /* ── FLOATING BUTTONS ───────────────────────── */
+ 
  fab: {
   position: 'absolute', borderRadius: 28,
   justifyContent: 'center', alignItems: 'center', elevation: 6,
@@ -144,7 +144,7 @@ export const styles = StyleSheet.create({
  },
  voucherFab: { bottom: V(105), right: H(16), width: 56, height: 56, backgroundColor: PRIMARY },
 
- /* ── BOTTOM SHEET ───────────────────────────── */
+ 
  bottomTitle: { fontSize: S(15), fontWeight: '600', marginBottom: V(12) },
  bottomInput: {
   borderWidth: 1, borderRadius: 12,
@@ -163,7 +163,7 @@ export const styles = StyleSheet.create({
   borderRadius: 10, borderWidth: 1,
  },
 
- /* ── SETTINGS TOGGLE ────────────────────────── */
+ 
  settingRow: {
   flexDirection: 'row', justifyContent: 'space-between',
   alignItems: 'center', paddingVertical: V(13),
@@ -190,7 +190,7 @@ export const styles = StyleSheet.create({
  },
  thumbOn: { alignSelf: 'flex-end' },
 
- /* ── MODALS ─────────────────────────────────── */
+ 
  modalHeader: {
   flexDirection: 'row', alignItems: 'center',
   justifyContent: 'space-between',
@@ -210,7 +210,7 @@ export const styles = StyleSheet.create({
   padding: V(14), marginTop: V(20), borderWidth: 1,
  },
 
- /* ── BOTTOM SHEET ───────────────────────────── */
+ 
  bsSectionTitle: { fontSize: S(15), fontWeight: '600', marginBottom: V(10) },
  regionBtn: {
   flexDirection: 'row', justifyContent: 'space-between',
@@ -221,7 +221,7 @@ export const styles = StyleSheet.create({
  },
  regionValue: { color: DEFAULT_TEXT, fontSize: S(14), fontWeight: '600', marginTop: V(4) },
 
- /* ── LOADING ────────────────────────────────── */
+ 
  loadingOverlay: {
   ...StyleSheet.absoluteFillObject,
   justifyContent: 'center', alignItems: 'center',

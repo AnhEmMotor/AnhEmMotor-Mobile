@@ -3,7 +3,7 @@ import {
   StyleSheet, Text, View, ScrollView, TextInput,
   KeyboardAvoidingView, Platform, Alert, Linking
 } from 'react-native';
-import { useActiveColors, useTheme } from '../../theme/Theme'; // Import useTheme
+import { useActiveColors, useTheme } from '../../theme/Theme'; 
 import { ChevronLeft, Send, Mail, Phone, Clock, CheckCircle, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
@@ -20,8 +20,8 @@ export default function ContactStaffScreen({ route, navigation }) {
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState(ticketId ? 'thread' : 'compose');
   const [threadHistory, setThreadHistory] = useState([]);
-// eslint-disable-next-line no-unused-vars
-  const [_isReplying, _setIsReplying] = useState(false);
+
+  
   const [ticketStatus, setTicketStatus] = useState('');
   const theme = useTheme(); // Use the useTheme hook
   const activeColors = useActiveColors();
@@ -35,10 +35,10 @@ export default function ContactStaffScreen({ route, navigation }) {
       if (tracking) {
         setTicketStatus(tracking.statusLabel || tracking.status);
         
-        // Convert to thread history format
+        
         const history = [];
         
-        // Add original request
+        
         history.push({
           id: 'req',
           from: 'customer',
@@ -53,7 +53,7 @@ export default function ContactStaffScreen({ route, navigation }) {
             history.push({
               id: `rep_${idx}`,
               from: 'staff',
-              name: 'CRM Admin', // We could use reply.repliedBy or similar if available
+              name: 'CRM Admin', 
               message: reply.message,
               time: new Date(reply.repliedAt || Date.now()).toLocaleString('vi-VN'),
               isRead: true
@@ -89,9 +89,9 @@ export default function ContactStaffScreen({ route, navigation }) {
     initTicket();
   }, [getProfileUseCase, ticketId, trackingToken, loadTicketHistory]);
 
-  // Temporarily fallback for reply: we don't have a public endpoint to add reply via tracking token.
-  // The user should use email or call for further discussion, or we mock it.
-// eslint-disable-next-line no-unused-vars
+  
+  
+
   const _handleSendReply = () => {
     Alert.alert('Thông báo', 'Tính năng trả lời trực tiếp đang được cập nhật. Vui lòng gửi email hoặc gọi hotline để thảo luận thêm.');
   };
@@ -119,7 +119,7 @@ export default function ContactStaffScreen({ route, navigation }) {
       style={[getStyles({ ...theme, ...theme.colors }).container, { backgroundColor: activeColors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      {/* Header */}
+      {}
       <Animated.View entering={FadeInUp.duration(500)} style={getStyles({ ...theme, ...theme.colors }).header}>
         <ScalePress style={[getStyles({ ...theme, ...theme.colors }).backBtn, { backgroundColor: activeColors.card }]} onPress={() => navigation.goBack()}>
           <ChevronLeft color={activeColors.text} size={24} />
@@ -144,7 +144,7 @@ export default function ContactStaffScreen({ route, navigation }) {
         </View>
       </Animated.View>
 
-      {/* Tabs */}
+      {}
       <View style={getStyles({ ...theme, ...theme.colors }).tabs}>
         <ScalePress
           style={[getStyles({ ...theme, ...theme.colors }).tab, activeTab === 'thread' && { borderBottomColor: activeColors.primary }]}
@@ -223,10 +223,10 @@ export default function ContactStaffScreen({ route, navigation }) {
         </ScrollView>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles({ ...theme, ...theme.colors }).composeContainer}>
-          <Animated.View entering={FadeInDown.duration(500)}> {/* This is fine */}
+          <Animated.View entering={FadeInDown.duration(500)}> {}
             <GlassCard
               style={[getStyles({ ...theme, ...theme.colors }).recipientCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
-              tint={activeColors.isDark ? 'dark' : 'light'} // This is fine
+              tint={activeColors.isDark ? 'dark' : 'light'} 
             >
               <Mail color={activeColors.primary} size={18} />
               <View style={{ marginLeft: 12, flex: 1 }}>
@@ -289,15 +289,15 @@ const getStyles = (colors) => StyleSheet.create({
   onlineDot: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
   dot: { width: 6, height: 6, borderRadius: 3, marginRight: 5 },
   onlineText: { fontSize: 11 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 }, // Added for headerRight
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 }, 
   callBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primary + '1A', justifyContent: 'center', alignItems: 'center', borderWidth: 1 },
 
   tabs: { flexDirection: 'row', paddingHorizontal: colors.spacing.md, marginBottom: colors.spacing.md },
   tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },
   tabText: { fontSize: 14, fontWeight: '600' },
 
-  threadList: { paddingHorizontal: colors.spacing.md }, // This is fine
-  sectionHint: { fontSize: 12, textAlign: 'center', marginBottom: colors.spacing.lg, fontStyle: 'italic' }, // This is fine
+  threadList: { paddingHorizontal: colors.spacing.md }, 
+  sectionHint: { fontSize: 12, textAlign: 'center', marginBottom: colors.spacing.lg, fontStyle: 'italic' }, 
 
   bubbleWrapper: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: colors.spacing.md },
   bubbleRight: { flexDirection: 'row-reverse' },
@@ -311,9 +311,9 @@ const getStyles = (colors) => StyleSheet.create({
   bubbleText: { fontSize: 14, lineHeight: 20 },
   bubbleMeta: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
   bubbleTime: { fontSize: 10, marginLeft: 4 },
-  // This is fine
+  
 
-  composeContainer: { paddingHorizontal: colors.spacing.md }, // This is fine
+  composeContainer: { paddingHorizontal: colors.spacing.md }, 
   recipientCard: { flexDirection: 'row', alignItems: 'center', padding: colors.spacing.md, marginBottom: colors.spacing.md, borderRadius: colors.radius.lg, borderWidth: 1 },
   recipientLabel: { fontSize: 11 },
   recipientEmail: { fontSize: 14, fontWeight: 'bold' },

@@ -6,10 +6,10 @@ import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 const DEFAULT_BG = '#0B0F19';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_TEXT = '#F8FAFC';
-// eslint-disable-next-line no-unused-vars
-const _DEFAULT_SUBTEXT = '#94A3B8';
+
+
+
+
 
 export default function InvoiceScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState('services');

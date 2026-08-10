@@ -6,8 +6,8 @@ import { Theme, useActiveColors } from '../theme/Theme';
 
 export default function GlassCard({ children, style, contentStyle, intensity = 20, tint }) {
   const activeColors = useActiveColors();
-// eslint-disable-next-line no-unused-vars
-  const _evaluatedTint = tint || (activeColors.isDark ? 'dark' : 'light');
+
+  
 
   const flattened = StyleSheet.flatten(style) || {};
   const layoutStyle = {};
