@@ -3,7 +3,7 @@ import {
   StyleSheet, Text, View, ScrollView, TextInput,
   KeyboardAvoidingView, Platform
 } from 'react-native';
-import { Theme, useTheme } from '../../theme/Theme';
+import { useTheme } from '../../theme/Theme';
 import { ChevronLeft, Send, Bot, Zap, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';

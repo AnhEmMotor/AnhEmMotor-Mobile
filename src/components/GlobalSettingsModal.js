@@ -22,7 +22,7 @@ import GlassCard from './GlassCard';
 const STORAGE_KEY = '@AEM_Customer_Profile';
 
 export default function GlobalSettingsModal() {
-  const { isSettingsOpen, setSettingsOpen, themeMode, setThemeMode } = useGlobalState();
+  const { isSettingsOpen, setSettingsOpen, _themeMode, setThemeMode } = useGlobalState();
   const theme = useTheme(); // Use the new useTheme hook
 
   // Local settings state

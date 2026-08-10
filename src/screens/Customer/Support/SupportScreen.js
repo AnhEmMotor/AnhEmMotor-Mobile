@@ -10,22 +10,17 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import { useGlobalState } from '../../../context/GlobalState';
-import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
+import { verticalScale, moderateScale } from '../../../utils/responsive';
 import {
   ChevronLeft,
   MessageSquare,
-  PhoneCall,
-  Plus,
-  Trash2,
   Camera,
   ChevronDown,
-  ChevronUp,
   Search,
   MapPin,
   Clock,
   Navigation,
   HelpCircle,
-  AlertCircle,
   User,
   Phone,
   Mail,
@@ -51,7 +46,7 @@ export default function SupportScreen({ navigation }) {
     attachedImages,
     searchQuery,
     setSearchQuery,
-    activeFaqId,
+    _activeFaqId,
     tickets,
     selectedTicket,
     selectedFaq,

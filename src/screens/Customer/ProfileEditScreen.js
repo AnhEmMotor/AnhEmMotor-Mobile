@@ -39,7 +39,7 @@ export default function ProfileEditScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     try {
       setIsLoading(true);
       const entity = await getProfileUseCase.execute();
@@ -54,14 +54,14 @@ export default function ProfileEditScreen({ navigation }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getProfileUseCase]);
 
   useEffect(() => {
     const init = async () => {
       await loadData();
     };
     init();
-  }, []);
+  }, [loadData]);
 
   const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
@@ -248,7 +248,7 @@ export default function ProfileEditScreen({ navigation }) {
   );
 }
 
-const getStyles = (theme) => StyleSheet.create({
+const _getStyles = (theme) => StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.background },
 
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing.md, marginTop: theme.spacing.xl, marginBottom: theme.spacing.md },

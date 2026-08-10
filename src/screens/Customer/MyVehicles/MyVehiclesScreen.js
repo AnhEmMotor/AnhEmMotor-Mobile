@@ -59,7 +59,7 @@ if (route?.params?.openAddModal) {
 setTimeout(() => setFormVisible(true), 0);
 setTimeout(() => navigation.setParams({ openAddModal: undefined }), 0);
 }
-}, [route?.params?.openAddModal]);
+}, [route?.params?.openAddModal, navigation]);
 
 const handleSubmit = async () => {
 if (!newPlate.trim()) {

@@ -3,11 +3,9 @@ import {
   StyleSheet, 
   Text, 
   View, 
-  Image, 
   ScrollView, 
   TouchableOpacity, 
-  Dimensions, 
-  Platform,
+  Dimensions,
   StatusBar
 } from 'react-native';
 import { useTheme } from '../../theme/Theme'; // Import useTheme
@@ -25,7 +23,7 @@ import ScalePress from '../../components/ScalePress';
 import FinanceCalculator from '../../components/FinanceCalculator';
 import Toast from '../../components/Toast';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: _screenWidth, height: _screenHeight } = Dimensions.get('window');
 
 export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
@@ -50,7 +50,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   // Password fields state
   const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
 
-  const loadProfileData = async () => {
+  const loadProfileData = React.useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getProfileUseCase.execute();
@@ -61,7 +61,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getProfileUseCase]);
 
   const triggerHaptic = () => {
     if (Platform.OS !== 'web') {
@@ -74,7 +74,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       await loadProfileData();
     };
     init();
-  }, []);
+  }, [loadProfileData]);
 
   // Open Bottom Sheet to Edit a Field
   const openEditField = (field) => {

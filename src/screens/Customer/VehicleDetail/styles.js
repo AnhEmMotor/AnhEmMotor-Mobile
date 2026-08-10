@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 // Use dark theme as default fallback since background colors are dynamic
 const DEFAULT_BG = '#0B0F19';

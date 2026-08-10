@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete, apiPostFormData, tokenService } from './httpClient';
+import { apiGet, apiPost, apiPut, apiPatch, apiPostFormData, tokenService } from './httpClient';
 
 export async function loginApi(usernameOrEmail, password) {
   await tokenService.clearTokens();

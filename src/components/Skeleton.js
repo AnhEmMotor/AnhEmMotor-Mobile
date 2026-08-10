@@ -13,7 +13,7 @@ export default function Skeleton({ width, height, borderRadius = 10 }) {
         Animated.timing(opacity, { toValue: 0.3, duration: 800, useNativeDriver: Platform.OS !== 'web' }),
       ])
     ).start();
-  }, []);
+  }, [opacity]);
 
   return (
     <Animated.View 

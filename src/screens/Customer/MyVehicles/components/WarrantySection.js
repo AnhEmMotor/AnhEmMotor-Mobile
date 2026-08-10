@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { ShieldCheck } from 'lucide-react-native';
-import { Theme, useActiveColors } from '../../../../theme/Theme';
+import { useActiveColors } from '../../../../theme/Theme';
 import { calculateWarrantyDays, formatDate } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 

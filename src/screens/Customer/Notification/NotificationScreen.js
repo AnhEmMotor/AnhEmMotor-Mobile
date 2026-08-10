@@ -5,7 +5,6 @@ import {
   ScrollView, 
   TouchableOpacity, 
   Modal, 
-  Image, 
   Alert,
   useColorScheme
 } from 'react-native';
@@ -22,24 +21,18 @@ import {
   Gift,
   AlertTriangle,
   Map,
-  ClipboardCheck,
   Truck,
   CheckCircle,
   Clock,
-  UserCheck,
   Share2,
   Copy,
   Download,
-  Info,
-  Key,
   Lock,
-  Unlock,
   MessageSquare,
   Settings
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import ScalePress from '../../../components/ScalePress';
-import EmptyState from '../../../components/EmptyState';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { moderateScale } from '../../../utils/responsive';
 import { useNotification } from './useNotification';
@@ -62,7 +55,7 @@ export default function NotificationScreen({ navigation }) {
   const logic = useNotification(navigation);
   const [copied, setCopied] = useState(false);
 
-  const getIcon = (type) => {
+  const _getIcon = (type) => {
     switch (type) {
       case 'delivery':
         return <Truck color={Theme.staticColors.warning} size={22} />;
@@ -95,7 +88,7 @@ export default function NotificationScreen({ navigation }) {
     }
   };
 
-  const getIconBg = (category) => {
+  const _getIconBg = (category) => {
     switch (category) {
       case 'service':
         return styles.iconService;
@@ -108,7 +101,7 @@ export default function NotificationScreen({ navigation }) {
     }
   };
 
-  const handleCopy = (text) => {
+  const handleCopy = (_text) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

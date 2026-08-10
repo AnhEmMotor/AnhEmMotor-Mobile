@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../theme/Theme'; // Import useTheme
-import { Inbox, PackageOpen } from 'lucide-react-native';
+import { Inbox } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function EmptyState({ 

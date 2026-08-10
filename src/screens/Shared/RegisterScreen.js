@@ -7,7 +7,6 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
   ScrollView,
   Alert,
   ActivityIndicator
@@ -23,7 +22,7 @@ import { registerApi } from '../../api/customerApi';
 export default function RegisterScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
-  const activeColors = useActiveColors();
+  const _activeColors = useActiveColors();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

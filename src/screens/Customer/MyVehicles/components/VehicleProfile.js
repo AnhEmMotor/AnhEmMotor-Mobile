@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { QrCode, Copy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Theme, useActiveColors } from '../../../../theme/Theme';
+import { useActiveColors } from '../../../../theme/Theme';
 import { copyToClipboard } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
-const PLACEHOLDER_IMG = { uri: 'https://cdn-icons-png.flaticon.com/512/2001/2001567.png' };
+const _PLACEHOLDER_IMG = { uri: 'https://cdn-icons-png.flaticon.com/512/2001/2001567.png' };
 
 const getBikeImage = (bikeName) => {
   const name = bikeName ? bikeName.toLowerCase() : '';

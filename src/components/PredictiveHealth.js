@@ -14,7 +14,7 @@ const PredictiveHealth = ({ data, title, color = "#22d3ee" }) => {
 		backgroundGradientFrom: theme.colors.card,
 		backgroundGradientTo: theme.colors.card,
 		decimalPlaces: 0,
-		color: (opacity = 1) => color,
+		color: (_opacity = 1) => color,
 		labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
 		style: {
 			borderRadius: 16,
@@ -49,7 +49,7 @@ const PredictiveHealth = ({ data, title, color = "#22d3ee" }) => {
 					datasets: [
 						{
 							data: data || [95, 92, 88, 85, 82, 80],
-							color: (opacity = 1) => color, // Neon color
+							color: (_opacity = 1) => color, // Neon color
 							strokeWidth: 3,
 						},
 					],

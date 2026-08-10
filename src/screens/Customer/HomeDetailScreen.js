@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,7 +10,6 @@ import {
   Share,
   Clipboard,
   TextInput,
-  Animated as RNAnimated,
   Modal,
   Alert
 } from 'react-native';
@@ -20,8 +19,6 @@ import {
   Share2,
   Calendar,
   User,
-  Tag,
-  Bell,
   Gift,
   ArrowRight,
   QrCode,
@@ -33,10 +30,7 @@ import {
   Sparkles,
   Heart,
   ThumbsUp,
-  MessageSquare,
-  HelpCircle,
   MapPin,
-  Map,
   Bike,
   CalendarClock,
   ShieldAlert
@@ -44,9 +38,8 @@ import {
 import RenderHtml from 'react-native-render-html';
 import { useActiveColors, Theme, useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
-import { styles } from '../../features/home/presentation/styles';
 import ScalePress from '../../components/ScalePress';
-import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
+import { verticalScale, moderateScale } from '../../utils/responsive';
 
 const { width } = Dimensions.get('window');
 
@@ -219,7 +212,7 @@ export default function HomeDetailScreen({ route, navigation }) {
   // Render Alert Details (Nhắc nhở quan trọng)
   const renderAlertDetail = () => {
     const isCritical = activeItem.type === 'critical';
-    const alertColor = isCritical ? colors.error : '#F59E0B'; // Soft orange for warn alerts
+    const _alertColor = isCritical ? colors.error : '#F59E0B'; // Soft orange for warn alerts
     const alertImg = 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=600&q=80'; // Modern maintenance bay image
 
     return (

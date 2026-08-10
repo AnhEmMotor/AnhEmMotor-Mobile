@@ -1,9 +1,9 @@
 export const IProductRepository = {
-  async getCatalogProducts(search = '', categoryId = null) {
+  async getCatalogProducts(_search = '', _categoryId = null) {
     throw new Error('IProductRepository.getCatalogProducts not implemented');
   },
 
-  async getProductDetail(productId) {
+  async getProductDetail(_productId) {
     throw new Error('IProductRepository.getProductDetail not implemented');
   },
 

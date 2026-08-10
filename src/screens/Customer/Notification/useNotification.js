@@ -182,7 +182,7 @@ const INITIAL_NOTIFICATIONS = [
   },
 ];
 
-export const useNotification = (navigation) => {
+export const useNotification = (_navigation) => {
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const [activeTab, setActiveTab] = useState('service'); // 'service', 'loyalty', 'system', 'feedback'
   const [unreadOnly, setUnreadOnly] = useState(false);

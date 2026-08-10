@@ -3,7 +3,7 @@ import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_TEXT = '#F8FAFC';
+const _DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
 
 export const styles = StyleSheet.create({

@@ -45,7 +45,7 @@ function CustomerTabs() {
   const activeColors = useActiveColors();
   const { themeMode } = useGlobalState();
   const systemScheme = useColorScheme();
-  const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
+  const _isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
   const barHeight = 55 + bottomInset;

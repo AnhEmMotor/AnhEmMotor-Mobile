@@ -42,7 +42,7 @@ const ServiceTracker = ({ currentStep = 2 }) => {
 						const isCompleted = step.id < currentStep;
 						const Icon = step.icon;
 
-						const styles = getStyles();
+						const _styles = getStyles();
 						return (
 							<View key={step.id} style={getStyles(activeColors).stepItem}>
 								<View style={getStyles(activeColors).iconWrapper}>

@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-nati
 import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-import { DollarSign, Calendar, ArrowRight, MessageSquare } from 'lucide-react-native';
+import { ArrowRight, MessageSquare } from 'lucide-react-native';
 import GlassCard from './GlassCard';
 import { useTheme } from '../theme/Theme'; // Import useTheme
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
   const theme = useTheme();
@@ -17,7 +17,7 @@ const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
 
   const interestRate = 0.08; // 8% yearly
 
-  const calculateFinance = () => {
+  const calculateFinance = React.useCallback(() => {
     const downPayment = (vehiclePrice * downPaymentPercent) / 100;
     const principal = vehiclePrice - downPayment;
 
@@ -30,11 +30,11 @@ const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
     const monthlyPayment = principal * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
 
     setMonthlyInstallment(Math.round(monthlyPayment));
-  };
+  }, [vehiclePrice, downPaymentPercent, months]);
 
   useEffect(() => {
     setTimeout(() => calculateFinance(), 0);
-  }, [downPaymentPercent, months]);
+  }, [calculateFinance]);
 
   const handleSliderChange = (value, setter) => {
     setter(value);

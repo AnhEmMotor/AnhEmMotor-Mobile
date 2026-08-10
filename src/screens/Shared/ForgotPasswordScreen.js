@@ -7,22 +7,21 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
   ScrollView,
   Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { Mail, Lock, Eye, EyeOff, Check, Clock } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, Clock } from 'lucide-react-native';
 import { Theme, useActiveColors, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { forgotPasswordApi, resetPasswordApi } from '../../api/customerApi';
 
 export default function ForgotPasswordScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
-  const activeColors = useActiveColors();
+  const _activeColors = useActiveColors();
 
   const [step, setStep] = useState(1); // 1: email, 2: reset token, 3: reset password
   const [email, setEmail] = useState('');

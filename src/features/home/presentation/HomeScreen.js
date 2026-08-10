@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Image, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Theme, useActiveColors } from '../../../theme/Theme';
+import { useActiveColors } from '../../../theme/Theme';
 import { useGlobalState } from '../../../context/GlobalState';
-import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
-import { Bell, Calendar, Wrench, AlertTriangle, ShieldAlert, Settings,
+import { verticalScale, moderateScale } from '../../../utils/responsive';
+import { Bell, AlertTriangle, ShieldAlert, Settings,
   Ticket, QrCode, ArrowRight,
   HelpCircle, ChevronRight, Book, List, Droplets
 } from 'lucide-react-native';
@@ -15,7 +15,6 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from './styles';
 import { useHome } from './useHome';
-import { API_BASE_URL } from '../../../config';
 import { shortcuts, alerts, vouchers, promoItems, newsItems } from './constants';
 
 const BANNERS = [
@@ -101,10 +100,10 @@ export default function HomeScreen({ navigation }) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { 
     unreadNotifications, 
-    vehicleStatus, 
+    _vehicleStatus, 
     selectedVoucher, 
     bottomSheetRef, 
-    handleOpenVoucher,
+    _handleOpenVoucher,
     handleCloseVoucher,
     userName,
     newsList
@@ -180,7 +179,7 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   // Scroll to specific banner
-  const scrollToBanner = (index) => {
+  const scrollToBanner = useCallback((index) => {
     const scrollView = scrollViewRef.current;
     if (scrollView) {
       scrollView.scrollTo({
@@ -188,7 +187,7 @@ export default function HomeScreen({ navigation }) {
         animated: true
       });
     }
-  };
+  }, [BANNER_WIDTH, BANNER_SPACING]);
 
   // Sync scroll position when activeBanner changes from user interaction
   useEffect(() => {
@@ -196,7 +195,7 @@ export default function HomeScreen({ navigation }) {
       scrollToBanner(activeBanner);
       isUserInitiatedRef.current = false;
     }
-  }, [activeBanner]);
+  }, [activeBanner, scrollToBanner]);
 
   const handleDotPress = (index) => {
     isUserInitiatedRef.current = true;

@@ -1,6 +1,6 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React from 'react';
-import { Platform, LogBox } from 'react-native';
+import { LogBox } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 

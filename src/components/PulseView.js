@@ -4,8 +4,7 @@ import Animated, {
   useSharedValue, 
   withRepeat, 
   withTiming, 
-  withSequence,
-  interpolate
+  withSequence
 } from 'react-native-reanimated';
 
 export default function PulseView({ children, style, pulseScale = 1.05, duration = 1500 }) {
@@ -20,7 +19,7 @@ export default function PulseView({ children, style, pulseScale = 1.05, duration
       -1,
       true
     );
-  }, []);
+  }, [duration, pulseScale, scale]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

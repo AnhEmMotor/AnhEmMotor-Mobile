@@ -16,7 +16,7 @@ export const useSupport = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Trạng thái Accordion FAQ
-  const [activeFaqId, setActiveFaqId] = useState(null);
+  const [activeFaqId, _setActiveFaqId] = useState(null);
 
   // Danh sách phản hồi của tôi (Tickets)
   const [tickets, setTickets] = useState(INITIAL_TICKETS);
@@ -218,7 +218,7 @@ export const useSupport = () => {
     // Showroom AnhEmMotor Biên Hòa: 10.9575, 106.8427
     const lat = 10.9575;
     const lng = 106.8427;
-    const label = 'Showroom AnhEmMotor Bien Hoa';
+    const _label = 'Showroom AnhEmMotor Bien Hoa';
     
     const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
     try {

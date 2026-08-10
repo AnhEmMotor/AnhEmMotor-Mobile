@@ -1,13 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Theme, useTheme } from '../../theme/Theme';
 import {
-  BarChart3,
   TrendingUp,
-  PieChart,
-  DollarSign,
-  Calendar,
-  ChevronRight,
   Wallet,
   ArrowUpRight,
   ArrowDownRight
@@ -15,12 +10,10 @@ import {
 import GlassCard from '../../components/GlassCard';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import ScalePress from '../../components/ScalePress';
-import { LineChart } from 'react-native-chart-kit';
 
 const DEFAULT_BG = '#0B0F19';
 
-export default function FinancialHubScreen({ navigation }) {
+export default function FinancialHubScreen({ _navigation }) {
   const theme = useTheme();
   
   const assets = [

@@ -10,17 +10,13 @@ import {
   Dimensions,
   Modal,
   TextInput,
-  Alert,
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import { Theme, useActiveColors } from '../../../theme/Theme';
+import { useActiveColors } from '../../../theme/Theme';
 import {
   ChevronLeft,
   Wrench,
-  ShieldCheck,
-  Cpu,
-  Smartphone,
   Gauge,
   Calendar,
   AlertCircle,
@@ -30,17 +26,15 @@ import {
   Edit2,
   CheckCircle2,
   FileDown,
-  Info,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import GlassCard from '../../../components/GlassCard';
-import ScalePress from '../../../components/ScalePress';
-import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
 import { useMyVehicleDetail } from './hooks/useMyVehicleDetail';
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: _screenWidth } = Dimensions.get('window');
 
 /**
  * @file MyVehicleDetailScreen.js
@@ -86,7 +80,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
   const plateBody = plateParts.slice(1).join(' ') || activeBike.plate || '---';
   const warrantyLabel = activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
   const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
-  const nextService = activeBike.nextService || {};
+  const _nextService = activeBike.nextService || {};
 
   // State handles
   const [nickname, setNickname] = useState('Chiến mã của Khôi 🏍️');

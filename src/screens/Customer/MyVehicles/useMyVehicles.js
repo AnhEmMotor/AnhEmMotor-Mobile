@@ -42,7 +42,7 @@ export const useMyVehicles = () => {
 			if (!isMountedRef.current) return;
 			setLoading(false);
 		}
-	});
+	}, [getCustomerVehiclesUseCase, getCustomerVehicleDetailUseCase]);
 
 	useEffect(() => {
 		isMountedRef.current = true;
@@ -52,7 +52,7 @@ export const useMyVehicles = () => {
 		return () => {
 			isMountedRef.current = false;
 		};
-	}, []);
+	}, [loadVehicles]);
 
 	const selectBike = async (bikeId) => {
 		const found = bikes.find((b) => b.id === bikeId);

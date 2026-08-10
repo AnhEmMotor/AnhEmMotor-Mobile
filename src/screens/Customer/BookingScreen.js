@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useActiveColors, useTheme } from '../../theme/Theme'; // Import useTheme
-import {
-  CheckCircle2, Calendar as CalendarIcon, Clock, ChevronRight,
-  Wrench, ShieldAlert, Sparkles, Bike, MapPin, Search, ChevronLeft, Settings
+import { ChevronRight,
+  Wrench, ShieldAlert, Sparkles, Bike, ChevronLeft, Settings
 } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
-import Animated, { FadeInRight, FadeOutLeft, Layout } from 'react-native-reanimated';
+import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import ScalePress from '../../components/ScalePress';
 import ServiceTracker from '../../components/ServiceTracker';
 import RemoteApproval from '../../components/RemoteApproval';
@@ -102,7 +101,7 @@ export default function BookingScreen({ navigation }) {
       </ScrollView>
 
       <View style={styles.timeGrid}>
-        {timeSlots.map((time, index) => (
+        {timeSlots.map((time, _index) => (
           <ScalePress key={time} style={styles.timeSlotWrapper} onPress={() => setSelectedTime(time)}>
             <GlassCard style={[styles.timeCard, selectedTime === time && styles.selectedCard, selectedTime === time && { borderColor: activeColors.primary }]} intensity={selectedTime === time ? 40 : 15}>
               <Text style={[styles.timeText, { color: activeColors.subtext }, selectedTime === time && { color: '#fff' }]}>{time}</Text>

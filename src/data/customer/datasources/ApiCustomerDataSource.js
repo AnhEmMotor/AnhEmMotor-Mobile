@@ -4,12 +4,6 @@ import {
   getCustomerVehicleHistoryApi,
   registerVehicleApi,
   updateVehicleApi,
-  getBookingHistoryApi,
-  getInvoicesApi,
-  getLatestNewsApi,
-  getActiveShipmentsApi,
-  getFaqsApi,
-  getProfileApi,
 } from '../../../api/customerApi';
 import { API_BASE_URL } from '../../../config';
 
@@ -154,7 +148,7 @@ export class ApiCustomerDataSource {
     });
   }
 
-  async getUpcomingReminders(vehicleId) {
+  async getUpcomingReminders(_vehicleId) {
     /* TODO: backend endpoint GET /api/v1/client/vehicles/{id}/reminders */
     return [];
   }

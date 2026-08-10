@@ -17,7 +17,7 @@ export class IProfileRepository {
    * @param {UserProfile} userProfile 
    * @returns {Promise<UserProfile>}
    */
-  async updateProfile(userProfile) {
+  async updateProfile(_userProfile) {
     throw new Error('Method not implemented');
   }
 
@@ -26,7 +26,7 @@ export class IProfileRepository {
    * @param {Object} settings 
    * @returns {Promise<UserProfile>}
    */
-  async updateSettings(settings) {
+  async updateSettings(_settings) {
     throw new Error('Method not implemented');
   }
 
@@ -35,7 +35,7 @@ export class IProfileRepository {
    * @param {string} imageUri 
    * @returns {Promise<string>} Uploaded image URL/URI
    */
-  async uploadAvatar(imageUri) {
+  async uploadAvatar(_imageUri) {
     throw new Error('Method not implemented');
   }
 }

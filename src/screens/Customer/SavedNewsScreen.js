@@ -13,7 +13,6 @@ import { useTheme } from "../../theme/Theme"; // Import useTheme
 import GlassCard from "../../components/GlassCard";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ScalePress from "../../components/ScalePress";
 
 export default function SavedNewsScreen({ navigation }) {
 	const [savedItems, setSavedItems] = useState([]);
@@ -176,7 +175,7 @@ export default function SavedNewsScreen({ navigation }) {
 	);
 }
 
-const getStyles = (theme) =>
+const _getStyles = (theme) =>
 	StyleSheet.create({
 		container: { flex: 1 },
 		header: {

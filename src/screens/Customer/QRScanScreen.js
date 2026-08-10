@@ -26,7 +26,7 @@ export default function QRScanScreen({ navigation }) {
 
 	React.useEffect(() => {
 		scanPos.value = withRepeat(withTiming(250, { duration: 2000 }), -1, true);
-	}, []);
+	}, [scanPos]);
 
 	const scanStyle = useAnimatedStyle(() => ({
 		transform: [{ translateY: scanPos.value }], // This is fine

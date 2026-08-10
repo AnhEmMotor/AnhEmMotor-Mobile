@@ -15,7 +15,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Mail, Lock, Eye, EyeOff, ChevronRight, Moon, Sun } from 'lucide-react-native';
-import { Theme, useActiveColors, useTheme } from '../theme/Theme';
+import { Theme, useTheme } from '../theme/Theme';
 import { useGlobalState } from '../context/GlobalState';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { horizontalScale, verticalScale, moderateScale } from '../utils/responsive';
@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginApi, getCurrentUserApi } from '../api/customerApi';
 import { tokenService } from '../api/httpClient';
 
-const { height } = Dimensions.get('window');
+const { _height } = Dimensions.get('window');
 
 export default function LoginScreen({ navigation }) {
   const theme = useTheme();

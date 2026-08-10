@@ -6,12 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
-  StyleSheet,
   Alert,
   ActivityIndicator,
 } from 'react-native';
 import { requestConsultationApi } from '../../../api/customerApi';
-import { Theme, useActiveColors } from '../../../theme/Theme';
+import { useActiveColors } from '../../../theme/Theme';
 import {
   ChevronLeft,
   RotateCcw,
@@ -19,19 +18,15 @@ import {
   Zap,
   ShieldCheck,
   Key,
-  Usb,
   Droplet,
-  ChevronRight,
   Star
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
 import Slider from '@react-native-community/slider';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import ScalePress from '../../../components/ScalePress';
 import { styles } from './styles';
 import { useVehicleDetail } from './useVehicleDetail';
-import { moderateScale } from '../../../utils/responsive';
 
 /**
  * @file VehicleDetailScreen.js
@@ -39,7 +34,7 @@ import { moderateScale } from '../../../utils/responsive';
  * @description Modernized vehicle detail screen following product-details.md
  */
 export default function VehicleDetailScreen({ navigation, route }) {
-  const { motor, isOwned } = route.params || {};
+  const { motor, _isOwned } = route.params || {};
   const logic = useVehicleDetail(motor);
   const activeColors = useActiveColors();
   const [submittingConsultation, setSubmittingConsultation] = useState(false);

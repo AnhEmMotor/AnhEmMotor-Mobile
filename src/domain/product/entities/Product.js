@@ -36,7 +36,7 @@ export class Product {
 }
 
 export class ProductVariant {
-  constructor(data, index = 0) {
+  constructor(data, _index = 0) {
     this.id = data.id ?? data.Id ?? null;
     this.productId = data.productId ?? data.ProductId ?? null;
     this.urlSlug = data.urlSlug ?? data.UrlSlug ?? '';
@@ -68,7 +68,7 @@ export class ProductVariant {
 }
 
 export class ProductVariantColor {
-  constructor(data, index = 0) {
+  constructor(data, _index = 0) {
     this.id = data.id ?? data.Id ?? null;
     this.name = data.name ?? data.ColorName ?? data.Name ?? '';
     this.colorName = data.colorName ?? data.ColorName ?? data.name ?? '';

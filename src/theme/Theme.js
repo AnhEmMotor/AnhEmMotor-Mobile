@@ -1,4 +1,4 @@
-import { horizontalScale, verticalScale, moderateScale } from '../utils/responsive';
+import { moderateScale } from '../utils/responsive';
 import { useColorScheme } from 'react-native';
 import { useGlobalState } from '../context/GlobalState';
 

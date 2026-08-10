@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { Text, View, ScrollView, TouchableOpacity, Image, Modal, TextInput, ActivityIndicator, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme, useActiveColors } from '../../../theme/Theme';
-import { Award, Shield, Wrench, Clock, Calendar, FileText, CircleDollarSign, CreditCard, Check, Package, Truck, CheckCircle, Sparkles, Star, Camera, LogOut, Trash2, ChevronRight, Settings } from 'lucide-react-native';
+import { Award, Shield, Wrench, Clock, FileText, CreditCard, Package, Truck, CheckCircle, Sparkles, Star, Camera, LogOut, Trash2, ChevronRight, Settings } from 'lucide-react-native';
 import ScalePress from '../../../components/ScalePress';
 import CustomBottomSheet from '../../../components/CustomBottomSheet';
 import { verticalScale } from '../../../utils/responsive';
@@ -15,9 +15,9 @@ export default function ProfileScreen({ navigation, route }) {
 const bottomSheetRef = useRef(null);
 const [activeRegionList, setActiveRegionList] = useState(null);
 const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-const [voucherModalVisible, setVoucherModalVisible] = useState(false);
+const [_voucherModalVisible, setVoucherModalVisible] = useState(false);
 
-const { profile, isLoading, isSaving, avatarModal, setAvatarModal, activeField, setActiveField, tempData, setTempData, passwordForm, setPasswordForm, openEditField, handleSaveField, handleToggleSetting, handleSelectPhoto, handleSelectCartoonAvatar, handleDeleteAccount, handleLogout, cartoonAvatars } = useProfileController(navigation, bottomSheetRef);
+const { profile, isLoading, isSaving, avatarModal, setAvatarModal, activeField, _setActiveField, tempData, setTempData, passwordForm, setPasswordForm, openEditField, handleSaveField, _handleToggleSetting, handleSelectPhoto, handleSelectCartoonAvatar, handleDeleteAccount, handleLogout, cartoonAvatars } = useProfileController(navigation, bottomSheetRef);
 
 const { setSettingsOpen } = useGlobalState();
 const activeColors = useActiveColors();
@@ -29,7 +29,7 @@ if (route?.params?.openSettings) {
 setSettingsOpen(true);
 navigation.setParams({ openSettings: undefined });
 }
-}, [route?.params?.openSettings]);
+}, [route?.params?.openSettings, navigation, setSettingsOpen]);
 
 const regionList = activeRegionList === 'provinces' ? MOCK_REGIONS.provinces : activeRegionList === 'districts' ? (MOCK_REGIONS.districts[tempData?.province] || []) : activeRegionList === 'wards' ? (MOCK_REGIONS.wards[tempData?.district] || []) : [];
 

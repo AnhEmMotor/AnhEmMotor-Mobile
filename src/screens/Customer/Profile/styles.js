@@ -1,14 +1,14 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_CARD = '#111111';
+const _DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
-const DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
+const _DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
 const PRIMARY = Theme.staticColors.primary;
 const SECONDARY = Theme.staticColors.secondary;
 

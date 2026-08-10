@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { ChevronRight, Clock } from 'lucide-react-native';
-import { Theme, useActiveColors } from '../../../../theme/Theme';
+import { useActiveColors } from '../../../../theme/Theme';
 import { styles } from '../styles';
 
 export const TimelineItem = ({ item, isLast }) => {

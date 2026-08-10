@@ -1,5 +1,4 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { verticalScale } from '../../../utils/responsive';
 import { ProductDataSource } from '../../../data/product/datasources/ProductDataSource';
 
 export const useVehicleDetail = (motorSummary, initialColor) => {
@@ -29,8 +28,8 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
         const data = await ProductDataSource.fetchProductDetail(motorSummary.id);
         if (isMounted) {
           setMotorDetail(data);
-          if (data?.colors?.length > 0 && selectedColor === 'default') {
-            setSelectedColor(data.colors[0].id);
+          if (data?.colors?.length > 0) {
+            setSelectedColor(prev => prev === 'default' ? data.colors[0].id : prev);
           }
         }
       } catch (err) {
@@ -43,9 +42,11 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
     return () => { isMounted = false; };
   }, [motorSummary?.id]);
 
-  const motorFrames = Array.isArray(motor?.frames) && motor.frames.length > 0
-    ? motor.frames
-    : [motor?.img || motor?.imageUrl || motor?.coverImageUrl];
+  const motorFrames = useMemo(() => (
+    Array.isArray(motor?.frames) && motor.frames.length > 0
+      ? motor.frames
+      : [motor?.img || motor?.imageUrl || motor?.coverImageUrl]
+  ), [motor]);
 
   const handleTouchStart = (e) => {
     lastX.current = e.nativeEvent.pageX;

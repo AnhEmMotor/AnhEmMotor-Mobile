@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { Theme, useActiveColors } from '../../theme/Theme';
-import { FileText, Download, ChevronLeft, Receipt, Settings } from 'lucide-react-native';
+import { FileText, Download, ChevronLeft, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
-import ScalePress from '../../components/ScalePress';
-import EmptyState from '../../components/EmptyState';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 const DEFAULT_BG = '#0B0F19';
-const DEFAULT_TEXT = '#F8FAFC';
-const DEFAULT_SUBTEXT = '#94A3B8';
+const _DEFAULT_TEXT = '#F8FAFC';
+const _DEFAULT_SUBTEXT = '#94A3B8';
 
 export default function InvoiceScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState('services');
