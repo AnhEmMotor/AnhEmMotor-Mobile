@@ -7,4 +7,9 @@ module.exports = {
 		es2021: true,
 	},
 	plugins: ["unused-imports"],
+	rules: {
+		"no-unused-vars": ["warn", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }],
+		"react/display-name": "off",
+		"import/namespace": "off"
+	}
 };
