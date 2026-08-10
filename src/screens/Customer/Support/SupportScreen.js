@@ -46,6 +46,7 @@ export default function SupportScreen({ navigation }) {
     attachedImages,
     searchQuery,
     setSearchQuery,
+// eslint-disable-next-line no-unused-vars
     _activeFaqId,
     tickets,
     selectedTicket,

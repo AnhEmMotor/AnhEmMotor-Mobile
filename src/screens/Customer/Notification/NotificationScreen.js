@@ -55,6 +55,7 @@ export default function NotificationScreen({ navigation }) {
   const logic = useNotification(navigation);
   const [copied, setCopied] = useState(false);
 
+// eslint-disable-next-line no-unused-vars
   const _getIcon = (type) => {
     switch (type) {
       case 'delivery':
@@ -88,6 +89,7 @@ export default function NotificationScreen({ navigation }) {
     }
   };
 
+// eslint-disable-next-line no-unused-vars
   const _getIconBg = (category) => {
     switch (category) {
       case 'service':

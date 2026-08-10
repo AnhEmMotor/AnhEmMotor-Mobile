@@ -15,8 +15,10 @@ export default function ProfileScreen({ navigation, route }) {
 const bottomSheetRef = useRef(null);
 const [activeRegionList, setActiveRegionList] = useState(null);
 const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+// eslint-disable-next-line no-unused-vars
 const [_voucherModalVisible, setVoucherModalVisible] = useState(false);
 
+// eslint-disable-next-line no-unused-vars
 const { profile, isLoading, isSaving, avatarModal, setAvatarModal, activeField, _setActiveField, tempData, setTempData, passwordForm, setPasswordForm, openEditField, handleSaveField, _handleToggleSetting, handleSelectPhoto, handleSelectCartoonAvatar, handleDeleteAccount, handleLogout, cartoonAvatars } = useProfileController(navigation, bottomSheetRef);
 
 const { setSettingsOpen } = useGlobalState();

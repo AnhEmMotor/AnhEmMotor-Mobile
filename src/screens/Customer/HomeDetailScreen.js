@@ -212,6 +212,7 @@ export default function HomeDetailScreen({ route, navigation }) {
   // Render Alert Details (Nhắc nhở quan trọng)
   const renderAlertDetail = () => {
     const isCritical = activeItem.type === 'critical';
+// eslint-disable-next-line no-unused-vars
     const _alertColor = isCritical ? colors.error : '#F59E0B'; // Soft orange for warn alerts
     const alertImg = 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=600&q=80'; // Modern maintenance bay image
 

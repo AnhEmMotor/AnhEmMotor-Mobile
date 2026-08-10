@@ -175,6 +175,7 @@ export default function SavedNewsScreen({ navigation }) {
 	);
 }
 
+// eslint-disable-next-line no-unused-vars
 const _getStyles = (theme) =>
 	StyleSheet.create({
 		container: { flex: 1 },

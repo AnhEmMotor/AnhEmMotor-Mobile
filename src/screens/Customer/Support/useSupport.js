@@ -16,6 +16,7 @@ export const useSupport = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Trạng thái Accordion FAQ
+// eslint-disable-next-line no-unused-vars
   const [activeFaqId, _setActiveFaqId] = useState(null);
 
   // Danh sách phản hồi của tôi (Tickets)
@@ -143,6 +144,7 @@ export const useSupport = () => {
       try {
         const profile = await getProfileUseCase.execute();
         if (profile) userProfile = profile;
+// eslint-disable-next-line no-unused-vars
       } catch (e) {
         // Ignore if user not logged in or profile fetch fails
       }
@@ -218,6 +220,7 @@ export const useSupport = () => {
     // Showroom AnhEmMotor Biên Hòa: 10.9575, 106.8427
     const lat = 10.9575;
     const lng = 106.8427;
+// eslint-disable-next-line no-unused-vars
     const _label = 'Showroom AnhEmMotor Bien Hoa';
     
     const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
@@ -268,6 +271,7 @@ export const useSupport = () => {
         setSelectedTicket(null);
         Alert.alert('Thành công 🎉', 'Bạn đã duyệt đóng ca hỗ trợ này. Cảm ơn ý kiến của bạn!');
       }, 300);
+// eslint-disable-next-line no-unused-vars
     } catch (e) {
       Alert.alert('Lỗi', 'Không thể đóng yêu cầu lúc này.');
     }

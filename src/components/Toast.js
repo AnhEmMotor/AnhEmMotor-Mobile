@@ -83,5 +83,6 @@ const getStyles = (theme) => StyleSheet.create({
   }
 });
 
+Toast.displayName = 'Toast';
 export default Toast;
 

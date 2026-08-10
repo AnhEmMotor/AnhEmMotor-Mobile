@@ -43,8 +43,11 @@ const Tab = createBottomTabNavigator();
 
 function CustomerTabs() {
   const activeColors = useActiveColors();
+// eslint-disable-next-line no-unused-vars
   const { themeMode } = useGlobalState();
+// eslint-disable-next-line no-unused-vars
   const systemScheme = useColorScheme();
+// eslint-disable-next-line no-unused-vars
   const _isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? insets.bottom : 20;

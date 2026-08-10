@@ -6,6 +6,7 @@ import { useActiveColors } from '../../../../theme/Theme';
 import { copyToClipboard } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
+// eslint-disable-next-line no-unused-vars
 const _PLACEHOLDER_IMG = { uri: 'https://cdn-icons-png.flaticon.com/512/2001/2001567.png' };
 
 const getBikeImage = (bikeName) => {

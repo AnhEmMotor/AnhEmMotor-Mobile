@@ -1,6 +1,7 @@
 import '@expo/metro-runtime';
 import 'react-native-gesture-handler';
 import { enableScreens } from 'react-native-screens';
+// eslint-disable-next-line import/namespace
 import { registerRootComponent } from 'expo';
 
 import App from './App';

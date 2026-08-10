@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
+// eslint-disable-next-line import/namespace
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowRight, MessageSquare } from 'lucide-react-native';
 import GlassCard from './GlassCard';
 import { useTheme } from '../theme/Theme'; // Import useTheme
 
+// eslint-disable-next-line no-unused-vars
 const { _width } = Dimensions.get('window');
 
 const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {

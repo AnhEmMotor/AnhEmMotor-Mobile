@@ -34,6 +34,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
 import { useMyVehicleDetail } from './hooks/useMyVehicleDetail';
 
+// eslint-disable-next-line no-unused-vars
 const { width: _screenWidth } = Dimensions.get('window');
 
 /**
@@ -80,6 +81,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
   const plateBody = plateParts.slice(1).join(' ') || activeBike.plate || '---';
   const warrantyLabel = activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
   const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
+// eslint-disable-next-line no-unused-vars
   const _nextService = activeBike.nextService || {};
 
   // State handles

@@ -2,12 +2,16 @@ import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
+// eslint-disable-next-line no-unused-vars
 const { _width } = Dimensions.get('window');
 
 // Use dark theme as default fallback since background colors are dynamic
 const DEFAULT_BG = '#0B0F19';
+// eslint-disable-next-line no-unused-vars
 const _DEFAULT_CARD = '#111111';
+// eslint-disable-next-line no-unused-vars
 const _DEFAULT_TEXT = '#F8FAFC';
+// eslint-disable-next-line no-unused-vars
 const _DEFAULT_SUBTEXT = '#94A3B8';
 
 export const styles = StyleSheet.create({

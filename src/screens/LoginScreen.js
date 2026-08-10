@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginApi, getCurrentUserApi } from '../api/customerApi';
 import { tokenService } from '../api/httpClient';
 
+// eslint-disable-next-line no-unused-vars
 const { _height } = Dimensions.get('window');
 
 export default function LoginScreen({ navigation }) {

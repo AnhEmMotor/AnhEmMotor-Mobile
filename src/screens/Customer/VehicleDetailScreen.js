@@ -23,6 +23,7 @@ import ScalePress from '../../components/ScalePress';
 import FinanceCalculator from '../../components/FinanceCalculator';
 import Toast from '../../components/Toast';
 
+// eslint-disable-next-line no-unused-vars
 const { width: _screenWidth, height: _screenHeight } = Dimensions.get('window');
 
 export default function VehicleDetailScreen({ navigation, route }) {

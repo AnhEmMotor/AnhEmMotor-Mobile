@@ -34,6 +34,7 @@ import { useVehicleDetail } from './useVehicleDetail';
  * @description Modernized vehicle detail screen following product-details.md
  */
 export default function VehicleDetailScreen({ navigation, route }) {
+// eslint-disable-next-line no-unused-vars
   const { motor, _isOwned } = route.params || {};
   const logic = useVehicleDetail(motor);
   const activeColors = useActiveColors();

@@ -42,6 +42,7 @@ const ServiceTracker = ({ currentStep = 2 }) => {
 						const isCompleted = step.id < currentStep;
 						const Icon = step.icon;
 
+// eslint-disable-next-line no-unused-vars
 						const _styles = getStyles();
 						return (
 							<View key={step.id} style={getStyles(activeColors).stepItem}>

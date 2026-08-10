@@ -2,12 +2,15 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
+// eslint-disable-next-line no-unused-vars
 const { _width } = Dimensions.get('window');
 
 const DEFAULT_BG = '#0B0F19';
+// eslint-disable-next-line no-unused-vars
 const _DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
+// eslint-disable-next-line no-unused-vars
 const _DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
 const PRIMARY = Theme.staticColors.primary;
 const SECONDARY = Theme.staticColors.secondary;

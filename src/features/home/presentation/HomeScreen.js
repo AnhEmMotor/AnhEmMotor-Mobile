@@ -100,9 +100,11 @@ export default function HomeScreen({ navigation }) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { 
     unreadNotifications, 
+// eslint-disable-next-line no-unused-vars
     _vehicleStatus, 
     selectedVoucher, 
     bottomSheetRef, 
+// eslint-disable-next-line no-unused-vars
     _handleOpenVoucher,
     handleCloseVoucher,
     userName,

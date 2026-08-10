@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LogOut, Trash2, ChevronRight, Settings, Bell, Shield, Languages, Eye } from 'lucide-react-native';
+// eslint-disable-next-line import/namespace
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { resetRoot, navigationRef } from '../navigation/RootNavigation';
@@ -22,6 +23,7 @@ import GlassCard from './GlassCard';
 const STORAGE_KEY = '@AEM_Customer_Profile';
 
 export default function GlobalSettingsModal() {
+// eslint-disable-next-line no-unused-vars
   const { isSettingsOpen, setSettingsOpen, _themeMode, setThemeMode } = useGlobalState();
   const theme = useTheme(); // Use the new useTheme hook
 

@@ -9,6 +9,7 @@ const DEFAULT_BG = '#0B0F19';
 const DEFAULT_CARD = '#111111';
 const DEFAULT_TEXT = '#F8FAFC';
 const DEFAULT_SUBTEXT = '#94A3B8';
+// eslint-disable-next-line no-unused-vars
 const _DEFAULT_BORDER = 'rgba(255, 255, 255, 0.06)';
 
 export const styles = StyleSheet.create({

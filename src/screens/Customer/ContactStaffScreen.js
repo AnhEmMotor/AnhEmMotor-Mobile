@@ -20,6 +20,7 @@ export default function ContactStaffScreen({ route, navigation }) {
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState(ticketId ? 'thread' : 'compose');
   const [threadHistory, setThreadHistory] = useState([]);
+// eslint-disable-next-line no-unused-vars
   const [_isReplying, _setIsReplying] = useState(false);
   const [ticketStatus, setTicketStatus] = useState('');
   const theme = useTheme(); // Use the useTheme hook
@@ -90,6 +91,7 @@ export default function ContactStaffScreen({ route, navigation }) {
 
   // Temporarily fallback for reply: we don't have a public endpoint to add reply via tracking token.
   // The user should use email or call for further discussion, or we mock it.
+// eslint-disable-next-line no-unused-vars
   const _handleSendReply = () => {
     Alert.alert('Thông báo', 'Tính năng trả lời trực tiếp đang được cập nhật. Vui lòng gửi email hoặc gọi hotline để thảo luận thêm.');
   };

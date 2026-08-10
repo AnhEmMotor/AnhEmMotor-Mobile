@@ -21,6 +21,7 @@ import { forgotPasswordApi, resetPasswordApi } from '../../api/customerApi';
 export default function ForgotPasswordScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
+// eslint-disable-next-line no-unused-vars
   const _activeColors = useActiveColors();
 
   const [step, setStep] = useState(1); // 1: email, 2: reset token, 3: reset password

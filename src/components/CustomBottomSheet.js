@@ -106,4 +106,5 @@ const styles = StyleSheet.create({
   }
 });
 
+CustomBottomSheet.displayName = 'CustomBottomSheet';
 export default CustomBottomSheet;

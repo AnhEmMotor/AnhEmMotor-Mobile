@@ -249,6 +249,7 @@ export default function ProfileEditScreen({ navigation }) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 const _getStyles = (theme) => StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.background },
 

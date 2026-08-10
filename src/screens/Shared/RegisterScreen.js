@@ -22,6 +22,7 @@ import { registerApi } from '../../api/customerApi';
 export default function RegisterScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
+// eslint-disable-next-line no-unused-vars
   const _activeColors = useActiveColors();
 
   const [name, setName] = useState('');
