@@ -31,10 +31,13 @@ export function useServiceHistoryController(vehicleId) {
     } finally {
       setLoading(false);
     }
-  }, [vehicleId]);
+  }, [vehicleId, getServiceHistoryUseCase, getUpcomingRemindersUseCase]);
 
   useEffect(() => {
-    loadServiceData();
+    const init = async () => {
+      await loadServiceData();
+    };
+    init();
   }, [loadServiceData]);
 
   return {

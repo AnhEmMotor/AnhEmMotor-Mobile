@@ -42,13 +42,6 @@ export default function GlobalSettingsModal() {
     }
   };
 
-  // Load settings when modal is opened
-  useEffect(() => {
-    if (isSettingsOpen) {
-      loadSettings();
-    }
-  }, [isSettingsOpen]);
-
   const loadSettings = async () => {
     try {
       setLoading(true);
@@ -70,6 +63,16 @@ export default function GlobalSettingsModal() {
       setLoading(false);
     }
   };
+
+  // Load settings when modal is opened
+  useEffect(() => {
+    const init = async () => {
+      if (isSettingsOpen) {
+        await loadSettings();
+      }
+    };
+    init();
+  }, [isSettingsOpen]);
 
   // Save specific settings key
   const handleToggleSetting = async (key, currentValue) => {

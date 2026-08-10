@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import { useActiveColors } from '../theme/Theme';
 
 export default function Skeleton({ width, height, borderRadius = 10 }) {
-  const opacity = useRef(new Animated.Value(0.3)).current;
+  const [opacity] = useState(() => new Animated.Value(0.3));
   const activeColors = useActiveColors();
 
   useEffect(() => {

@@ -39,10 +39,6 @@ export default function ProfileEditScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = async () => {
     try {
       setIsLoading(true);
@@ -59,6 +55,13 @@ export default function ProfileEditScreen({ navigation }) {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const init = async () => {
+      await loadData();
+    };
+    init();
+  }, []);
 
   const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 

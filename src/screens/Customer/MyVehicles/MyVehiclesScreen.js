@@ -56,8 +56,8 @@ const [newColor, setNewColor] = useState('');
 
 React.useEffect(() => {
 if (route?.params?.openAddModal) {
-setFormVisible(true);
-navigation.setParams({ openAddModal: undefined });
+setTimeout(() => setFormVisible(true), 0);
+setTimeout(() => navigation.setParams({ openAddModal: undefined }), 0);
 }
 }, [route?.params?.openAddModal]);
 

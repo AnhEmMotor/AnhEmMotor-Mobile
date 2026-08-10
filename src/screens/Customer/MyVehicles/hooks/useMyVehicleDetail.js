@@ -28,16 +28,19 @@ export function useMyVehicleDetail(initialBike) {
   );
 
   useEffect(() => {
-    if (initialBike?.id) {
-      loadVehicleDetail(initialBike.id);
-    }
-  }, [initialBike?.id, loadVehicleDetail]);
+    const init = async () => {
+      if (initialBike && initialBike.id) {
+        await loadVehicleDetail(initialBike.id);
+      }
+    };
+    init();
+  }, [initialBike, loadVehicleDetail]);
 
   const retry = useCallback(() => {
-    if (initialBike?.id) {
+    if (initialBike && initialBike.id) {
       loadVehicleDetail(initialBike.id);
     }
-  }, [initialBike?.id, loadVehicleDetail]);
+  }, [initialBike, loadVehicleDetail]);
 
   const saveVehicle = useCallback(async (vehicleId, updates) => {
     if (!vehicleId) return null;

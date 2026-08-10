@@ -17,10 +17,6 @@ const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
 
   const interestRate = 0.08; // 8% yearly
 
-  useEffect(() => {
-    calculateFinance();
-  }, [downPaymentPercent, months]);
-
   const calculateFinance = () => {
     const downPayment = (vehiclePrice * downPaymentPercent) / 100;
     const principal = vehiclePrice - downPayment;
@@ -35,6 +31,10 @@ const FinanceCalculator = ({ vehiclePrice = 450000000, onAction }) => {
 
     setMonthlyInstallment(Math.round(monthlyPayment));
   };
+
+  useEffect(() => {
+    setTimeout(() => calculateFinance(), 0);
+  }, [downPaymentPercent, months]);
 
   const handleSliderChange = (value, setter) => {
     setter(value);

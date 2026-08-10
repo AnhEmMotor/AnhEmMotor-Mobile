@@ -80,9 +80,12 @@ export default function ContactStaffScreen({ route, navigation }) {
     };
     fetchUser();
     
-    if (ticketId && trackingToken) {
-      loadTicketHistory();
-    }
+    const initTicket = async () => {
+      if (ticketId && trackingToken) {
+        await loadTicketHistory();
+      }
+    };
+    initTicket();
   }, [getProfileUseCase, ticketId, trackingToken, loadTicketHistory]);
 
   // Temporarily fallback for reply: we don't have a public endpoint to add reply via tracking token.

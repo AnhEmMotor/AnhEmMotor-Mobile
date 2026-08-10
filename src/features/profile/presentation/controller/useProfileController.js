@@ -50,17 +50,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   // Password fields state
   const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
 
-  // Load Profile on mount
-  useEffect(() => {
-    loadProfileData();
-  }, []);
-
-  const triggerHaptic = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }
-  };
-
   const loadProfileData = async () => {
     try {
       setIsLoading(true);
@@ -73,6 +62,19 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       setIsLoading(false);
     }
   };
+
+  const triggerHaptic = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      await loadProfileData();
+    };
+    init();
+  }, []);
 
   // Open Bottom Sheet to Edit a Field
   const openEditField = (field) => {

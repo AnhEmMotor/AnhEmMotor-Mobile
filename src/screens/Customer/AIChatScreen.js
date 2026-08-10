@@ -41,6 +41,12 @@ function getBotReply(input) {
   return 'Cảm ơn câu hỏi của bạn! Để được tư vấn chính xác nhất, nhân viên AnhEmMotor sẽ liên hệ lại trong 5-10 phút. Bạn có muốn để lại số điện thoại không?';
 }
 
+let nextMsgId = 1;
+const generateId = () => {
+  nextMsgId += 1;
+  return new Date().getTime() + nextMsgId;
+};
+
 export default function AIChatScreen({ navigation }) {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
@@ -50,12 +56,12 @@ export default function AIChatScreen({ navigation }) {
 
   const sendMessage = (text = input) => {
     if (!text.trim()) return;
-    const userMsg = { id: Date.now(), from: 'user', text };
+    const userMsg = { id: generateId(), from: 'user', text };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     if (text !== input) setIsTyping(true);
     setTimeout(() => {
-      const botMsg = { id: Date.now() + 1, from: 'bot', text: getBotReply(text) };
+      const botMsg = { id: generateId(), from: 'bot', text: getBotReply(text) };
       setMessages(prev => [...prev, botMsg]);
       setIsTyping(false);
     }, 1200);
