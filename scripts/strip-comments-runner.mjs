@@ -44,7 +44,7 @@ function getAllFiles(dir, fileList = []) {
 }
 
 const args = process.argv.slice(2);
-let files = [];
+let files;
 if (args.length > 0) {
   files = args.filter(
     (f) =>
@@ -138,8 +138,8 @@ files.forEach((file) => {
     if (content !== stripped) {
       fs.writeFileSync(file, stripped, 'utf8');
     }
-  } catch (e) {
-    console.error('Failed to strip comments from ' + file + ':', e.message);
+  } catch {
+    process.stderr.write('Failed to strip comments from ' + file + ':\n');
   }
 });
-console.log('Comments stripped successfully.');
+process.stdout.write('Comments stripped successfully.\n');
