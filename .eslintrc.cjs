@@ -6,8 +6,14 @@ module.exports = {
 		node: true,
 		es2021: true,
 	},
+	plugins: ['unused-imports'],
 	rules: {
-		'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+		'no-unused-vars': 'off',
+		'unused-imports/no-unused-imports': 'warn',
+		'unused-imports/no-unused-vars': [
+			'warn',
+			{ 'vars': 'all', 'varsIgnorePattern': '^_', 'args': 'after-used', 'argsIgnorePattern': '^_' }
+		],
 		'no-undef': 'off',
 		'no-var': 'off',
 		'no-unused-expressions': 'off',
