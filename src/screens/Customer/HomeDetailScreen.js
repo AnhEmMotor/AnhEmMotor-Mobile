@@ -225,7 +225,6 @@ export default function HomeDetailScreen({ route, navigation }) {
     setCommentText('');
   };
 
-  // Render Alert Details (Nhắc nhở quan trọng)
   const renderAlertDetail = () => {
     const isCritical = activeItem.type === 'critical';
 

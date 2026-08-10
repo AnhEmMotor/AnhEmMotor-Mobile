@@ -29,7 +29,7 @@ export default function ContactStaffScreen({ route, navigation }) {
   const [threadHistory, setThreadHistory] = useState([]);
 
   const [ticketStatus, setTicketStatus] = useState('');
-  const theme = useTheme(); // Use the useTheme hook
+  const theme = useTheme();
   const activeColors = useActiveColors();
 
   const [userName, setUserName] = useState('Khách hàng');

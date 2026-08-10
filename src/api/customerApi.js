@@ -339,8 +339,6 @@ function normalizeProductItem(item) {
     categoryName: item?.categoryName ?? item?.CategoryName ?? item?.category ?? '',
     brandId: item?.brandId ?? item?.BrandId ?? null,
     categoryId: item?.categoryId ?? item?.CategoryId ?? null,
-
-    // Technical specs
     weight: item?.weight ?? item?.Weight ?? null,
     length: item?.length ?? item?.Length ?? null,
     width: item?.width ?? item?.Width ?? null,
@@ -374,8 +372,6 @@ function normalizeProductItem(item) {
     material: item?.material ?? item?.Material ?? null,
     origin: item?.origin ?? item?.Origin ?? null,
     warrantyPeriod: item?.warrantyPeriod ?? item?.WarrantyPeriod ?? null,
-
-    // Arrays
     variants,
     technologies,
     colors: variants.flatMap((v) => v.colors || []),

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { useTheme } from '../theme/Theme'; 
+import { useTheme } from '../theme/Theme';
 import { LineChart } from 'react-native-chart-kit';
 import { Activity, Zap } from 'lucide-react-native';
 
@@ -25,7 +25,7 @@ const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
       stroke: color,
     },
     propsForBackgroundLines: {
-      strokeDasharray: '', // solid background lines
+      strokeDasharray: '',
       stroke: 'rgba(255,255,255,0.05)',
     },
   };
@@ -33,7 +33,6 @@ const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
   return (
     <View style={getStyles(theme).container}>
       <View style={getStyles(theme).header}>
-        {/* Use getStyles for titleRow and title */}
         <View style={getStyles(theme).titleRow}>
           <Activity color={color} size={18} />
           <Text style={styles.title}>{title}</Text>
@@ -49,7 +48,7 @@ const PredictiveHealth = ({ data, title, color = '#22d3ee' }) => {
           datasets: [
             {
               data: data || [95, 92, 88, 85, 82, 80],
-              color: (_opacity = 1) => color, 
+              color: (_opacity = 1) => color,
               strokeWidth: 3,
             },
           ],
@@ -96,7 +95,7 @@ const getStyles = (theme) =>
       alignItems: 'center',
     },
     title: {
-      color: theme.colors.text, 
+      color: theme.colors.text,
       fontSize: 16,
       fontWeight: 'bold',
       marginLeft: 10,
@@ -113,7 +112,7 @@ const getStyles = (theme) =>
     chart: {
       marginVertical: 8,
       borderRadius: 16,
-      marginLeft: -15, 
+      marginLeft: -15,
     },
     footer: {
       flexDirection: 'row',
@@ -121,7 +120,6 @@ const getStyles = (theme) =>
       marginTop: 10,
     },
     predictionText: {
-      
       fontSize: 11,
       marginLeft: 6,
     },

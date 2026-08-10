@@ -28,7 +28,6 @@ import {
 import { useActiveColors } from '../../../theme/Theme';
 import { getMyFinanceContractsApi } from '../../../api/customerApi';
 
-
 const fmt = (n) => Number(n || 0).toLocaleString('vi-VN') + 'đ';
 
 const STATUS_MAP = {
@@ -89,7 +88,6 @@ const row = StyleSheet.create({
   label: { fontSize: 13 },
   value: { fontSize: 13, fontWeight: '600', maxWidth: '50%', textAlign: 'right' },
 });
-
 
 export default function FinanceContractScreen({ navigation }) {
   const colors = useActiveColors();
@@ -176,10 +174,8 @@ export default function FinanceContractScreen({ navigation }) {
                 <StatusBadge status={c.status} />
               </View>
 
-              {/* Divider */}
               <View style={[s.divider, { backgroundColor: colors.border }]} />
 
-              {/* Key numbers */}
               <View style={s.cardNumbers}>
                 <View style={s.numBlock}>
                   <Text style={[s.numLabel, { color: colors.subtext }]}>Giá xe</Text>
@@ -410,7 +406,6 @@ const s = StyleSheet.create({
   footerDate: { fontSize: 12 },
   detailLink: { fontSize: 13, fontWeight: '600' },
 
-  
   modalOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.6)' },
   modalSheet: { borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, paddingBottom: 36 },
   handle: { width: 40, height: 4, borderRadius: 2, alignSelf: 'center', marginBottom: 20 },

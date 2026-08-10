@@ -2,7 +2,6 @@ import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-// Standard iPhone 11/12/13/14 screen size as guideline
 const guidelineBaseWidth = 375;
 const guidelineBaseHeight = 812;
 

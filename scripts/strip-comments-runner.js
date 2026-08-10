@@ -37,7 +37,6 @@ if (args.length > 0) {
 }
 
 files.forEach((file) => {
-  // Ignore config files
   if (file.includes('config') || file.includes('.eslintrc') || file.includes('scripts')) {
     return;
   }

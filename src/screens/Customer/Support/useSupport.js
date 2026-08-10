@@ -11,17 +11,12 @@ export const useSupport = () => {
   const [feedbackText, setFeedbackText] = useState('');
   const [attachedImages, setAttachedImages] = useState([]);
 
-  // Trạng thái tìm kiếm FAQ
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Trạng thái Accordion FAQ
-  // eslint-disable-next-line no-unused-vars
-  const [activeFaqId, _setActiveFaqId] = useState(null);
+  const [activeFaqId] = useState(null);
 
-  // Danh sách phản hồi của tôi (Tickets)
   const [tickets, setTickets] = useState(INITIAL_TICKETS);
 
-  // Quản lý Bottom Sheets
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [isIssueSheetVisible, setIsIssueSheetVisible] = useState(false);
@@ -33,7 +28,6 @@ export const useSupport = () => {
 
   const { getProfileUseCase } = useDependency();
 
-  // Load tickets from AsyncStorage on mount
   useEffect(() => {
     const loadTickets = async () => {
       try {
