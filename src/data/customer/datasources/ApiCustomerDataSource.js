@@ -15,17 +15,19 @@ export function mapBackendVehicleToMobile(b) {
     return String(value);
   };
 
-    const name =
-      b.productName ??
-      b.ProductName ??
-      b.name ??
-      b.Name ??
-      b.variantName ??
-      b.VariantName ??
-      (b.brandName || b.BrandName ? `${b.brandName || b.BrandName} ${b.variantName || b.VariantName || ''}`.trim() : null) ??
-      b.fullName ??
-      b.FullName ??
-      'Xe của tôi';
+  const name =
+    b.productName ??
+    b.ProductName ??
+    b.name ??
+    b.Name ??
+    b.variantName ??
+    b.VariantName ??
+    (b.brandName || b.BrandName
+      ? `${b.brandName || b.BrandName} ${b.variantName || b.VariantName || ''}`.trim()
+      : null) ??
+    b.fullName ??
+    b.FullName ??
+    'Xe của tôi';
 
   return {
     id: String(b.id ?? b.Id ?? b.vehicleId ?? b.VehicleId ?? Math.random()),
@@ -38,20 +40,19 @@ export function mapBackendVehicleToMobile(b) {
       b.plateNumber ??
       b.PlateNumber ??
       '',
-    vin:
-      b.vinNumber ??
-      b.VinNumber ??
-      b.vin ??
-      b.Vin ??
-      '',
-    engine:
-      b.engineNumber ??
-      b.EngineNumber ??
-      b.engine ??
-      b.Engine ??
-      '',
+    vin: b.vinNumber ?? b.VinNumber ?? b.vin ?? b.Vin ?? '',
+    engine: b.engineNumber ?? b.EngineNumber ?? b.engine ?? b.Engine ?? '',
     color: b.colorName ?? b.ColorName ?? b.color ?? b.Color ?? '',
-    type: b.categoryName ?? b.CategoryName ?? b.type ?? b.Type ?? b.vehicleType ?? b.VehicleType ?? b.brandName ?? b.BrandName ?? 'Xe máy',
+    type:
+      b.categoryName ??
+      b.CategoryName ??
+      b.type ??
+      b.Type ??
+      b.vehicleType ??
+      b.VehicleType ??
+      b.brandName ??
+      b.BrandName ??
+      'Xe máy',
     version:
       b.variantName ??
       b.VariantName ??
@@ -75,12 +76,13 @@ export function mapBackendVehicleToMobile(b) {
     warrantyUntil: b.warrantyUntil ?? b.WarrantyUntil ?? b.warrantyDate ?? b.WarrantyDate ?? '',
     warrantyFrom: b.warrantyFrom ?? b.WarrantyFrom ?? '',
     insuranceUntil: b.insuranceUntil ?? b.InsuranceUntil ?? '',
-    timeline: Array.isArray(b.timeline) ? b.timeline : (Array.isArray(b.Timeline) ? b.Timeline : []),
-    image: (b.imageUrl || b.ImageUrl || b.image || b.Image) 
-      ? ((b.imageUrl || b.ImageUrl || b.image || b.Image).startsWith('http') 
-          ? (b.imageUrl || b.ImageUrl || b.image || b.Image) 
-          : `${API_BASE_URL}${b.imageUrl || b.ImageUrl || b.image || b.Image}`)
-      : null,
+    timeline: Array.isArray(b.timeline) ? b.timeline : Array.isArray(b.Timeline) ? b.Timeline : [],
+    image:
+      b.imageUrl || b.ImageUrl || b.image || b.Image
+        ? (b.imageUrl || b.ImageUrl || b.image || b.Image).startsWith('http')
+          ? b.imageUrl || b.ImageUrl || b.image || b.Image
+          : `${API_BASE_URL}${b.imageUrl || b.ImageUrl || b.image || b.Image}`
+        : null,
   };
 }
 
@@ -106,12 +108,8 @@ export class ApiCustomerDataSource {
 
   async getServiceHistory(vehicleId) {
     const raw = await getCustomerVehicleHistoryApi(vehicleId);
-    const purchaseHistory = Array.isArray(raw.purchaseHistory)
-      ? raw.purchaseHistory
-      : [];
-    const warrantyHistory = Array.isArray(raw.warrantyHistory)
-      ? raw.warrantyHistory
-      : [];
+    const purchaseHistory = Array.isArray(raw.purchaseHistory) ? raw.purchaseHistory : [];
+    const warrantyHistory = Array.isArray(raw.warrantyHistory) ? raw.warrantyHistory : [];
 
     const mappedPurchaseHistory = purchaseHistory.map((entry) => ({
       id: String(entry.id),
@@ -149,7 +147,6 @@ export class ApiCustomerDataSource {
   }
 
   async getUpcomingReminders(_vehicleId) {
-    /* TODO: backend endpoint GET /api/v1/client/vehicles/{id}/reminders */
-    return [];
+        return [];
   }
 }

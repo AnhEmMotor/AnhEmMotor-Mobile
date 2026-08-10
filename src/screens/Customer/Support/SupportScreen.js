@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Image
-} from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme, useActiveColors } from '../../../theme/Theme';
 import { useGlobalState } from '../../../context/GlobalState';
@@ -24,7 +17,7 @@ import {
   User,
   Phone,
   Mail,
-  Settings
+  Settings,
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -46,7 +39,7 @@ export default function SupportScreen({ navigation }) {
     attachedImages,
     searchQuery,
     setSearchQuery,
-// eslint-disable-next-line no-unused-vars
+    
     _activeFaqId,
     tickets,
     selectedTicket,
@@ -70,30 +63,50 @@ export default function SupportScreen({ navigation }) {
     handleEmailSupport,
     handleNavigateMaps,
     handleToggleFaq,
-    handleApproveCloseTicket
+    handleApproveCloseTicket,
   } = useSupport();
 
-  // Lọc câu hỏi FAQ động theo tìm kiếm
-  const filteredFaqCategories = FAQ_CATEGORIES.map(category => {
-    const matchedItems = category.items.filter(item =>
-      item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.answer.toLowerCase().includes(searchQuery.toLowerCase())
+  
+  const filteredFaqCategories = FAQ_CATEGORIES.map((category) => {
+    const matchedItems = category.items.filter(
+      (item) =>
+        item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.answer.toLowerCase().includes(searchQuery.toLowerCase())
     );
     return {
       ...category,
-      items: matchedItems
+      items: matchedItems,
     };
-  }).filter(category => category.items.length > 0);
+  }).filter((category) => category.items.length > 0);
 
   const isFormValid = feedbackText.trim().length > 0;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
-      {/* HEADER */}
-      <View style={[styles.header, { paddingHorizontal: 20, justifyContent: 'space-between', width: '100%' }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+      edges={['top']}
+    >
+      {}
+      <View
+        style={[
+          styles.header,
+          { paddingHorizontal: 20, justifyContent: 'space-between', width: '100%' },
+        ]}
+      >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity
-            style={[styles.backBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12, width: 44, height: 44, justifyContent: 'center', alignItems: 'center', marginRight: 15 }]}
+            style={[
+              styles.backBtn,
+              {
+                backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                borderRadius: 12,
+                width: 44,
+                height: 44,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 15,
+              },
+            ]}
             onPress={() => navigation.goBack()}
           >
             <ChevronLeft color={activeColors.text} size={moderateScale(24)} />
@@ -101,8 +114,20 @@ export default function SupportScreen({ navigation }) {
           <Text style={[styles.title, { color: activeColors.text }]}>Hỗ trợ khách hàng</Text>
         </View>
         <TouchableOpacity
-          style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 12 }}
-          onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
+          style={{
+            width: 44,
+            height: 44,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+            borderRadius: 12,
+          }}
+          onPress={() =>
+            navigation.navigate('CustomerHome', {
+              screen: 'Profile',
+              params: { openSettings: true },
+            })
+          }
         >
           <Settings color={activeColors.text} size={22} />
         </TouchableOpacity>
@@ -113,12 +138,15 @@ export default function SupportScreen({ navigation }) {
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
-
-        {/* TẦNG 1: SPOTLIGHT – TRỢ LÝ SỐ AI & KẾT NỐI CHUYÊN VIÊN */}
+        {}
         <Animated.View entering={FadeInUp.duration(600).delay(100)}>
           <GlassCard style={styles.spotlightCard}>
-            <Text style={[styles.greeting, { color: activeColors.subtext }]}>Xin chào, Anh Khôi 👋</Text>
-            <Text style={[styles.spotlightTitle, { color: activeColors.text }]}>AnhEmMotor có thể giúp gì cho bạn hôm nay?</Text>
+            <Text style={[styles.greeting, { color: activeColors.subtext }]}>
+              Xin chào, Anh Khôi 👋
+            </Text>
+            <Text style={[styles.spotlightTitle, { color: activeColors.text }]}>
+              AnhEmMotor có thể giúp gì cho bạn hôm nay?
+            </Text>
 
             <View style={styles.spotlightActions}>
               <ScalePress style={styles.primaryBtn} onPress={() => navigation.navigate('AIChat')}>
@@ -127,34 +155,64 @@ export default function SupportScreen({ navigation }) {
               </ScalePress>
 
               <ScalePress
-                style={[styles.secondaryBtn, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)', borderColor: activeColors.border }]}
+                style={[
+                  styles.secondaryBtn,
+                  {
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+                    borderColor: activeColors.border,
+                  },
+                ]}
                 onPress={() => navigation.navigate('ContactStaff')}
               >
                 <User color={Theme.staticColors.primary} size={moderateScale(18)} />
-                <Text style={[styles.secondaryBtnText, { color: activeColors.text }]}>Hỗ Trợ Viên</Text>
+                <Text style={[styles.secondaryBtnText, { color: activeColors.text }]}>
+                  Hỗ Trợ Viên
+                </Text>
               </ScalePress>
             </View>
           </GlassCard>
         </Animated.View>
 
-        {/* TẦNG 2: VẬN HÀNH – FORM GỬI PHẢN HỒI VĂN BẢN */}
+        {}
         <Animated.View entering={FadeInDown.duration(600).delay(200)}>
-          <Text style={[styles.sectionLabel, { color: activeColors.text }]}>Gửi ý kiến phản hồi 📣</Text>
+          <Text style={[styles.sectionLabel, { color: activeColors.text }]}>
+            Gửi ý kiến phản hồi 📣
+          </Text>
           <GlassCard style={styles.formCard}>
-            {/* Chọn Nhóm Vấn đề */}
-            <Text style={[styles.dropdownLabel, { color: activeColors.subtext }]}>Nhóm vấn đề cần hỗ trợ</Text>
+            {}
+            <Text style={[styles.dropdownLabel, { color: activeColors.subtext }]}>
+              Nhóm vấn đề cần hỗ trợ
+            </Text>
             <TouchableOpacity
-              style={[styles.dropdownSelector, { backgroundColor: isDark ? 'rgba(0,0,0,0.25)' : '#F8FAFC', borderColor: activeColors.border }]}
+              style={[
+                styles.dropdownSelector,
+                {
+                  backgroundColor: isDark ? 'rgba(0,0,0,0.25)' : '#F8FAFC',
+                  borderColor: activeColors.border,
+                },
+              ]}
               onPress={handleOpenIssueSheet}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dropdownVal, { color: activeColors.text }]}>{selectedIssue}</Text>
+              <Text style={[styles.dropdownVal, { color: activeColors.text }]}>
+                {selectedIssue}
+              </Text>
               <ChevronDown color={activeColors.subtext} size={moderateScale(18)} />
             </TouchableOpacity>
 
-            {/* Viết Nội dung */}
-            <Text style={[styles.dropdownLabel, { color: activeColors.subtext }]}>Mô tả chi tiết yêu cầu</Text>
-            <View style={[styles.textareaContainer, { backgroundColor: isDark ? 'rgba(0,0,0,0.25)' : '#F8FAFC', borderColor: activeColors.border }]}>
+            {}
+            <Text style={[styles.dropdownLabel, { color: activeColors.subtext }]}>
+              Mô tả chi tiết yêu cầu
+            </Text>
+            <View
+              style={[
+                styles.textareaContainer,
+                {
+                  backgroundColor: isDark ? 'rgba(0,0,0,0.25)' : '#F8FAFC',
+                  borderColor: activeColors.border,
+                },
+              ]}
+            >
               <TextInput
                 style={[styles.textarea, { color: activeColors.text }]}
                 placeholder="Vui lòng nhập phản hồi, ý kiến đóng góp hoặc thắc mắc của bạn (tối đa 500 ký tự)..."
@@ -164,14 +222,23 @@ export default function SupportScreen({ navigation }) {
                 value={feedbackText}
                 onChangeText={setFeedbackText}
               />
-              <Text style={[styles.charCounter, { color: activeColors.subtext }]}>{feedbackText.length}/500</Text>
+              <Text style={[styles.charCounter, { color: activeColors.subtext }]}>
+                {feedbackText.length}/500
+              </Text>
             </View>
 
-            {/* Đính kèm hình ảnh và Gửi */}
+            {}
             <View style={styles.formFooter}>
               <View style={styles.attachRow}>
                 <TouchableOpacity
-                  style={[styles.attachIconBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', borderWidth: 1, borderColor: activeColors.border }]}
+                  style={[
+                    styles.attachIconBtn,
+                    {
+                      backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC',
+                      borderWidth: 1,
+                      borderColor: activeColors.border,
+                    },
+                  ]}
                   onPress={handleAttachImage}
                   activeOpacity={0.7}
                 >
@@ -192,21 +259,44 @@ export default function SupportScreen({ navigation }) {
               </View>
 
               <TouchableOpacity
-                style={isFormValid ? styles.submitBtn : [styles.submitBtnDisabled, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#E2E8F0', borderColor: activeColors.border }]}
+                style={
+                  isFormValid
+                    ? styles.submitBtn
+                    : [
+                        styles.submitBtnDisabled,
+                        {
+                          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#E2E8F0',
+                          borderColor: activeColors.border,
+                        },
+                      ]
+                }
                 onPress={handleSubmitFeedback}
                 disabled={!isFormValid}
                 activeOpacity={0.8}
               >
-                <Text style={isFormValid ? styles.submitBtnText : [styles.submitBtnTextDisabled, { color: isDark ? 'rgba(255, 255, 255, 0.25)' : '#94A3B8' }]}>Gửi phản hồi</Text>
+                <Text
+                  style={
+                    isFormValid
+                      ? styles.submitBtnText
+                      : [
+                          styles.submitBtnTextDisabled,
+                          { color: isDark ? 'rgba(255, 255, 255, 0.25)' : '#94A3B8' },
+                        ]
+                  }
+                >
+                  Gửi phản hồi
+                </Text>
               </TouchableOpacity>
             </View>
           </GlassCard>
         </Animated.View>
 
-        {/* LỊCH SỬ YÊU CẦU - PHẢN HỒI CỦA TÔI */}
+        {}
         {tickets.length > 0 && (
           <Animated.View entering={FadeInDown.duration(600).delay(250)}>
-            <Text style={[styles.sectionLabel, { color: activeColors.text }]}>Phản hồi của tôi ({tickets.length})</Text>
+            <Text style={[styles.sectionLabel, { color: activeColors.text }]}>
+              Phản hồi của tôi ({tickets.length})
+            </Text>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -221,18 +311,30 @@ export default function SupportScreen({ navigation }) {
                   <GlassCard style={styles.ticketCard}>
                     <View style={styles.ticketHeader}>
                       <Text style={styles.ticketType}>{ticket.issueType}</Text>
-                      <Text style={[
-                        styles.ticketStatus,
-                        { color: ticket.status === 'resolved' ? Theme.staticColors.success : Theme.staticColors.warning }
-                      ]}>
+                      <Text
+                        style={[
+                          styles.ticketStatus,
+                          {
+                            color:
+                              ticket.status === 'resolved'
+                                ? Theme.staticColors.success
+                                : Theme.staticColors.warning,
+                          },
+                        ]}
+                      >
                         {ticket.statusLabel}
                       </Text>
                     </View>
-                    <Text style={[styles.ticketContent, { color: activeColors.text }]} numberOfLines={2}>
+                    <Text
+                      style={[styles.ticketContent, { color: activeColors.text }]}
+                      numberOfLines={2}
+                    >
                       {ticket.content}
                     </Text>
                     <View style={styles.ticketFooter}>
-                      <Text style={[styles.ticketDate, { color: activeColors.subtext }]}>{ticket.date}</Text>
+                      <Text style={[styles.ticketDate, { color: activeColors.subtext }]}>
+                        {ticket.date}
+                      </Text>
                       <Text style={styles.ticketCta}>Xem chi tiết</Text>
                     </View>
                   </GlassCard>
@@ -242,12 +344,25 @@ export default function SupportScreen({ navigation }) {
           </Animated.View>
         )}
 
-        {/* TẦNG 3: TỰ PHỤC VỤ – TRUNG TÂM CÂU HỎI THƯỜNG GẶP (SMART FAQ) */}
-        <Animated.View entering={FadeInDown.duration(600).delay(300)} style={{ marginTop: verticalScale(15) }}>
-          <Text style={[styles.sectionLabel, { color: activeColors.text }]}>Câu hỏi thường gặp FAQ 🔍</Text>
+        {}
+        <Animated.View
+          entering={FadeInDown.duration(600).delay(300)}
+          style={{ marginTop: verticalScale(15) }}
+        >
+          <Text style={[styles.sectionLabel, { color: activeColors.text }]}>
+            Câu hỏi thường gặp FAQ 🔍
+          </Text>
 
-          {/* Thanh tìm kiếm thông minh */}
-          <View style={[styles.searchBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', borderColor: activeColors.border }]}>
+          {}
+          <View
+            style={[
+              styles.searchBox,
+              {
+                backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                borderColor: activeColors.border,
+              },
+            ]}
+          >
             <Search color={activeColors.subtext} size={moderateScale(18)} />
             <TextInput
               style={[styles.searchInput, { color: activeColors.text }]}
@@ -258,24 +373,38 @@ export default function SupportScreen({ navigation }) {
             />
           </View>
 
-          {/* Danh sách câu hỏi thả xuống */}
+          {}
           {filteredFaqCategories.length > 0 ? (
             filteredFaqCategories.map((category) => (
               <View key={category.id} style={styles.faqCatBox}>
                 <View style={styles.faqCatHeader}>
                   <category.icon color={category.iconColor} size={moderateScale(18)} />
-                  <Text style={[styles.faqCatTitle, { color: activeColors.text }]}>{category.title}</Text>
+                  <Text style={[styles.faqCatTitle, { color: activeColors.text }]}>
+                    {category.title}
+                  </Text>
                 </View>
 
                 {category.items.map((item) => {
                   return (
-                    <View key={item.id} style={[styles.faqAccordion, { backgroundColor: activeColors.card, borderColor: activeColors.border, borderWidth: 1 }]}>
+                    <View
+                      key={item.id}
+                      style={[
+                        styles.faqAccordion,
+                        {
+                          backgroundColor: activeColors.card,
+                          borderColor: activeColors.border,
+                          borderWidth: 1,
+                        },
+                      ]}
+                    >
                       <TouchableOpacity
                         style={styles.faqHeader}
                         onPress={() => handleToggleFaq(item.id)}
                         activeOpacity={0.7}
                       >
-                        <Text style={[styles.faqQuestion, { color: activeColors.text }]}>{item.question}</Text>
+                        <Text style={[styles.faqQuestion, { color: activeColors.text }]}>
+                          {item.question}
+                        </Text>
                         <ChevronDown color={activeColors.subtext} size={moderateScale(16)} />
                       </TouchableOpacity>
                     </View>
@@ -286,27 +415,45 @@ export default function SupportScreen({ navigation }) {
           ) : (
             <View style={{ alignItems: 'center', paddingVertical: 20 }}>
               <HelpCircle color={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} size={40} />
-              <Text style={{ color: activeColors.subtext, fontSize: 13, marginTop: 10 }}>Không tìm thấy câu hỏi phù hợp</Text>
+              <Text style={{ color: activeColors.subtext, fontSize: 13, marginTop: 10 }}>
+                Không tìm thấy câu hỏi phù hợp
+              </Text>
             </View>
           )}
         </Animated.View>
 
-        {/* TẦNG 4: HỆ THỐNG – BẢN ĐỒ & THÔNG TIN CỬA HÀNG */}
-        <Animated.View entering={FadeInDown.duration(600).delay(400)} style={{ marginTop: verticalScale(15) }}>
-          <Text style={[styles.sectionLabel, { color: activeColors.text }]}>Cửa hàng kinh doanh xe máy 📍</Text>
+        {}
+        <Animated.View
+          entering={FadeInDown.duration(600).delay(400)}
+          style={{ marginTop: verticalScale(15) }}
+        >
+          <Text style={[styles.sectionLabel, { color: activeColors.text }]}>
+            Cửa hàng kinh doanh xe máy 📍
+          </Text>
           <GlassCard style={styles.systemCard}>
             <View style={styles.systemHeader}>
               <MapPin color={Theme.staticColors.primary} size={moderateScale(20)} />
-              <Text style={[styles.systemTitle, { color: activeColors.text }]}>Showroom AnhEmMotor Biên Hòa</Text>
+              <Text style={[styles.systemTitle, { color: activeColors.text }]}>
+                Showroom AnhEmMotor Biên Hòa
+              </Text>
             </View>
-            <Text style={[styles.systemAddress, { color: activeColors.text }]}>Số 28, Đường Đồng Khởi, Phường Tân Phong, Thành phố Biên Hòa, Tỉnh Đồng Nai</Text>
+            <Text style={[styles.systemAddress, { color: activeColors.text }]}>
+              Số 28, Đường Đồng Khởi, Phường Tân Phong, Thành phố Biên Hòa, Tỉnh Đồng Nai
+            </Text>
 
-            <View style={[styles.systemHeader, { marginBottom: verticalScale(15), marginTop: verticalScale(5) }]}>
+            <View
+              style={[
+                styles.systemHeader,
+                { marginBottom: verticalScale(15), marginTop: verticalScale(5) },
+              ]}
+            >
               <Clock color={activeColors.subtext} size={moderateScale(16)} />
-              <Text style={[styles.systemHours, { color: activeColors.subtext }]}>Giờ mở cửa: 08:00 - 20:00 (Hằng ngày)</Text>
+              <Text style={[styles.systemHours, { color: activeColors.subtext }]}>
+                Giờ mở cửa: 08:00 - 20:00 (Hằng ngày)
+              </Text>
             </View>
 
-            {/* Hotline & Email liên hệ */}
+            {}
             <View style={[styles.systemContactContainer, { borderTopColor: activeColors.border }]}>
               <TouchableOpacity
                 style={styles.systemContactItem}
@@ -314,7 +461,9 @@ export default function SupportScreen({ navigation }) {
                 activeOpacity={0.7}
               >
                 <Phone color="#10B981" size={moderateScale(16)} />
-                <Text style={[styles.systemContactText, { color: activeColors.text }]}>Hotline: 0912 345 678</Text>
+                <Text style={[styles.systemContactText, { color: activeColors.text }]}>
+                  Hotline: 0912 345 678
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -323,7 +472,9 @@ export default function SupportScreen({ navigation }) {
                 activeOpacity={0.7}
               >
                 <Mail color="#E31B23" size={moderateScale(16)} />
-                <Text style={[styles.systemContactText, { color: activeColors.text }]}>support@anhemmotor.vn</Text>
+                <Text style={[styles.systemContactText, { color: activeColors.text }]}>
+                  support@anhemmotor.vn
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -341,7 +492,7 @@ export default function SupportScreen({ navigation }) {
         <View style={{ height: verticalScale(60) }} />
       </ScrollView>
 
-      {/* BOTTOM SHEET: CHỌN PHÂN LOẠI PHẢN HỒI (TẦNG 2) */}
+      {}
       {isIssueSheetVisible && (
         <CustomBottomSheet
           ref={issueSheetRef}
@@ -359,7 +510,12 @@ export default function SupportScreen({ navigation }) {
                   onPress={() => handleSelectIssue(issue)}
                   activeOpacity={0.7}
                 >
-                  <Text style={[isSelected ? styles.sheetOptionSelectedText : styles.sheetOptionText, { color: activeColors.text }]}>
+                  <Text
+                    style={[
+                      isSelected ? styles.sheetOptionSelectedText : styles.sheetOptionText,
+                      { color: activeColors.text },
+                    ]}
+                  >
                     {issue}
                   </Text>
                 </TouchableOpacity>
@@ -369,7 +525,7 @@ export default function SupportScreen({ navigation }) {
         </CustomBottomSheet>
       )}
 
-      {/* BOTTOM SHEET: CHI TIẾT PHẢN HỒI & CRM REPLY (TẦNG 2) */}
+      {}
       {selectedTicket && (
         <CustomBottomSheet
           ref={ticketDetailSheetRef}
@@ -380,7 +536,9 @@ export default function SupportScreen({ navigation }) {
           <View style={styles.sheetContent}>
             <View style={styles.ticketDetailBox}>
               <View style={styles.ticketDetailMeta}>
-                <Text style={{ color: Theme.staticColors.primary, fontSize: 13, fontWeight: 'bold' }}>
+                <Text
+                  style={{ color: Theme.staticColors.primary, fontSize: 13, fontWeight: 'bold' }}
+                >
                   Yêu cầu: {selectedTicket.issueType}
                 </Text>
                 <Text style={{ color: activeColors.subtext, fontSize: 12 }}>
@@ -388,15 +546,26 @@ export default function SupportScreen({ navigation }) {
                 </Text>
               </View>
 
-              <Text style={{ color: activeColors.subtext, fontSize: 12, marginBottom: 5 }}>Nội dung của bạn:</Text>
-              <Text style={[styles.ticketDetailContent, { color: activeColors.text }]}>{selectedTicket.content}</Text>
+              <Text style={{ color: activeColors.subtext, fontSize: 12, marginBottom: 5 }}>
+                Nội dung của bạn:
+              </Text>
+              <Text style={[styles.ticketDetailContent, { color: activeColors.text }]}>
+                {selectedTicket.content}
+              </Text>
 
-              <View style={[styles.chatBox, { backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)' }]}>
+              <View
+                style={[
+                  styles.chatBox,
+                  { backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)' },
+                ]}
+              >
                 <Text style={styles.chatAuthor}>Phản hồi từ CRM Admin:</Text>
-                <Text style={[styles.chatText, { color: activeColors.text }]}>{selectedTicket.reply}</Text>
+                <Text style={[styles.chatText, { color: activeColors.text }]}>
+                  {selectedTicket.reply}
+                </Text>
               </View>
 
-              {/* Nút tương tác 2 chiều */}
+              {}
               <View style={styles.sheetActionRow}>
                 <TouchableOpacity
                   style={styles.sheetCloseBtn}
@@ -406,14 +575,25 @@ export default function SupportScreen({ navigation }) {
                   <Text style={styles.sheetCloseBtnText}>✓ Duyệt đóng ca</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.sheetDiscussBtn, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)', borderColor: activeColors.border }]}
+                  style={[
+                    styles.sheetDiscussBtn,
+                    {
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+                      borderColor: activeColors.border,
+                    },
+                  ]}
                   onPress={() => {
                     handleCloseTicketDetail();
-                    navigation.navigate('ContactStaff', { ticketId: selectedTicket.id, trackingToken: selectedTicket.trackingToken });
+                    navigation.navigate('ContactStaff', {
+                      ticketId: selectedTicket.id,
+                      trackingToken: selectedTicket.trackingToken,
+                    });
                   }}
                   activeOpacity={0.8}
                 >
-                  <Text style={[styles.sheetDiscussBtnText, { color: activeColors.text }]}>💬 Thảo luận thêm</Text>
+                  <Text style={[styles.sheetDiscussBtnText, { color: activeColors.text }]}>
+                    💬 Thảo luận thêm
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -421,7 +601,7 @@ export default function SupportScreen({ navigation }) {
         </CustomBottomSheet>
       )}
 
-      {/* BOTTOM SHEET: CHI TIẾT CÂU HỎI THƯỜNG GẶP FAQ (TẦNG 3 - QUY TẮC VÀNG 1) */}
+      {}
       {selectedFaq && (
         <CustomBottomSheet
           ref={faqDetailSheetRef}
@@ -430,15 +610,25 @@ export default function SupportScreen({ navigation }) {
           themeMode={themeMode}
         >
           <View style={styles.sheetContent}>
-            <Text style={[styles.faqDetailQuestion, { color: activeColors.text }]}>❓ {selectedFaq.question}</Text>
-            <View style={[styles.faqDetailAnswerBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', borderColor: activeColors.border }]}>
-              <Text style={[styles.faqDetailAnswer, { color: activeColors.text }]}>{selectedFaq.answer}</Text>
+            <Text style={[styles.faqDetailQuestion, { color: activeColors.text }]}>
+              ❓ {selectedFaq.question}
+            </Text>
+            <View
+              style={[
+                styles.faqDetailAnswerBox,
+                {
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                  borderColor: activeColors.border,
+                },
+              ]}
+            >
+              <Text style={[styles.faqDetailAnswer, { color: activeColors.text }]}>
+                {selectedFaq.answer}
+              </Text>
             </View>
           </View>
         </CustomBottomSheet>
       )}
-
     </SafeAreaView>
   );
 }
-

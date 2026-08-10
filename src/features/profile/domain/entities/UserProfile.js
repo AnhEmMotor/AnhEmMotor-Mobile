@@ -1,8 +1,3 @@
-/**
- * @file UserProfile.js
- * @layer Domain - Entities
- * @description Central business entity representing the user's profile and settings.
- */
 export class UserProfile {
   constructor({
     uid = '',
@@ -22,7 +17,7 @@ export class UserProfile {
       biometricLogin: false,
       theme: 'dark',
       language: 'vi',
-    }
+    },
   } = {}) {
     this.uid = uid;
     this.name = name;
@@ -39,15 +34,12 @@ export class UserProfile {
     this.settings = { ...settings };
   }
 
-  /**
-   * Helper to format name to capitalize first letter of each word
-   */
-  getFormattedName() {
+    getFormattedName() {
     if (!this.name) return '';
     return this.name
       .toLowerCase()
       .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   }
 
@@ -59,10 +51,7 @@ export class UserProfile {
     return parts.join(', ');
   }
 
-  /**
-   * Creates a deep copy of the entity
-   */
-  clone() {
+    clone() {
     return new UserProfile({
       uid: this.uid,
       name: this.name,
@@ -76,7 +65,7 @@ export class UserProfile {
       specificAddress: this.specificAddress,
       licenseTier: this.licenseTier,
       licenseImage: this.licenseImage,
-      settings: { ...this.settings }
+      settings: { ...this.settings },
     });
   }
 }

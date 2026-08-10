@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDependency } from '../../../di/DependencyContext';
 
-
 export function useServiceHistoryController(vehicleId) {
   const { getServiceHistoryUseCase, getUpcomingRemindersUseCase } = useDependency();
   const [history, setHistory] = useState([]);
@@ -18,11 +17,11 @@ export function useServiceHistoryController(vehicleId) {
         getUpcomingRemindersUseCase.execute(vehicleId),
       ]);
       console.log('HISTORY DATA RETURNED:', historyData);
-      
+
       if (historyData && historyData.error) {
         throw new Error(historyData.error.message);
       }
-      
+
       setHistory(historyData);
       setReminders(remindersData);
     } catch (error) {

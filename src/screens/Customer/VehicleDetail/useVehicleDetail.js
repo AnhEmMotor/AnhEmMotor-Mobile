@@ -7,16 +7,18 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
   const [error, setError] = useState(null);
 
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedColor, setSelectedColor] = useState(initialColor || motorSummary?.colors?.[0]?.id || 'default');
+  const [selectedColor, setSelectedColor] = useState(
+    initialColor || motorSummary?.colors?.[0]?.id || 'default'
+  );
   const [rotationIndex, setRotationIndex] = useState(0);
+
   
-  // Finance State
   const [downPaymentPercent, setDownPaymentPercent] = useState(30);
   const [loanTerm, setLoanTerm] = useState(12);
-  
+
   const lastX = useRef(0);
 
-  const motor = motorDetail || motorSummary; // Fallback to summary while loading
+  const motor = motorDetail || motorSummary; 
 
   useEffect(() => {
     let isMounted = true;
@@ -29,7 +31,7 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
         if (isMounted) {
           setMotorDetail(data);
           if (data?.colors?.length > 0) {
-            setSelectedColor(prev => prev === 'default' ? data.colors[0].id : prev);
+            setSelectedColor((prev) => (prev === 'default' ? data.colors[0].id : prev));
           }
         }
       } catch (err) {
@@ -39,14 +41,18 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
       }
     };
     fetchDetail();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [motorSummary?.id]);
 
-  const motorFrames = useMemo(() => (
-    Array.isArray(motor?.frames) && motor.frames.length > 0
-      ? motor.frames
-      : [motor?.img || motor?.imageUrl || motor?.coverImageUrl]
-  ), [motor]);
+  const motorFrames = useMemo(
+    () =>
+      Array.isArray(motor?.frames) && motor.frames.length > 0
+        ? motor.frames
+        : [motor?.img || motor?.imageUrl || motor?.coverImageUrl],
+    [motor]
+  );
 
   const handleTouchStart = (e) => {
     lastX.current = e.nativeEvent.pageX;
@@ -59,7 +65,7 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
 
     if (Math.abs(diff) > sensitivity) {
       const direction = diff > 0 ? 1 : -1;
-      setRotationIndex(prev => {
+      setRotationIndex((prev) => {
         let next = (prev + direction) % motorFrames.length;
         if (next < 0) next = motorFrames.length - 1;
         return next;
@@ -70,29 +76,44 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
 
   const currentImage = useMemo(() => {
     if (Array.isArray(motor?.frames) && motor.frames.length > 0) return motorFrames[rotationIndex];
-    return motor?.colors?.find(c => c.id === selectedColor)?.image || motor?.colors?.find(c => c.id === selectedColor)?.coverImageUrl || motor?.img || motor?.imageUrl || motor?.coverImageUrl;
+    return (
+      motor?.colors?.find((c) => c.id === selectedColor)?.image ||
+      motor?.colors?.find((c) => c.id === selectedColor)?.coverImageUrl ||
+      motor?.img ||
+      motor?.imageUrl ||
+      motor?.coverImageUrl
+    );
   }, [rotationIndex, selectedColor, motor, motorFrames]);
 
-  // Mock Finance Calculation
+  
   const financeResults = useMemo(() => {
-    const priceValue = motor?.price ?? motor?.referencePrice ?? motor?.Price ?? motor?.ReferencePrice;
-    const priceRaw = typeof priceValue === 'number'
-      ? priceValue
-      : parseInt(String(priceValue || '').replace(/\./g, '').replace(/[^\d]/g, '') || '0');
+    const priceValue =
+      motor?.price ?? motor?.referencePrice ?? motor?.Price ?? motor?.ReferencePrice;
+    const priceRaw =
+      typeof priceValue === 'number'
+        ? priceValue
+        : parseInt(
+            String(priceValue || '')
+              .replace(/\./g, '')
+              .replace(/[^\d]/g, '') || '0'
+          );
     const downPayment = Math.floor(priceRaw * (downPaymentPercent / 100));
     const loanAmount = priceRaw - downPayment;
-    const monthlyRate = 0.015; // 1.5% average
-    const monthlyPayment = Math.floor((loanAmount * monthlyRate * Math.pow(1 + monthlyRate, loanTerm)) / (Math.pow(1 + monthlyRate, loanTerm) - 1));
-    
+    const monthlyRate = 0.015; 
+    const monthlyPayment = Math.floor(
+      (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, loanTerm)) /
+        (Math.pow(1 + monthlyRate, loanTerm) - 1)
+    );
+
     return {
       downPayment,
       loanAmount,
-      monthlyPayment
+      monthlyPayment,
     };
   }, [downPaymentPercent, loanTerm, motor]);
 
   return {
-    motor, // This is the detailed motor if loaded, else summary
+    motor, 
     loading,
     error,
     activeTab,
@@ -107,6 +128,6 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
     setDownPaymentPercent,
     loanTerm,
     setLoanTerm,
-    financeResults
+    financeResults,
   };
 };

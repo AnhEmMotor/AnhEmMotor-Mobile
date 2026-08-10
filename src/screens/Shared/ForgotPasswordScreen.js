@@ -22,9 +22,7 @@ export default function ForgotPasswordScreen({ navigation }) {
   const theme = useTheme();
   const colors = theme.colors;
 
-  
-
-  const [step, setStep] = useState(1); 
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPass, setNewPass] = useState('');
@@ -42,7 +40,10 @@ export default function ForgotPasswordScreen({ navigation }) {
     setLoading(true);
     try {
       await forgotPasswordApi(email.trim());
-      Alert.alert('Thành công', 'Đã gửi yêu cầu đặt lại mật khẩu. Vui lòng kiểm tra email của bạn.');
+      Alert.alert(
+        'Thành công',
+        'Đã gửi yêu cầu đặt lại mật khẩu. Vui lòng kiểm tra email của bạn.'
+      );
       setStep(2);
     } catch (error) {
       Alert.alert('Lỗi', error.message || 'Không thể gửi yêu cầu đặt lại mật khẩu.');
@@ -66,7 +67,7 @@ export default function ForgotPasswordScreen({ navigation }) {
     try {
       await resetPasswordApi(email.trim(), otp.trim(), newPass);
       Alert.alert('Thành công', 'Mật khẩu đã được cập nhật. Vui lòng đăng nhập lại.', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') }
+        { text: 'OK', onPress: () => navigation.navigate('Login') },
       ]);
     } catch (error) {
       Alert.alert('Lỗi', error.message || 'Không thể đặt lại mật khẩu.');
@@ -78,7 +79,9 @@ export default function ForgotPasswordScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <LinearGradient
-        colors={theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']}
+        colors={
+          theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']
+        }
         style={StyleSheet.absoluteFill}
       />
       <View style={[styles.glowTop, { backgroundColor: theme.staticColors.primary + '18' }]} />
@@ -87,12 +90,21 @@ export default function ForgotPasswordScreen({ navigation }) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
           <Animated.View entering={FadeInDown.duration(800)} style={styles.card}>
-            <BlurView intensity={theme.isDark ? 25 : 50} tint={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
+            <BlurView
+              intensity={theme.isDark ? 25 : 50}
+              tint={theme.isDark ? 'dark' : 'light'}
+              style={StyleSheet.absoluteFill}
+            />
             <View style={[styles.cardInner, { backgroundColor: colors.glassBg }]}>
               <Text style={[styles.formTitle, { color: colors.text }]}>Quên mật khẩu</Text>
-              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>Nhập email để nhận liên kết đặt lại mật khẩu</Text>
+              <Text style={[styles.formSubtitle, { color: colors.subtext }]}>
+                Nhập email để nhận liên kết đặt lại mật khẩu
+              </Text>
 
               {step === 1 && (
                 <>
@@ -101,10 +113,19 @@ export default function ForgotPasswordScreen({ navigation }) {
                     style={[
                       styles.inputWrapper,
                       { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      activeInput === 'phone' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                      activeInput === 'phone' && [
+                        styles.inputActive,
+                        {
+                          borderColor: colors.primary + '80',
+                          backgroundColor: colors.primary + '10',
+                        },
+                      ],
                     ]}
                   >
-                    <Mail size={moderateScale(18)} color={activeInput === 'phone' ? colors.primary : colors.subtext} />
+                    <Mail
+                      size={moderateScale(18)}
+                      color={activeInput === 'phone' ? colors.primary : colors.subtext}
+                    />
                     <TextInput
                       style={[styles.input, { color: colors.text }]}
                       placeholder="Email của bạn"
@@ -141,10 +162,19 @@ export default function ForgotPasswordScreen({ navigation }) {
                     style={[
                       styles.inputWrapper,
                       { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      activeInput === 'otp' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                      activeInput === 'otp' && [
+                        styles.inputActive,
+                        {
+                          borderColor: colors.primary + '80',
+                          backgroundColor: colors.primary + '10',
+                        },
+                      ],
                     ]}
                   >
-                    <Clock size={moderateScale(18)} color={activeInput === 'otp' ? colors.primary : colors.subtext} />
+                    <Clock
+                      size={moderateScale(18)}
+                      color={activeInput === 'otp' ? colors.primary : colors.subtext}
+                    />
                     <TextInput
                       style={[styles.input, { color: colors.text }]}
                       placeholder="Mã OTP (6 chữ số)"
@@ -177,10 +207,19 @@ export default function ForgotPasswordScreen({ navigation }) {
                     style={[
                       styles.inputWrapper,
                       { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      activeInput === 'newPass' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                      activeInput === 'newPass' && [
+                        styles.inputActive,
+                        {
+                          borderColor: colors.primary + '80',
+                          backgroundColor: colors.primary + '10',
+                        },
+                      ],
                     ]}
                   >
-                    <Lock size={moderateScale(18)} color={activeInput === 'newPass' ? colors.primary : colors.subtext} />
+                    <Lock
+                      size={moderateScale(18)}
+                      color={activeInput === 'newPass' ? colors.primary : colors.subtext}
+                    />
                     <TextInput
                       style={[styles.input, { color: colors.text }]}
                       placeholder="Mật khẩu mới"
@@ -192,7 +231,11 @@ export default function ForgotPasswordScreen({ navigation }) {
                       onBlur={() => setActiveInput(null)}
                     />
                     <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
-                      {showPassword ? <EyeOff size={moderateScale(18)} color={colors.subtext} /> : <Eye size={moderateScale(18)} color={colors.subtext} />}
+                      {showPassword ? (
+                        <EyeOff size={moderateScale(18)} color={colors.subtext} />
+                      ) : (
+                        <Eye size={moderateScale(18)} color={colors.subtext} />
+                      )}
                     </Pressable>
                   </View>
                   {}
@@ -200,10 +243,19 @@ export default function ForgotPasswordScreen({ navigation }) {
                     style={[
                       styles.inputWrapper,
                       { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      activeInput === 'confirmPass' && [styles.inputActive, { borderColor: colors.primary + '80', backgroundColor: colors.primary + '10' }],
+                      activeInput === 'confirmPass' && [
+                        styles.inputActive,
+                        {
+                          borderColor: colors.primary + '80',
+                          backgroundColor: colors.primary + '10',
+                        },
+                      ],
                     ]}
                   >
-                    <Lock size={moderateScale(18)} color={activeInput === 'confirmPass' ? colors.primary : colors.subtext} />
+                    <Lock
+                      size={moderateScale(18)}
+                      color={activeInput === 'confirmPass' ? colors.primary : colors.subtext}
+                    />
                     <TextInput
                       style={[styles.input, { color: colors.text }]}
                       placeholder="Xác nhận mật khẩu"
@@ -215,7 +267,11 @@ export default function ForgotPasswordScreen({ navigation }) {
                       onBlur={() => setActiveInput(null)}
                     />
                     <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
-                      {showPassword ? <EyeOff size={moderateScale(18)} color={colors.subtext} /> : <Eye size={moderateScale(18)} color={colors.subtext} />}
+                      {showPassword ? (
+                        <EyeOff size={moderateScale(18)} color={colors.subtext} />
+                      ) : (
+                        <Eye size={moderateScale(18)} color={colors.subtext} />
+                      )}
                     </Pressable>
                   </View>
                   <Pressable
@@ -229,7 +285,9 @@ export default function ForgotPasswordScreen({ navigation }) {
                       end={{ x: 1, y: 0 }}
                       style={styles.btnGradient}
                     >
-                      <Text style={styles.btnText}>{loading ? 'Đang xử lý...' : 'Đặt lại mật khẩu'}</Text>
+                      <Text style={styles.btnText}>
+                        {loading ? 'Đang xử lý...' : 'Đặt lại mật khẩu'}
+                      </Text>
                     </LinearGradient>
                   </Pressable>
                 </>
@@ -269,7 +327,12 @@ const styles = StyleSheet.create({
     borderRadius: horizontalScale(125),
     backgroundColor: 'rgba(227,27,35,0.08)',
   },
-  card: { borderRadius: Theme.radius.lg, overflow: 'hidden', borderWidth: 1, marginBottom: verticalScale(24) },
+  card: {
+    borderRadius: Theme.radius.lg,
+    overflow: 'hidden',
+    borderWidth: 1,
+    marginBottom: verticalScale(24),
+  },
   cardInner: { padding: moderateScale(24) },
   formTitle: { fontSize: moderateScale(20), fontWeight: '700', marginBottom: verticalScale(4) },
   formSubtitle: { fontSize: moderateScale(13), marginBottom: verticalScale(24) },
@@ -298,8 +361,22 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(14),
     fontWeight: '600',
   },
-  btnPrimary: { borderRadius: Theme.radius.md, overflow: 'hidden', marginBottom: verticalScale(16) },
+  btnPrimary: {
+    borderRadius: Theme.radius.md,
+    overflow: 'hidden',
+    marginBottom: verticalScale(16),
+  },
   btnDisabled: { opacity: 0.5 },
-  btnGradient: { height: verticalScale(52), flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  btnText: { color: '#fff', fontSize: moderateScale(15), fontWeight: '600', marginRight: horizontalScale(6) },
+  btnGradient: {
+    height: verticalScale(52),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: moderateScale(15),
+    fontWeight: '600',
+    marginRight: horizontalScale(6),
+  },
 });

@@ -1,17 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Alert, Platform } from 'react-native';
 
-
-
-
-
-
 import { UserProfile } from '../../domain/entities/UserProfile';
 import { useGlobalState } from '../../../../context/GlobalState';
 import { useDependency } from '../../../../di/DependencyContext';
 import { resetRoot } from '../../../../navigation/RootNavigation';
 import { tokenService } from '../../../../api/httpClient';
-
 
 export const MOCK_REGIONS = {
   provinces: ['Hồ Chí Minh', 'Đồng Nai', 'Hà Nội', 'Bình Dương'],
@@ -22,18 +16,33 @@ export const MOCK_REGIONS = {
     'Bình Dương': ['Thành phố Thủ Dầu Một', 'Thành phố Thuận An', 'Thành phố Dĩ An'],
   },
   wards: {
-    'Quận 9': ['Phường Hiệp Phú', 'Phường Tăng Nhơn Phú A', 'Phường Tăng Nhơn Phú B', 'Phường Long Thạnh Mỹ'],
-    'Thành phố Thủ Đức': ['Phường Thảo Điền', 'Phường An Phú', 'Phường Bình An', 'Phường Linh Trung'],
-    'Thành phố Biên Hòa': ['Phường Quyết Thắng', 'Phường Tân Phong', 'Phường Trung Dũng', 'Phường Trảng Dài'],
+    'Quận 9': [
+      'Phường Hiệp Phú',
+      'Phường Tăng Nhơn Phú A',
+      'Phường Tăng Nhơn Phú B',
+      'Phường Long Thạnh Mỹ',
+    ],
+    'Thành phố Thủ Đức': [
+      'Phường Thảo Điền',
+      'Phường An Phú',
+      'Phường Bình An',
+      'Phường Linh Trung',
+    ],
+    'Thành phố Biên Hòa': [
+      'Phường Quyết Thắng',
+      'Phường Tân Phong',
+      'Phường Trung Dũng',
+      'Phường Trảng Dài',
+    ],
     'Huyện Long Thành': ['Thị trấn Long Thành', 'Xã An Phước', 'Xã Lộc An', 'Xã Long Đức'],
     'Quận Hoàn Kiếm': ['Phường Hàng Bạc', 'Phường Tràng Tiền', 'Phường Đồng Xuân'],
     'Thành phố Thủ Dầu Một': ['Phường Phú Cường', 'Phường Hiệp Thành', 'Phường Chánh Nghĩa'],
-  }
+  },
 };
 
 export const useProfileController = (navigation, bottomSheetRef) => {
-  const ImagePicker = require("expo-image-picker");
-  const Haptics = require("expo-haptics");
+  const ImagePicker = require('expo-image-picker');
+  const Haptics = require('expo-haptics');
   const {
     getProfileUseCase,
     updateProfileUseCase,
@@ -47,12 +56,14 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   const [isSaving, setIsSaving] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
 
-  
   const [activeField, setActiveField] = useState(null);
   const [tempData, setTempData] = useState({});
 
-  
-  const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
 
   const loadProfileData = useCallback(async () => {
     try {
@@ -80,7 +91,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     init();
   }, [loadProfileData]);
 
-  
   const openEditField = (field) => {
     triggerHaptic();
     setActiveField(field);
@@ -125,7 +135,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     bottomSheetRef.current?.show();
   };
 
-  
   const handleSaveField = async () => {
     triggerHaptic();
     try {
@@ -195,14 +204,12 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  
   const handleToggleSetting = async (key, currentValue) => {
     triggerHaptic();
     try {
       const newValue = !currentValue;
 
-      
-      setProfile(prev => {
+      setProfile((prev) => {
         const cloned = prev.clone();
         cloned.settings[key] = newValue;
         return cloned;
@@ -211,7 +218,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       await updateSettingsUseCase.execute({ [key]: newValue });
     } catch (error) {
       console.error(`Toggle ${key} failed:`, error);
-      setProfile(prev => {
+      setProfile((prev) => {
         const cloned = prev.clone();
         cloned.settings[key] = currentValue;
         return cloned;
@@ -220,7 +227,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  
   const handleSelectPhoto = async (type) => {
     setAvatarModal(false);
     triggerHaptic();
@@ -233,7 +239,10 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       }
 
       if (!permissionResult.granted) {
-        Alert.alert('Quyền truy cập', 'AnhEmMotor cần quyền truy cập máy ảnh hoặc thư viện để đổi ảnh.');
+        Alert.alert(
+          'Quyền truy cập',
+          'AnhEmMotor cần quyền truy cập máy ảnh hoặc thư viện để đổi ảnh.'
+        );
         return;
       }
 
@@ -265,7 +274,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  
   const handleSelectCartoonAvatar = async (url) => {
     triggerHaptic();
     try {
@@ -284,7 +292,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     }
   };
 
-  
   const handleDeleteAccount = () => {
     triggerHaptic();
     Alert.alert(
@@ -301,7 +308,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
             await repository.clearAllData();
             setIsLoading(false);
             Alert.alert('Thông báo', 'Tài khoản của bạn đã được xóa thành công khỏi hệ thống.', [
-              { text: 'OK', onPress: () => resetRoot('Login') }
+              { text: 'OK', onPress: () => resetRoot('Login') },
             ]);
           },
         },
@@ -329,7 +336,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     'https://img.freepik.com/free-vector/cute-robot-pixel-art-style_475147-152.jpg',
     'https://img.freepik.com/free-vector/cute-cat-pixel-art-style_475147-151.jpg',
     'https://img.freepik.com/free-vector/cute-dog-pixel-art-style_475147-153.jpg',
-    'https://img.freepik.com/free-vector/cute-panda-pixel-art-style_475147-150.jpg'
+    'https://img.freepik.com/free-vector/cute-panda-pixel-art-style_475147-150.jpg',
   ];
 
   return {

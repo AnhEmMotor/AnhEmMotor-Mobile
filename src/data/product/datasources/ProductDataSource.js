@@ -11,18 +11,32 @@ function normalizeProductItem(item) {
         productId: v.productId ?? v.ProductId,
         urlSlug: v.urlSlug ?? v.UrlSlug ?? '',
         price: v.price ?? v.Price,
-        coverImageUrl: getFullImageUrl(v.cover_image_url ?? v.coverImageUrl ?? v.CoverImageUrl ?? '', API_BASE_URL),
+        coverImageUrl: getFullImageUrl(
+          v.cover_image_url ?? v.coverImageUrl ?? v.CoverImageUrl ?? '',
+          API_BASE_URL
+        ),
         variantName: v.variantName ?? v.VariantName ?? '',
         optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
-        photos: Array.isArray(v.photos ?? v.Photos) ? (v.photos ?? v.Photos).map(p => ({...p, image: getFullImageUrl(p.image, API_BASE_URL)})) : [],
+        photos: Array.isArray(v.photos ?? v.Photos)
+          ? (v.photos ?? v.Photos).map((p) => ({
+              ...p,
+              image: getFullImageUrl(p.image, API_BASE_URL),
+            }))
+          : [],
         colors: (v.colors ?? v.Colors ?? []).map((c) => ({
           id: c.id ?? c.Id ?? null,
           name: c.name ?? c.ColorName ?? c.Name ?? '',
           colorName: c.colorName ?? c.ColorName ?? c.name ?? '',
           colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
           code: c.code ?? c.ColorCode ?? '#ccc',
-          coverImageUrl: getFullImageUrl(c.cover_image_url ?? c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '', API_BASE_URL),
-          image: getFullImageUrl(c.cover_image_url ?? c.image ?? c.CoverImageUrl ?? '', API_BASE_URL),
+          coverImageUrl: getFullImageUrl(
+            c.cover_image_url ?? c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
+            API_BASE_URL
+          ),
+          image: getFullImageUrl(
+            c.cover_image_url ?? c.image ?? c.CoverImageUrl ?? '',
+            API_BASE_URL
+          ),
           maxPurchaseQuantity: c.maxPurchaseQuantity ?? c.MaxPurchaseQuantity ?? null,
           effectiveMax: c.effectiveMax ?? c.EffectiveMax ?? null,
         })),

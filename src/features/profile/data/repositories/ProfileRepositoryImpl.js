@@ -9,7 +9,7 @@ import { UserProfileModel } from '../models/UserProfileModel';
 
 export class ProfileRepositoryImpl {
   async _simulateNetworkLatency(ms = 600) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   _makeProfile(user) {
@@ -71,7 +71,10 @@ export class ProfileRepositoryImpl {
   static async _saveLocal(profile) {
     try {
       const { AsyncStorage } = await import('@react-native-async-storage/async-storage');
-      const model = profile instanceof UserProfileModel ? profile : new UserProfileModel({ ...profile, settings: profile.settings });
+      const model =
+        profile instanceof UserProfileModel
+          ? profile
+          : new UserProfileModel({ ...profile, settings: profile.settings });
       await AsyncStorage.setItem('@AEM_Customer_Profile', JSON.stringify(model.toJson()));
     } catch {}
   }

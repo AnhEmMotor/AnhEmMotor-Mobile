@@ -1,15 +1,9 @@
 import React from 'react';
 import { Pressable } from 'react-native';
-import Animated, { 
-  useAnimatedStyle, 
-  useSharedValue, 
-  withSpring,
-} from 'react-native-reanimated';
-
-
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const Haptics = require("expo-haptics");
+const Haptics = require('expo-haptics');
 
 const setScaleValue = (sharedValue, val) => {
   sharedValue.value = val;
@@ -44,4 +38,3 @@ export default function ScalePress({ children, onPress, style, activeScale = 0.9
     </AnimatedPressable>
   );
 }
-

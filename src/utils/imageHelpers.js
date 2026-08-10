@@ -1,6 +1,6 @@
 export const getFullImageUrl = (url, baseUrl) => {
   if (!url) return '';
-  
+
   const cleanBase = baseUrl.replace(/\/$/, '');
 
   if (url.includes('localhost:5000')) {

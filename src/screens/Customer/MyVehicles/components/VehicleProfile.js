@@ -6,18 +6,28 @@ import { useActiveColors } from '../../../../theme/Theme';
 import { copyToClipboard } from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
-
-
-
 const getBikeImage = (bikeName) => {
   const name = bikeName ? bikeName.toLowerCase() : '';
-  if (name.includes('sh') || name.includes('vario') || name.includes('scooter') || name.includes('vespa') || name.includes('vision') || name.includes('lead')) {
-    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' }; 
+  if (
+    name.includes('sh') ||
+    name.includes('vario') ||
+    name.includes('scooter') ||
+    name.includes('vespa') ||
+    name.includes('vision') ||
+    name.includes('lead')
+  ) {
+    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' };
   }
-  if (name.includes('exciter') || name.includes('winner') || name.includes('côn tay') || name.includes('underbone') || name.includes('raider')) {
-    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' }; 
+  if (
+    name.includes('exciter') ||
+    name.includes('winner') ||
+    name.includes('côn tay') ||
+    name.includes('underbone') ||
+    name.includes('raider')
+  ) {
+    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' };
   }
-  return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' }; 
+  return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' };
 };
 
 export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
@@ -25,14 +35,16 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
 
   return (
     <Animated.View entering={FadeInDown.delay(200)} style={styles.profileSection}>
-      <TouchableOpacity 
-        onPress={onPress} 
-        activeOpacity={0.85} 
-        style={styles.bikeHeader}
-      >
+      <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={styles.bikeHeader}>
         <View style={styles.bikeInfo}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[styles.bikeName, { color: activeColors.text }]} numberOfLines={1} ellipsizeMode="tail">{bike.name}</Text>
+            <Text
+              style={[styles.bikeName, { color: activeColors.text }]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {bike.name}
+            </Text>
             <Text style={{ fontSize: 14, color: activeColors.primary, marginLeft: 6 }}>➔</Text>
           </View>
           <Text style={styles.bikePlate}>{bike.plate}</Text>
@@ -42,12 +54,15 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
           </View>
         </View>
         <View style={styles.bikeImageContainer}>
-          <Image 
-            source={bike.image ? { uri: bike.image } : getBikeImage(bike.name)} 
-            style={styles.bikeThumb} 
+          <Image
+            source={bike.image ? { uri: bike.image } : getBikeImage(bike.name)}
+            style={styles.bikeThumb}
             resizeMode="contain"
           />
-          <TouchableOpacity onPress={onShowQR} style={[styles.qrBadge, { borderColor: activeColors.background }]}>
+          <TouchableOpacity
+            onPress={onShowQR}
+            style={[styles.qrBadge, { borderColor: activeColors.background }]}
+          >
             <QrCode color="#fff" size={12} />
           </TouchableOpacity>
         </View>
@@ -55,14 +70,20 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
 
       <View style={[styles.detailGrid, { borderTopColor: activeColors.border }]}>
         <View style={styles.detailRow}>
-          <TouchableOpacity style={styles.detailItem} onPress={() => copyToClipboard(bike.vin, 'số khung')}>
+          <TouchableOpacity
+            style={styles.detailItem}
+            onPress={() => copyToClipboard(bike.vin, 'số khung')}
+          >
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Số khung</Text>
             <View style={styles.detailValueRow}>
               <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.vin}</Text>
               <Copy color={activeColors.subtext} size={10} style={{ marginLeft: 4 }} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.detailItem, { marginLeft: 20 }]} onPress={() => copyToClipboard(bike.engine, 'số máy')}>
+          <TouchableOpacity
+            style={[styles.detailItem, { marginLeft: 20 }]}
+            onPress={() => copyToClipboard(bike.engine, 'số máy')}
+          >
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Số máy</Text>
             <View style={styles.detailValueRow}>
               <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.engine}</Text>
@@ -88,7 +109,9 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
 
         <View style={styles.detailRow}>
           <View style={styles.detailItem}>
-            <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Đăng ký lần đầu</Text>
+            <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>
+              Đăng ký lần đầu
+            </Text>
             <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.regDate}</Text>
           </View>
           <View style={styles.detailItem}>

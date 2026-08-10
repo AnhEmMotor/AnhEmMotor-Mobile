@@ -1,19 +1,44 @@
-import { View, Text, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft, Calendar, User, Phone, Mail, FileText, CheckCircle2 } from 'lucide-react-native';
+import {
+  ChevronLeft,
+  Calendar,
+  User,
+  Phone,
+  Mail,
+  FileText,
+  CheckCircle2,
+} from 'lucide-react-native';
 import { useActiveColors } from '../../../theme/Theme';
 import { useAppointmentBooking } from './useAppointmentBooking';
 
 export default function AppointmentBookingScreen({ navigation }) {
   const activeColors = useActiveColors();
-  const { formData, updateField, isLoading, handleSubmit, serviceOptions } = useAppointmentBooking(navigation);
+  const { formData, updateField, isLoading, handleSubmit, serviceOptions } =
+    useAppointmentBooking(navigation);
 
   const blockBg = { backgroundColor: activeColors.cardBg, borderColor: activeColors.border };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top', 'bottom']}>
-      {/* Header */}
-      <View style={[styles.header, { borderBottomColor: activeColors.border, backgroundColor: activeColors.cardBg }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+      edges={['top', 'bottom']}
+    >
+      {}
+      <View
+        style={[
+          styles.header,
+          { borderBottomColor: activeColors.border, backgroundColor: activeColors.cardBg },
+        ]}
+      >
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <ChevronLeft color={activeColors.text} size={24} />
         </TouchableOpacity>
@@ -21,26 +46,30 @@ export default function AppointmentBookingScreen({ navigation }) {
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView 
-        style={{ flex: 1 }} 
-        showsVerticalScrollIndicator={false} 
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, padding: 16 }}
         keyboardShouldPersistTaps="handled"
       >
-        
-        {/* Intro */}
+        {}
         <View style={styles.introBlock}>
           <Text style={[styles.introText, { color: activeColors.subtext }]}>
-            Vui lòng điền thông tin bên dưới để đặt lịch. Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất để xác nhận.
+            Vui lòng điền thông tin bên dưới để đặt lịch. Chúng tôi sẽ liên hệ lại với bạn trong
+            thời gian sớm nhất để xác nhận.
           </Text>
         </View>
 
-        {/* Thông tin liên hệ */}
+        {}
         <View style={[styles.section, blockBg]}>
-          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>1. THÔNG TIN LIÊN HỆ</Text>
-          
+          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>
+            1. THÔNG TIN LIÊN HỆ
+          </Text>
+
           <View style={styles.inputGroup}>
-            <View style={styles.inputIcon}><User size={18} color={activeColors.subtext} /></View>
+            <View style={styles.inputIcon}>
+              <User size={18} color={activeColors.subtext} />
+            </View>
             <TextInput
               style={[styles.input, { color: activeColors.text, borderColor: activeColors.border }]}
               placeholder="Họ và tên"
@@ -51,7 +80,9 @@ export default function AppointmentBookingScreen({ navigation }) {
           </View>
 
           <View style={styles.inputGroup}>
-            <View style={styles.inputIcon}><Phone size={18} color={activeColors.subtext} /></View>
+            <View style={styles.inputIcon}>
+              <Phone size={18} color={activeColors.subtext} />
+            </View>
             <TextInput
               style={[styles.input, { color: activeColors.text, borderColor: activeColors.border }]}
               placeholder="Số điện thoại"
@@ -63,7 +94,9 @@ export default function AppointmentBookingScreen({ navigation }) {
           </View>
 
           <View style={styles.inputGroup}>
-            <View style={styles.inputIcon}><Mail size={18} color={activeColors.subtext} /></View>
+            <View style={styles.inputIcon}>
+              <Mail size={18} color={activeColors.subtext} />
+            </View>
             <TextInput
               style={[styles.input, { color: activeColors.text, borderColor: activeColors.border }]}
               placeholder="Email (không bắt buộc)"
@@ -76,43 +109,53 @@ export default function AppointmentBookingScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Thông tin dịch vụ */}
+        {}
         <View style={[styles.section, blockBg]}>
-          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>2. DỊCH VỤ & THỜI GIAN</Text>
-          
+          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>
+            2. DỊCH VỤ & THỜI GIAN
+          </Text>
+
           <Text style={[styles.fieldLabel, { color: activeColors.subtext }]}>Loại dịch vụ</Text>
           <View style={styles.optionsWrap}>
             {serviceOptions.map((opt) => {
               const isSelected = formData.serviceType === opt;
               return (
-                <TouchableOpacity 
-                  key={opt} 
+                <TouchableOpacity
+                  key={opt}
                   style={[
-                    styles.optionChip, 
-                    { 
-                      backgroundColor: isSelected ? activeColors.primary + '15' : activeColors.background,
-                      borderColor: isSelected ? activeColors.primary : activeColors.border
-                    }
+                    styles.optionChip,
+                    {
+                      backgroundColor: isSelected
+                        ? activeColors.primary + '15'
+                        : activeColors.background,
+                      borderColor: isSelected ? activeColors.primary : activeColors.border,
+                    },
                   ]}
                   onPress={() => updateField('serviceType', opt)}
                 >
-                  <Text style={[
-                    styles.optionText, 
-                    { 
-                      color: isSelected ? activeColors.primary : activeColors.text,
-                      fontWeight: isSelected ? '600' : '400'
-                    }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.optionText,
+                      {
+                        color: isSelected ? activeColors.primary : activeColors.text,
+                        fontWeight: isSelected ? '600' : '400',
+                      },
+                    ]}
+                  >
                     {opt}
                   </Text>
                 </TouchableOpacity>
-              )
+              );
             })}
           </View>
 
-          <Text style={[styles.fieldLabel, { color: activeColors.subtext, marginTop: 16 }]}>Ngày & Giờ hẹn mong muốn</Text>
+          <Text style={[styles.fieldLabel, { color: activeColors.subtext, marginTop: 16 }]}>
+            Ngày & Giờ hẹn mong muốn
+          </Text>
           <View style={styles.inputGroup}>
-            <View style={styles.inputIcon}><Calendar size={18} color={activeColors.subtext} /></View>
+            <View style={styles.inputIcon}>
+              <Calendar size={18} color={activeColors.subtext} />
+            </View>
             <TextInput
               style={[styles.input, { color: activeColors.text, borderColor: activeColors.border }]}
               placeholder="Ví dụ: Sáng mai (15/10), 14:00 ngày 20/10..."
@@ -123,14 +166,21 @@ export default function AppointmentBookingScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Ghi chú */}
+        {}
         <View style={[styles.section, blockBg]}>
-          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>3. GHI CHÚ BỔ SUNG</Text>
-          
+          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>
+            3. GHI CHÚ BỔ SUNG
+          </Text>
+
           <View style={styles.inputGroupArea}>
-            <View style={[styles.inputIcon, { marginTop: 10 }]}><FileText size={18} color={activeColors.subtext} /></View>
+            <View style={[styles.inputIcon, { marginTop: 10 }]}>
+              <FileText size={18} color={activeColors.subtext} />
+            </View>
             <TextInput
-              style={[styles.inputArea, { color: activeColors.text, borderColor: activeColors.border }]}
+              style={[
+                styles.inputArea,
+                { color: activeColors.text, borderColor: activeColors.border },
+              ]}
               placeholder="Bạn muốn thêm biển số xe, yêu cầu thợ ruột, hoặc mô tả tình trạng xe ở đây..."
               placeholderTextColor={activeColors.subtext}
               multiline
@@ -145,10 +195,18 @@ export default function AppointmentBookingScreen({ navigation }) {
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* Bottom Button */}
-      <View style={[styles.bottomBar, { borderTopColor: activeColors.border, backgroundColor: activeColors.cardBg }]}>
-        <TouchableOpacity 
-          style={[styles.submitButton, { backgroundColor: activeColors.primary, opacity: isLoading ? 0.7 : 1 }]}
+      {}
+      <View
+        style={[
+          styles.bottomBar,
+          { borderTopColor: activeColors.border, backgroundColor: activeColors.cardBg },
+        ]}
+      >
+        <TouchableOpacity
+          style={[
+            styles.submitButton,
+            { backgroundColor: activeColors.primary, opacity: isLoading ? 0.7 : 1 },
+          ]}
           onPress={handleSubmit}
           disabled={isLoading}
         >
@@ -278,5 +336,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
-  }
+  },
 });

@@ -44,11 +44,6 @@ const Tab = createBottomTabNavigator();
 function CustomerTabs() {
   const activeColors = useActiveColors();
 
-  
-
-  
-
-  
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? insets.bottom : 20;
   const barHeight = 55 + bottomInset;
@@ -60,30 +55,74 @@ function CustomerTabs() {
   const tabBorderTop = activeColors.border;
 
   return (
-    <Tab.Navigator screenOptions={{
-      headerShown: false,
-      tabBarStyle: {
-        backgroundColor: tabBg,
-        borderTopWidth: 1,
-        borderTopColor: tabBorderTop,
-        height: barHeight,
-        paddingBottom: paddingBottom,
-        paddingTop: 10,
-        elevation: 0,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      },
-      tabBarActiveTintColor: tabActiveText,
-      tabBarInactiveTintColor: tabInactiveText,
-    }}>
-      <Tab.Screen name="Hub" component={HomeScreen} options={{ tabBarIcon: ({color}) => <LayoutGrid color={color} size={22} />, tabBarLabel: 'Trang chủ' }} />
-      <Tab.Screen name="Catalog" component={CatalogScreen} options={{ tabBarIcon: ({color}) => <Package color={color} size={22} />, tabBarLabel: 'Sản phẩm' }} />
-      <Tab.Screen name="MyVehicles" component={MyVehiclesScreen} options={{ tabBarIcon: ({color}) => <Motorbike color={color} size={22} />, tabBarLabel: 'Xe của tôi' }} />
-      <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarIcon: ({color}) => <Bell color={color} size={22} />, tabBarLabel: 'Thông báo' }} />
-      <Tab.Screen name="Support" component={SupportScreen} options={{ tabBarIcon: ({color}) => <LifeBuoy color={color} size={22} />, tabBarLabel: 'Hỗ trợ' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarIcon: ({color}) => <User color={color} size={22} />, tabBarLabel: 'Cá nhân' }} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: tabBg,
+          borderTopWidth: 1,
+          borderTopColor: tabBorderTop,
+          height: barHeight,
+          paddingBottom: paddingBottom,
+          paddingTop: 10,
+          elevation: 0,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+        },
+        tabBarActiveTintColor: tabActiveText,
+        tabBarInactiveTintColor: tabInactiveText,
+      }}
+    >
+      <Tab.Screen
+        name="Hub"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => <LayoutGrid color={color} size={22} />,
+          tabBarLabel: 'Trang chủ',
+        }}
+      />
+      <Tab.Screen
+        name="Catalog"
+        component={CatalogScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Package color={color} size={22} />,
+          tabBarLabel: 'Sản phẩm',
+        }}
+      />
+      <Tab.Screen
+        name="MyVehicles"
+        component={MyVehiclesScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Motorbike color={color} size={22} />,
+          tabBarLabel: 'Xe của tôi',
+        }}
+      />
+      <Tab.Screen
+        name="Notification"
+        component={NotificationScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Bell color={color} size={22} />,
+          tabBarLabel: 'Thông báo',
+        }}
+      />
+      <Tab.Screen
+        name="Support"
+        component={SupportScreen}
+        options={{
+          tabBarIcon: ({ color }) => <LifeBuoy color={color} size={22} />,
+          tabBarLabel: 'Hỗ trợ',
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color }) => <User color={color} size={22} />,
+          tabBarLabel: 'Cá nhân',
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -111,7 +150,14 @@ export default function AppNavigator() {
 
   if (initialRoute === null) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#050505', justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#050505',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <ActivityIndicator size="large" color="#E31B23" />
       </View>
     );
@@ -119,7 +165,13 @@ export default function AppNavigator() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false, animation: Platform.OS === 'web' ? 'none' : 'slide_from_right' }}>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        screenOptions={{
+          headerShown: false,
+          animation: Platform.OS === 'web' ? 'none' : 'slide_from_right',
+        }}
+      >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />

@@ -3,11 +3,11 @@ import { useColorScheme } from 'react-native';
 import { useGlobalState } from '../context/GlobalState';
 
 export const Theme = {
-  // Static colors that are consistent across themes (e.g., brand colors, status colors)
+  
   staticColors: {
-    primary: '#E31B23',      // AnhEmMotor Red
-    secondary: '#FFFFFF',    // White accent for brand
-    // Status colors
+    primary: '#E31B23', 
+    secondary: '#FFFFFF', 
+    
     success: '#22C55E',
     warning: '#F59E0B',
     error: '#DC2626',
@@ -85,12 +85,12 @@ export const Theme = {
       boxShadow: '0px 10px 20px rgba(227, 27, 35, 0.4)',
       elevation: 10,
     },
-  }
+  },
 };
 
-// Define palettes as plain objects, logic for selecting them will be in useActiveColors
+
 const darkPalette = {
-  background: '#050505', // Deep black brand background
+  background: '#050505', 
   card: '#111111',
   surface: '#1C1C1C',
   text: '#F8FAFC',
@@ -103,7 +103,7 @@ const darkPalette = {
 };
 
 const lightPalette = {
-  background: '#FFFFFF', // Clean white theme
+  background: '#FFFFFF', 
   card: '#F8FAFC',
   surface: '#E5E7EB',
   text: '#111827',
@@ -115,7 +115,7 @@ const lightPalette = {
   modalOverlay: 'rgba(0, 0, 0, 0.6)',
 };
 
-// Hook to get active colors based on theme mode
+
 export const useActiveColors = () => {
   const globalState = useGlobalState();
   const themeMode = globalState?.themeMode || 'light';
@@ -131,13 +131,13 @@ export const useActiveColors = () => {
   };
 };
 
-// New hook to get the full theme (static + dynamic colors)
+
 export const useTheme = () => {
   const activeDynamicColors = useActiveColors();
 
   return {
-    ...Theme, // Static spacing, radius, typography, shadows, staticColors
-    colors: { ...Theme.staticColors, ...activeDynamicColors }, // Combined colors
-    isDark: activeDynamicColors.isDark, // Expose isDark directly from useTheme
+    ...Theme, 
+    colors: { ...Theme.staticColors, ...activeDynamicColors }, 
+    isDark: activeDynamicColors.isDark, 
   };
 };

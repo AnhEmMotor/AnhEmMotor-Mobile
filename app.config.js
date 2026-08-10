@@ -1,54 +1,53 @@
 export default {
-  "expo": {
-    "name": "Anh Em Motor",
-    "slug": "AnhEmMotorMobile",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
+  expo: {
+    name: 'Anh Em Motor',
+    slug: 'AnhEmMotorMobile',
+    version: '1.0.0',
+    orientation: 'portrait',
+    icon: './assets/icon.png',
+    userInterfaceStyle: 'light',
+    newArchEnabled: true,
+    splash: {
+      resizeMode: 'contain',
+      backgroundColor: '#000000',
     },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.AnhEmMotorMobile",
-      "config": {
-        "googleMapsApiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || "dummy_ios_key"
-      }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#000000"
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: 'com.anonymous.AnhEmMotorMobile',
+      config: {
+        googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_IOS_API_KEY || 'dummy_ios_key',
       },
-      "edgeToEdgeEnabled": true,
-      "config": {
-        "googleMaps": {
-          "apiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || "dummy_android_key"
-        }
+    },
+    android: {
+      adaptiveIcon: {
+        foregroundImage: './assets/adaptive-icon.png',
+        backgroundColor: '#000000',
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.anonymous.AnhEmMotorMobile"
+      edgeToEdgeEnabled: true,
+      config: {
+        googleMaps: {
+          apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_ANDROID_API_KEY || 'dummy_android_key',
+        },
+      },
+      permissions: ['android.permission.RECORD_AUDIO'],
+      package: 'com.anonymous.AnhEmMotorMobile',
     },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "extra": {
-        "googleMapsApiKey": process.env.EXPO_PUBLIC_GOOGLE_MAPS_WEB_API_KEY || "dummy_web_key"
-      }
+    web: {
+      favicon: './assets/favicon.png',
+      extra: {
+        googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_WEB_API_KEY || 'dummy_web_key',
+      },
     },
-    "plugins": [
-      "expo-status-bar",
+    plugins: [
+      'expo-status-bar',
       [
-        "expo-image-picker",
+        'expo-image-picker',
         {
-          "photosPermission": "Ứng dụng cần truy cập thư viện ảnh để bạn có thể cập nhật ảnh đại diện.",
-          "cameraPermission": "Ứng dụng cần truy cập camera để bạn có thể chụp ảnh đại diện mới."
-        }
-      ]
-    ]
-  }
+          photosPermission:
+            'Ứng dụng cần truy cập thư viện ảnh để bạn có thể cập nhật ảnh đại diện.',
+          cameraPermission: 'Ứng dụng cần truy cập camera để bạn có thể chụp ảnh đại diện mới.',
+        },
+      ],
+    ],
+  },
 };

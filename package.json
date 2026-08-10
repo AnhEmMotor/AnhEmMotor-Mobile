@@ -57,12 +57,17 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unused-imports": "^4.4.1",
     "expo-module-scripts": "^56.0.2",
+    "prettier": "^3.9.6",
     "typescript": "^7.0.2"
   },
   "lint-staged": {
     "**/*.{js,jsx}": [
+      "prettier --write",
       "node scripts/strip-comments-runner.js",
       "eslint --fix"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write"
     ]
   }
 }

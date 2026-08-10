@@ -17,7 +17,8 @@ export class Product {
     this.promotionText = data.promotionText ?? data.PromotionText ?? '';
 
     this.technologies = Array.isArray(data.technologies ?? data.Technologies)
-      ? (data.technologies ?? data.Technologies) : [];
+      ? (data.technologies ?? data.Technologies)
+      : [];
 
     this.variants = Array.isArray(data.variants ?? data.Variants)
       ? (data.variants ?? data.Variants).map((v, i) => new ProductVariant(v, i))
@@ -26,11 +27,12 @@ export class Product {
 
   get cheapestPrice() {
     if (!Array.isArray(this.variants) || this.variants.length === 0) return null;
-    return Math.min(...this.variants.filter(v => v.price != null).map(v => v.price));
+    return Math.min(...this.variants.filter((v) => v.price != null).map((v) => v.price));
   }
 
   get primaryImage() {
-    if (this.variants.length > 0 && this.variants[0].coverImageUrl) return this.variants[0].coverImageUrl;
+    if (this.variants.length > 0 && this.variants[0].coverImageUrl)
+      return this.variants[0].coverImageUrl;
     return this.imgUrl || this.imageUrl || '';
   }
 }
@@ -61,7 +63,8 @@ export class ProductVariant {
   get displayName() {
     const parts = [];
     if (this.variantName && !this.optionValuesText) parts.push(this.variantName);
-    if (this.optionValuesText && this.optionValuesText !== this.variantName) parts.push(this.optionValuesText);
+    if (this.optionValuesText && this.optionValuesText !== this.variantName)
+      parts.push(this.optionValuesText);
     if (this.colors.length > 0 && this.colors[0].name) parts.push(this.colors[0].name);
     return parts.join(' - ') || '';
   }

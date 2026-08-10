@@ -1,9 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useActiveColors, useTheme } from '../../theme/Theme'; // Import useTheme
-import { ChevronRight,
-  Wrench, ShieldAlert, Sparkles, Bike, ChevronLeft, Settings
+import { useActiveColors, useTheme } from '../../theme/Theme'; 
+import {
+  ChevronRight,
+  Wrench,
+  ShieldAlert,
+  Sparkles,
+  Bike,
+  ChevronLeft,
+  Settings,
 } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
@@ -15,11 +21,11 @@ import { useGlobalState } from '../../context/GlobalState';
 
 export default function BookingScreen({ navigation }) {
   const activeColors = useActiveColors();
-  const theme = useTheme(); // Use the useTheme hook
+  const theme = useTheme(); 
   const styles = getStyles(theme, activeColors);
   const { setSettingsOpen } = useGlobalState();
   const toastRef = useRef(null);
-  const [activeView, setActiveView] = useState('booking'); // 'booking' or 'status'
+  const [activeView, setActiveView] = useState('booking'); 
   const [step, setStep] = useState(1);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
@@ -32,9 +38,21 @@ export default function BookingScreen({ navigation }) {
   ];
 
   const services = [
-    { name: 'Bảo dưỡng định kỳ', icon: <Wrench color={activeColors.primary} size={24} />, desc: 'Kiểm tra tổng quát 24 hạng mục' },
-    { name: 'Khắc phục sự cố', icon: <ShieldAlert color={activeColors.secondary} size={24} />, desc: 'Xử lý lỗi động cơ, phanh, điện' },
-    { name: 'Vệ sinh & Làm đẹp', icon: <Sparkles color={activeColors.info} size={24} />, desc: 'Rửa xe chi tiết & phủ Ceramic' },
+    {
+      name: 'Bảo dưỡng định kỳ',
+      icon: <Wrench color={activeColors.primary} size={24} />,
+      desc: 'Kiểm tra tổng quát 24 hạng mục',
+    },
+    {
+      name: 'Khắc phục sự cố',
+      icon: <ShieldAlert color={activeColors.secondary} size={24} />,
+      desc: 'Xử lý lỗi động cơ, phanh, điện',
+    },
+    {
+      name: 'Vệ sinh & Làm đẹp',
+      icon: <Sparkles color={activeColors.info} size={24} />,
+      desc: 'Rửa xe chi tiết & phủ Ceramic',
+    },
   ];
 
   const timeSlots = ['08:00', '09:00', '10:00', '13:00', '14:00', '15:00'];
@@ -43,8 +61,20 @@ export default function BookingScreen({ navigation }) {
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <Text style={[styles.stepTitle, { color: activeColors.text }]}>Chọn xe cần dịch vụ</Text>
       {myBikes.map((bike, i) => (
-        <ScalePress key={i} onPress={() => { setSelectedVehicle(bike); setStep(2); }}>
-          <GlassCard style={[styles.optionCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]} intensity={15}>
+        <ScalePress
+          key={i}
+          onPress={() => {
+            setSelectedVehicle(bike);
+            setStep(2);
+          }}
+        >
+          <GlassCard
+            style={[
+              styles.optionCard,
+              { borderColor: activeColors.border, backgroundColor: activeColors.card },
+            ]}
+            intensity={15}
+          >
             <View style={[styles.optionIconBox, { backgroundColor: activeColors.border + '33' }]}>
               <Bike color={activeColors.primary} size={24} />
             </View>
@@ -62,12 +92,26 @@ export default function BookingScreen({ navigation }) {
   const renderStep2 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <TouchableOpacity onPress={() => setStep(1)} style={styles.backLinkWrapper}>
-        <Text style={[styles.backLink, { color: activeColors.primary }]}>← Đổi xe ({selectedVehicle?.name})</Text>
+        <Text style={[styles.backLink, { color: activeColors.primary }]}>
+          ← Đổi xe ({selectedVehicle?.name})
+        </Text>
       </TouchableOpacity>
       <Text style={[styles.stepTitle, { color: activeColors.text }]}>Chọn loại dịch vụ</Text>
       {services.map((s, i) => (
-        <ScalePress key={i} onPress={() => { setSelectedService(s.name); setStep(3); }}>
-          <GlassCard style={[styles.optionCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]} intensity={15}>
+        <ScalePress
+          key={i}
+          onPress={() => {
+            setSelectedService(s.name);
+            setStep(3);
+          }}
+        >
+          <GlassCard
+            style={[
+              styles.optionCard,
+              { borderColor: activeColors.border, backgroundColor: activeColors.card },
+            ]}
+            intensity={15}
+          >
             <View style={[styles.optionIconBox, { backgroundColor: activeColors.border + '33' }]}>
               {s.icon}
             </View>
@@ -85,14 +129,31 @@ export default function BookingScreen({ navigation }) {
   const renderStep3 = () => (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} style={styles.stepContainer}>
       <TouchableOpacity onPress={() => setStep(2)} style={styles.backLinkWrapper}>
-        <Text style={[styles.backLink, { color: activeColors.primary }]}>← Đổi dịch vụ ({selectedService})</Text>
+        <Text style={[styles.backLink, { color: activeColors.primary }]}>
+          ← Đổi dịch vụ ({selectedService})
+        </Text>
       </TouchableOpacity>
       <Text style={[styles.stepTitle, { color: activeColors.text }]}>Chọn thời gian</Text>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: theme.spacing.lg }}>
-        {[6, 7, 8, 9, 10, 11].map(d => (
-          <ScalePress key={d} onPress={() => setSelectedDate(`Ngày ${d}/05`)} style={{ marginRight: theme.spacing.md }}>
-            <GlassCard style={[styles.dateCard, selectedDate === `Ngày ${d}/05` && styles.selectedCard, selectedDate === `Ngày ${d}/05` && { borderColor: activeColors.primary }]} intensity={selectedDate === `Ngày ${d}/05` ? 40 : 15}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ marginBottom: theme.spacing.lg }}
+      >
+        {[6, 7, 8, 9, 10, 11].map((d) => (
+          <ScalePress
+            key={d}
+            onPress={() => setSelectedDate(`Ngày ${d}/05`)}
+            style={{ marginRight: theme.spacing.md }}
+          >
+            <GlassCard
+              style={[
+                styles.dateCard,
+                selectedDate === `Ngày ${d}/05` && styles.selectedCard,
+                selectedDate === `Ngày ${d}/05` && { borderColor: activeColors.primary },
+              ]}
+              intensity={selectedDate === `Ngày ${d}/05` ? 40 : 15}
+            >
               <Text style={[styles.dateText, { color: activeColors.text }]}>{d}</Text>
               <Text style={[styles.monthText, { color: activeColors.subtext }]}>Tháng 5</Text>
             </GlassCard>
@@ -102,16 +163,38 @@ export default function BookingScreen({ navigation }) {
 
       <View style={styles.timeGrid}>
         {timeSlots.map((time, _index) => (
-          <ScalePress key={time} style={styles.timeSlotWrapper} onPress={() => setSelectedTime(time)}>
-            <GlassCard style={[styles.timeCard, selectedTime === time && styles.selectedCard, selectedTime === time && { borderColor: activeColors.primary }]} intensity={selectedTime === time ? 40 : 15}>
-              <Text style={[styles.timeText, { color: activeColors.subtext }, selectedTime === time && { color: '#fff' }]}>{time}</Text>
+          <ScalePress
+            key={time}
+            style={styles.timeSlotWrapper}
+            onPress={() => setSelectedTime(time)}
+          >
+            <GlassCard
+              style={[
+                styles.timeCard,
+                selectedTime === time && styles.selectedCard,
+                selectedTime === time && { borderColor: activeColors.primary },
+              ]}
+              intensity={selectedTime === time ? 40 : 15}
+            >
+              <Text
+                style={[
+                  styles.timeText,
+                  { color: activeColors.subtext },
+                  selectedTime === time && { color: '#fff' },
+                ]}
+              >
+                {time}
+              </Text>
             </GlassCard>
           </ScalePress>
         ))}
       </View>
 
       {selectedTime && (
-        <ScalePress style={[styles.confirmBtn, { backgroundColor: activeColors.primary }]} onPress={handleComplete}>
+        <ScalePress
+          style={[styles.confirmBtn, { backgroundColor: activeColors.primary }]}
+          onPress={handleComplete}
+        >
           <Text style={styles.confirmBtnText}>Xác nhận & Gửi yêu cầu</Text>
         </ScalePress>
       )}
@@ -127,35 +210,95 @@ export default function BookingScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+      edges={['top']}
+    >
       <View style={styles.header}>
         <View style={[styles.headerTopRow, { marginBottom: 15 }]}>
-          <ScalePress style={{ width: 44, height: 44, justifyContent: 'center' }} onPress={() => navigation.goBack()}>
+          <ScalePress
+            style={{ width: 44, height: 44, justifyContent: 'center' }}
+            onPress={() => navigation.goBack()}
+          >
             <ChevronLeft color={activeColors.text} size={28} />
           </ScalePress>
-          <ScalePress style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }} onPress={() => setSettingsOpen(true)}>
+          <ScalePress
+            style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}
+            onPress={() => setSettingsOpen(true)}
+          >
             <Settings color={activeColors.text} size={22} />
           </ScalePress>
         </View>
-        <View style={[styles.tabSwitcher, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }]}>
-          <TouchableOpacity onPress={() => setActiveView('booking')} style={[styles.tab, activeView === 'booking' && [styles.activeTab, { backgroundColor: activeColors.card }]]}>
-            <Text style={[styles.tabText, { color: activeColors.subtext }, activeView === 'booking' && { color: activeColors.primary }]}>Đặt lịch</Text>
+        <View
+          style={[
+            styles.tabSwitcher,
+            {
+              backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+            },
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => setActiveView('booking')}
+            style={[
+              styles.tab,
+              activeView === 'booking' && [
+                styles.activeTab,
+                { backgroundColor: activeColors.card },
+              ],
+            ]}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: activeColors.subtext },
+                activeView === 'booking' && { color: activeColors.primary },
+              ]}
+            >
+              Đặt lịch
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setActiveView('status')} style={[styles.tab, activeView === 'status' && [styles.activeTab, { backgroundColor: activeColors.card }]]}>
-            <Text style={[styles.tabText, { color: activeColors.subtext }, activeView === 'status' && { color: activeColors.primary }]}>Đang sửa chữa</Text>
+          <TouchableOpacity
+            onPress={() => setActiveView('status')}
+            style={[
+              styles.tab,
+              activeView === 'status' && [styles.activeTab, { backgroundColor: activeColors.card }],
+            ]}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                { color: activeColors.subtext },
+                activeView === 'status' && { color: activeColors.primary },
+              ]}
+            >
+              Đang sửa chữa
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      > {/* Use getStyles for scrollContent */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {' '}
+        {}
         {activeView === 'booking' ? (
           <View style={styles.bookingContent}>
             <View style={styles.progressContainer}>
-              {[1, 2, 3].map(i => (
-                <View key={i} style={[styles.progressDot, { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)' }, step >= i && [styles.activeProgressDot, { backgroundColor: activeColors.primary }]]} />
+              {[1, 2, 3].map((i) => (
+                <View
+                  key={i}
+                  style={[
+                    styles.progressDot,
+                    {
+                      backgroundColor: activeColors.isDark
+                        ? 'rgba(255,255,255,0.1)'
+                        : 'rgba(0,0,0,0.08)',
+                    },
+                    step >= i && [
+                      styles.activeProgressDot,
+                      { backgroundColor: activeColors.primary },
+                    ],
+                  ]}
+                />
               ))}
             </View>
             {step === 1 && renderStep1()}
@@ -178,46 +321,106 @@ export default function BookingScreen({ navigation }) {
   );
 }
 
-const getStyles = (theme, activeColors) => StyleSheet.create({
-  container: { flex: 1 },
-  scrollContent: { paddingHorizontal: theme.spacing.lg, paddingBottom: 120, flexGrow: 1 },
-  header: { marginTop: 10, marginBottom: theme.spacing.xl, paddingHorizontal: theme.spacing.lg },
-  headerTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  backBtn: { width: 44, height: 44, justifyContent: 'center', marginBottom: 15, borderRadius: theme.radius.md },
-  tabSwitcher: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 15, padding: 4 },
-  tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 12 },
-  activeTab: { backgroundColor: activeColors.card },
-  tabText: { fontWeight: 'bold', fontSize: 14 },
-  activeTabText: { color: activeColors.primary },
+const getStyles = (theme, activeColors) =>
+  StyleSheet.create({
+    container: { flex: 1 },
+    scrollContent: { paddingHorizontal: theme.spacing.lg, paddingBottom: 120, flexGrow: 1 },
+    header: { marginTop: 10, marginBottom: theme.spacing.xl, paddingHorizontal: theme.spacing.lg },
+    headerTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    backBtn: {
+      width: 44,
+      height: 44,
+      justifyContent: 'center',
+      marginBottom: 15,
+      borderRadius: theme.radius.md,
+    },
+    tabSwitcher: {
+      flexDirection: 'row',
+      backgroundColor: 'rgba(255,255,255,0.03)',
+      borderRadius: 15,
+      padding: 4,
+    },
+    tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 12 },
+    activeTab: { backgroundColor: activeColors.card },
+    tabText: { fontWeight: 'bold', fontSize: 14 },
+    activeTabText: { color: activeColors.primary },
 
-  bookingContent: { flex: 1 },
-  progressContainer: { flexDirection: 'row', justifyContent: 'center', marginBottom: theme.spacing.lg },
-  progressDot: { width: 40, height: 4, backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)', borderRadius: 2, marginHorizontal: 4 },
-  activeProgressDot: { backgroundColor: activeColors.primary },
+    bookingContent: { flex: 1 },
+    progressContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginBottom: theme.spacing.lg,
+    },
+    progressDot: {
+      width: 40,
+      height: 4,
+      backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+      borderRadius: 2,
+      marginHorizontal: 4,
+    },
+    activeProgressDot: { backgroundColor: activeColors.primary },
 
-  stepContainer: { flex: 1 },
-  stepTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: theme.spacing.lg },
-  backLinkWrapper: { marginBottom: 8 },
-  backLink: { fontSize: 14, fontWeight: '600' },
+    stepContainer: { flex: 1 },
+    stepTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: theme.spacing.lg },
+    backLinkWrapper: { marginBottom: 8 },
+    backLink: { fontSize: 14, fontWeight: '600' },
 
-  optionCard: { padding: theme.spacing.md, flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.md, borderRadius: theme.radius.lg, borderWidth: 1 },
-  optionIconBox: { width: 48, height: 48, borderRadius: theme.radius.md, backgroundColor: activeColors.border + '33', justifyContent: 'center', alignItems: 'center' },
-  optionText: { fontSize: 16, fontWeight: 'bold' },
-  optionDesc: { fontSize: 12, marginTop: 2, flex: 1 },
-  distanceText: { color: activeColors.primary, fontSize: 12, fontWeight: 'bold' },
+    optionCard: {
+      padding: theme.spacing.md,
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: theme.spacing.md,
+      borderRadius: theme.radius.lg,
+      borderWidth: 1,
+    },
+    optionIconBox: {
+      width: 48,
+      height: 48,
+      borderRadius: theme.radius.md,
+      backgroundColor: activeColors.border + '33',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    optionText: { fontSize: 16, fontWeight: 'bold' },
+    optionDesc: { fontSize: 12, marginTop: 2, flex: 1 },
+    distanceText: { color: activeColors.primary, fontSize: 12, fontWeight: 'bold' },
 
-  dateCard: { padding: theme.spacing.md, alignItems: 'center', minWidth: 80, borderRadius: theme.radius.lg, borderWidth: 1, backgroundColor: activeColors.card },
-  dateText: { fontSize: 24, fontWeight: 'bold' },
-  monthText: { fontSize: 12, marginTop: 4 },
-  selectedCard: { borderColor: activeColors.primary, borderWidth: 1, backgroundColor: 'rgba(0,122,255,0.05)' },
+    dateCard: {
+      padding: theme.spacing.md,
+      alignItems: 'center',
+      minWidth: 80,
+      borderRadius: theme.radius.lg,
+      borderWidth: 1,
+      backgroundColor: activeColors.card,
+    },
+    dateText: { fontSize: 24, fontWeight: 'bold' },
+    monthText: { fontSize: 12, marginTop: 4 },
+    selectedCard: {
+      borderColor: activeColors.primary,
+      borderWidth: 1,
+      backgroundColor: 'rgba(0,122,255,0.05)',
+    },
 
-  timeGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', flex: 1 },
-  timeSlotWrapper: { width: '31%', marginBottom: theme.spacing.md },
-  timeCard: { padding: theme.spacing.sm, alignItems: 'center', borderRadius: theme.radius.lg, borderWidth: 1, backgroundColor: activeColors.card },
-  timeText: { fontSize: 15, fontWeight: 'bold' },
+    timeGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', flex: 1 },
+    timeSlotWrapper: { width: '31%', marginBottom: theme.spacing.md },
+    timeCard: {
+      padding: theme.spacing.sm,
+      alignItems: 'center',
+      borderRadius: theme.radius.lg,
+      borderWidth: 1,
+      backgroundColor: activeColors.card,
+    },
+    timeText: { fontSize: 15, fontWeight: 'bold' },
 
-  confirmBtn: { backgroundColor: activeColors.primary, height: 60, borderRadius: 18, justifyContent: 'center', alignItems: 'center', marginTop: theme.spacing.lg },
-  confirmBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+    confirmBtn: {
+      backgroundColor: activeColors.primary,
+      height: 60,
+      borderRadius: 18,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: theme.spacing.lg,
+    },
+    confirmBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 
-  approvalSection: { marginTop: 40, paddingBottom: 50 }
-});
+    approvalSection: { marginTop: 40, paddingBottom: 50 },
+  });

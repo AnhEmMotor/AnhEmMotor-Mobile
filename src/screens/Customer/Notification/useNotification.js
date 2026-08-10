@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 
 const INITIAL_NOTIFICATIONS = [
-  // TAB 1: Dịch vụ & Tiến độ (service)
+  
   {
     id: 's1',
     category: 'service',
@@ -58,7 +58,7 @@ const INITIAL_NOTIFICATIONS = [
     deepLink: 'CleanCarLog',
   },
 
-  // TAB 2: Đặc quyền & Ưu đãi (loyalty)
+  
   {
     id: 'l1',
     category: 'loyalty',
@@ -109,7 +109,7 @@ const INITIAL_NOTIFICATIONS = [
     voucherName: 'Miễn phí thay nhớt máy tháng sinh nhật',
   },
 
-  // TAB 3: Hành chính & Hệ thống (system)
+  
   {
     id: 'sys1',
     category: 'system',
@@ -155,7 +155,8 @@ const INITIAL_NOTIFICATIONS = [
     isRead: true,
     actionLabel: 'Xem nội dung giải quyết',
     deepLink: 'FeedbackReply',
-    feedbackContent: 'Ban quản lý showroom AnhEmMotor Biên Hòa xin gửi lời cảm ơn và tiếp thu ý kiến đóng góp chân thành của bạn. Chúng tôi đã tiến hành làm việc trực tiếp với đội ngũ bảo vệ và dịch vụ khách hàng tại showroom để khắc phục thái độ phục vụ chưa chu đáo. AnhEmMotor cam kết không ngừng nâng cao chất lượng phục vụ nhằm mang đến trải nghiệm hài lòng nhất cho quý khách. Chúc bạn vạn dặm bình an!',
+    feedbackContent:
+      'Ban quản lý showroom AnhEmMotor Biên Hòa xin gửi lời cảm ơn và tiếp thu ý kiến đóng góp chân thành của bạn. Chúng tôi đã tiến hành làm việc trực tiếp với đội ngũ bảo vệ và dịch vụ khách hàng tại showroom để khắc phục thái độ phục vụ chưa chu đáo. AnhEmMotor cam kết không ngừng nâng cao chất lượng phục vụ nhằm mang đến trải nghiệm hài lòng nhất cho quý khách. Chúc bạn vạn dặm bình an!',
   },
   {
     id: 'fb2',
@@ -167,7 +168,8 @@ const INITIAL_NOTIFICATIONS = [
     isRead: true,
     actionLabel: 'Xem phản hồi & Tặng quà',
     deepLink: 'FeedbackReply',
-    feedbackContent: 'Chào Anh Khôi, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ đợi tại khu vực rửa xe còn hơi lâu vào ngày cuối tuần. Chúng tôi đã tăng cường thêm 2 nhân viên tại bộ phận dịch vụ và gửi tặng anh mã voucher rửa xe hoàn toàn miễn phí áp dụng cho lần tiếp theo. Xin chân thành cảm ơn ý kiến đóng góp quý báu của anh!',
+    feedbackContent:
+      'Chào Anh Khôi, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ đợi tại khu vực rửa xe còn hơi lâu vào ngày cuối tuần. Chúng tôi đã tăng cường thêm 2 nhân viên tại bộ phận dịch vụ và gửi tặng anh mã voucher rửa xe hoàn toàn miễn phí áp dụng cho lần tiếp theo. Xin chân thành cảm ơn ý kiến đóng góp quý báu của anh!',
   },
   {
     id: 'sys5',
@@ -184,12 +186,12 @@ const INITIAL_NOTIFICATIONS = [
 
 export const useNotification = (_navigation) => {
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
-  const [activeTab, setActiveTab] = useState('service'); // 'service', 'loyalty', 'system', 'feedback'
+  const [activeTab, setActiveTab] = useState('service'); 
   const [unreadOnly, setUnreadOnly] = useState(false);
 
-  // Custom states for Tab 1 (notification.md)
+  
   const [hasActiveWorkshop, setHasActiveWorkshop] = useState(true);
-  const [workshopStep, setWorkshopStep] = useState(2); // 1: Khám xe, 2: Sửa chữa, 3: Kiểm tra cuối, 4: Rửa xe & Sẵn sàng
+  const [workshopStep, setWorkshopStep] = useState(2); 
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('18/05/2026');
   const [selectedTime, setSelectedTime] = useState('08:00');
@@ -199,7 +201,8 @@ export const useNotification = (_navigation) => {
       id: 'h1',
       date: '16/05/2026',
       location: 'Showroom Biên Hòa',
-      parts: 'Thay nhớt máy Motul Gold 10W40, Lọc gió Honda chính hãng, Vệ sinh kim phun & họng xăng',
+      parts:
+        'Thay nhớt máy Motul Gold 10W40, Lọc gió Honda chính hãng, Vệ sinh kim phun & họng xăng',
       cost: '1.250.000đ',
       warranty: 'Bảo hành phụ tùng 6 tháng (Đến 16/11/2026)',
       isCleanCar: true,
@@ -208,7 +211,8 @@ export const useNotification = (_navigation) => {
       id: 'h2',
       date: '12/03/2026',
       location: 'Showroom Biên Hòa',
-      parts: 'Thay má phanh trước Nissin cao cấp, căn chỉnh phanh đĩa trước sau & vệ sinh nồi xe ga',
+      parts:
+        'Thay má phanh trước Nissin cao cấp, căn chỉnh phanh đĩa trước sau & vệ sinh nồi xe ga',
       cost: '850.000đ',
       warranty: 'Bảo hành má phanh 3 tháng (Đến 12/06/2026)',
       isCleanCar: true,
@@ -217,34 +221,35 @@ export const useNotification = (_navigation) => {
       id: 'h3',
       date: '10/01/2026',
       location: 'Showroom Biên Hòa',
-      parts: 'Thay thế nước làm mát Liqui Moly đỏ, kiểm tra toàn diện bình điện ắc quy & bảo dưỡng cổ phốt',
+      parts:
+        'Thay thế nước làm mát Liqui Moly đỏ, kiểm tra toàn diện bình điện ắc quy & bảo dưỡng cổ phốt',
       cost: '350.000đ',
       warranty: 'Không áp dụng bảo hành phụ tùng',
       isCleanCar: true,
-    }
+    },
   ];
 
-  // Modals state
-  const [activeModal, setActiveModal] = useState(null); // 'deliveryMap', 'workshop', 'referral', 'voucher', 'invoice', 'feedback', 'process', 'cleancar', 'insurance', 'security'
+  
+  const [activeModal, setActiveModal] = useState(null); 
   const [selectedNotif, setSelectedNotif] = useState(null);
 
-  // Calculate unread counts
+  
   const totalUnreadCount = useMemo(() => {
-    return notifications.filter(n => !n.isRead).length;
+    return notifications.filter((n) => !n.isRead).length;
   }, [notifications]);
 
   const tabUnreadCounts = useMemo(() => {
     return {
-      service: notifications.filter(n => n.category === 'service' && !n.isRead).length,
-      loyalty: notifications.filter(n => n.category === 'loyalty' && !n.isRead).length,
-      system: notifications.filter(n => n.category === 'system' && !n.isRead).length,
-      feedback: notifications.filter(n => n.category === 'feedback' && !n.isRead).length,
+      service: notifications.filter((n) => n.category === 'service' && !n.isRead).length,
+      loyalty: notifications.filter((n) => n.category === 'loyalty' && !n.isRead).length,
+      system: notifications.filter((n) => n.category === 'system' && !n.isRead).length,
+      feedback: notifications.filter((n) => n.category === 'feedback' && !n.isRead).length,
     };
   }, [notifications]);
 
-  // Filtered notifications based on active tab and unreadOnly toggle
+  
   const filteredNotifications = useMemo(() => {
-    return notifications.filter(n => {
+    return notifications.filter((n) => {
       if (n.category !== activeTab) return false;
       if (unreadOnly && n.isRead) return false;
       return true;
@@ -252,14 +257,14 @@ export const useNotification = (_navigation) => {
   }, [notifications, activeTab, unreadOnly]);
 
   const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
   const markAsRead = (id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
-  // Handle CTA action click
+  
   const handleAction = (notif) => {
     markAsRead(notif.id);
     setSelectedNotif(notif);
@@ -318,7 +323,7 @@ export const useNotification = (_navigation) => {
     markAllAsRead,
     markAsRead,
     handleAction,
-    // New states and variables returned
+    
     hasActiveWorkshop,
     setHasActiveWorkshop,
     workshopStep,

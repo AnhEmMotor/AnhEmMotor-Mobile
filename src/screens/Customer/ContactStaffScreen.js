@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  StyleSheet, Text, View, ScrollView, TextInput,
-  KeyboardAvoidingView, Platform, Alert, Linking
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Linking,
 } from 'react-native';
-import { useActiveColors, useTheme } from '../../theme/Theme'; 
+import { useActiveColors, useTheme } from '../../theme/Theme';
 import { ChevronLeft, Send, Mail, Phone, Clock, CheckCircle, Settings } from 'lucide-react-native';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
@@ -16,12 +23,11 @@ const STAFF_EMAIL = 'support@anhemmotor.vn';
 export default function ContactStaffScreen({ route, navigation }) {
   const ticketId = route?.params?.ticketId;
   const trackingToken = route?.params?.trackingToken;
-  
+
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState(ticketId ? 'thread' : 'compose');
   const [threadHistory, setThreadHistory] = useState([]);
 
-  
   const [ticketStatus, setTicketStatus] = useState('');
   const theme = useTheme(); // Use the useTheme hook
   const activeColors = useActiveColors();
@@ -34,33 +40,31 @@ export default function ContactStaffScreen({ route, navigation }) {
       const tracking = await contactApi.getSupportTracking(ticketId, trackingToken);
       if (tracking) {
         setTicketStatus(tracking.statusLabel || tracking.status);
-        
-        
+
         const history = [];
-        
-        
+
         history.push({
           id: 'req',
           from: 'customer',
           name: userName || 'Khách hàng',
           message: tracking.content,
           time: new Date(tracking.createdAt).toLocaleString('vi-VN'),
-          isRead: true
+          isRead: true,
         });
-        
+
         if (tracking.replies && tracking.replies.length > 0) {
           tracking.replies.forEach((reply, idx) => {
             history.push({
               id: `rep_${idx}`,
               from: 'staff',
-              name: 'CRM Admin', 
+              name: 'CRM Admin',
               message: reply.message,
               time: new Date(reply.repliedAt || Date.now()).toLocaleString('vi-VN'),
-              isRead: true
+              isRead: true,
             });
           });
         }
-        
+
         setThreadHistory(history);
       }
     } catch (e) {
@@ -80,7 +84,7 @@ export default function ContactStaffScreen({ route, navigation }) {
       }
     };
     fetchUser();
-    
+
     const initTicket = async () => {
       if (ticketId && trackingToken) {
         await loadTicketHistory();
@@ -89,11 +93,11 @@ export default function ContactStaffScreen({ route, navigation }) {
     initTicket();
   }, [getProfileUseCase, ticketId, trackingToken, loadTicketHistory]);
 
-  
-  
-
   const _handleSendReply = () => {
-    Alert.alert('Thông báo', 'Tính năng trả lời trực tiếp đang được cập nhật. Vui lòng gửi email hoặc gọi hotline để thảo luận thêm.');
+    Alert.alert(
+      'Thông báo',
+      'Tính năng trả lời trực tiếp đang được cập nhật. Vui lòng gửi email hoặc gọi hotline để thảo luận thêm.'
+    );
   };
 
   const handleSendEmail = () => {
@@ -116,28 +120,77 @@ export default function ContactStaffScreen({ route, navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={[getStyles({ ...theme, ...theme.colors }).container, { backgroundColor: activeColors.background }]}
+      style={[
+        getStyles({ ...theme, ...theme.colors }).container,
+        { backgroundColor: activeColors.background },
+      ]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {}
-      <Animated.View entering={FadeInUp.duration(500)} style={getStyles({ ...theme, ...theme.colors }).header}>
-        <ScalePress style={[getStyles({ ...theme, ...theme.colors }).backBtn, { backgroundColor: activeColors.card }]} onPress={() => navigation.goBack()}>
+      <Animated.View
+        entering={FadeInUp.duration(500)}
+        style={getStyles({ ...theme, ...theme.colors }).header}
+      >
+        <ScalePress
+          style={[
+            getStyles({ ...theme, ...theme.colors }).backBtn,
+            { backgroundColor: activeColors.card },
+          ]}
+          onPress={() => navigation.goBack()}
+        >
           <ChevronLeft color={activeColors.text} size={24} />
         </ScalePress>
         <View style={getStyles({ ...theme, ...theme.colors }).headerCenter}>
-          <Text style={[getStyles({ ...theme, ...theme.colors }).headerTitle, { color: activeColors.text }]}>Liên hệ nhân viên</Text>
+          <Text
+            style={[
+              getStyles({ ...theme, ...theme.colors }).headerTitle,
+              { color: activeColors.text },
+            ]}
+          >
+            Liên hệ nhân viên
+          </Text>
           <View style={getStyles({ ...theme, ...theme.colors }).onlineDot}>
-            <View style={[getStyles({ ...theme, ...theme.colors }).dot, { backgroundColor: theme.colors.success }]} />
-            <Text style={[getStyles({ ...theme, ...theme.colors }).onlineText, { color: theme.colors.success }]}>Đang hoạt động</Text>
+            <View
+              style={[
+                getStyles({ ...theme, ...theme.colors }).dot,
+                { backgroundColor: theme.colors.success },
+              ]}
+            />
+            <Text
+              style={[
+                getStyles({ ...theme, ...theme.colors }).onlineText,
+                { color: theme.colors.success },
+              ]}
+            >
+              Đang hoạt động
+            </Text>
           </View>
         </View>
         <View style={getStyles({ ...theme, ...theme.colors }).headerRight}>
-          <ScalePress style={[getStyles({ ...theme, ...theme.colors }).callBtn, { borderColor: activeColors.isDark ? theme.colors.primary + '4D' : theme.colors.primary + '26' }]} onPress={() => Linking.openURL('tel:19001234')}>
+          <ScalePress
+            style={[
+              getStyles({ ...theme, ...theme.colors }).callBtn,
+              {
+                borderColor: activeColors.isDark
+                  ? theme.colors.primary + '4D'
+                  : theme.colors.primary + '26',
+              },
+            ]}
+            onPress={() => Linking.openURL('tel:19001234')}
+          >
             <Phone color={activeColors.primary} size={20} />
           </ScalePress>
           <ScalePress
-            style={[getStyles({ ...theme, ...theme.colors }).callBtn, { backgroundColor: activeColors.card, borderColor: activeColors.border }]}
-            onPress={() => navigation.navigate('CustomerHome', { screen: 'Profile', params: { openSettings: true } })}
+            style={[
+              getStyles({ ...theme, ...theme.colors }).callBtn,
+              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+            ]}
+            onPress={() =>
+              navigation.navigate('CustomerHome', {
+                screen: 'Profile',
+                params: { openSettings: true },
+              })
+            }
           >
             <Settings color={activeColors.text} size={20} />
           </ScalePress>
@@ -147,64 +200,128 @@ export default function ContactStaffScreen({ route, navigation }) {
       {}
       <View style={getStyles({ ...theme, ...theme.colors }).tabs}>
         <ScalePress
-          style={[getStyles({ ...theme, ...theme.colors }).tab, activeTab === 'thread' && { borderBottomColor: activeColors.primary }]}
+          style={[
+            getStyles({ ...theme, ...theme.colors }).tab,
+            activeTab === 'thread' && { borderBottomColor: activeColors.primary },
+          ]}
           onPress={() => setActiveTab('thread')}
         >
-          <Text style={[getStyles({ ...theme, ...theme.colors }).tabText, { color: activeColors.subtext }, activeTab === 'thread' && { color: activeColors.primary }]}>Lịch sử trao đổi</Text>
+          <Text
+            style={[
+              getStyles({ ...theme, ...theme.colors }).tabText,
+              { color: activeColors.subtext },
+              activeTab === 'thread' && { color: activeColors.primary },
+            ]}
+          >
+            Lịch sử trao đổi
+          </Text>
         </ScalePress>
         <ScalePress
-          style={[getStyles({ ...theme, ...theme.colors }).tab, activeTab === 'compose' && { borderBottomColor: activeColors.primary }]}
+          style={[
+            getStyles({ ...theme, ...theme.colors }).tab,
+            activeTab === 'compose' && { borderBottomColor: activeColors.primary },
+          ]}
           onPress={() => setActiveTab('compose')}
         >
-          <Text style={[getStyles({ ...theme, ...theme.colors }).tabText, { color: activeColors.subtext }, activeTab === 'compose' && { color: activeColors.primary }]}>Gửi Email mới</Text>
+          <Text
+            style={[
+              getStyles({ ...theme, ...theme.colors }).tabText,
+              { color: activeColors.subtext },
+              activeTab === 'compose' && { color: activeColors.primary },
+            ]}
+          >
+            Gửi Email mới
+          </Text>
         </ScalePress>
       </View>
 
       {activeTab === 'thread' ? (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles({ ...theme, ...theme.colors }).threadList}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={getStyles({ ...theme, ...theme.colors }).threadList}
+        >
           {ticketId ? (
-            <Text style={[getStyles({ ...theme, ...theme.colors }).sectionHint, { color: activeColors.subtext }]}>Mã yêu cầu: {ticketId} - Trạng thái: {ticketStatus}</Text>
+            <Text
+              style={[
+                getStyles({ ...theme, ...theme.colors }).sectionHint,
+                { color: activeColors.subtext },
+              ]}
+            >
+              Mã yêu cầu: {ticketId} - Trạng thái: {ticketStatus}
+            </Text>
           ) : (
-            <Text style={[getStyles({ ...theme, ...theme.colors }).sectionHint, { color: activeColors.subtext }]}>Chưa có yêu cầu hỗ trợ nào được chọn.</Text>
+            <Text
+              style={[
+                getStyles({ ...theme, ...theme.colors }).sectionHint,
+                { color: activeColors.subtext },
+              ]}
+            >
+              Chưa có yêu cầu hỗ trợ nào được chọn.
+            </Text>
           )}
-          
-          {(threadHistory).map((msg, index) => {
+
+          {threadHistory.map((msg, index) => {
             const isCustomer = msg.from === 'customer';
             return (
               <Animated.View
                 key={msg.id}
                 entering={FadeInDown.duration(500).delay(index * 100)}
-                style={[getStyles({ ...theme, ...theme.colors }).bubbleWrapper, isCustomer && getStyles({ ...theme, ...theme.colors }).bubbleRight]}
+                style={[
+                  getStyles({ ...theme, ...theme.colors }).bubbleWrapper,
+                  isCustomer && getStyles({ ...theme, ...theme.colors }).bubbleRight,
+                ]}
               >
                 {!isCustomer && (
-                  <View style={[getStyles({ ...theme, ...theme.colors }).avatarCircle, { backgroundColor: activeColors.primary }]}>
+                  <View
+                    style={[
+                      getStyles({ ...theme, ...theme.colors }).avatarCircle,
+                      { backgroundColor: activeColors.primary },
+                    ]}
+                  >
                     <Text style={getStyles({ ...theme, ...theme.colors }).avatarText}>AE</Text>
                   </View>
                 )}
-                <View style={[
-                  getStyles({ ...theme, ...theme.colors }).bubble,
-                  isCustomer
-                    ? [getStyles({ ...theme, ...theme.colors }).customerBubble, { backgroundColor: activeColors.primary }]
-                    : [getStyles({ ...theme, ...theme.colors }).staffBubble, { backgroundColor: activeColors.card }]
-                ]}>
-                  <Text style={[
-                    getStyles({ ...theme, ...theme.colors }).bubbleName,
-                    { color: isCustomer ? 'rgba(255,255,255,0.7)' : activeColors.subtext }
-                  ]}>
+                <View
+                  style={[
+                    getStyles({ ...theme, ...theme.colors }).bubble,
+                    isCustomer
+                      ? [
+                          getStyles({ ...theme, ...theme.colors }).customerBubble,
+                          { backgroundColor: activeColors.primary },
+                        ]
+                      : [
+                          getStyles({ ...theme, ...theme.colors }).staffBubble,
+                          { backgroundColor: activeColors.card },
+                        ],
+                  ]}
+                >
+                  <Text
+                    style={[
+                      getStyles({ ...theme, ...theme.colors }).bubbleName,
+                      { color: isCustomer ? 'rgba(255,255,255,0.7)' : activeColors.subtext },
+                    ]}
+                  >
                     {msg.name}
                   </Text>
-                  <Text style={[
-                    getStyles({ ...theme, ...theme.colors }).bubbleText,
-                    { color: isCustomer ? '#FFFFFF' : activeColors.text }
-                  ]}>
+                  <Text
+                    style={[
+                      getStyles({ ...theme, ...theme.colors }).bubbleText,
+                      { color: isCustomer ? '#FFFFFF' : activeColors.text },
+                    ]}
+                  >
                     {msg.message}
                   </Text>
                   <View style={getStyles({ ...theme, ...theme.colors }).bubbleMeta}>
-                    <Clock size={10} color={isCustomer ? 'rgba(255,255,255,0.6)' : activeColors.subtext} />
-                    <Text style={[
-                      getStyles({ ...theme, ...theme.colors }).bubbleTime,
-                      { color: isCustomer ? 'rgba(255,255,255,0.5)' : activeColors.subtext }
-                    ]}>
+                    <Clock
+                      size={10}
+                      color={isCustomer ? 'rgba(255,255,255,0.6)' : activeColors.subtext}
+                    />
+                    <Text
+                      style={[
+                        getStyles({ ...theme, ...theme.colors }).bubbleTime,
+                        { color: isCustomer ? 'rgba(255,255,255,0.5)' : activeColors.subtext },
+                      ]}
+                    >
                       {msg.time}
                     </Text>
                     {isCustomer && (
@@ -222,26 +339,60 @@ export default function ContactStaffScreen({ route, navigation }) {
           <View style={{ height: 80 }} />
         </ScrollView>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={getStyles({ ...theme, ...theme.colors }).composeContainer}>
-          <Animated.View entering={FadeInDown.duration(500)}> {}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={getStyles({ ...theme, ...theme.colors }).composeContainer}
+        >
+          <Animated.View entering={FadeInDown.duration(500)}>
+            {' '}
+            {}
             <GlassCard
-              style={[getStyles({ ...theme, ...theme.colors }).recipientCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
-              tint={activeColors.isDark ? 'dark' : 'light'} 
+              style={[
+                getStyles({ ...theme, ...theme.colors }).recipientCard,
+                { borderColor: activeColors.border, backgroundColor: activeColors.card },
+              ]}
+              tint={activeColors.isDark ? 'dark' : 'light'}
             >
               <Mail color={activeColors.primary} size={18} />
               <View style={{ marginLeft: 12, flex: 1 }}>
-                <Text style={[getStyles({ ...theme, ...theme.colors }).recipientLabel, { color: activeColors.subtext }]}>Gửi đến</Text>
-                <Text style={[getStyles({ ...theme, ...theme.colors }).recipientEmail, { color: activeColors.primary }]}>{STAFF_EMAIL}</Text>
+                <Text
+                  style={[
+                    getStyles({ ...theme, ...theme.colors }).recipientLabel,
+                    { color: activeColors.subtext },
+                  ]}
+                >
+                  Gửi đến
+                </Text>
+                <Text
+                  style={[
+                    getStyles({ ...theme, ...theme.colors }).recipientEmail,
+                    { color: activeColors.primary },
+                  ]}
+                >
+                  {STAFF_EMAIL}
+                </Text>
               </View>
             </GlassCard>
-
-            <Text style={[getStyles({ ...theme, ...theme.colors }).composeLabel, { color: activeColors.text }]}>Nội dung</Text>
+            <Text
+              style={[
+                getStyles({ ...theme, ...theme.colors }).composeLabel,
+                { color: activeColors.text },
+              ]}
+            >
+              Nội dung
+            </Text>
             <GlassCard
-              style={[getStyles({ ...theme, ...theme.colors }).textAreaCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+              style={[
+                getStyles({ ...theme, ...theme.colors }).textAreaCard,
+                { borderColor: activeColors.border, backgroundColor: activeColors.card },
+              ]}
               tint={activeColors.isDark ? 'dark' : 'light'}
             >
               <TextInput
-                style={[getStyles({ ...theme, ...theme.colors }).textArea, { color: activeColors.text }]}
+                style={[
+                  getStyles({ ...theme, ...theme.colors }).textArea,
+                  { color: activeColors.text },
+                ]}
                 value={message}
                 onChangeText={setMessage}
                 placeholder="Nhập nội dung cần trao đổi với nhân viên AnhEmMotor..."
@@ -251,25 +402,45 @@ export default function ContactStaffScreen({ route, navigation }) {
                 textAlignVertical="top"
               />
             </GlassCard>
-
-            <Text style={[getStyles({ ...theme, ...theme.colors }).composeLabel, { color: activeColors.text }]}>Mẫu câu hỏi nhanh</Text>
+            <Text
+              style={[
+                getStyles({ ...theme, ...theme.colors }).composeLabel,
+                { color: activeColors.text },
+              ]}
+            >
+              Mẫu câu hỏi nhanh
+            </Text>
             {quickTemplates.map((tmpl, i) => (
               <ScalePress key={i} onPress={() => setMessage(tmpl)}>
                 <GlassCard
-                  style={[getStyles({ ...theme, ...theme.colors }).templateCard, { borderColor: activeColors.border, backgroundColor: activeColors.card }]}
+                  style={[
+                    getStyles({ ...theme, ...theme.colors }).templateCard,
+                    { borderColor: activeColors.border, backgroundColor: activeColors.card },
+                  ]}
                   tint={activeColors.isDark ? 'dark' : 'light'}
                 >
-                  <Text style={[getStyles({ ...theme, ...theme.colors }).templateText, { color: activeColors.subtext }]}>{tmpl}</Text>
+                  <Text
+                    style={[
+                      getStyles({ ...theme, ...theme.colors }).templateText,
+                      { color: activeColors.subtext },
+                    ]}
+                  >
+                    {tmpl}
+                  </Text>
                 </GlassCard>
               </ScalePress>
             ))}
-
             <ScalePress
-              style={[getStyles({ ...theme, ...theme.colors }).sendBtn, { backgroundColor: activeColors.primary }]}
+              style={[
+                getStyles({ ...theme, ...theme.colors }).sendBtn,
+                { backgroundColor: activeColors.primary },
+              ]}
               onPress={handleSendEmail}
             >
               <Send color="#fff" size={18} />
-              <Text style={getStyles({ ...theme, ...theme.colors }).sendBtnText}>Mở ứng dụng Email & Gửi</Text>
+              <Text style={getStyles({ ...theme, ...theme.colors }).sendBtnText}>
+                Mở ứng dụng Email & Gửi
+              </Text>
             </ScalePress>
           </Animated.View>
           <View style={{ height: 60 }} />
@@ -279,49 +450,122 @@ export default function ContactStaffScreen({ route, navigation }) {
   );
 }
 
-const getStyles = (colors) => StyleSheet.create({
-  container: { flex: 1 },
+const getStyles = (colors) =>
+  StyleSheet.create({
+    container: { flex: 1 },
 
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: colors.spacing.md, marginTop: colors.spacing.xl, marginBottom: colors.spacing.md },
-  backBtn: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: colors.spacing.md },
-  headerCenter: { flex: 1 },
-  headerTitle: { fontSize: 18, fontWeight: 'bold' },
-  onlineDot: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  dot: { width: 6, height: 6, borderRadius: 3, marginRight: 5 },
-  onlineText: { fontSize: 11 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 }, 
-  callBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primary + '1A', justifyContent: 'center', alignItems: 'center', borderWidth: 1 },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: colors.spacing.md,
+      marginTop: colors.spacing.xl,
+      marginBottom: colors.spacing.md,
+    },
+    backBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: colors.spacing.md,
+    },
+    headerCenter: { flex: 1 },
+    headerTitle: { fontSize: 18, fontWeight: 'bold' },
+    onlineDot: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
+    dot: { width: 6, height: 6, borderRadius: 3, marginRight: 5 },
+    onlineText: { fontSize: 11 },
+    headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    callBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.primary + '1A',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+    },
 
-  tabs: { flexDirection: 'row', paddingHorizontal: colors.spacing.md, marginBottom: colors.spacing.md },
-  tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },
-  tabText: { fontSize: 14, fontWeight: '600' },
+    tabs: {
+      flexDirection: 'row',
+      paddingHorizontal: colors.spacing.md,
+      marginBottom: colors.spacing.md,
+    },
+    tab: {
+      flex: 1,
+      paddingVertical: 12,
+      alignItems: 'center',
+      borderBottomWidth: 2,
+      borderBottomColor: 'transparent',
+    },
+    tabText: { fontSize: 14, fontWeight: '600' },
 
-  threadList: { paddingHorizontal: colors.spacing.md }, 
-  sectionHint: { fontSize: 12, textAlign: 'center', marginBottom: colors.spacing.lg, fontStyle: 'italic' }, 
+    threadList: { paddingHorizontal: colors.spacing.md },
+    sectionHint: {
+      fontSize: 12,
+      textAlign: 'center',
+      marginBottom: colors.spacing.lg,
+      fontStyle: 'italic',
+    },
 
-  bubbleWrapper: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: colors.spacing.md },
-  bubbleRight: { flexDirection: 'row-reverse' },
-  avatarCircle: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 8 },
-  avatarText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
+    bubbleWrapper: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      marginBottom: colors.spacing.md,
+    },
+    bubbleRight: { flexDirection: 'row-reverse' },
+    avatarCircle: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 8,
+    },
+    avatarText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
 
-  bubble: { maxWidth: '78%', borderRadius: 18, padding: colors.spacing.md },
-  staffBubble: { borderBottomLeftRadius: 4 },
-  customerBubble: { borderBottomRightRadius: 4 },
-  bubbleName: { fontSize: 11, fontWeight: 'bold', marginBottom: 4 },
-  bubbleText: { fontSize: 14, lineHeight: 20 },
-  bubbleMeta: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
-  bubbleTime: { fontSize: 10, marginLeft: 4 },
-  
+    bubble: { maxWidth: '78%', borderRadius: 18, padding: colors.spacing.md },
+    staffBubble: { borderBottomLeftRadius: 4 },
+    customerBubble: { borderBottomRightRadius: 4 },
+    bubbleName: { fontSize: 11, fontWeight: 'bold', marginBottom: 4 },
+    bubbleText: { fontSize: 14, lineHeight: 20 },
+    bubbleMeta: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
+    bubbleTime: { fontSize: 10, marginLeft: 4 },
 
-  composeContainer: { paddingHorizontal: colors.spacing.md }, 
-  recipientCard: { flexDirection: 'row', alignItems: 'center', padding: colors.spacing.md, marginBottom: colors.spacing.md, borderRadius: colors.radius.lg, borderWidth: 1 },
-  recipientLabel: { fontSize: 11 },
-  recipientEmail: { fontSize: 14, fontWeight: 'bold' },
-  composeLabel: { fontSize: 16, fontWeight: 'bold', marginVertical: colors.spacing.sm },
-  textAreaCard: { padding: colors.spacing.md, marginBottom: colors.spacing.lg, borderRadius: colors.radius.lg, borderWidth: 1 },
-  textArea: { fontSize: 14, minHeight: 120, lineHeight: 22 },
-  templateCard: { padding: colors.spacing.md, marginBottom: colors.spacing.sm, flexDirection: 'row', alignItems: 'center', borderRadius: colors.radius.lg, borderWidth: 1 },
-  templateText: { fontSize: 13, flex: 1 },
-  sendBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16, borderRadius: colors.radius.md, marginTop: colors.spacing.xl },
-  sendBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 10 },
-});
+    composeContainer: { paddingHorizontal: colors.spacing.md },
+    recipientCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: colors.spacing.md,
+      marginBottom: colors.spacing.md,
+      borderRadius: colors.radius.lg,
+      borderWidth: 1,
+    },
+    recipientLabel: { fontSize: 11 },
+    recipientEmail: { fontSize: 14, fontWeight: 'bold' },
+    composeLabel: { fontSize: 16, fontWeight: 'bold', marginVertical: colors.spacing.sm },
+    textAreaCard: {
+      padding: colors.spacing.md,
+      marginBottom: colors.spacing.lg,
+      borderRadius: colors.radius.lg,
+      borderWidth: 1,
+    },
+    textArea: { fontSize: 14, minHeight: 120, lineHeight: 22 },
+    templateCard: {
+      padding: colors.spacing.md,
+      marginBottom: colors.spacing.sm,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: colors.radius.lg,
+      borderWidth: 1,
+    },
+    templateText: { fontSize: 13, flex: 1 },
+    sendBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 16,
+      borderRadius: colors.radius.md,
+      marginTop: colors.spacing.xl,
+    },
+    sendBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 10 },
+  });

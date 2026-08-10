@@ -2,7 +2,12 @@ import { apiGet, apiPost, apiPut, apiPatch, apiPostFormData, tokenService } from
 
 export async function loginApi(usernameOrEmail, password) {
   await tokenService.clearTokens();
-  const response = await apiPost('/api/v1/Auth/login', { usernameOrEmail, password }, undefined, false);
+  const response = await apiPost(
+    '/api/v1/Auth/login',
+    { usernameOrEmail, password },
+    undefined,
+    false
+  );
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đăng nhập thất bại');
@@ -34,7 +39,12 @@ export async function forgotPasswordApi(email) {
 }
 
 export async function resetPasswordApi(email, token, newPassword) {
-  const response = await apiPost('/api/v1/Auth/reset-password', { email, token, newPassword }, undefined, false);
+  const response = await apiPost(
+    '/api/v1/Auth/reset-password',
+    { email, token, newPassword },
+    undefined,
+    false
+  );
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Đặt lại mật khẩu thất bại');
@@ -136,14 +146,14 @@ export async function getMyVehiclesApi() {
     throw new Error(data.error?.message || 'Không thể tải danh sách xe');
   }
   const data = await response.json();
-  
+
   if (data?.value?.items) {
     return data.value.items;
   }
   if (data?.items) {
     return data.items;
   }
-  
+
   return Array.isArray(data) ? data : data.value || data.data || [];
 }
 
@@ -199,7 +209,9 @@ export async function updateVehicleApi(vehicleId, vehicleData) {
 
 export async function getAvailableSlotsApi(date) {
   const dateStr = date instanceof Date ? date.toISOString() : date;
-  const response = await apiGet('/api/v1/client/bookings/available-slots?date=' + encodeURIComponent(dateStr));
+  const response = await apiGet(
+    '/api/v1/client/bookings/available-slots?date=' + encodeURIComponent(dateStr)
+  );
   if (!response.ok) {
     throw new Error('Không thể tải lịch trống');
   }
@@ -238,9 +250,8 @@ export async function cancelBookingApi(bookingId, reason) {
 function formatPrice(value) {
   if (value == null || value === '') return 'Liên hệ';
 
-  const numericValue = typeof value === 'number'
-    ? value
-    : Number(String(value).replace(/[^\d.\-]/g, ''));
+  const numericValue =
+    typeof value === 'number' ? value : Number(String(value).replace(/[^\d.\-]/g, ''));
 
   if (!Number.isFinite(numericValue)) return 'Liên hệ';
 
@@ -250,53 +261,70 @@ function formatPrice(value) {
 function normalizeProductItem(item) {
   if (!item || typeof item !== 'object') return null;
 
-  const variants = Array.isArray(item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants)
-    ? (item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants).map((v) => ({
-        id: v.id ?? v.Id,
-        productId: v.productId ?? v.ProductId,
-        urlSlug: v.urlSlug ?? v.UrlSlug ?? '',
-        price: v.price ?? v.Price,
-        coverImageUrl: v.coverImageUrl ?? v.CoverImageUrl ?? '',
-        variantName: v.variantName ?? v.VariantName ?? '',
-        optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
-        photos: Array.isArray(v.photos ?? v.Photos) ? (v.photos ?? v.Photos) : [],
-        colors: (v.colors ?? v.Colors ?? []).map((c) => ({
-          id: c.id ?? c.Id ?? null,
-          name: c.name ?? c.ColorName ?? c.Name ?? '',
-          colorName: c.colorName ?? c.ColorName ?? c.name ?? '',
-          colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
-          code: c.code ?? c.ColorCode ?? '#ccc',
-          coverImageUrl: c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
-          image: c.image ?? c.CoverImageUrl ?? '',
-        })),
-      }))
+  const variants = Array.isArray(
+    item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants
+  )
+    ? (item?.productVariants ?? item?.ProductVariants ?? item?.variants ?? item?.Variants).map(
+        (v) => ({
+          id: v.id ?? v.Id,
+          productId: v.productId ?? v.ProductId,
+          urlSlug: v.urlSlug ?? v.UrlSlug ?? '',
+          price: v.price ?? v.Price,
+          coverImageUrl: v.coverImageUrl ?? v.CoverImageUrl ?? '',
+          variantName: v.variantName ?? v.VariantName ?? '',
+          optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
+          photos: Array.isArray(v.photos ?? v.Photos) ? (v.photos ?? v.Photos) : [],
+          colors: (v.colors ?? v.Colors ?? []).map((c) => ({
+            id: c.id ?? c.Id ?? null,
+            name: c.name ?? c.ColorName ?? c.Name ?? '',
+            colorName: c.colorName ?? c.ColorName ?? c.name ?? '',
+            colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
+            code: c.code ?? c.ColorCode ?? '#ccc',
+            coverImageUrl: c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
+            image: c.image ?? c.CoverImageUrl ?? '',
+          })),
+        })
+      )
     : [];
 
-  const technologies = Array.isArray(item?.technologies ?? item?.Technologies ?? item?.productTechnologies ?? item?.ProductTechnologies)
-    ? (item?.technologies ?? item?.Technologies ?? item?.productTechnologies ?? item?.ProductTechnologies).map((t) => ({
+  const technologies = Array.isArray(
+    item?.technologies ??
+      item?.Technologies ??
+      item?.productTechnologies ??
+      item?.ProductTechnologies
+  )
+    ? (
+        item?.technologies ??
+        item?.Technologies ??
+        item?.productTechnologies ??
+        item?.ProductTechnologies
+      ).map((t) => ({
         technologyId: t.technologyId ?? t.TechnologyId ?? null,
         title: t.title ?? t.Title ?? t.customTitle ?? t.CustomTitle ?? '',
-        description: t.description ?? t.Description ?? t.customDescription ?? t.CustomDescription ?? '',
+        description:
+          t.description ?? t.Description ?? t.customDescription ?? t.CustomDescription ?? '',
         imageUrl: t.imageUrl ?? t.ImageUrl ?? t.customImageUrl ?? t.CustomImageUrl ?? '',
       }))
     : [];
 
   const firstVariant = variants[0];
-  const imageUrl = item?.imageUrl
-    || item?.ImageUrl
-    || item?.img
-    || item?.coverImageUrl
-    || item?.CoverImageUrl
-    || firstVariant?.coverImageUrl
-    || firstVariant?.imageUrl
-    || '';
+  const imageUrl =
+    item?.imageUrl ||
+    item?.ImageUrl ||
+    item?.img ||
+    item?.coverImageUrl ||
+    item?.CoverImageUrl ||
+    firstVariant?.coverImageUrl ||
+    firstVariant?.imageUrl ||
+    '';
 
-  const priceValue = item?.referencePrice
-    ?? item?.ReferencePrice
-    ?? item?.price
-    ?? item?.Price
-    ?? firstVariant?.price
-    ?? null;
+  const priceValue =
+    item?.referencePrice ??
+    item?.ReferencePrice ??
+    item?.price ??
+    item?.Price ??
+    firstVariant?.price ??
+    null;
 
   return {
     ...item,
@@ -311,7 +339,7 @@ function normalizeProductItem(item) {
     categoryName: item?.categoryName ?? item?.CategoryName ?? item?.category ?? '',
     brandId: item?.brandId ?? item?.BrandId ?? null,
     categoryId: item?.categoryId ?? item?.CategoryId ?? null,
-    
+
     // Technical specs
     weight: item?.weight ?? item?.Weight ?? null,
     length: item?.length ?? item?.Length ?? null,
@@ -346,11 +374,11 @@ function normalizeProductItem(item) {
     material: item?.material ?? item?.Material ?? null,
     origin: item?.origin ?? item?.Origin ?? null,
     warrantyPeriod: item?.warrantyPeriod ?? item?.WarrantyPeriod ?? null,
-    
+
     // Arrays
     variants,
     technologies,
-    colors: variants.flatMap(v => v.colors || []),
+    colors: variants.flatMap((v) => v.colors || []),
   };
 }
 
@@ -407,7 +435,11 @@ export async function getProductDetailApi(productId) {
   return normalizeProductItem(rawData);
 }
 
-export async function requestConsultationApi(productId, customerNote = '', preferredContactTime = '') {
+export async function requestConsultationApi(
+  productId,
+  customerNote = '',
+  preferredContactTime = ''
+) {
   const response = await apiPost('/api/v1/client/catalog/request-consultation', {
     productId: Number(productId),
     customerNote,
@@ -448,7 +480,10 @@ export async function submitFeedbackApi(rating, comment, mediaUrls = []) {
 }
 
 export async function requestCallbackApi(phoneNumber, issueDescription) {
-  const response = await apiPost('/api/v1/client/support/callback', { phoneNumber, issueDescription });
+  const response = await apiPost('/api/v1/client/support/callback', {
+    phoneNumber,
+    issueDescription,
+  });
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.error?.message || 'Gửi yêu cầu thất bại');

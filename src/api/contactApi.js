@@ -17,7 +17,9 @@ export const contactApi = {
   },
 
   getSupportTracking: async (id, trackingToken) => {
-    const response = await apiGet(`/api/v1/Contacts/support-request/${id}/tracking?token=${trackingToken}`);
+    const response = await apiGet(
+      `/api/v1/Contacts/support-request/${id}/tracking?token=${trackingToken}`
+    );
     return response.json();
   },
 
@@ -28,5 +30,5 @@ export const contactApi = {
       comment,
     });
     return response;
-  }
+  },
 };

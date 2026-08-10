@@ -15,10 +15,8 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
     const rawVehicles = await this.customerDataSource.getVehicles();
     return rawVehicles.map((vehicle) => {
       const img = vehicle.imageUrl || vehicle.ImageUrl || vehicle.image || vehicle.Image;
-      const parsedImage = img 
-        ? (img.startsWith('http') ? img : `${API_BASE_URL}${img}`)
-        : null;
-        
+      const parsedImage = img ? (img.startsWith('http') ? img : `${API_BASE_URL}${img}`) : null;
+
       return new CustomerVehicle({
         ...vehicle,
         type: vehicle.type || vehicle.categoryName || vehicle.CategoryName || vehicle.variantName,
@@ -63,7 +61,10 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
       warrantyPeriod: rawVehicle.warrantyPeriod,
       insuranceUntil: rawVehicle.insuranceUntil,
       currentOdo: currentOdo,
-      odo: currentOdo != null ? `${currentOdo.toLocaleString?.() ?? currentOdo} km` : rawVehicle.odo ?? '',
+      odo:
+        currentOdo != null
+          ? `${currentOdo.toLocaleString?.() ?? currentOdo} km`
+          : (rawVehicle.odo ?? ''),
       status: rawVehicle.maintenanceStatus ?? rawVehicle.status ?? '',
       maintenanceStatus: rawVehicle.maintenanceStatus,
       lastMaintenanceDate: rawVehicle.lastMaintenanceDate,
@@ -73,7 +74,9 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
         rawVehicle.nextService ??
         (nextMaintenanceOdo || rawVehicle.nextMaintenanceDate
           ? {
-              odo: nextMaintenanceOdo ? `${nextMaintenanceOdo.toLocaleString?.() ?? nextMaintenanceOdo} km` : '',
+              odo: nextMaintenanceOdo
+                ? `${nextMaintenanceOdo.toLocaleString?.() ?? nextMaintenanceOdo} km`
+                : '',
               date: rawVehicle.nextMaintenanceDate,
               items: [],
             }
@@ -81,11 +84,17 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
       operatingSpecs: rawVehicle.operatingSpecs,
       timeline: rawVehicle.timeline,
       documents: rawVehicle.documents,
-      image: (rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image) 
-        ? ((rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image).startsWith('http') 
-            ? (rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image) 
-            : `${API_BASE_URL}${rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image}`)
-        : null,
+      image:
+        rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image
+          ? (
+              rawVehicle.imageUrl ||
+              rawVehicle.ImageUrl ||
+              rawVehicle.image ||
+              rawVehicle.Image
+            ).startsWith('http')
+            ? rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image
+            : `${API_BASE_URL}${rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image}`
+          : null,
     });
   }
 

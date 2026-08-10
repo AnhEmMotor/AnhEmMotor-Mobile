@@ -24,7 +24,7 @@ export const useHome = () => {
 
   const handleOpenVoucher = (voucher) => {
     setSelectedVoucher(voucher);
-    // Sử dụng setTimeout 50ms để đợi component BottomSheet render gắn ref xong rồi mới show
+    
     setTimeout(() => {
       bottomSheetRef.current?.show();
     }, 50);
@@ -42,7 +42,7 @@ export const useHome = () => {
         const { getLatestNewsApi } = require('../../../api/customerApi');
         const { API_BASE_URL } = require('../../../config');
         const news = await getLatestNewsApi();
-        
+
         const getImageUrl = (url) => {
           if (!url) return 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
           if (url.startsWith('http')) return url;
@@ -50,23 +50,36 @@ export const useHome = () => {
           return `${API_BASE_URL}/${cleanUrl}`;
         };
 
-        // Map the backend data to match the UI structure
-        const formattedNews = (news || []).map(item => ({
+        
+        const formattedNews = (news || []).map((item) => ({
           id: item.id || item.Id,
           title: item.title || item.Title,
-          desc: item.metaDescription || item.MetaDescription || item.summary || item.Summary || item.content || item.Content || 'Tin tức nóng hổi luôn được cập nhật.',
+          desc:
+            item.metaDescription ||
+            item.MetaDescription ||
+            item.summary ||
+            item.Summary ||
+            item.content ||
+            item.Content ||
+            'Tin tức nóng hổi luôn được cập nhật.',
           image: getImageUrl(item.coverImageUrl || item.CoverImageUrl),
-          author: item.authorName || item.AuthorName || item.author || item.Author || 'AE Motor News',
-          date: item.publishedDate || item.PublishedDate ? new Date(item.publishedDate || item.PublishedDate).toLocaleDateString('vi-VN') : (item.createdAt || item.CreatedAt ? new Date(item.createdAt || item.CreatedAt).toLocaleDateString('vi-VN') : 'Mới nhất'),
-          slug: item.slug || item.Slug
+          author:
+            item.authorName || item.AuthorName || item.author || item.Author || 'AE Motor News',
+          date:
+            item.publishedDate || item.PublishedDate
+              ? new Date(item.publishedDate || item.PublishedDate).toLocaleDateString('vi-VN')
+              : item.createdAt || item.CreatedAt
+                ? new Date(item.createdAt || item.CreatedAt).toLocaleDateString('vi-VN')
+                : 'Mới nhất',
+          slug: item.slug || item.Slug,
         }));
-        
+
         setNewsList(formattedNews);
       } catch (error) {
         console.error('Lỗi tải tin tức:', error);
       }
     };
-    
+
     fetchNews();
   }, []);
 
@@ -78,11 +91,11 @@ export const useHome = () => {
     userName,
     handleOpenVoucher,
     handleCloseVoucher,
-    newsList
+    newsList,
   };
 };
 
 export const shortcuts = [
-  // icons are passed as components, so we can't define them here without imports
-  // I'll keep them in the main component or import them here
+  
+  
 ];

@@ -20,20 +20,23 @@ export const useCatalog = () => {
 
   const initialized = useRef(false);
 
-  const loadProducts = useCallback(async (categoryId) => {
-    try {
-      setLoading(true);
-      setFetchError(null);
-      const data = await ProductDataSource.fetchCatalogProducts(searchQuery, categoryId);
-      setProducts(data.items || []);
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
-      setProducts([]);
-      setFetchError(error.message || 'Không thể tải danh sách sản phẩm');
-    } finally {
-      setLoading(false);
-    }
-  }, [searchQuery]);
+  const loadProducts = useCallback(
+    async (categoryId) => {
+      try {
+        setLoading(true);
+        setFetchError(null);
+        const data = await ProductDataSource.fetchCatalogProducts(searchQuery, categoryId);
+        setProducts(data.items || []);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        setProducts([]);
+        setFetchError(error.message || 'Không thể tải danh sách sản phẩm');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [searchQuery]
+  );
 
   const loadBrands = useCallback(async () => {
     try {
