@@ -58,6 +58,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "expo-module-scripts": "^56.0.2",
     "prettier": "^3.9.6",
+    "strip-comments": "^2.0.1",
     "typescript": "^7.0.2"
   },
   "lint-staged": {
