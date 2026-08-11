@@ -15,17 +15,15 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useServiceHistoryController } from './hooks/useServiceHistoryController';
 
 export default function ServiceHistoryScreen({ navigation, route }) {
-  const vehicle = route?.params?.vehicle || {
-    id: '1',
-    name: 'Kawasaki Z1000',
-    plate: '59-A3 123.45',
-  };
+  const passedVehicle = route?.params?.vehicle || null;
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const { history, reminders, loading, error, refreshData } = useServiceHistoryController(
-    vehicle.id || '1'
+  const { history, reminders, loading, error, refreshData, activeVehicle } = useServiceHistoryController(
+    passedVehicle?.id || null
   );
+
+  const displayVehicle = passedVehicle || activeVehicle || { name: 'Chưa có xe', plate: '---' };
 
   return (
     <View style={styles.container}>
@@ -37,7 +35,7 @@ export default function ServiceHistoryScreen({ navigation, route }) {
         <View>
           <Text style={styles.headerTitle}>Lịch sử bảo trì</Text>
           <Text style={styles.headerSub}>
-            {vehicle.name} · {vehicle.plate}
+            {displayVehicle.name} · {displayVehicle.plate}
           </Text>
         </View>
       </Animated.View>

@@ -34,6 +34,9 @@ import FinancialHubScreen from '../screens/Customer/FinancialHubScreen';
 import LegalProgressScreen from '../screens/Customer/LegalProgressScreen';
 import AppointmentBookingScreen from '../screens/Customer/Appointment/AppointmentBookingScreen';
 import FinanceContractScreen from '../screens/Customer/FinanceContract/FinanceContractScreen';
+import CartScreen from '../screens/Customer/CartScreen';
+import CheckoutScreen from '../screens/Customer/CheckoutScreen';
+import OrderSuccessScreen from '../screens/Customer/OrderSuccessScreen';
 
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
 import { navigationRef } from './RootNavigation';
@@ -195,6 +198,9 @@ export default function AppNavigator() {
         <Stack.Screen name="LegalProgress" component={LegalProgressScreen} />
         <Stack.Screen name="AppointmentBooking" component={AppointmentBookingScreen} />
         <Stack.Screen name="FinanceContract" component={FinanceContractScreen} />
+        <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Checkout" component={CheckoutScreen} />
+        <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
       </Stack.Navigator>
       <GlobalSettingsModal />
     </NavigationContainer>

@@ -108,35 +108,35 @@ export class ApiCustomerDataSource {
 
   async getServiceHistory(vehicleId) {
     const raw = await getCustomerVehicleHistoryApi(vehicleId);
-    const purchaseHistory = Array.isArray(raw.purchaseHistory) ? raw.purchaseHistory : [];
-    const warrantyHistory = Array.isArray(raw.warrantyHistory) ? raw.warrantyHistory : [];
+    const purchaseHistory = Array.isArray(raw.purchaseHistory) ? raw.purchaseHistory : (Array.isArray(raw.PurchaseHistory) ? raw.PurchaseHistory : []);
+    const warrantyHistory = Array.isArray(raw.warrantyHistory) ? raw.warrantyHistory : (Array.isArray(raw.WarrantyHistory) ? raw.WarrantyHistory : []);
 
     const mappedPurchaseHistory = purchaseHistory.map((entry) => ({
-      id: String(entry.id),
-      date: entry.purchaseDate ? new Date(entry.purchaseDate).toLocaleDateString() : '',
-      title: `Mua xe - ${entry.invoiceNumber}`,
+      id: String(entry.id || entry.Id),
+      date: (entry.purchaseDate || entry.PurchaseDate) ? new Date(entry.purchaseDate || entry.PurchaseDate).toLocaleDateString() : '',
+      title: `Mua xe - ${entry.invoiceNumber || entry.InvoiceNumber || ''}`,
       items: [
-        `Người bán: ${entry.sellerName}`,
-        `Số tiền: ${entry.amount?.toLocaleString?.() ?? entry.amount} đ`,
-        entry.notes || 'Không có ghi chú',
+        `Người bán: ${entry.sellerName || entry.SellerName || 'AnhEmMotor Showroom'}`,
+        `Số tiền: ${(entry.amount || entry.Amount)?.toLocaleString?.() ?? (entry.amount || entry.Amount)} đ`,
+        entry.notes || entry.Notes || 'Không có ghi chú',
       ],
-      cost: entry.amount ? `${entry.amount.toLocaleString()} đ` : '',
-      technician: entry.sellerName,
+      cost: (entry.amount || entry.Amount) ? `${(entry.amount || entry.Amount).toLocaleString()} đ` : '',
+      technician: entry.sellerName || entry.SellerName,
       status: 'completed',
     }));
 
     const mappedWarrantyHistory = warrantyHistory.map((entry) => ({
-      id: String(entry.id),
-      date: entry.startDate ? new Date(entry.startDate).toLocaleDateString() : '',
-      title: `Bảo hành - ${entry.providerName}`,
+      id: String(entry.id || entry.Id),
+      date: (entry.startDate || entry.StartDate) ? new Date(entry.startDate || entry.StartDate).toLocaleDateString() : '',
+      title: `Bảo dưỡng - ${entry.providerName || entry.ProviderName || ''}`,
       items: [
-        `Số hợp đồng: ${entry.policyNumber}`,
-        entry.description || 'Không có mô tả',
-        `Mức bảo hiểm: ${entry.coverageAmount?.toLocaleString?.() ?? entry.coverageAmount} đ`,
+        `Mã phiếu: ${entry.policyNumber || entry.PolicyNumber || ''}`,
+        entry.description || entry.Description || 'Không có mô tả',
+        `Chi phí: ${(entry.coverageAmount || entry.CoverageAmount)?.toLocaleString?.() ?? (entry.coverageAmount || entry.CoverageAmount)} đ`,
       ],
-      cost: entry.coverageAmount ? `${entry.coverageAmount.toLocaleString()} đ` : '',
-      technician: entry.providerName,
-      status: entry.status || 'completed',
+      cost: (entry.coverageAmount || entry.CoverageAmount) ? `${(entry.coverageAmount || entry.CoverageAmount).toLocaleString()} đ` : '',
+      technician: entry.providerName || entry.ProviderName,
+      status: entry.status || entry.Status || 'completed',
     }));
 
     return [...mappedPurchaseHistory, ...mappedWarrantyHistory].sort((a, b) => {

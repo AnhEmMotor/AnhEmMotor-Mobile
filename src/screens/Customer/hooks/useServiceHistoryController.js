@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDependency } from '../../../di/DependencyContext';
 
-export function useServiceHistoryController(vehicleId) {
-  const { getServiceHistoryUseCase, getUpcomingRemindersUseCase } = useDependency();
+export function useServiceHistoryController(initialVehicleId) {
+  const { getServiceHistoryUseCase, getUpcomingRemindersUseCase, getCustomerVehiclesUseCase } = useDependency();
   const [history, setHistory] = useState([]);
   const [reminders, setReminders] = useState([]);
+  const [activeVehicle, setActiveVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,9 +13,20 @@ export function useServiceHistoryController(vehicleId) {
     try {
       setLoading(true);
       setError(null);
+      let targetVehicleId = initialVehicleId;
+
+      if (!targetVehicleId) {
+        const vehicles = await getCustomerVehiclesUseCase.execute();
+        if (!vehicles || vehicles.length === 0) {
+          throw new Error('Bạn chưa có xe nào để xem lịch sử.');
+        }
+        targetVehicleId = vehicles[0].id;
+        setActiveVehicle(vehicles[0]);
+      }
+
       const [historyData, remindersData] = await Promise.all([
-        getServiceHistoryUseCase.execute(vehicleId),
-        getUpcomingRemindersUseCase.execute(vehicleId),
+        getServiceHistoryUseCase.execute(targetVehicleId),
+        getUpcomingRemindersUseCase.execute(targetVehicleId),
       ]);
       console.log('HISTORY DATA RETURNED:', historyData);
 
@@ -30,7 +42,7 @@ export function useServiceHistoryController(vehicleId) {
     } finally {
       setLoading(false);
     }
-  }, [vehicleId, getServiceHistoryUseCase, getUpcomingRemindersUseCase]);
+  }, [initialVehicleId, getServiceHistoryUseCase, getUpcomingRemindersUseCase, getCustomerVehiclesUseCase]);
 
   useEffect(() => {
     const init = async () => {
@@ -44,6 +56,7 @@ export function useServiceHistoryController(vehicleId) {
     reminders,
     loading,
     error,
+    activeVehicle,
     refreshData: loadServiceData,
   };
 }

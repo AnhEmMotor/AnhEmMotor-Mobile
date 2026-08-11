@@ -12,6 +12,7 @@ export class UserProfile {
     specificAddress = '',
     licenseTier = '',
     licenseImage = null,
+    avatar = null,
     settings = {
       maintenanceNotifications: true,
       biometricLogin: false,
@@ -31,6 +32,7 @@ export class UserProfile {
     this.specificAddress = specificAddress;
     this.licenseTier = licenseTier;
     this.licenseImage = licenseImage;
+    this.avatar = avatar;
     this.settings = { ...settings };
   }
 
@@ -62,6 +64,7 @@ export class UserProfile {
       specificAddress: this.specificAddress,
       licenseTier: this.licenseTier,
       licenseImage: this.licenseImage,
+      avatar: this.avatar,
       settings: { ...this.settings },
     });
   }

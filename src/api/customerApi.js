@@ -104,7 +104,11 @@ export async function changePasswordApi(oldPassword, newPassword) {
 }
 
 export async function updateUserApi(body) {
-  const response = await apiPut('/api/v1/User/me', body);
+  const payload = { ...body };
+  if (!payload.dateOfBirth) {
+    payload.dateOfBirth = null;
+  }
+  const response = await apiPut('/api/v1/User/me', payload);
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.error?.message || 'Cập nhật thông tin thất bại');
@@ -125,7 +129,15 @@ export async function getGenderOptionsApi() {
 export async function uploadAvatarApi(fileUri) {
   const formData = new FormData();
   const fileName = fileUri.split('/').pop() || 'avatar.jpg';
-  formData.append('file', { uri: fileUri, name: fileName, type: 'image/jpeg' });
+
+  if (typeof document !== 'undefined') {
+    const response = await fetch(fileUri);
+    const blob = await response.blob();
+    formData.append('file', blob, fileName);
+  } else {
+    formData.append('file', { uri: fileUri, name: fileName, type: 'image/jpeg' });
+  }
+
   return apiPostFormData('/api/v1/User/avatar', formData);
 }
 
@@ -174,6 +186,9 @@ export async function getCustomerVehicleHistoryApi(vehicleId) {
     throw new Error(data.error?.message || 'Không thể tải lịch sử xe');
   }
   const data = await response.json();
+  if (data && data.isSuccess === false) {
+    throw new Error(data.error?.message || 'Không thể tải lịch sử xe');
+  }
   return data.value || data.data || data;
 }
 

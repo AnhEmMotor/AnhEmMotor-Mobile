@@ -147,7 +147,7 @@ export default function ProfileScreen({ navigation, route }) {
             />
             <TouchableOpacity
               style={[styles.camBadge, { backgroundColor: activeColors.primary }]}
-              onPress={() => setAvatarModal(true)}
+              onPress={() => handleSelectPhoto('gallery')}
             >
               <Camera color="#FFFFFF" size={14} />
             </TouchableOpacity>
@@ -408,84 +408,7 @@ export default function ProfileScreen({ navigation, route }) {
         </TouchableOpacity>
       </View>
 
-      {}
-      <Modal visible={avatarModal} animationType="slide" presentationStyle="pageSheet">
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#050505' }}>
-          <View style={[styles.modalHeader, { borderBottomColor: activeColors.border }]}>
-            <TouchableOpacity onPress={() => setAvatarModal(false)}>
-              <Text style={styles.modalClose}>Đóng</Text>
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>Ảnh đại diện</Text>
-            <View style={{ width: 50 }} />
-          </View>
-          <ScrollView style={styles.modalBody}>
-            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
-              <TouchableOpacity
-                style={[styles.actionBtn, { flex: 1, borderColor: activeColors.border }]}
-                onPress={() => handleSelectPhoto('camera')}
-              >
-                <Camera color={activeColors.primary} size={20} />
-                <Text
-                  style={{
-                    color: activeColors.text,
-                    fontSize: 13,
-                    fontWeight: '500',
-                    marginLeft: 8,
-                  }}
-                >
-                  Máy ảnh
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.actionBtn, { flex: 1, borderColor: activeColors.border }]}
-                onPress={() => handleSelectPhoto('gallery')}
-              >
-                <Image
-                  source={{
-                    uri: 'https://img.freepik.com/free-vector/cute-boy-with-glasses-hoodie-pixel-art-style_475147-155.jpg',
-                  }}
-                  style={{ width: 20, height: 20, borderRadius: 4 }}
-                />
-                <Text
-                  style={{
-                    color: activeColors.text,
-                    fontSize: 13,
-                    fontWeight: '500',
-                    marginLeft: 8,
-                  }}
-                >
-                  Thư viện
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{
-                color: activeColors.text,
-                fontSize: 15,
-                fontWeight: '600',
-                marginBottom: 12,
-              }}
-            >
-              Avatar nhanh
-            </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {cartoonAvatars.map((url) => (
-                <TouchableOpacity key={url} onPress={() => handleSelectCartoonAvatar(url)}>
-                  <Image
-                    source={{ uri: url }}
-                    style={{
-                      width: '30%',
-                      aspectRatio: 1,
-                      borderRadius: 10,
-                      backgroundColor: 'rgba(255,255,255,0.03)',
-                    }}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Modal>
+
 
       {}
       <Modal visible={settingsModalVisible} animationType="slide" presentationStyle="pageSheet">

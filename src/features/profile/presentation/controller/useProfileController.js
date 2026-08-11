@@ -54,7 +54,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   const [profile, setProfile] = useState(new UserProfile());
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [avatarModal, setAvatarModal] = useState(false);
 
   const [activeField, setActiveField] = useState(null);
   const [tempData, setTempData] = useState({});
@@ -228,7 +227,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
   };
 
   const handleSelectPhoto = async (type) => {
-    setAvatarModal(false);
     triggerHaptic();
     try {
       let permissionResult;
@@ -260,7 +258,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
         const uploadedUri = await uploadAvatarUseCase.execute(pickerResult.assets[0].uri);
 
         const updated = profile.clone();
-        updated.licenseImage = uploadedUri;
+        updated.avatar = uploadedUri;
         const saved = await updateProfileUseCase.execute(updated);
         setProfile(saved);
 
@@ -281,14 +279,13 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       const savedUrl = await uploadAvatarUseCase.execute(url);
 
       const updated = profile.clone();
-      updated.licenseImage = savedUrl;
+      updated.avatar = savedUrl;
       const saved = await updateProfileUseCase.execute(updated);
       setProfile(saved);
     } catch (error) {
       console.error('Cartoon avatar select failed:', error);
     } finally {
       setIsSaving(false);
-      setAvatarModal(false);
     }
   };
 
@@ -343,8 +340,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
     profile,
     isLoading,
     isSaving,
-    avatarModal,
-    setAvatarModal,
     activeField,
     setActiveField,
     tempData,
