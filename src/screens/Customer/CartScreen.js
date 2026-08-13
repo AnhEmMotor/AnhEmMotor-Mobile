@@ -65,7 +65,7 @@ export default function CartScreen({ navigation }) {
           <Text style={[styles.emptyText, { color: activeColors.subtext }]}>Giỏ hàng trống</Text>
           <TouchableOpacity
             style={[styles.btnShopping, { backgroundColor: activeColors.primary }]}
-            onPress={() => navigation.navigate('Catalog')}
+            onPress={() => navigation.navigate('CustomerHome', { screen: 'Catalog' })}
           >
             <Text style={styles.btnShoppingText}>Tiếp tục mua sắm</Text>
           </TouchableOpacity>

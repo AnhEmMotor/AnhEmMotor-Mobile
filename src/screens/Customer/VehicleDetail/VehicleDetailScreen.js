@@ -737,8 +737,20 @@ export default function VehicleDetailScreen({ navigation, route }) {
                 },
               ]}
               onPress={() => {
+                if (logic.loading) {
+                  Alert.alert('Thông báo', 'Đang tải dữ liệu sản phẩm, vui lòng đợi...');
+                  return;
+                }
+                const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
+                if (!variantId) {
+                  Alert.alert('Lỗi', 'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!');
+                  return;
+                }
                 addToCart({
                   id: motor?.id,
+                  productId: motor?.id,
+                  variantId: variantId,
+                  colorId: logic.motor?.colors?.[0]?.id || motor?.colors?.[0]?.id || null,
                   name: motor?.name || motor?.productName,
                   price: motor?.price || motor?.referencePrice || 0,
                   image: motor?.img || motor?.imageUrl,
@@ -751,8 +763,20 @@ export default function VehicleDetailScreen({ navigation, route }) {
             <ScalePress
               style={styles.primaryBtn}
               onPress={() => {
+                if (logic.loading) {
+                  Alert.alert('Thông báo', 'Đang tải dữ liệu sản phẩm, vui lòng đợi...');
+                  return;
+                }
+                const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
+                if (!variantId) {
+                  Alert.alert('Lỗi', 'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!');
+                  return;
+                }
                 addToCart({
                   id: motor?.id,
+                  productId: motor?.id,
+                  variantId: variantId,
+                  colorId: logic.motor?.colors?.[0]?.id || motor?.colors?.[0]?.id || null,
                   name: motor?.name || motor?.productName,
                   price: motor?.price || motor?.referencePrice || 0,
                   image: motor?.img || motor?.imageUrl,
