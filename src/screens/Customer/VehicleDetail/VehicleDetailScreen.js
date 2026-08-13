@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Slider from '@react-native-community/slider';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import ScalePress from '../../../components/ScalePress';
+import Toast from '../../../components/Toast';
+import { useCart } from '../../../context/CartContext';
 import { styles } from './styles';
 import { useVehicleDetail } from './useVehicleDetail';
 
@@ -33,6 +35,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
   const logic = useVehicleDetail(motor);
   const activeColors = useActiveColors();
   const [submittingConsultation, setSubmittingConsultation] = useState(false);
+  const { addToCart } = useCart();
+  const toastRef = useRef(null);
+  
+  const isMotorcycle = motor?.categoryId === 8 || motor?.categoryName === 'Xe máy';
 
   const handleRequestConsultation = async () => {
     if (!motor?.id) {
@@ -78,146 +84,150 @@ export default function VehicleDetailScreen({ navigation, route }) {
       </View>
 
       {}
-      <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tính năng nổi bật</Text>
-      <View style={styles.featureGrid}>
-        {logic.motor?.technologies?.length > 0
-          ? logic.motor.technologies.slice(0, 4).map((tech, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.featureCard,
-                  { backgroundColor: activeColors.card, borderColor: activeColors.border },
-                ]}
-              >
-                <View style={styles.featureIcon}>
-                  <ShieldCheck color={activeColors.primary} size={20} />
-                </View>
-                <Text style={[styles.featureTitle, { color: activeColors.text }]} numberOfLines={1}>
-                  {tech.title || 'Công nghệ'}
-                </Text>
-                <Text
-                  style={[styles.featureDesc, { color: activeColors.subtext }]}
-                  numberOfLines={2}
-                >
-                  {tech.description || 'Đang cập nhật'}
-                </Text>
-              </View>
-            ))
-          : [
-              {
-                icon: <ShieldCheck color={activeColors.primary} size={20} />,
-                title: 'Phanh an toàn',
-                desc: 'Đảm bảo an toàn tối đa.',
-              },
-              {
-                icon: <Key color={activeColors.warning} size={20} />,
-                title: 'Smartkey',
-                desc: 'Chống trộm thông minh.',
-              },
-              {
-                icon: <Droplet color="#E31B23" size={20} />,
-                title: 'Tiết kiệm',
-                desc: 'Tiết kiệm xăng tối đa.',
-              },
-              {
-                icon: <Zap color="#A855F7" size={20} />,
-                title: 'Động cơ mạnh',
-                desc: 'Vận hành êm ái.',
-              },
-            ].map((f, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.featureCard,
-                  { backgroundColor: activeColors.card, borderColor: activeColors.border },
-                ]}
-              >
-                <View style={styles.featureIcon}>{f.icon}</View>
-                <Text style={[styles.featureTitle, { color: activeColors.text }]}>{f.title}</Text>
-                <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>{f.desc}</Text>
-              </View>
-            ))}
-      </View>
+      {isMotorcycle && (
+        <>
+          <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tính năng nổi bật</Text>
+          <View style={styles.featureGrid}>
+            {logic.motor?.technologies?.length > 0
+              ? logic.motor.technologies.slice(0, 4).map((tech, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.featureCard,
+                      { backgroundColor: activeColors.card, borderColor: activeColors.border },
+                    ]}
+                  >
+                    <View style={styles.featureIcon}>
+                      <ShieldCheck color={activeColors.primary} size={20} />
+                    </View>
+                    <Text style={[styles.featureTitle, { color: activeColors.text }]} numberOfLines={1}>
+                      {tech.title || 'Công nghệ'}
+                    </Text>
+                    <Text
+                      style={[styles.featureDesc, { color: activeColors.subtext }]}
+                      numberOfLines={2}
+                    >
+                      {tech.description || 'Đang cập nhật'}
+                    </Text>
+                  </View>
+                ))
+              : [
+                  {
+                    icon: <ShieldCheck color={activeColors.primary} size={20} />,
+                    title: 'Phanh an toàn',
+                    desc: 'Đảm bảo an toàn tối đa.',
+                  },
+                  {
+                    icon: <Key color={activeColors.warning} size={20} />,
+                    title: 'Smartkey',
+                    desc: 'Chống trộm thông minh.',
+                  },
+                  {
+                    icon: <Droplet color="#E31B23" size={20} />,
+                    title: 'Tiết kiệm',
+                    desc: 'Tiết kiệm xăng tối đa.',
+                  },
+                  {
+                    icon: <Zap color="#A855F7" size={20} />,
+                    title: 'Động cơ mạnh',
+                    desc: 'Vận hành êm ái.',
+                  },
+                ].map((f, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.featureCard,
+                      { backgroundColor: activeColors.card, borderColor: activeColors.border },
+                    ]}
+                  >
+                    <View style={styles.featureIcon}>{f.icon}</View>
+                    <Text style={[styles.featureTitle, { color: activeColors.text }]}>{f.title}</Text>
+                    <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>{f.desc}</Text>
+                  </View>
+                ))}
+          </View>
 
-      {}
-      <TouchableOpacity
-        style={[
-          styles.financeTeaser,
-          { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' },
-        ]}
-        onPress={() => logic.setActiveTab('finance')}
-      >
-        <Text style={[styles.teaserTitle, { color: activeColors.text }]}>
-          Gợi ý tài chính nhanh 💰
-        </Text>
-        <Text style={[styles.teaserDesc, { color: activeColors.subtext }]}>
-          Sở hữu xe chỉ với 15.000.000đ trả trước - Hỗ trợ lãi suất ưu đãi từ 1.200.000đ/tháng.
-        </Text>
-        <Text style={[styles.teaserLink, { color: activeColors.primary }]}>
-          Tính chi phí trả góp chi tiết ➔
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.specGroup}>
-        <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>
-          Khung sườn, Phuộc & An toàn
-        </Text>
-        <SpecRow
-          label="Phanh trước"
-          value={logic.motor?.frontBrake || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Phanh sau"
-          value={logic.motor?.rearBrake || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Phuộc trước"
-          value={logic.motor?.frontSuspension || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Phuộc sau"
-          value={logic.motor?.rearSuspension || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Lốp trước"
-          value={logic.motor?.frontTireSize || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Lốp sau"
-          value={logic.motor?.rearTireSize || logic.motor?.tireSize || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-      </View>
+          {}
+          <TouchableOpacity
+            style={[
+              styles.financeTeaser,
+              { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' },
+            ]}
+            onPress={() => logic.setActiveTab('finance')}
+          >
+            <Text style={[styles.teaserTitle, { color: activeColors.text }]}>
+              Gợi ý tài chính nhanh 💰
+            </Text>
+            <Text style={[styles.teaserDesc, { color: activeColors.subtext }]}>
+              Sở hữu xe chỉ với 15.000.000đ trả trước - Hỗ trợ lãi suất ưu đãi từ 1.200.000đ/tháng.
+            </Text>
+            <Text style={[styles.teaserLink, { color: activeColors.primary }]}>
+              Tính chi phí trả góp chi tiết ➔
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.specGroup}>
+            <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>
+              Khung sườn, Phuộc & An toàn
+            </Text>
+            <SpecRow
+              label="Phanh trước"
+              value={logic.motor?.frontBrake || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Phanh sau"
+              value={logic.motor?.rearBrake || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Phuộc trước"
+              value={logic.motor?.frontSuspension || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Phuộc sau"
+              value={logic.motor?.rearSuspension || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Lốp trước"
+              value={logic.motor?.frontTireSize || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Lốp sau"
+              value={logic.motor?.rearTireSize || logic.motor?.tireSize || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+          </View>
 
-      <View style={styles.specGroup}>
-        <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>
-          Tiện ích & Công nghệ
-        </Text>
-        <SpecRow
-          label="Hệ thống đèn"
-          value={logic.motor?.lightingSystem || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Mặt đồng hồ"
-          value={logic.motor?.dashboardType || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Hệ thống khóa"
-          value={logic.motor?.starterSystem || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-        <SpecRow
-          label="Bảo hành"
-          value={logic.motor?.warrantyPeriod || 'Đang cập nhật'}
-          activeColors={activeColors}
-        />
-      </View>
+          <View style={styles.specGroup}>
+            <Text style={[styles.specGroupTitle, { color: activeColors.primary }]}>
+              Tiện ích & Công nghệ
+            </Text>
+            <SpecRow
+              label="Hệ thống đèn"
+              value={logic.motor?.lightingSystem || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Mặt đồng hồ"
+              value={logic.motor?.dashboardType || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Hệ thống khóa"
+              value={logic.motor?.starterSystem || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+            <SpecRow
+              label="Bảo hành"
+              value={logic.motor?.warrantyPeriod || 'Đang cập nhật'}
+              activeColors={activeColors}
+            />
+          </View>
+        </>
+      )}
     </Animated.View>
   );
 
@@ -640,11 +650,11 @@ export default function VehicleDetailScreen({ navigation, route }) {
           >
             {[
               { id: 'overview', label: 'Tổng quan' },
-              { id: 'specs', label: 'Thông số' },
+              { id: 'specs', label: 'Thông số', isMotorcycleOnly: true },
               { id: 'gallery', label: 'Thư viện' },
-              { id: 'finance', label: 'Trả góp' },
+              { id: 'finance', label: 'Trả góp', isMotorcycleOnly: true },
               { id: 'reviews', label: 'Đánh giá' },
-            ].map((tab) => (
+            ].filter(t => isMotorcycle || !t.isMotorcycleOnly).map((tab) => (
               <TouchableOpacity
                 key={tab.id}
                 style={[
@@ -690,31 +700,98 @@ export default function VehicleDetailScreen({ navigation, route }) {
           { backgroundColor: activeColors.background, borderTopColor: activeColors.border },
         ]}
       >
-        <ScalePress
-          style={[
-            styles.secondaryBtn,
-            {
-              backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-            },
-          ]}
-          onPress={() => navigation.navigate('Booking')}
-        >
-          <Text style={[styles.btnText, { color: activeColors.text }]}>Lái thử</Text>
-        </ScalePress>
-        <ScalePress
-          style={styles.primaryBtn}
-          onPress={handleRequestConsultation}
-          disabled={submittingConsultation}
-        >
-          <LinearGradient colors={[activeColors.primary, '#1E3A8A']} style={styles.gradient}>
-            {submittingConsultation ? (
-              <ActivityIndicator color="#fff" size="small" />
-            ) : (
-              <Text style={styles.btnText}>Tư Vấn</Text>
-            )}
-          </LinearGradient>
-        </ScalePress>
+        {isMotorcycle ? (
+          <>
+            <ScalePress
+              style={[
+                styles.secondaryBtn,
+                {
+                  backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                },
+              ]}
+              onPress={() => navigation.navigate('Booking')}
+            >
+              <Text style={[styles.btnText, { color: activeColors.text }]}>Lái thử</Text>
+            </ScalePress>
+            <ScalePress
+              style={styles.primaryBtn}
+              onPress={handleRequestConsultation}
+              disabled={submittingConsultation}
+            >
+              <LinearGradient colors={[activeColors.primary, '#1E3A8A']} style={styles.gradient}>
+                {submittingConsultation ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <Text style={styles.btnText}>Tư Vấn</Text>
+                )}
+              </LinearGradient>
+            </ScalePress>
+          </>
+        ) : (
+          <>
+            <ScalePress
+              style={[
+                styles.secondaryBtn,
+                {
+                  backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                },
+              ]}
+              onPress={() => {
+                if (logic.loading) {
+                  Alert.alert('Thông báo', 'Đang tải dữ liệu sản phẩm, vui lòng đợi...');
+                  return;
+                }
+                const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
+                if (!variantId) {
+                  Alert.alert('Lỗi', 'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!');
+                  return;
+                }
+                addToCart({
+                  id: motor?.id,
+                  productId: motor?.id,
+                  variantId: variantId,
+                  colorId: logic.motor?.colors?.[0]?.id || motor?.colors?.[0]?.id || null,
+                  name: motor?.name || motor?.productName,
+                  price: motor?.price || motor?.referencePrice || 0,
+                  image: motor?.img || motor?.imageUrl,
+                });
+                toastRef.current?.show(`Đã thêm ${motor?.name || 'sản phẩm'} vào giỏ hàng`, 'success');
+              }}
+            >
+              <Text style={[styles.btnText, { color: activeColors.text }]}>Thêm vào giỏ</Text>
+            </ScalePress>
+            <ScalePress
+              style={styles.primaryBtn}
+              onPress={() => {
+                if (logic.loading) {
+                  Alert.alert('Thông báo', 'Đang tải dữ liệu sản phẩm, vui lòng đợi...');
+                  return;
+                }
+                const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
+                if (!variantId) {
+                  Alert.alert('Lỗi', 'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!');
+                  return;
+                }
+                addToCart({
+                  id: motor?.id,
+                  productId: motor?.id,
+                  variantId: variantId,
+                  colorId: logic.motor?.colors?.[0]?.id || motor?.colors?.[0]?.id || null,
+                  name: motor?.name || motor?.productName,
+                  price: motor?.price || motor?.referencePrice || 0,
+                  image: motor?.img || motor?.imageUrl,
+                });
+                navigation.navigate('Cart');
+              }}
+            >
+              <LinearGradient colors={[activeColors.primary, '#1E3A8A']} style={styles.gradient}>
+                <Text style={styles.btnText}>Mua ngay</Text>
+              </LinearGradient>
+            </ScalePress>
+          </>
+        )}
       </View>
+      <Toast ref={toastRef} />
     </View>
   );
 }

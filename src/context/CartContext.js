@@ -65,7 +65,13 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
+    return cartItems.reduce((sum, item) => {
+      let price = item.price;
+      if (typeof price === 'string') {
+        price = parseInt(price.replace(/[^\d]/g, ''), 10) || 0;
+      }
+      return sum + (price || 0) * item.quantity;
+    }, 0);
   };
 
   const getCartCount = () => {

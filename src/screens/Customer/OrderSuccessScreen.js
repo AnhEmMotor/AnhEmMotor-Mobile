@@ -20,7 +20,7 @@ export default function OrderSuccessScreen({ navigation }) {
       <View style={styles.footer}>
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: activeColors.primary }]}
-          onPress={() => navigation.navigate('Catalog')}
+          onPress={() => navigation.navigate('CustomerHome', { screen: 'Catalog' })}
         >
           <Text style={styles.btnText}>Tiếp tục mua sắm</Text>
         </TouchableOpacity>

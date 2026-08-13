@@ -46,7 +46,11 @@ export const useHome = () => {
         const getImageUrl = (url) => {
           if (!url) return 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
           if (url.startsWith('http')) return url;
-          const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
+          const normalized = url.replace(/\\/g, '/');
+          let cleanUrl = normalized.startsWith('/') ? normalized.substring(1) : normalized;
+          if (!cleanUrl.startsWith('uploads/')) {
+            cleanUrl = `uploads/${cleanUrl}`;
+          }
           return `${API_BASE_URL}/${cleanUrl}`;
         };
 
