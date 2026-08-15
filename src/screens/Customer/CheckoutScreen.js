@@ -62,14 +62,14 @@ export default function CheckoutScreen({ navigation }) {
         const storedProfile = await AsyncStorage.getItem('@AEM_Customer_Profile');
         if (storedProfile) {
           const profile = JSON.parse(storedProfile);
-          setFormData({
-            ...formData,
+          setFormData(f => ({
+            ...f,
             name: profile.name || profile.fullName || '',
             phone: profile.phone || profile.phoneNumber || '',
             address: profile.address || profile.specificAddress || '',
-          });
+          }));
         }
-      } catch (e) {}
+      } catch (_e) {}
     };
     loadProfile();
   }, []);

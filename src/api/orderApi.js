@@ -58,7 +58,7 @@ export async function createSalesOrderApi(payload) {
       } else if (data.title) {
         errorMsg = data.title;
       }
-    } catch (e) {}
+    } catch (_e) {}
     throw new Error(errorMsg);
   }
   return response.json();

@@ -25,7 +25,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from './styles';
 import { useHome } from './useHome';
-import { shortcuts, alerts, vouchers, promoItems, newsItems } from './constants';
+import { shortcuts, alerts, promoItems, newsItems } from './constants';
 
 const BANNERS = [
   {

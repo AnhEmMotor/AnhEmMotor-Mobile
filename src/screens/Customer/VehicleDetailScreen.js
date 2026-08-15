@@ -10,7 +10,6 @@ import ScalePress from '../../components/ScalePress';
 import FinanceCalculator from '../../components/FinanceCalculator';
 import Toast from '../../components/Toast';
 import { useCart } from '../../context/CartContext';
-import { ShoppingCart } from 'lucide-react-native';
 
 export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};

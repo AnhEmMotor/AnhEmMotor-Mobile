@@ -50,8 +50,6 @@ export default function ProfileScreen({ navigation, route }) {
     profile,
     isLoading,
     isSaving,
-    avatarModal,
-    setAvatarModal,
     activeField,
     tempData,
     setTempData,
@@ -60,10 +58,8 @@ export default function ProfileScreen({ navigation, route }) {
     openEditField,
     handleSaveField,
     handleSelectPhoto,
-    handleSelectCartoonAvatar,
     handleDeleteAccount,
     handleLogout,
-    cartoonAvatars,
   } = useProfileController(navigation, bottomSheetRef);
 
   const { setSettingsOpen } = useGlobalState();
