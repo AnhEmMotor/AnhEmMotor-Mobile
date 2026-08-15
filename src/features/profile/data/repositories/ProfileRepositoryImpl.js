@@ -25,7 +25,8 @@ export class ProfileRepositoryImpl {
       ward: user.ward || '',
       specificAddress: user.specificAddress || user.address || '',
       licenseTier: user.licenseTier || 'A1',
-      licenseImage: user.licenseImage || user.avatar || null,
+      licenseImage: user.licenseImage || null,
+      avatar: user.avatarUrl || user.avatar || null,
       settings: user.settings
         ? {
             maintenanceNotifications: user.settings.maintenanceNotifications ?? true,

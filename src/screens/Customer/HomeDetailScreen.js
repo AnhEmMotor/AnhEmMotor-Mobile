@@ -51,7 +51,7 @@ const MOCK_RELATED_NEWS = [
     author: 'Khánh AEM',
     date: '16/05/2026',
     image:
-      'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070',
   },
   {
     id: 'n2',
@@ -60,7 +60,7 @@ const MOCK_RELATED_NEWS = [
     author: 'Minh Motor',
     date: '15/05/2026',
     image:
-      'https://images.unsplash.com/photo-1525160354320-d8e92641c563?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80',
   },
 ];
 

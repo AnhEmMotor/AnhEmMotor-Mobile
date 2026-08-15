@@ -90,6 +90,10 @@ export const useCatalog = () => {
     return list;
   }, [products, activeBrandId, searchQuery, sortBy]);
 
+  const refreshProducts = useCallback(() => {
+    loadProducts(activeCategoryId);
+  }, [loadProducts, activeCategoryId]);
+
   return {
     loading,
     fetchError,
@@ -104,6 +108,6 @@ export const useCatalog = () => {
     activeBrandId,
     setActiveBrandId,
     filteredMotors,
-    refreshProducts: () => loadProducts(activeCategoryId),
+    refreshProducts,
   };
 };

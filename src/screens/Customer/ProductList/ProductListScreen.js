@@ -7,10 +7,12 @@ import ScalePress from '../../../components/ScalePress';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { styles } from './styles';
 import { useProductList } from './useProductList';
+import { useCart } from '../../../context/CartContext';
 
 export default function ProductListScreen({ route, navigation }) {
   const { brand, type, filteredProducts } = useProductList(route);
   const activeColors = useActiveColors();
+  const { getCartCount } = useCart();
 
   return (
     <SafeAreaView
@@ -45,7 +47,7 @@ export default function ProductListScreen({ route, navigation }) {
             accessible
             accessibilityRole="button"
             accessibilityLabel="Giỏ hàng"
-            onPress={() => navigation.navigate('Catalog')}
+            onPress={() => navigation.navigate('Cart')}
             style={[
               styles.cartBtn,
               {
@@ -53,10 +55,31 @@ export default function ProductListScreen({ route, navigation }) {
                 backgroundColor: activeColors.isDark
                   ? 'rgba(255,255,255,0.05)'
                   : 'rgba(0,0,0,0.03)',
+                position: 'relative',
               },
             ]}
           >
             <ShoppingCart color={activeColors.text} size={24} />
+            {getCartCount() > 0 && (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -5,
+                  right: -5,
+                  backgroundColor: '#E31B23',
+                  borderRadius: 10,
+                  minWidth: 20,
+                  height: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingHorizontal: 4,
+                }}
+              >
+                <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
+                  {getCartCount()}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             accessible

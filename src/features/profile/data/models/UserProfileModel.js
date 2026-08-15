@@ -16,6 +16,7 @@ export class UserProfileModel extends UserProfile {
       specificAddress: json.specificAddress,
       licenseTier: json.licenseTier,
       licenseImage: json.licenseImage,
+      avatar: json.avatar,
       settings: json.settings
         ? {
             maintenanceNotifications: json.settings.maintenanceNotifications ?? true,
@@ -41,6 +42,7 @@ export class UserProfileModel extends UserProfile {
       specificAddress: this.specificAddress,
       licenseTier: this.licenseTier,
       licenseImage: this.licenseImage,
+      avatar: this.avatar,
       settings: { ...this.settings },
     };
   }

@@ -8,6 +8,8 @@ export const useHome = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const bottomSheetRef = useRef(null);
   const [userName, setUserName] = useState('');
+  const [personalVouchers, setPersonalVouchers] = useState([]);
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -20,6 +22,25 @@ export const useHome = () => {
       }
     };
     fetchProfile();
+    
+    const fetchPersonalVouchers = async () => {
+      try {
+        const { getPersonalVouchersApi } = require('../../../api/customerApi');
+        const vouchers = await getPersonalVouchersApi();
+        if (vouchers && Array.isArray(vouchers)) {
+            const formattedVouchers = vouchers.map(v => ({
+                id: v.id || v.Id,
+                title: v.name || v.Name || v.code || v.Code,
+                desc: `Giảm ${v.discountValue || v.DiscountValue}${v.discountType === 1 || v.DiscountType === 1 ? 'đ' : '%'} - Áp dụng cho đơn từ ${(v.minOrderValue || v.MinOrderValue || 0).toLocaleString('vi-VN')}đ`,
+                code: v.code || v.Code,
+            }));
+            setPersonalVouchers(formattedVouchers);
+        }
+      } catch (error) {
+        console.error('Lỗi tải voucher cá nhân:', error);
+      }
+    };
+    fetchPersonalVouchers();
   }, []);
 
   const handleOpenVoucher = (voucher) => {
@@ -46,7 +67,11 @@ export const useHome = () => {
         const getImageUrl = (url) => {
           if (!url) return 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
           if (url.startsWith('http')) return url;
-          const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
+          const normalized = url.replace(/\\/g, '/');
+          let cleanUrl = normalized.startsWith('/') ? normalized.substring(1) : normalized;
+          if (!cleanUrl.startsWith('uploads/')) {
+            cleanUrl = `uploads/${cleanUrl}`;
+          }
           return `${API_BASE_URL}/${cleanUrl}`;
         };
 
@@ -92,6 +117,7 @@ export const useHome = () => {
     handleOpenVoucher,
     handleCloseVoucher,
     newsList,
+    personalVouchers,
   };
 };
 

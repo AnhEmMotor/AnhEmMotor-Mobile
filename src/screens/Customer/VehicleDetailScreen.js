@@ -9,9 +9,11 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import ScalePress from '../../components/ScalePress';
 import FinanceCalculator from '../../components/FinanceCalculator';
 import Toast from '../../components/Toast';
+import { useCart } from '../../context/CartContext';
 
 export default function VehicleDetailScreen({ navigation, route }) {
   const { motor, isOwned } = route.params || {};
+  const { addToCart } = useCart();
   const theme = useTheme();
   const styles = getStyles(theme);
   const [activeTab, setActiveTab] = useState('overview');
@@ -60,13 +62,18 @@ export default function VehicleDetailScreen({ navigation, route }) {
         {}
         <View style={getStyles(theme).header}>
           <View
-            style={styles.imageWrapper}
-            onMoveShouldSetResponder={(evt) => {
-              const { dx, dy } = evt.nativeEvent;
-              return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10;
-            }}
-            onResponderGrant={handleTouchStart}
-            onResponderMove={handleTouchMove}
+            style={[styles.imageWrapper, motorFrames.length > 1 && { touchAction: 'pan-y' }]}
+            {...(motorFrames.length > 1
+              ? {
+                  onMoveShouldSetResponder: (evt) => {
+                    const { dx, dy } = evt.nativeEvent;
+                    // For Web where dx/dy might be undefined, this will safely return false
+                    return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10;
+                  },
+                  onResponderGrant: handleTouchStart,
+                  onResponderMove: handleTouchMove,
+                }
+              : {})}
           >
             <Animated.Image
               entering={FadeIn.duration(800)}
@@ -216,19 +223,65 @@ export default function VehicleDetailScreen({ navigation, route }) {
 
           {}
           <View style={getStyles(theme).actionArea}>
-            <ScalePress
-              style={getStyles(theme).mainBtn}
-              onPress={() => navigation.navigate('Booking')}
-            >
-              <LinearGradient
-                colors={[theme.colors.primary, theme.colors.primary + 'AA']}
-                style={getStyles(theme).gradient}
+            {(motor?.category === 'Phụ tùng' || motor?.category === 'Phụ kiện' || motor?.categoryName === 'Phụ tùng' || motor?.categoryName === 'Phụ kiện') ? (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <ScalePress
+                  style={[getStyles(theme).mainBtn, { flex: 1, marginRight: 10, backgroundColor: theme.colors.card, borderWidth: 1, borderColor: theme.colors.primary }]}
+                  onPress={() => {
+                    addToCart({
+                      id: motor.id,
+                      productId: motor.id,
+                      variantId: motor.variants?.[0]?.id || null,
+                      colorId: motor.colors?.[0]?.id || null,
+                      name: motor.name || motor.productName,
+                      price: motor.price || 0,
+                      image: motor.img || motor.imageUrl,
+                    });
+                    toastRef.current?.show('Đã thêm vào giỏ hàng');
+                  }}
+                >
+                  <Text style={[getStyles(theme).btnText, { color: theme.colors.primary }]}>
+                    Thêm vào giỏ
+                  </Text>
+                </ScalePress>
+                <ScalePress
+                  style={[getStyles(theme).mainBtn, { flex: 1 }]}
+                  onPress={() => {
+                    addToCart({
+                      id: motor.id,
+                      productId: motor.id,
+                      variantId: motor.variants?.[0]?.id || null,
+                      colorId: motor.colors?.[0]?.id || null,
+                      name: motor.name || motor.productName,
+                      price: motor.price || 0,
+                      image: motor.img || motor.imageUrl,
+                    });
+                    navigation.navigate('Cart');
+                  }}
+                >
+                  <LinearGradient
+                    colors={[theme.colors.primary, theme.colors.primary + 'AA']}
+                    style={getStyles(theme).gradient}
+                  >
+                    <Text style={getStyles(theme).btnText}>Mua ngay</Text>
+                  </LinearGradient>
+                </ScalePress>
+              </View>
+            ) : (
+              <ScalePress
+                style={getStyles(theme).mainBtn}
+                onPress={() => navigation.navigate('Booking')}
               >
-                <Text style={getStyles(theme).btnText}>
-                  {isOwned ? 'Đặt lịch bảo dưỡng' : 'Đăng ký lái thử ngay'}
-                </Text>
-              </LinearGradient>
-            </ScalePress>
+                <LinearGradient
+                  colors={[theme.colors.primary, theme.colors.primary + 'AA']}
+                  style={getStyles(theme).gradient}
+                >
+                  <Text style={getStyles(theme).btnText}>
+                    {isOwned ? 'Đặt lịch bảo dưỡng' : 'Đăng ký lái thử ngay'}
+                  </Text>
+                </LinearGradient>
+              </ScalePress>
+            )}
             <Text style={styles.footerHint}>
               * Giá trên đã bao gồm VAT, chưa bao gồm phí trước bạ.
             </Text>

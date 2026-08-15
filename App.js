@@ -5,6 +5,7 @@ import { LogBox } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { GlobalStateProvider } from './src/context/GlobalState';
+import { CartProvider } from './src/context/CartContext';
 import { DependencyProvider } from './src/di/DependencyContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import ErrorBoundary from './src/components/ErrorBoundary';
@@ -24,10 +25,12 @@ export default function App() {
   const RootContent = (
     <DependencyProvider>
       <GlobalStateProvider>
-        <StatusBar style="light" />
-        <ErrorBoundary>
-          <AppNavigator />
-        </ErrorBoundary>
+        <CartProvider>
+          <StatusBar style="light" />
+          <ErrorBoundary>
+            <AppNavigator />
+          </ErrorBoundary>
+        </CartProvider>
       </GlobalStateProvider>
     </DependencyProvider>
   );

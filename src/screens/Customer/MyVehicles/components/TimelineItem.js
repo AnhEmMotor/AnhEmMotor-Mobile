@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { ChevronRight, Clock } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useActiveColors } from '../../../../theme/Theme';
 import { styles } from '../styles';
 
 export const TimelineItem = ({ item, isLast }) => {
   const activeColors = useActiveColors();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.timelineItem}>
@@ -45,7 +47,10 @@ export const TimelineItem = ({ item, isLast }) => {
             </View>
             <View style={styles.timelineRightInfo}>
               <Text style={[styles.timelinePrice, { color: activeColors.text }]}>{item.price}</Text>
-              <TouchableOpacity style={styles.invoiceBtn}>
+              <TouchableOpacity 
+                style={styles.invoiceBtn}
+                onPress={() => navigation.navigate('InvoiceScreen')}
+              >
                 <Text style={[styles.invoiceText, { color: activeColors.primary }]}>
                   Xem hóa đơn
                 </Text>
