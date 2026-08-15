@@ -119,6 +119,7 @@ export default function HomeScreen({ navigation }) {
     handleCloseVoucher,
     userName,
     newsList,
+    personalVouchers,
   } = useHome();
 
   const colors = useActiveColors();
@@ -433,45 +434,46 @@ export default function HomeScreen({ navigation }) {
           </Animated.View>
         )}
 
-        {}
-        <Animated.View entering={FadeInDown.duration(600).delay(600)} style={styles.voucherModule}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Voucher dành riêng cho bạn
-          </Text>
-          <View style={styles.voucherGrid}>
-            {vouchers.map((voucher) => (
-              <ScalePress
-                key={voucher.id}
-                style={styles.voucherCardWrapper}
-                onPress={() =>
-                  navigation.navigate('HomeDetail', { type: 'voucher', item: voucher })
-                }
-              >
-                <GlassCard
-                  style={[
-                    styles.voucherCard,
-                    { borderColor: colors.glassBorder, backgroundColor: colors.glassBg },
-                  ]}
-                  contentStyle={styles.voucherCardInner}
-                  tint={colors.isDark ? 'dark' : 'light'}
+        {personalVouchers && personalVouchers.length > 0 && (
+          <Animated.View entering={FadeInDown.duration(600).delay(600)} style={styles.voucherModule}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Voucher dành riêng cho bạn
+            </Text>
+            <View style={styles.voucherGrid}>
+              {personalVouchers.map((voucher) => (
+                <ScalePress
+                  key={voucher.id}
+                  style={styles.voucherCardWrapper}
+                  onPress={() =>
+                    navigation.navigate('HomeDetail', { type: 'voucher', item: voucher })
+                  }
                 >
-                  <View style={styles.voucherTop}>
-                    <Ticket color={colors.text} size={moderateScale(20)} />
-                    <QrCode color={colors.text} size={moderateScale(20)} />
-                  </View>
-                  <View style={styles.voucherTextContainer}>
-                    <Text style={[styles.voucherTitle, { color: colors.text }]} numberOfLines={2}>
-                      {voucher.title}
-                    </Text>
-                    <Text style={[styles.voucherDesc, { color: colors.subtext }]} numberOfLines={2}>
-                      {voucher.desc}
-                    </Text>
-                  </View>
-                </GlassCard>
-              </ScalePress>
-            ))}
-          </View>
-        </Animated.View>
+                  <GlassCard
+                    style={[
+                      styles.voucherCard,
+                      { borderColor: colors.glassBorder, backgroundColor: colors.glassBg },
+                    ]}
+                    contentStyle={styles.voucherCardInner}
+                    tint={colors.isDark ? 'dark' : 'light'}
+                  >
+                    <View style={styles.voucherTop}>
+                      <Ticket color={colors.text} size={moderateScale(20)} />
+                      <QrCode color={colors.text} size={moderateScale(20)} />
+                    </View>
+                    <View style={styles.voucherTextContainer}>
+                      <Text style={[styles.voucherTitle, { color: colors.text }]} numberOfLines={2}>
+                        {voucher.title}
+                      </Text>
+                      <Text style={[styles.voucherDesc, { color: colors.subtext }]} numberOfLines={2}>
+                        {voucher.desc}
+                      </Text>
+                    </View>
+                  </GlassCard>
+                </ScalePress>
+              ))}
+            </View>
+          </Animated.View>
+        )}
 
         {}
         <Animated.View entering={FadeInDown.duration(600).delay(700)} style={styles.exploreModule}>

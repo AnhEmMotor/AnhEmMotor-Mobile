@@ -76,7 +76,15 @@ export function mapBackendVehicleToMobile(b) {
     warrantyUntil: b.warrantyUntil ?? b.WarrantyUntil ?? b.warrantyDate ?? b.WarrantyDate ?? '',
     warrantyFrom: b.warrantyFrom ?? b.WarrantyFrom ?? '',
     insuranceUntil: b.insuranceUntil ?? b.InsuranceUntil ?? '',
-    timeline: Array.isArray(b.timeline) ? b.timeline : Array.isArray(b.Timeline) ? b.Timeline : [],
+    timeline: (Array.isArray(b.timeline) ? b.timeline : Array.isArray(b.Timeline) ? b.Timeline : []).map((t) => ({
+      ...t,
+      id: t.id ?? t.Id ?? Math.random().toString(),
+      date: t.date ?? t.Date ?? '',
+      type: t.type ?? t.Type ?? t.title ?? t.Title ?? 'Bảo dưỡng',
+      desc: t.desc ?? t.Desc ?? t.description ?? t.Description ?? (t.items || t.Items)?.[2] ?? '',
+      km: t.km ?? t.Km ?? (t.items || t.Items)?.[0]?.replace('Số km: ', '') ?? '0 km',
+      price: t.price ?? t.Price ?? t.cost ?? t.Cost ?? (t.items || t.Items)?.[1]?.replace('Chi phí: ', '') ?? '0 đ',
+    })),
     image:
       b.imageUrl || b.ImageUrl || b.image || b.Image
         ? (b.imageUrl || b.ImageUrl || b.image || b.Image).startsWith('http')

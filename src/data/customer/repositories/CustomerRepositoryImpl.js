@@ -83,7 +83,15 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
             }
           : {}),
       operatingSpecs: rawVehicle.operatingSpecs,
-      timeline: rawVehicle.timeline,
+      timeline: (Array.isArray(rawVehicle.timeline) ? rawVehicle.timeline : Array.isArray(rawVehicle.Timeline) ? rawVehicle.Timeline : []).map(t => ({
+        ...t,
+        id: t.id ?? t.Id ?? Math.random().toString(),
+        date: t.date ?? t.Date ?? '',
+        type: t.type ?? t.Type ?? t.title ?? t.Title ?? 'Bảo dưỡng',
+        desc: t.desc ?? t.Desc ?? t.description ?? t.Description ?? (t.items || t.Items)?.[2] ?? '',
+        km: t.km ?? t.Km ?? (t.items || t.Items)?.[0]?.replace('Số km: ', '') ?? '0 km',
+        price: t.price ?? t.Price ?? t.cost ?? t.Cost ?? (t.items || t.Items)?.[1]?.replace('Chi phí: ', '') ?? '0 đ',
+      })),
       documents: rawVehicle.documents,
       image:
         rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image

@@ -577,3 +577,12 @@ export async function getMyFinanceContractsApi() {
   }
   return data;
 }
+
+export async function getPersonalVouchersApi() {
+  const response = await apiGet('/api/v1/client/vouchers/personal');
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || data.title || 'Không thể tải voucher cá nhân');
+  }
+  return data.value || data.data || data;
+}
