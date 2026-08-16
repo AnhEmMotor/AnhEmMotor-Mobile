@@ -159,14 +159,12 @@ export async function getMyVehiclesApi() {
   }
   const data = await response.json();
 
-  if (data?.value?.items) {
-    return data.value.items;
-  }
-  if (data?.items) {
-    return data.items;
-  }
+  if (data?.value?.items) return data.value.items;
+  if (data?.value?.data) return data.value.data;
+  if (data?.items) return data.items;
+  if (data?.data) return data.data;
 
-  return Array.isArray(data) ? data : data.value || data.data || [];
+  return Array.isArray(data) ? data : data.value || [];
 }
 
 export async function getCustomerVehicleDetailApi(vehicleId) {
@@ -575,7 +573,7 @@ export async function getMyFinanceContractsApi() {
   if (!response.ok) {
     throw new Error(data.error?.message || data.title || 'Không thể tải hợp đồng tài chính');
   }
-  return data;
+  return data.value || data.data || data;
 }
 
 export async function getPersonalVouchersApi() {
