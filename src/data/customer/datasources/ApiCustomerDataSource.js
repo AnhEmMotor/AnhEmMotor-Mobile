@@ -128,7 +128,7 @@ export class ApiCustomerDataSource {
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
         return `${day}/${month}/${year}`;
-      } catch (e) {
+      } catch (_e) {
         return String(dateStr).split('T')[0];
       }
     };

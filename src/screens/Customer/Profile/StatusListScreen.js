@@ -4,12 +4,11 @@ import { useActiveColors } from '../../../theme/Theme';
 import { ChevronLeft, Package, Wrench } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import GlassCard from '../../../components/GlassCard';
-import { moderateScale, verticalScale } from '../../../utils/responsive';
+import { moderateScale } from '../../../utils/responsive';
 
 export default function StatusListScreen({ navigation, route }) {
   const { title, items, type } = route.params || { title: 'Danh sách', items: [], type: 'outputs' };
   const activeColors = useActiveColors();
-  const isDark = activeColors.isDark;
 
   return (
     <View style={[styles.container, { backgroundColor: activeColors.background }]}>

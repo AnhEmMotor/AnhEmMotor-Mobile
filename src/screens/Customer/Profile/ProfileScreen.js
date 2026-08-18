@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Alert } from 'react-native';
+
 import {
   Text,
   View,
@@ -60,10 +60,8 @@ export default function ProfileScreen({ navigation, route }) {
     openEditField,
     handleSaveField,
     handleSelectPhoto,
-    handleSelectCartoonAvatar,
     handleDeleteAccount,
     handleLogout,
-    cartoonAvatars,
     personalOutputs,
     personalRepairs,
   } = useProfileController(navigation, bottomSheetRef);
@@ -72,7 +70,6 @@ export default function ProfileScreen({ navigation, route }) {
   const activeColors = useActiveColors();
   const isDark = activeColors.isDark;
   const styles = createStyles(activeColors);
-  const blockBg = { backgroundColor: activeColors.cardBg, borderColor: activeColors.border };
 
   useEffect(() => {
     if (route?.params?.openSettings) {

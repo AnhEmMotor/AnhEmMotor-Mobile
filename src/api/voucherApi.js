@@ -1,4 +1,4 @@
-﻿import { apiGet } from './httpClient';
+import { apiGet } from './httpClient';
 
 export const getPersonalVouchers = async () => {
   try {

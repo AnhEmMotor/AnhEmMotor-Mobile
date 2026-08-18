@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -15,16 +15,12 @@ import { useGlobalState } from '../../../context/GlobalState';
 import { Theme } from '../../../theme/Theme';
 import { API_BASE_URL } from '../../../config';
 import {
-  Wrench,
-  FileText,
   ChevronLeft,
   CalendarClock,
   ShieldCheck,
   Gift,
-  AlertTriangle,
   Map,
   Truck,
-  CheckCircle,
   Clock,
   Share2,
   Copy,
@@ -447,7 +443,7 @@ export default function NotificationScreen({ navigation }) {
                   borderRadius: 16,
                   width: '100%',
                   padding: 20,
-                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1)', elevation: 3,
+                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                   elevation: 4,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
@@ -1219,7 +1215,7 @@ export default function NotificationScreen({ navigation }) {
                   overflow: 'hidden',
                   borderWidth: 1,
                   borderColor: activeColors.border,
-                  boxShadow: isDark ? '0px 2px 8px rgba(0,0,0,0.3)' : '0px 2px 8px rgba(0,0,0,0.06)', elevation: 2,
+                  boxShadow: isDark ? '0px 2px 8px rgba(0,0,0,0.3)' : '0px 2px 8px rgba(0,0,0,0.06)',
                   elevation: 3,
                 }}
               >
