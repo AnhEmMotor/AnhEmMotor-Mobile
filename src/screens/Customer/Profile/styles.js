@@ -2,14 +2,6 @@ import { StyleSheet } from 'react-native';
 import { Theme } from '../../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../../utils/responsive';
 
-const DEFAULT_BG = '#0B0F19';
-
-const DEFAULT_TEXT = '#F8FAFC';
-const DEFAULT_SUBTEXT = '#94A3B8';
-
-const PRIMARY = Theme.staticColors.primary;
-const SECONDARY = Theme.staticColors.secondary;
-
 const H = horizontalScale;
 const V = verticalScale;
 const S = moderateScale;
@@ -18,51 +10,55 @@ const PAD = H(16);
 const GAP = V(12);
 const RADIUS = Theme.radius.lg;
 
-export const styles = StyleSheet.create({
-  shell: { flex: 1, backgroundColor: DEFAULT_BG },
+export const createStyles = (activeColors) => StyleSheet.create({
+  shell: { flex: 1, backgroundColor: activeColors.background },
 
   scrollContent: { paddingHorizontal: PAD, paddingTop: V(8), paddingBottom: V(170) },
 
   headerBlock: {
     alignItems: 'center',
     paddingVertical: V(22),
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.04)',
+  },
+  settingsBtn: {
+    position: 'absolute',
+    top: V(16),
+    right: PAD,
+    padding: 8,
   },
   avatarWrap: { position: 'relative', marginBottom: V(12) },
-  avatar: {
+  avatarProfile: {
     width: S(90),
     height: S(90),
     borderRadius: S(45),
     borderWidth: 2.5,
-    borderColor: PRIMARY,
+    borderColor: activeColors.primary,
   },
   camBadge: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: PRIMARY,
+    backgroundColor: activeColors.primary,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     width: H(28),
     height: H(28),
   },
-  headerName: { color: DEFAULT_TEXT, fontSize: S(20), fontWeight: '700' },
-  headerRole: { color: DEFAULT_SUBTEXT, fontSize: S(13), marginTop: V(4) },
+  headerName: { color: activeColors.text, fontSize: S(20), fontWeight: '700' },
+  headerRole: { color: activeColors.subtext, fontSize: S(13), marginTop: V(4) },
   scoreRow: { flexDirection: 'row', alignItems: 'center', marginTop: V(8), gap: 6 },
-  scoreText: { color: PRIMARY, fontSize: S(13), fontWeight: '600' },
+  scoreText: { color: activeColors.primary, fontSize: S(13), fontWeight: '600' },
 
   block: {
-    backgroundColor: 'rgba(255,255,255,0.02)',
+    backgroundColor: activeColors.card,
     borderRadius: RADIUS,
     padding: PAD,
     marginBottom: GAP,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.04)',
+    borderColor: activeColors.border,
   },
   blockTitle: {
-    color: DEFAULT_TEXT,
+    color: activeColors.text,
     fontSize: S(13),
     fontWeight: '700',
     letterSpacing: 0.5,
@@ -90,8 +86,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: H(12),
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
-    backgroundColor: 'rgba(255,255,255,0.015)',
+    borderColor: activeColors.border,
+    backgroundColor: activeColors.surface,
   },
   gridIcon: {
     width: H(40),
@@ -100,7 +96,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  gridLabel: { color: DEFAULT_TEXT, fontSize: S(13), fontWeight: '500', flex: 1 },
+  gridLabel: { color: activeColors.text, fontSize: S(13), fontWeight: '500', flex: 1 },
 
   iconRow: { flexDirection: 'row', justifyContent: 'space-between' },
   iconCol: { alignItems: 'center', width: '23%' },
@@ -110,13 +106,13 @@ export const styles = StyleSheet.create({
     borderRadius: H(24),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.03)',
+    backgroundColor: activeColors.surface,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: activeColors.border,
     position: 'relative',
   },
   iconLabel: {
-    color: DEFAULT_SUBTEXT,
+    color: activeColors.subtext,
     fontSize: S(11),
     textAlign: 'center',
     marginTop: V(6),
@@ -142,9 +138,9 @@ export const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#E31B23',
+    backgroundColor: activeColors.primary,
     borderWidth: 1.5,
-    borderColor: DEFAULT_BG,
+    borderColor: activeColors.background,
   },
 
   ratingRow: {
@@ -165,7 +161,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: PAD,
     paddingVertical: V(14),
     borderTopWidth: 1,
-    backgroundColor: DEFAULT_BG,
+    borderTopColor: activeColors.border,
+    backgroundColor: activeColors.background,
   },
   actionBtn: {
     flex: 1,
@@ -175,12 +172,12 @@ export const styles = StyleSheet.create({
     paddingVertical: V(12),
     borderRadius: 12,
     borderWidth: 1,
-    backgroundColor: 'rgba(255,255,255,0.02)',
-    borderColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: activeColors.surface,
+    borderColor: activeColors.border,
   },
-  actionBtnText: { fontSize: S(13), fontWeight: '600', marginLeft: H(6) },
-  logoutText: { color: '#E31B23' },
-  deleteText: { color: SECONDARY },
+  actionBtnText: { color: activeColors.text, fontSize: S(13), fontWeight: '600', marginLeft: H(6) },
+  logoutText: { color: activeColors.primary },
+  deleteText: { color: activeColors.text },
 
   fab: {
     position: 'absolute',
@@ -193,11 +190,14 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
   },
-  voucherFab: { bottom: V(105), right: H(16), width: 56, height: 56, backgroundColor: PRIMARY },
+  voucherFab: { bottom: V(105), right: H(16), width: 56, height: 56, backgroundColor: activeColors.primary },
 
-  bottomTitle: { fontSize: S(15), fontWeight: '600', marginBottom: V(12) },
+  bottomTitle: { color: activeColors.text, fontSize: S(15), fontWeight: '600', marginBottom: V(12) },
   bottomInput: {
     borderWidth: 1,
+    borderColor: activeColors.border,
+    backgroundColor: activeColors.inputBg,
+    color: activeColors.text,
     borderRadius: 12,
     paddingHorizontal: H(14),
     paddingVertical: V(12),
@@ -209,7 +209,7 @@ export const styles = StyleSheet.create({
     paddingVertical: V(13),
     alignItems: 'center',
     marginTop: V(18),
-    backgroundColor: PRIMARY,
+    backgroundColor: activeColors.primary,
   },
   bottomSaveBtnText: { color: '#fff', fontSize: S(15), fontWeight: '700' },
   chipRow: { flexDirection: 'row', gap: H(8), marginTop: V(8) },
@@ -218,6 +218,8 @@ export const styles = StyleSheet.create({
     paddingVertical: V(10),
     borderRadius: 10,
     borderWidth: 1,
+    borderColor: activeColors.border,
+    backgroundColor: activeColors.surface,
   },
 
   settingRow: {
@@ -226,15 +228,15 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: V(13),
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.03)',
+    borderBottomColor: activeColors.border,
   },
   settingInfo: { flex: 1, marginRight: H(10) },
   settingTitleRow: { flexDirection: 'row', alignItems: 'center' },
   settingIcon: { marginRight: H(10) },
-  settingTitle: { color: DEFAULT_TEXT, fontSize: S(14), fontWeight: '600' },
-  settingDesc: { color: DEFAULT_SUBTEXT, fontSize: S(12), marginTop: V(2), opacity: 0.8 },
+  settingTitle: { color: activeColors.text, fontSize: S(14), fontWeight: '600' },
+  settingDesc: { color: activeColors.subtext, fontSize: S(12), marginTop: V(2), opacity: 0.8 },
   toggleWrap: { flexDirection: 'row', alignItems: 'center' },
-  toggleLabel: { color: DEFAULT_SUBTEXT, marginRight: H(8), fontSize: S(13) },
+  toggleLabel: { color: activeColors.subtext, marginRight: H(8), fontSize: S(13) },
   toggleTrack: {
     width: H(44),
     height: V(24),
@@ -262,16 +264,18 @@ export const styles = StyleSheet.create({
     paddingHorizontal: PAD,
     paddingVertical: V(14),
     borderBottomWidth: 1,
+    borderBottomColor: activeColors.border,
+    backgroundColor: activeColors.card,
   },
   modalTitle: {
-    color: DEFAULT_TEXT,
+    color: activeColors.text,
     fontSize: S(17),
     fontWeight: '700',
     letterSpacing: 0.5,
   },
-  modalClose: { color: PRIMARY, fontSize: S(16), fontWeight: '600' },
-  modalBody: { flex: 1, padding: PAD },
-  warningText: { color: DEFAULT_SUBTEXT, fontSize: S(12), marginTop: V(6) },
+  modalClose: { color: activeColors.primary, fontSize: S(16), fontWeight: '600' },
+  modalBody: { flex: 1, padding: PAD, backgroundColor: activeColors.background },
+  warningText: { color: activeColors.subtext, fontSize: S(12), marginTop: V(6) },
   logoutBtnRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -280,25 +284,28 @@ export const styles = StyleSheet.create({
     padding: V(14),
     marginTop: V(20),
     borderWidth: 1,
+    borderColor: activeColors.border,
+    backgroundColor: activeColors.surface,
   },
 
-  bsSectionTitle: { fontSize: S(15), fontWeight: '600', marginBottom: V(10) },
+  bsSectionTitle: { color: activeColors.text, fontSize: S(15), fontWeight: '600', marginBottom: V(10) },
   regionBtn: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.03)',
+    backgroundColor: activeColors.surface,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: activeColors.border,
     borderRadius: 12,
     padding: V(12),
     marginTop: V(8),
   },
-  regionValue: { color: DEFAULT_TEXT, fontSize: S(14), fontWeight: '600', marginTop: V(4) },
+  regionValue: { color: activeColors.text, fontSize: S(14), fontWeight: '600', marginTop: V(4) },
 
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: activeColors.modalOverlay,
   },
 });

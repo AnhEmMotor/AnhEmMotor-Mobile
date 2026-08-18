@@ -14,19 +14,19 @@ export class ProfileRepositoryImpl {
 
   _makeProfile(user) {
     return new UserProfile({
-      uid: user.uid || user.id,
-      name: user.name || user.fullName || '',
-      phone: user.phone || user.phoneNumber || '',
-      email: user.email || '',
-      birthDate: user.birthDate || user.dateOfBirth || '',
-      gender: user.gender || 'Nam',
-      province: user.province || '',
-      district: user.district || '',
-      ward: user.ward || '',
-      specificAddress: user.specificAddress || user.address || '',
-      licenseTier: user.licenseTier || 'A1',
-      licenseImage: user.licenseImage || null,
-      avatar: user.avatarUrl || user.avatar || null,
+      uid: user.uid || user.id || user.Id,
+      name: user.name || user.fullName || user.FullName || '',
+      phone: user.phone || user.phoneNumber || user.PhoneNumber || '',
+      email: user.email || user.Email || '',
+      birthDate: user.birthDate || user.dateOfBirth || user.DateOfBirth || '',
+      gender: user.gender || user.Gender || 'Nam',
+      province: user.province || user.Province || '',
+      district: user.district || user.District || '',
+      ward: user.ward || user.Ward || '',
+      specificAddress: user.specificAddress || user.address || user.Address || '',
+      licenseTier: user.licenseTier || user.LicenseTier || 'A1',
+      licenseImage: user.licenseImage || user.LicenseImage || null,
+      avatar: user.avatarUrl || user.avatar || user.AvatarUrl || null,
       settings: user.settings
         ? {
             maintenanceNotifications: user.settings.maintenanceNotifications ?? true,
@@ -39,13 +39,9 @@ export class ProfileRepositoryImpl {
   }
 
   async getProfile() {
-    const localProfile = await ProfileRepositoryImpl._loadLocal();
-    if (localProfile) return localProfile;
-
     try {
       const user = await getCurrentUserApi();
-
-      if (user && (user.name || user.email || user.fullName)) {
+      if (user && (user.name || user.email || user.fullName || user.FullName)) {
         const profile = this._makeProfile(user);
         await ProfileRepositoryImpl._saveLocal(profile);
         return profile;
@@ -53,6 +49,9 @@ export class ProfileRepositoryImpl {
     } catch (error) {
       console.warn('[ProfileRepo] Remote failed:', error.message);
     }
+
+    const localProfile = await ProfileRepositoryImpl._loadLocal();
+    if (localProfile) return localProfile;
 
     return new UserProfile();
   }

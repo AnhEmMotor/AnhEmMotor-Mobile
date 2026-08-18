@@ -1,4 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { contactApi } from '../../../api/contactApi';
+import { getLatestNews } from '../../../api/newsApi';
 
 const INITIAL_NOTIFICATIONS = [
 
@@ -189,6 +191,80 @@ export const useNotification = (_navigation) => {
   const [activeTab, setActiveTab] = useState('service'); 
   const [unreadOnly, setUnreadOnly] = useState(false);
 
+  // State for news tab
+  const [newsList, setNewsList] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(false);
+
+  // Fetch tin tức mới nhất từ DB
+  useEffect(() => {
+    const fetchNews = async () => {
+      setNewsLoading(true);
+      try {
+        const data = await getLatestNews();
+        setNewsList(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error('Error fetching news:', e);
+      } finally {
+        setNewsLoading(false);
+      }
+    };
+    fetchNews();
+  }, []);
+
+  const [vouchers, setVouchers] = useState([]);
+  const [vouchersLoading, setVouchersLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      setVouchersLoading(true);
+      try {
+        const { apiGet } = require('../../../api/httpClient');
+        const res = await apiGet('/api/v1/client/vouchers/personal');
+        if (res && res.ok) {
+          const data = await res.json();
+          setVouchers(data.value || []);
+        }
+      } catch (e) {
+        console.error('Error fetching personal vouchers:', e);
+      } finally {
+        setVouchersLoading(false);
+      }
+    };
+    fetchVouchers();
+  }, []);
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        const response = await contactApi.getMyFeedbacks();
+        if (response && Array.isArray(response)) {
+          // Format API response into notification format
+          const feedbackNotifs = response.map(fb => ({
+            id: `fb_${fb.id}`,
+            category: 'feedback',
+            type: 'feedback',
+            title: fb.contact?.subject || 'Ý kiến đóng góp',
+            desc: fb.content,
+            time: new Date(fb.createdAt).toLocaleDateString('vi-VN'),
+            isRead: true, // or check if there is unread reply
+            actionLabel: 'Xem nội dung',
+            deepLink: 'FeedbackReply',
+            feedbackContent: fb.contact?.replies?.[0]?.message || 'Chưa có phản hồi từ cửa hàng.'
+          }));
+
+          // Replace hardcoded feedbacks with real ones
+          setNotifications(prev => [
+            ...prev.filter(n => n.category !== 'feedback'),
+            ...feedbackNotifs
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching feedbacks:', error);
+      }
+    };
+
+    fetchFeedbacks();
+  }, []);
 
     const [hasActiveWorkshop, setHasActiveWorkshop] = useState(true);
   const [workshopStep, setWorkshopStep] = useState(2); 
@@ -324,7 +400,7 @@ export const useNotification = (_navigation) => {
     markAsRead,
     handleAction,
 
-        hasActiveWorkshop,
+    hasActiveWorkshop,
     setHasActiveWorkshop,
     workshopStep,
     setWorkshopStep,
@@ -335,5 +411,9 @@ export const useNotification = (_navigation) => {
     selectedTime,
     setSelectedTime,
     serviceHistory,
+    newsList,
+    newsLoading,
+    vouchers,
+    vouchersLoading,
   };
 };

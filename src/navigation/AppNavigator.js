@@ -25,6 +25,7 @@ import MyVehicleDetailScreen from '../screens/Customer/MyVehicles/MyVehicleDetai
 import AIChatScreen from '../screens/Customer/AIChatScreen';
 import QRScanScreen from '../screens/Customer/QRScanScreen';
 import SavedNewsScreen from '../screens/Customer/SavedNewsScreen';
+import NewsDetailScreen from '../screens/Customer/NewsDetailScreen';
 import ProductListScreen from '../screens/Customer/ProductList/ProductListScreen';
 import ContactStaffScreen from '../screens/Customer/ContactStaffScreen';
 import HomeDetailScreen from '../screens/Customer/HomeDetailScreen';
@@ -37,6 +38,7 @@ import FinanceContractScreen from '../screens/Customer/FinanceContract/FinanceCo
 import CartScreen from '../screens/Customer/CartScreen';
 import CheckoutScreen from '../screens/Customer/CheckoutScreen';
 import OrderSuccessScreen from '../screens/Customer/OrderSuccessScreen';
+import StatusListScreen from '../screens/Customer/Profile/StatusListScreen';
 
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
 import { navigationRef } from './RootNavigation';
@@ -189,6 +191,7 @@ export default function AppNavigator() {
         <Stack.Screen name="AIChat" component={AIChatScreen} />
         <Stack.Screen name="QRScan" component={QRScanScreen} />
         <Stack.Screen name="SavedNews" component={SavedNewsScreen} />
+        <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
         <Stack.Screen name="ProductList" component={ProductListScreen} />
         <Stack.Screen name="ContactStaff" component={ContactStaffScreen} />
         <Stack.Screen name="HomeDetail" component={HomeDetailScreen} />
@@ -201,6 +204,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
         <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
+        <Stack.Screen name="StatusList" component={StatusListScreen} />
       </Stack.Navigator>
       <GlobalSettingsModal />
     </NavigationContainer>

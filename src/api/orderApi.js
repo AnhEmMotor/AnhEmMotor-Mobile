@@ -63,3 +63,9 @@ export async function createSalesOrderApi(payload) {
   }
   return response.json();
 }
+
+export async function getPersonalOutputsApi() {
+  const response = await apiGet('/api/v1/client/outputs/personal');
+  if (!response.ok) throw new Error('Không thể tải lịch sử đơn hàng');
+  return response.json();
+}

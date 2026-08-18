@@ -31,4 +31,9 @@ export const contactApi = {
     });
     return response;
   },
+
+  getMyFeedbacks: async () => {
+    const response = await apiGet('/api/v1/client/support/my-feedbacks');
+    return response.json();
+  },
 };
