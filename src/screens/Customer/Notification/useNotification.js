@@ -66,7 +66,7 @@ const INITIAL_NOTIFICATIONS = [
     category: 'loyalty',
     type: 'loyalty_level',
     title: 'Thăng hạng GOLD MEMBER 👑',
-    desc: 'Chúc mừng Anh Khôi đã chính thức thăng hạng lên GOLD MEMBER sau kỳ bảo dưỡng vừa qua. Khám phá ngay các đặc quyền mới dành riêng cho bạn!',
+    desc: 'Chúc mừng Chị Uyên đã chính thức thăng hạng lên GOLD MEMBER sau kỳ bảo dưỡng vừa qua. Khám phá ngay các đặc quyền mới dành riêng cho bạn!',
     time: '1 ngày trước',
     isRead: false,
     actionLabel: 'Xem đặc quyền Gold',
@@ -95,19 +95,19 @@ const INITIAL_NOTIFICATIONS = [
     isRead: true,
     actionLabel: 'Chia sẻ mã ngay',
     deepLink: 'ReferralShare',
-    referralCode: 'AEM-KHOI-GOLD',
+    referralCode: 'AEM-UYEN-GOLD',
   },
   {
     id: 'l4',
     category: 'loyalty',
     type: 'birthday',
-    title: 'Chúc mừng sinh nhật Anh Khôi! 🎉',
+    title: 'Chúc mừng sinh nhật Chị Uyên! 🎉',
     desc: 'AnhEmMotor gửi tặng bạn Voucher thay nhớt hoàn toàn miễn phí trong tháng này.',
     time: '5 ngày trước',
     isRead: true,
     actionLabel: 'Nhận quà sinh nhật',
     deepLink: 'VoucherWallet',
-    voucherCode: 'BDAY-KHOI-OIL',
+    voucherCode: 'BDAY-UYEN-OIL',
     voucherName: 'Miễn phí thay nhớt máy tháng sinh nhật',
   },
 
@@ -171,7 +171,7 @@ const INITIAL_NOTIFICATIONS = [
     actionLabel: 'Xem phản hồi & Tặng quà',
     deepLink: 'FeedbackReply',
     feedbackContent:
-      'Chào Anh Khôi, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ đợi tại khu vực rửa xe còn hơi lâu vào ngày cuối tuần. Chúng tôi đã tăng cường thêm 2 nhân viên tại bộ phận dịch vụ và gửi tặng anh mã voucher rửa xe hoàn toàn miễn phí áp dụng cho lần tiếp theo. Xin chân thành cảm ơn ý kiến đóng góp quý báu của anh!',
+      'Chào Chị Uyên, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ đợi tại khu vực rửa xe còn hơi lâu vào ngày cuối tuần. Chúng tôi đã tăng cường thêm 2 nhân viên tại bộ phận dịch vụ và gửi tặng anh mã voucher rửa xe hoàn toàn miễn phí áp dụng cho lần tiếp theo. Xin chân thành cảm ơn ý kiến đóng góp quý báu của anh!',
   },
   {
     id: 'sys5',
@@ -396,6 +396,7 @@ export const useNotification = (_navigation) => {
     activeModal,
     setActiveModal,
     selectedNotif,
+    setSelectedNotif,
     markAllAsRead,
     markAsRead,
     handleAction,
@@ -417,3 +418,4 @@ export const useNotification = (_navigation) => {
     vouchersLoading,
   };
 };
+

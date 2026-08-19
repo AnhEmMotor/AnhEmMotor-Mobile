@@ -361,7 +361,7 @@ export default function NotificationScreen({ navigation }) {
                   { color: isDark ? '#fff' : '#4338CA', fontSize: moderateScale(22) },
                 ]}
               >
-                {logic.selectedNotif.referralCode || 'AEM-KHOI-GOLD'}
+                {logic.selectedNotif.referralCode || 'AEM-UYEN-GOLD'}
               </Text>
               <Text
                 style={[
@@ -582,7 +582,7 @@ export default function NotificationScreen({ navigation }) {
               <View style={{ gap: 8 }}>
                 {[
                   { label: 'Mã hóa đơn', val: logic.selectedNotif.invoiceNumber || '#AEM-9982' },
-                  { label: 'Khách hàng', val: 'Nguyễn Văn Khôi' },
+                  { label: 'Khách hàng', val: 'Nguyễn Minh Uyên' },
                   { label: 'Sản phẩm', val: 'Honda SH 160i Thể thao' },
                   { label: 'Nơi cấp hóa đơn', val: 'Tổng cục Thuế Việt Nam' },
                   { label: 'Trạng thái pháp lý', val: '● Hợp lệ / Đã kê khai', color: '#10B981' },
@@ -1222,7 +1222,7 @@ export default function NotificationScreen({ navigation }) {
                 {/* Cover image */}
                 {!!item.coverImageUrl && (
                   <Image
-                    source={{ uri: item.coverImageUrl.startsWith('http') ? item.coverImageUrl : API_BASE_URL + item.coverImageUrl }}
+                    source={{ uri: item.coverImageUrl.startsWith('http') ? item.coverImageUrl : API_BASE_URL + '/uploads/' + item.coverImageUrl.replace(/^[\\\/]+/, '') }}
                     style={{ width: '100%', height: 180, backgroundColor: activeColors.border }}
                     resizeMode="cover"
                   />
@@ -1316,7 +1316,7 @@ export default function NotificationScreen({ navigation }) {
                     <Text style={styles.virtualCardBrand}>AnhEmMotor 🏍️</Text>
                     <Text style={styles.virtualCardTier}>GOLD</Text>
                   </View>
-                  <Text style={styles.virtualCardName}>NGUYỄN VĂN KHÔI</Text>
+                  <Text style={styles.virtualCardName}>NGUYỄN MINH UYÊN</Text>
                   <View style={styles.virtualCardFooter}>
                     <Text style={styles.virtualCardNumber}>ID: AEM-88992</Text>
                     <Text style={styles.virtualCardPoints}>3,500 Pts</Text>
@@ -1325,7 +1325,7 @@ export default function NotificationScreen({ navigation }) {
               </View>
 
               <Text style={[styles.loyaltyMemberDesc, { color: activeColors.text }]}>
-                Chúc mừng Anh Khôi đã chính thức thăng hạng lên{' '}
+                Chúc mừng Chị Uyên đã chính thức thăng hạng lên{' '}
                 <Text style={{ fontWeight: 'bold', color: '#A855F7' }}>GOLD MEMBER</Text> sau kỳ bảo
                 dưỡng vừa qua. Khám phá ngay các đặc quyền mới dành riêng cho bạn!
               </Text>
@@ -1344,10 +1344,10 @@ export default function NotificationScreen({ navigation }) {
             ) : logic.vouchers && logic.vouchers.length > 0 ? (
               logic.vouchers.map((voucher, index) => {
                 const formatValue = (v) => {
-                  if (v.discountType === 1) return v.discountValue + '%';
-                  if (v.discountValue >= 1000000) return (v.discountValue / 1000000) + 'M';
-                  if (v.discountValue >= 1000) return (v.discountValue / 1000) + 'K';
-                  return v.discountValue;
+                  if ((v.discountType === 0 || v.DiscountType === 0 || v.discountType === 'PERCENT' || v.DiscountType === 'PERCENT')) return (v.discountValue ?? v.DiscountValue) + '%';
+                  if ((v.discountValue ?? v.DiscountValue) >= 1000000) return ((v.discountValue ?? v.DiscountValue) / 1000000) + 'M';
+                  if ((v.discountValue ?? v.DiscountValue) >= 1000) return ((v.discountValue ?? v.DiscountValue) / 1000) + 'K';
+                  return (v.discountValue ?? v.DiscountValue);
                 };
                 const isExpiringSoon = new Date(voucher.validTo).getTime() - new Date().getTime() < 3 * 24 * 60 * 60 * 1000;
                 return (
@@ -1364,7 +1364,7 @@ export default function NotificationScreen({ navigation }) {
                     <View style={[styles.dashedVoucherBody, { backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)', borderColor: activeColors.border }]}>
                       <View style={[styles.dashedVoucherLeft, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)', borderRightColor: activeColors.border }]}>
                         <Text style={styles.voucherValBig}>{formatValue(voucher)}</Text>
-                        <Text style={styles.voucherValLabel}>{voucher.discountType === 1 ? 'GIẢM' : 'ĐỒNG'}</Text>
+                        <Text style={styles.voucherValLabel}>{(voucher.discountType === 0 || voucher.DiscountType === 0 || voucher.discountType === 'PERCENT' || voucher.DiscountType === 'PERCENT') ? 'GIẢM' : 'ĐỒNG'}</Text>
                       </View>
                       <View style={styles.dashedVoucherRight}>
                         <Text style={[styles.voucherNameTitle, { color: activeColors.text }]}>{voucher.name}</Text>
@@ -1469,7 +1469,7 @@ export default function NotificationScreen({ navigation }) {
                 ]}
               >
                 <Text style={[styles.referralCodeTextVal, { color: isDark ? '#fff' : '#4338CA' }]}>
-                  AEM-KHOI-GOLD
+                  AEM-UYEN-GOLD
                 </Text>
                 <Text style={[styles.referralCodeSubText, { color: activeColors.subtext }]}>
                   Nhận 500.000đ dịch vụ khi bạn bè mua xe thành công
@@ -1611,7 +1611,7 @@ export default function NotificationScreen({ navigation }) {
                     { color: activeColors.text, opacity: 0.8, fontStyle: 'italic' },
                   ]}
                 >
-                  "Chào Anh Khôi, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ
+                  "Chào Chị Uyên, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ
                   đợi tại khu vực rửa xe còn hơi lâu vào ngày cuối tuần..."
                 </Text>
               </View>
@@ -1685,7 +1685,7 @@ export default function NotificationScreen({ navigation }) {
             </View>
 
             <Text style={[styles.modalSub, { color: activeColors.subtext }]}>
-              {logic.selectedNotif?.time} • Khách hàng Khôi
+              {logic.selectedNotif?.time} • Khách hàng Uyên
             </Text>
 
             {renderActiveModalContent()}
@@ -1850,3 +1850,4 @@ export default function NotificationScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
