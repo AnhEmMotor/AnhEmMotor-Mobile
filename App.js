@@ -23,14 +23,14 @@ LogBox.ignoreLogs([
 const originalWarn = console.warn;
 console.warn = (...args) => {
   try {
-    const msg = args.map(a => String(a)).join(' ');
+    const msg = args.map((a) => String(a)).join(' ');
     if (
       msg.includes('props.pointerEvents is deprecated') ||
       msg.includes('Reduced motion setting is enabled on this device')
     ) {
       return;
     }
-  } catch (e) {}
+  } catch (_e) {}
   originalWarn(...args);
 };
 
