@@ -90,29 +90,35 @@ export const Theme = {
 
 
 const darkPalette = {
-  background: '#050505', 
-  card: '#111111',
-  surface: '#1C1C1C',
+  background: '#0B0F19', 
+  card: 'rgba(255, 255, 255, 0.03)',
+  surface: 'rgba(255, 255, 255, 0.05)',
   text: '#F8FAFC',
-  subtext: '#E5E7EB',
-  border: 'rgba(255, 255, 255, 0.14)',
-  glassBg: 'rgba(20, 20, 20, 0.78)',
+  subtext: '#94A3B8',
+  border: 'rgba(255, 255, 255, 0.08)',
+  glassBg: 'rgba(11, 15, 25, 0.65)',
   glassBorder: 'rgba(255, 255, 255, 0.12)',
-  inputBg: 'rgba(255, 255, 255, 0.08)',
-  modalOverlay: 'rgba(0, 0, 0, 0.92)',
+  inputBg: 'rgba(255, 255, 255, 0.06)',
+  modalOverlay: 'rgba(0, 0, 0, 0.85)',
+  gradientStart: '#1E293B',
+  gradientEnd: '#0B0F19',
+  glassGlow: 'rgba(227, 27, 35, 0.15)',
 };
 
 const lightPalette = {
-  background: '#FFFFFF', 
-  card: '#F8FAFC',
-  surface: '#E5E7EB',
-  text: '#111827',
-  subtext: '#475569',
-  border: 'rgba(0, 0, 0, 0.12)',
-  glassBg: 'rgba(255, 255, 255, 0.92)',
-  glassBorder: 'rgba(0, 0, 0, 0.08)',
-  inputBg: 'rgba(0, 0, 0, 0.05)',
-  modalOverlay: 'rgba(0, 0, 0, 0.6)',
+  background: '#F8FAFC', 
+  card: '#FFFFFF',
+  surface: '#F1F5F9',
+  text: '#0F172A',
+  subtext: '#64748B',
+  border: 'rgba(0, 0, 0, 0.08)',
+  glassBg: 'rgba(255, 255, 255, 0.8)',
+  glassBorder: 'rgba(255, 255, 255, 0.4)',
+  inputBg: '#F1F5F9',
+  modalOverlay: 'rgba(0, 0, 0, 0.5)',
+  gradientStart: '#F8FAFC',
+  gradientEnd: '#F1F5F9',
+  glassGlow: 'rgba(0, 0, 0, 0.05)',
 };
 
 

@@ -119,9 +119,23 @@ export class ApiCustomerDataSource {
     const purchaseHistory = Array.isArray(raw.purchaseHistory) ? raw.purchaseHistory : (Array.isArray(raw.PurchaseHistory) ? raw.PurchaseHistory : []);
     const warrantyHistory = Array.isArray(raw.warrantyHistory) ? raw.warrantyHistory : (Array.isArray(raw.WarrantyHistory) ? raw.WarrantyHistory : []);
 
+    const safeFormatDate = (dateStr) => {
+      if (!dateStr) return '';
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return String(dateStr).split('T')[0];
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      } catch (_e) {
+        return String(dateStr).split('T')[0];
+      }
+    };
+
     const mappedPurchaseHistory = purchaseHistory.map((entry) => ({
       id: String(entry.id || entry.Id),
-      date: (entry.purchaseDate || entry.PurchaseDate) ? new Date(entry.purchaseDate || entry.PurchaseDate).toLocaleDateString() : '',
+      date: (entry.purchaseDate || entry.PurchaseDate) ? safeFormatDate(entry.purchaseDate || entry.PurchaseDate) : '',
       title: `Mua xe - ${entry.invoiceNumber || entry.InvoiceNumber || ''}`,
       items: [
         `Người bán: ${entry.sellerName || entry.SellerName || 'AnhEmMotor Showroom'}`,
@@ -135,7 +149,7 @@ export class ApiCustomerDataSource {
 
     const mappedWarrantyHistory = warrantyHistory.map((entry) => ({
       id: String(entry.id || entry.Id),
-      date: (entry.startDate || entry.StartDate) ? new Date(entry.startDate || entry.StartDate).toLocaleDateString() : '',
+      date: (entry.startDate || entry.StartDate) ? safeFormatDate(entry.startDate || entry.StartDate) : '',
       title: `Bảo dưỡng - ${entry.providerName || entry.ProviderName || ''}`,
       items: [
         `Mã phiếu: ${entry.policyNumber || entry.PolicyNumber || ''}`,

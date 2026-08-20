@@ -7,21 +7,20 @@ import {
   Modal,
   Alert,
   useColorScheme,
+  ActivityIndicator,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalState } from '../../../context/GlobalState';
 import { Theme } from '../../../theme/Theme';
+import { API_BASE_URL } from '../../../config';
 import {
-  Wrench,
-  FileText,
   ChevronLeft,
   CalendarClock,
   ShieldCheck,
   Gift,
-  AlertTriangle,
   Map,
   Truck,
-  CheckCircle,
   Clock,
   Share2,
   Copy,
@@ -29,6 +28,7 @@ import {
   Lock,
   MessageSquare,
   Settings,
+  Newspaper,
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import ScalePress from '../../../components/ScalePress';
@@ -361,7 +361,7 @@ export default function NotificationScreen({ navigation }) {
                   { color: isDark ? '#fff' : '#4338CA', fontSize: moderateScale(22) },
                 ]}
               >
-                {logic.selectedNotif.referralCode || 'AEM-KHOI-GOLD'}
+                {logic.selectedNotif.referralCode || 'AEM-UYEN-GOLD'}
               </Text>
               <Text
                 style={[
@@ -443,10 +443,7 @@ export default function NotificationScreen({ navigation }) {
                   borderRadius: 16,
                   width: '100%',
                   padding: 20,
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 12,
+                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                   elevation: 4,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
@@ -585,7 +582,7 @@ export default function NotificationScreen({ navigation }) {
               <View style={{ gap: 8 }}>
                 {[
                   { label: 'Mã hóa đơn', val: logic.selectedNotif.invoiceNumber || '#AEM-9982' },
-                  { label: 'Khách hàng', val: 'Nguyễn Văn Khôi' },
+                  { label: 'Khách hàng', val: 'Nguyễn Minh Uyên' },
                   { label: 'Sản phẩm', val: 'Honda SH 160i Thể thao' },
                   { label: 'Nơi cấp hóa đơn', val: 'Tổng cục Thuế Việt Nam' },
                   { label: 'Trạng thái pháp lý', val: '● Hợp lệ / Đã kê khai', color: '#10B981' },
@@ -1126,9 +1123,8 @@ export default function NotificationScreen({ navigation }) {
         ]}
       >
         {[
-          { id: 'service', label: '🛠️ Tiến độ & Dịch vụ' },
+          { id: 'service', label: '📰 Tin tức mới nhất' },
           { id: 'loyalty', label: '🎟️ Đặc quyền & Ưu đãi' },
-          { id: 'system', label: '🛡️ Hành chính & Hệ thống' },
           { id: 'feedback', label: '💬 Ý kiến đóng góp' },
         ].map((tab) => {
           const count = logic.tabUnreadCounts[tab.id];
@@ -1167,319 +1163,129 @@ export default function NotificationScreen({ navigation }) {
       {}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
         {logic.activeTab === 'service' ? (
-          <View>
-            {}
-            <View
-              style={[
-                styles.demoToggleContainer,
-                {
-                  backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
-                  borderColor: activeColors.border,
-                },
-              ]}
-            >
-              <Text style={[styles.demoToggleText, { color: activeColors.subtext }]}>
-                Mô phỏng xe tại xưởng Biên Hòa:
+          <View style={{ paddingVertical: 8 }}>
+            {/* Header */}
+            <Animated.View entering={FadeInDown.duration(400)} style={{
+              flexDirection: 'row', alignItems: 'center', paddingHorizontal: 4,
+              marginBottom: 16,
+            }}>
+              <Newspaper color={isDark ? '#60A5FA' : '#2563EB'} size={20} style={{ marginRight: 8 }} />
+              <Text style={{ fontSize: 16, fontWeight: '700', color: activeColors.text }}>
+                Tin tức & Khuyến mãi mới nhất
               </Text>
-              <TouchableOpacity
-                style={[
-                  styles.demoToggleButton,
-                  logic.hasActiveWorkshop
-                    ? styles.demoToggleButtonActive
-                    : [
-                        styles.demoToggleButtonInactive,
-                        {
-                          backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-                          borderColor: activeColors.border,
-                        },
-                      ],
-                ]}
-                onPress={() => logic.setHasActiveWorkshop(!logic.hasActiveWorkshop)}
-              >
-                <Text
-                  style={[
-                    styles.demoToggleButtonLabel,
-                    { color: logic.hasActiveWorkshop ? '#10B981' : activeColors.subtext },
-                  ]}
-                >
-                  {logic.hasActiveWorkshop ? 'ĐANG CÓ XE (BẬT)' : 'KHÔNG CÓ XE (ẨN)'}
+            </Animated.View>
+
+            {/* Loading indicator */}
+            {logic.newsLoading && (
+              <View style={{ alignItems: 'center', paddingVertical: 40 }}>
+                <ActivityIndicator size="large" color={isDark ? '#60A5FA' : '#2563EB'} />
+                <Text style={{ marginTop: 12, color: activeColors.subtext, fontSize: 13 }}>
+                  Đang tải tin tức...
                 </Text>
-              </TouchableOpacity>
-            </View>
+              </View>
+            )}
 
-            {}
-            {logic.hasActiveWorkshop && (
-              <Animated.View entering={FadeInDown.duration(500)} style={styles.workshopLiveCard}>
-                <View style={styles.workshopLiveHeader}>
-                  <View
-                    style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                  >
-                    <Wrench color="#10B981" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
-                    <Text
-                      style={[styles.workshopLiveTitle, { flex: 1 }]}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      Trạng thái Sửa chữa Trực tuyến
-                    </Text>
-                  </View>
-                  <View style={styles.livePulseBadge}>
-                    <View style={styles.livePulseDot} />
-                    <Text style={styles.livePulseText}>TRỰC TIẾP</Text>
-                  </View>
-                </View>
-
-                <Text style={[styles.vehicleInfoText, { color: activeColors.text }]}>
-                  Xe Honda SH 160i (Biển số: 60-A1 555.55)
+            {/* Empty state */}
+            {!logic.newsLoading && logic.newsList.length === 0 && (
+              <Animated.View entering={FadeInDown.duration(500)} style={{
+                alignItems: 'center', paddingVertical: 60,
+                backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                borderRadius: 16, marginHorizontal: 4,
+              }}>
+                <Newspaper color={activeColors.subtext} size={44} />
+                <Text style={{ marginTop: 16, fontSize: 15, fontWeight: '600', color: activeColors.text }}>
+                  Chưa có tin tức nào
                 </Text>
-
-                {}
-                <View
-                  style={[
-                    styles.ktvRow,
-                    {
-                      backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
-                      borderColor: activeColors.border,
-                    },
-                  ]}
-                >
-                  <View style={styles.ktvAvatar}>
-                    <Text style={styles.ktvAvatarText}>H</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.ktvName, { color: activeColors.text }]}>
-                      KTV. Nguyễn Văn Hùng
-                    </Text>
-                    <Text style={[styles.ktvSub, { color: activeColors.subtext }]}>
-                      Kỹ thuật viên trưởng bàn số 3 (Tay nghề 8 năm)
-                    </Text>
-                  </View>
-                </View>
-
-                {}
-                <View style={styles.stepperContainer}>
-                  {[
-                    {
-                      step: 1,
-                      label: '1. Đang khám xe',
-                      desc: 'Kiểm tra lỗi tổng quát bằng máy đọc lỗi OBD chính hãng',
-                    },
-                    {
-                      step: 2,
-                      label: '2. Đang sửa chữa / thay phụ tùng',
-                      desc: 'Đang thay nhớt máy Motul Gold & lọc gió Honda chính hãng',
-                    },
-                    {
-                      step: 3,
-                      label: '3. Kiểm tra kỹ thuật cuối',
-                      desc: 'KTV trưởng test xe thực tế, đo thông số khí thải, an toàn',
-                    },
-                    {
-                      step: 4,
-                      label: '4. Rửa xe & Sẵn sàng giao',
-                      desc: 'Rửa bọt tuyết siêu bóng sạch, bàn giao chìa khóa cho khách',
-                    },
-                  ].map((item) => {
-                    const isCompleted = item.step < logic.workshopStep;
-                    const isActive = item.step === logic.workshopStep;
-                    const isPending = item.step > logic.workshopStep;
-
-                    return (
-                      <View key={item.step} style={styles.stepItem}>
-                        {}
-                        {item.step < 4 && (
-                          <View
-                            style={[
-                              styles.stepLine,
-                              isCompleted
-                                ? styles.stepLineCompleted
-                                : [
-                                    styles.stepLinePending,
-                                    { backgroundColor: activeColors.border },
-                                  ],
-                            ]}
-                          />
-                        )}
-
-                        {}
-                        <View
-                          style={[
-                            styles.stepIndicator,
-                            isCompleted && styles.stepIndicatorCompleted,
-                            isActive && styles.stepIndicatorActive,
-                            isPending && [
-                              styles.stepIndicatorPending,
-                              {
-                                backgroundColor: activeColors.card,
-                                borderColor: activeColors.border,
-                              },
-                            ],
-                          ]}
-                        >
-                          {isCompleted ? (
-                            <CheckCircle color="#fff" size={12} />
-                          ) : isActive ? (
-                            <View style={styles.activeDotInner} />
-                          ) : (
-                            <Text style={[styles.pendingStepText, { color: activeColors.subtext }]}>
-                              {item.step}
-                            </Text>
-                          )}
-                        </View>
-
-                        {}
-                        <View style={styles.stepContent}>
-                          <Text
-                            style={[
-                              styles.stepLabel,
-                              { color: activeColors.subtext },
-                              isActive && styles.stepLabelActive,
-                              isCompleted && [
-                                styles.stepLabelCompleted,
-                                { color: activeColors.text },
-                              ],
-                            ]}
-                          >
-                            {item.label}
-                          </Text>
-                          <Text
-                            style={[
-                              styles.stepDesc,
-                              { color: activeColors.subtext, opacity: 0.8 },
-                              isActive && styles.stepDescActive,
-                            ]}
-                          >
-                            {item.desc}
-                          </Text>
-                        </View>
-                      </View>
-                    );
-                  })}
-                </View>
+                <Text style={{ marginTop: 6, fontSize: 13, color: activeColors.subtext, textAlign: 'center', paddingHorizontal: 32 }}>
+                  Hãy quay lại sau để xem các tin tức và chương trình khuyến mãi mới nhất.
+                </Text>
               </Animated.View>
             )}
 
-            {}
-            <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.alertCard}>
-              <View style={styles.alertHeader}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                >
-                  <CalendarClock
-                    color={Theme.staticColors.warning}
-                    size={18}
-                    style={{ marginRight: 6, flexShrink: 0 }}
+            {/* News list */}
+            {!logic.newsLoading && logic.newsList.map((item, index) => (
+              <Animated.View
+                key={item.id?.toString() || index.toString()}
+                entering={FadeInDown.duration(400 + index * 80)}
+                style={{
+                  backgroundColor: activeColors.card,
+                  borderRadius: 16,
+                  marginBottom: 14,
+                  marginHorizontal: 4,
+                  overflow: 'hidden',
+                  borderWidth: 1,
+                  borderColor: activeColors.border,
+                  boxShadow: isDark ? '0px 2px 8px rgba(0,0,0,0.3)' : '0px 2px 8px rgba(0,0,0,0.06)',
+                  elevation: 3,
+                }}
+              >
+                {/* Cover image */}
+                {!!item.coverImageUrl && (
+                  <Image
+                    source={{ uri: item.coverImageUrl.startsWith('http') ? item.coverImageUrl : API_BASE_URL + '/uploads/' + item.coverImageUrl.replace(/^[\\\/]+/, '') }}
+                    style={{ width: '100%', height: 180, backgroundColor: activeColors.border }}
+                    resizeMode="cover"
                   />
-                  <Text
-                    style={[styles.alertTitle, { flex: 1 }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Nhắc Lịch Bảo Dưỡng Thông Minh
-                  </Text>
-                </View>
-                <View style={styles.alertBadge}>
-                  <Text style={styles.alertBadgeText}>KHUYÊN DÙNG</Text>
-                </View>
-              </View>
-
-              <Text style={[styles.alertDesc, { color: activeColors.text }]}>
-                Xe SH 160i (60-A1 555.55) của bạn đã chạy thêm{' '}
-                <Text style={{ fontWeight: 'bold', color: Theme.staticColors.warning }}>
-                  2,000km
-                </Text>
-                . Đã đến lúc thay nhớt máy và kiểm tra tổng quát để đảm bảo xe luôn bốc và an toàn.
-              </Text>
-
-              <View
-                style={[
-                  styles.odoContainer,
-                  { backgroundColor: isDark ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.04)' },
-                ]}
-              >
-                <View style={styles.odoBarBg}>
-                  <View style={[styles.odoBarActive, { width: '80%' }]} />
-                </View>
-                <View style={styles.odoLabels}>
-                  <Text style={[styles.odoLabelText, { color: activeColors.subtext }]}>
-                    Lần bảo dưỡng trước
-                  </Text>
-                  <Text
-                    style={[
-                      styles.odoLabelText,
-                      { fontWeight: 'bold', color: Theme.staticColors.warning },
-                    ]}
-                  >
-                    +2,000 km (Thay nhớt máy)
-                  </Text>
-                </View>
-              </View>
-
-              <TouchableOpacity
-                style={styles.alertCtaButton}
-                onPress={() => logic.setBookingModalVisible(true)}
-              >
-                <Text style={styles.alertCtaText}>Đặt lịch ngay</Text>
-              </TouchableOpacity>
-            </Animated.View>
-
-            {}
-            <Animated.View
-              entering={FadeInDown.duration(500).delay(200)}
-              style={styles.historySection}
-            >
-              <View style={styles.historyHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <ShieldCheck color="#10B981" size={18} style={{ marginRight: 6 }} />
-                  <Text style={styles.historyTitle}>Nhật Ký "Xe Sạch" (Lịch Sử Dịch Vụ)</Text>
-                </View>
-              </View>
-              <Text style={[styles.historySubtitle, { color: activeColors.subtext }]}>
-                Cuốn sổ bảo hành điện tử thay thế hoàn toàn sổ giấy, lưu trọn đời tại AnhEmMotor
-              </Text>
-
-              {logic.serviceHistory.map((item) => (
-                <View
-                  key={item.id}
-                  style={[
-                    styles.historyItemCard,
-                    { backgroundColor: activeColors.cardBg, borderColor: activeColors.border },
-                  ]}
-                >
-                  <View style={styles.historyItemHeader}>
-                    <View>
-                      <Text style={[styles.historyItemDate, { color: activeColors.text }]}>
-                        {item.date}
-                      </Text>
-                      <Text style={[styles.historyItemLocation, { color: activeColors.subtext }]}>
-                        {item.location}
-                      </Text>
-                    </View>
-                    <View style={styles.cleanCarBadge}>
-                      <ShieldCheck color="#10B981" size={12} style={{ marginRight: 3 }} />
-                      <Text style={styles.cleanCarBadgeText}>✓ Đạt chuẩn Xe Sạch</Text>
-                    </View>
+                )}
+                {/* No image placeholder */}
+                {!item.coverImageUrl && (
+                  <View style={{
+                    width: '100%', height: 100,
+                    backgroundColor: isDark ? 'rgba(96,165,250,0.08)' : 'rgba(37,99,235,0.05)',
+                    alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <Newspaper color={isDark ? '#60A5FA' : '#2563EB'} size={32} />
                   </View>
+                )}
 
-                  <Text style={[styles.historyPartsTitle, { color: activeColors.subtext }]}>
-                    Phụ tùng đã thay & Dịch vụ:
-                  </Text>
-                  <Text style={[styles.historyPartsText, { color: activeColors.text }]}>
-                    {item.parts}
+                {/* Content */}
+                <View style={{ padding: 14 }}>
+                  {/* Category badge */}
+                  {!!item.categoryName && (
+                    <View style={{
+                      alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 3,
+                      backgroundColor: isDark ? 'rgba(96,165,250,0.15)' : 'rgba(37,99,235,0.08)',
+                      borderRadius: 20, marginBottom: 8,
+                    }}>
+                      <Text style={{ fontSize: 11, fontWeight: '600', color: isDark ? '#60A5FA' : '#2563EB' }}>
+                        {item.categoryName}
+                      </Text>
+                    </View>
+                  )}
+
+                  {/* Title */}
+                  <Text style={{
+                    fontSize: 15, fontWeight: '700', color: activeColors.text,
+                    lineHeight: 22, marginBottom: 6,
+                  }} numberOfLines={2}>
+                    {item.title}
                   </Text>
 
-                  <View style={styles.historyFooter}>
-                    <Text style={[styles.historyCost, { color: activeColors.subtext }]}>
-                      Hóa đơn:{' '}
-                      <Text style={{ fontWeight: 'bold', color: '#10B981' }}>{item.cost}</Text>
+                  {/* Excerpt / description */}
+                  {!!item.metaDescription && (
+                    <Text style={{
+                      fontSize: 13, color: activeColors.subtext, lineHeight: 19, marginBottom: 10,
+                    }} numberOfLines={3}>
+                      {item.metaDescription}
                     </Text>
-                    <Text style={[styles.historyWarranty, { color: activeColors.subtext }]}>
-                      🛡️ BH phụ tùng: {item.warranty}
+                  )}
+
+                  {/* Footer: author + date */}
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Text style={{ fontSize: 12, color: activeColors.subtext }}>
+                      {item.authorName ? `✍️ ${item.authorName}` : '✍️ AnhEmMotor'}
+                    </Text>
+                    <Text style={{ fontSize: 12, color: activeColors.subtext }}>
+                      🕐 {item.publishedDate
+                        ? new Date(item.publishedDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                        : '—'}
                     </Text>
                   </View>
                 </View>
-              ))}
-            </Animated.View>
+              </Animated.View>
+            ))}
+
+            <View style={{ height: 24 }} />
           </View>
         ) : logic.activeTab === 'loyalty' ? (
           <View>
@@ -1510,7 +1316,7 @@ export default function NotificationScreen({ navigation }) {
                     <Text style={styles.virtualCardBrand}>AnhEmMotor 🏍️</Text>
                     <Text style={styles.virtualCardTier}>GOLD</Text>
                   </View>
-                  <Text style={styles.virtualCardName}>NGUYỄN VĂN KHÔI</Text>
+                  <Text style={styles.virtualCardName}>NGUYỄN MINH UYÊN</Text>
                   <View style={styles.virtualCardFooter}>
                     <Text style={styles.virtualCardNumber}>ID: AEM-88992</Text>
                     <Text style={styles.virtualCardPoints}>3,500 Pts</Text>
@@ -1519,7 +1325,7 @@ export default function NotificationScreen({ navigation }) {
               </View>
 
               <Text style={[styles.loyaltyMemberDesc, { color: activeColors.text }]}>
-                Chúc mừng Anh Khôi đã chính thức thăng hạng lên{' '}
+                Chúc mừng Chị Uyên đã chính thức thăng hạng lên{' '}
                 <Text style={{ fontWeight: 'bold', color: '#A855F7' }}>GOLD MEMBER</Text> sau kỳ bảo
                 dưỡng vừa qua. Khám phá ngay các đặc quyền mới dành riêng cho bạn!
               </Text>
@@ -1532,78 +1338,49 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {}
-            <Animated.View
-              entering={FadeInDown.duration(500).delay(100)}
-              style={styles.loyaltyVoucherCard}
-            >
-              <View style={styles.loyaltyVoucherHeader}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                >
-                  <Gift
-                    color={Theme.staticColors.primary}
-                    size={18}
-                    style={{ marginRight: 6, flexShrink: 0 }}
-                  />
-                  <Text
-                    style={[styles.loyaltyVoucherTitle, { flex: 1 }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Voucher Đang Kích Hoạt
-                  </Text>
-                </View>
-                <View style={styles.voucherUrgentBadge}>
-                  <Text style={styles.voucherUrgentBadgeText}>SẮP HẾT HẠN (3 ngày)</Text>
-                </View>
-              </View>
-
-              <View
-                style={[
-                  styles.dashedVoucherBody,
-                  {
-                    backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)',
-                    borderColor: activeColors.border,
-                  },
-                ]}
-              >
-                <View
-                  style={[
-                    styles.dashedVoucherLeft,
-                    {
-                      backgroundColor: isDark
-                        ? 'rgba(59, 130, 246, 0.1)'
-                        : 'rgba(59, 130, 246, 0.05)',
-                      borderRightColor: activeColors.border,
-                    },
-                  ]}
-                >
-                  <Text style={styles.voucherValBig}>2M</Text>
-                  <Text style={styles.voucherValLabel}>ĐỒNG</Text>
-                </View>
-                <View style={styles.dashedVoucherRight}>
-                  <Text style={[styles.voucherNameTitle, { color: activeColors.text }]}>
-                    Voucher đổi xe SH
-                  </Text>
-                  <Text style={[styles.voucherCodeLabel, { color: activeColors.subtext }]}>
-                    MÃ: SH-GOLD-2M
-                  </Text>
-                </View>
-              </View>
-
-              <Text style={[styles.loyaltyVoucherDesc, { color: activeColors.text }]}>
-                Voucher [Ưu đãi đặc quyền đổi xe SH - Giảm 2 Triệu] của bạn sẽ hết hạn trong 3 ngày
-                nữa. Đừng bỏ lỡ!
-              </Text>
-
-              <TouchableOpacity
-                style={[styles.loyaltyCtaButton, { backgroundColor: Theme.staticColors.primary }]}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'l2'))}
-              >
-                <Text style={styles.loyaltyCtaText}>Sử dụng ngay 🎟️</Text>
-              </TouchableOpacity>
-            </Animated.View>
+            {/* Voucher List */}
+            {logic.vouchersLoading ? (
+              <Text style={{ textAlign: 'center', marginTop: 20, color: activeColors.subtext }}>Đang tải dữ liệu voucher...</Text>
+            ) : logic.vouchers && logic.vouchers.length > 0 ? (
+              logic.vouchers.map((voucher, index) => {
+                const formatValue = (v) => {
+                  if ((v.discountType === 0 || v.DiscountType === 0 || v.discountType === 'PERCENT' || v.DiscountType === 'PERCENT')) return (v.discountValue ?? v.DiscountValue) + '%';
+                  if ((v.discountValue ?? v.DiscountValue) >= 1000000) return ((v.discountValue ?? v.DiscountValue) / 1000000) + 'M';
+                  if ((v.discountValue ?? v.DiscountValue) >= 1000) return ((v.discountValue ?? v.DiscountValue) / 1000) + 'K';
+                  return (v.discountValue ?? v.DiscountValue);
+                };
+                const isExpiringSoon = new Date(voucher.validTo).getTime() - new Date().getTime() < 3 * 24 * 60 * 60 * 1000;
+                return (
+                  <Animated.View key={voucher.id} entering={FadeInDown.duration(500).delay(100 + index * 100)} style={[styles.loyaltyVoucherCard, { marginTop: index > 0 ? 16 : 0 }]}>
+                    <View style={styles.loyaltyVoucherHeader}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
+                        <Gift color={Theme.staticColors.primary} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
+                        <Text style={[styles.loyaltyVoucherTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Voucher Đang Kích Hoạt</Text>
+                      </View>
+                      {isExpiringSoon && (
+                        <View style={styles.voucherUrgentBadge}><Text style={styles.voucherUrgentBadgeText}>SẮP HẾT HẠN</Text></View>
+                      )}
+                    </View>
+                    <View style={[styles.dashedVoucherBody, { backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)', borderColor: activeColors.border }]}>
+                      <View style={[styles.dashedVoucherLeft, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)', borderRightColor: activeColors.border }]}>
+                        <Text style={styles.voucherValBig}>{formatValue(voucher)}</Text>
+                        <Text style={styles.voucherValLabel}>{(voucher.discountType === 0 || voucher.DiscountType === 0 || voucher.discountType === 'PERCENT' || voucher.DiscountType === 'PERCENT') ? 'GIẢM' : 'ĐỒNG'}</Text>
+                      </View>
+                      <View style={styles.dashedVoucherRight}>
+                        <Text style={[styles.voucherNameTitle, { color: activeColors.text }]}>{voucher.name}</Text>
+                        <Text style={styles.voucherCodeLabel}>MÃ: {voucher.code}</Text>
+                      </View>
+                    </View>
+                    <Text style={[styles.loyaltyVoucherDesc, { color: activeColors.text }]}>Voucher [{voucher.name}] có hiệu lực đến ngày {new Date(voucher.validTo).toLocaleDateString('vi-VN')}. Đừng bỏ lỡ!</Text>
+                    <TouchableOpacity style={styles.loyaltyCtaButton} onPress={() => { logic.setSelectedNotif({ ...voucher, type: 'voucher', voucherCode: voucher.code, voucherName: voucher.name }); logic.setActiveModal('voucher'); }}>
+                      <Text style={styles.loyaltyCtaText}>Sử dụng ngay 🎟️</Text>
+                    </TouchableOpacity>
+                  </Animated.View>
+                );
+              })
+            ) : (
+              <Text style={{ textAlign: 'center', marginTop: 20, color: activeColors.subtext }}>Bạn chưa có voucher nào.</Text>
+            )}
 
             {}
             <Animated.View
@@ -1692,7 +1469,7 @@ export default function NotificationScreen({ navigation }) {
                 ]}
               >
                 <Text style={[styles.referralCodeTextVal, { color: isDark ? '#fff' : '#4338CA' }]}>
-                  AEM-KHOI-GOLD
+                  AEM-UYEN-GOLD
                 </Text>
                 <Text style={[styles.referralCodeSubText, { color: activeColors.subtext }]}>
                   Nhận 500.000đ dịch vụ khi bạn bè mua xe thành công
@@ -1718,197 +1495,6 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={[styles.loyaltyCtaText, { color: '#E31B23' }]}>
                   Chia sẻ mã ngay 🎁
                 </Text>
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-        ) : logic.activeTab === 'system' ? (
-          <View>
-            {}
-            <Animated.View entering={FadeInDown.duration(500)} style={styles.systemRecallCard}>
-              <View style={styles.systemRecallHeader}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                >
-                  <AlertTriangle
-                    color={Theme.staticColors.error}
-                    size={18}
-                    style={{ marginRight: 6, flexShrink: 0 }}
-                  />
-                  <Text
-                    style={[styles.systemRecallTitle, { flex: 1 }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Thông báo Triệu hồi Kỹ thuật
-                  </Text>
-                </View>
-                <View style={styles.recallUrgentBadge}>
-                  <Text style={styles.recallUrgentBadgeText}>KHẨN CẤP ⚠️</Text>
-                </View>
-              </View>
-
-              <Text style={[styles.systemRecallDesc, { color: activeColors.text }]}>
-                Thông báo từ{' '}
-                <Text style={{ fontWeight: 'bold', color: activeColors.text }}>Honda Việt Nam</Text>
-                : Triệu hồi và cập nhật miễn phí cụm khóa Smartkey cho các dòng xe SH sản xuất trong
-                giai đoạn đầu năm 2025 để nâng cấp bảo mật. Hãy đặt lịch hẹn sớm nhất tại đại lý gần
-                nhất.
-              </Text>
-
-              <TouchableOpacity
-                style={styles.systemCtaButton}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'sys1'))}
-              >
-                <Text style={styles.systemCtaText}>Đặt lịch kiểm tra ngay 🛠️</Text>
-              </TouchableOpacity>
-            </Animated.View>
-
-            {}
-            <Animated.View
-              entering={FadeInDown.duration(500).delay(100)}
-              style={styles.systemInsuranceCard}
-            >
-              <View style={styles.systemInsuranceHeader}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                >
-                  <ShieldCheck
-                    color={Theme.staticColors.warning}
-                    size={18}
-                    style={{ marginRight: 6, flexShrink: 0 }}
-                  />
-                  <Text
-                    style={[styles.systemInsuranceTitle, { flex: 1 }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Hạn Bảo Hiểm Dân Sự Xe
-                  </Text>
-                </View>
-                <View style={styles.insuranceWarningBadge}>
-                  <Text style={styles.insuranceWarningBadgeText}>SẮP HẾT HẠN</Text>
-                </View>
-              </View>
-
-              <Text style={[styles.systemInsuranceDesc, { color: activeColors.text }]}>
-                Bảo hiểm dân sự bắt buộc của xe{' '}
-                <Text style={{ fontWeight: 'bold', color: activeColors.text }}>60-A1 555.55</Text>{' '}
-                sẽ hết hạn vào ngày{' '}
-                <Text style={{ fontWeight: 'bold', color: Theme.staticColors.warning }}>
-                  20/05/2026
-                </Text>
-                . Hãy gia hạn trực tuyến để tránh bị phạt khi lưu thông trên đường.
-              </Text>
-
-              <TouchableOpacity
-                style={[styles.systemCtaButton, { backgroundColor: Theme.staticColors.warning }]}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'sys2'))}
-              >
-                <Text style={styles.systemCtaText}>Gia hạn bảo hiểm trực tuyến 🛡️</Text>
-              </TouchableOpacity>
-            </Animated.View>
-
-            {}
-            <Animated.View
-              entering={FadeInDown.duration(500).delay(200)}
-              style={styles.systemInvoiceCard}
-            >
-              <View style={styles.systemInvoiceHeader}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                >
-                  <FileText color="#10B981" size={18} style={{ marginRight: 6, flexShrink: 0 }} />
-                  <Text
-                    style={[styles.systemInvoiceTitle, { flex: 1 }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Hóa đơn e-Invoice sẵn sàng
-                  </Text>
-                </View>
-                <View style={styles.invoiceGreenBadge}>
-                  <Text style={styles.invoiceGreenBadgeText}>ĐÃ XUẤT 🧾</Text>
-                </View>
-              </View>
-
-              <View
-                style={[
-                  styles.invoiceSummaryBox,
-                  {
-                    backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
-                    borderColor: activeColors.border,
-                  },
-                ]}
-              >
-                <View style={styles.invoiceSummaryRow}>
-                  <Text style={[styles.invoiceSummaryLabel, { color: activeColors.subtext }]}>
-                    Mã hóa đơn:
-                  </Text>
-                  <Text style={[styles.invoiceSummaryVal, { color: activeColors.text }]}>
-                    #AEM-9982
-                  </Text>
-                </View>
-                <View style={styles.invoiceSummaryRow}>
-                  <Text style={[styles.invoiceSummaryLabel, { color: activeColors.subtext }]}>
-                    Tổng thanh toán:
-                  </Text>
-                  <Text style={[styles.invoiceSummaryVal, { color: '#10B981' }]}>105.000.000đ</Text>
-                </View>
-              </View>
-
-              <Text style={[styles.systemInvoiceDesc, { color: activeColors.text }]}>
-                Giao dịch thành công! Hóa đơn điện tử (e-Invoice) cho đơn hàng mua xe Honda SH của
-                bạn đã được xuất thành công trên hệ thống của Tổng cục Thuế.
-              </Text>
-
-              <TouchableOpacity
-                style={[styles.systemCtaButton, { backgroundColor: '#10B981' }]}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'sys3'))}
-              >
-                <Text style={styles.systemCtaText}>Xem và Tải hóa đơn (PDF) 🧾</Text>
-              </TouchableOpacity>
-            </Animated.View>
-
-            {}
-            <Animated.View
-              entering={FadeInDown.duration(500).delay(300)}
-              style={styles.systemSecurityCard}
-            >
-              <View style={styles.systemSecurityHeader}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}
-                >
-                  <Lock
-                    color={Theme.staticColors.error}
-                    size={18}
-                    style={{ marginRight: 6, flexShrink: 0 }}
-                  />
-                  <Text
-                    style={[styles.systemSecurityTitle, { flex: 1 }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Cảnh báo Đăng nhập lạ
-                  </Text>
-                </View>
-                <View style={styles.securityAlertBadge}>
-                  <Text style={styles.securityAlertBadgeText}>NGUY HIỂM 🔒</Text>
-                </View>
-              </View>
-
-              <Text style={[styles.systemSecurityDesc, { color: activeColors.text }]}>
-                Phát hiện thiết bị lạ đăng nhập tài khoản của bạn tại{' '}
-                <Text style={{ fontWeight: 'bold', color: Theme.staticColors.error }}>
-                  Biên Hòa lúc 08:30
-                </Text>
-                . Nếu không phải hành động của bạn, hãy khẩn cấp đổi mật khẩu để bảo vệ tài khoản.
-              </Text>
-
-              <TouchableOpacity
-                style={[styles.systemCtaButton, { backgroundColor: '#E11D48' }]}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'sys5'))}
-              >
-                <Text style={styles.systemCtaText}>Đổi mật khẩu ngay 🔒</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -2025,7 +1611,7 @@ export default function NotificationScreen({ navigation }) {
                     { color: activeColors.text, opacity: 0.8, fontStyle: 'italic' },
                   ]}
                 >
-                  "Chào Anh Khôi, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ
+                  "Chào Chị Uyên, Ban showroom đã nhận được phản hồi của anh về việc thời gian chờ
                   đợi tại khu vực rửa xe còn hơi lâu vào ngày cuối tuần..."
                 </Text>
               </View>
@@ -2099,7 +1685,7 @@ export default function NotificationScreen({ navigation }) {
             </View>
 
             <Text style={[styles.modalSub, { color: activeColors.subtext }]}>
-              {logic.selectedNotif?.time} • Khách hàng Khôi
+              {logic.selectedNotif?.time} • Khách hàng Uyên
             </Text>
 
             {renderActiveModalContent()}
@@ -2264,3 +1850,4 @@ export default function NotificationScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+

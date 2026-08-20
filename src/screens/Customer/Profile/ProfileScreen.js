@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Alert } from 'react-native';
+
 import {
   Text,
   View,
@@ -39,7 +39,9 @@ import {
   MOCK_REGIONS,
 } from '../../../features/profile/presentation/controller/useProfileController';
 import { useGlobalState } from '../../../context/GlobalState';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { LinearGradient } from 'expo-linear-gradient';
+import GlassCard from '../../../components/GlassCard';
 
 export default function ProfileScreen({ navigation, route }) {
   const bottomSheetRef = useRef(null);
@@ -60,12 +62,14 @@ export default function ProfileScreen({ navigation, route }) {
     handleSelectPhoto,
     handleDeleteAccount,
     handleLogout,
+    personalOutputs,
+    personalRepairs,
   } = useProfileController(navigation, bottomSheetRef);
 
   const { setSettingsOpen } = useGlobalState();
   const activeColors = useActiveColors();
   const isDark = activeColors.isDark;
-  const blockBg = { backgroundColor: activeColors.cardBg, borderColor: activeColors.border };
+  const styles = createStyles(activeColors);
 
   useEffect(() => {
     if (route?.params?.openSettings) {
@@ -114,24 +118,23 @@ export default function ProfileScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView
-      style={[styles.shell, { backgroundColor: activeColors.background }]}
-      edges={['top']}
-    >
+    <SafeAreaView style={styles.shell} edges={['top']}>
+      <LinearGradient
+        colors={[activeColors.gradientStart, activeColors.gradientEnd]}
+        style={StyleSheet.absoluteFill}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: verticalScale(170) }}
       >
         {}
-        <View
-          style={[
-            styles.headerBlock,
-            {
-              backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC',
-              borderBottomColor: activeColors.border,
-            },
-          ]}
-        >
+        <View style={styles.headerBlock}>
+          <TouchableOpacity 
+            style={styles.settingsBtn} 
+            onPress={() => setSettingsModalVisible(true)}
+          >
+            <Settings color={activeColors.text} size={24} />
+          </TouchableOpacity>
           <View style={styles.avatarWrap}>
             <Image
               source={{
@@ -139,7 +142,7 @@ export default function ProfileScreen({ navigation, route }) {
                   profile.avatar ||
                   'https://img.freepik.com/free-vector/cute-boy-with-glasses-hoodie-pixel-art-style_475147-155.jpg',
               }}
-              style={[styles.avatar, { borderColor: activeColors.primary + '66' }]}
+              style={[styles.avatarProfile, { borderColor: activeColors.primary + '66' }]}
             />
             <TouchableOpacity
               style={[styles.camBadge, { backgroundColor: activeColors.primary }]}
@@ -180,7 +183,7 @@ export default function ProfileScreen({ navigation, route }) {
         </View>
 
         {}
-        <View style={[styles.block, blockBg]}>
+        <GlassCard style={styles.block} contentStyle={{ padding: 0 }}>
           <Text style={[styles.blockTitle, { color: activeColors.text }]}>DỊCH VỤ & BẢO HÀNH</Text>
           <View style={styles.gridRowInner}>
             {[
@@ -207,10 +210,10 @@ export default function ProfileScreen({ navigation, route }) {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </GlassCard>
 
         {}
-        <View style={[styles.block, blockBg]}>
+        <GlassCard style={styles.block} contentStyle={{ padding: 0 }}>
           <Text style={[styles.blockTitle, { color: activeColors.text }]}>
             TÀI CHÍNH & HỢP ĐỒNG
           </Text>
@@ -239,10 +242,10 @@ export default function ProfileScreen({ navigation, route }) {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </GlassCard>
 
         {}
-        <View style={[styles.block, blockBg]}>
+        <GlassCard style={styles.block} contentStyle={{ padding: 0 }}>
           <Text style={[styles.blockTitle, { color: activeColors.text }]}>
             ĐƠN HÀNG PHỤ TÙNG & PHỤ KIỆN
           </Text>
@@ -251,43 +254,56 @@ export default function ProfileScreen({ navigation, route }) {
               {
                 I: Clock,
                 l: 'Chờ XN',
-                badge: null,
+                badge: personalOutputs.filter(o => ['pending', 'waiting_deposit', 'waiting_installment'].includes(o.statusId)).length || null,
                 c: '#94A3B8',
-                m: 'Đơn nhớt Motul 300V đang chờ xác nhận.',
+                m: 'Đơn hàng đang chờ xác nhận.',
               },
               {
                 I: Package,
                 l: 'Chuẩn bị',
-                badge: '2',
+                badge: personalOutputs.filter(o => ['paid_processing', 'confirmed_cod', 'deposit_paid'].includes(o.statusId)).length || null,
                 c: '#A855F7',
-                m: 'Đơn ốp pô đang đóng gói chuẩn bị giao.',
+                m: 'Đơn hàng đang được chuẩn bị.',
               },
               {
                 I: Truck,
                 l: 'Đang giao',
-                badge: null,
+                badge: personalOutputs.filter(o => o.statusId === 'delivering').length || null,
                 c: '#E31B23',
-                dot: true,
-                m: 'Đơn đang được shipper giao đến bạn.',
+                dot: personalOutputs.some(o => o.statusId === 'delivering'),
+                m: 'Đơn hàng đang được giao đến bạn.',
               },
               {
                 I: CheckCircle,
                 l: 'Hoàn thành',
-                badge: null,
+                badge: personalOutputs.filter(o => o.statusId === 'completed').length || null,
                 c: '#10B981',
-                m: 'Lịch sử đơn hàng phụ tùng đã nhận.',
+                m: 'Lịch sử đơn hàng đã hoàn thành.',
               },
             ].map(({ I: Icon, l, badge, c, dot, m }) => (
               <TouchableOpacity
                 key={l}
                 style={styles.iconCol}
-                onPress={() => Alert.alert('Trạng thái', m)}
+                onPress={() => {
+                  const items = personalOutputs.filter(o => {
+                    if (l === 'Chờ XN') return ['pending', 'waiting_deposit', 'waiting_installment'].includes(o.statusId);
+                    if (l === 'Chuẩn bị') return ['paid_processing', 'confirmed_cod', 'deposit_paid'].includes(o.statusId);
+                    if (l === 'Đang giao') return o.statusId === 'delivering';
+                    if (l === 'Hoàn thành') return o.statusId === 'completed';
+                    return false;
+                  });
+                  if (items.length > 0) {
+                    navigation.navigate('StatusList', { title: l, items, type: 'outputs' });
+                  } else {
+                    navigation.navigate('StatusList', { title: l, items: [], type: 'outputs' });
+                  }
+                }}
               >
                 <View style={[styles.iconCircle, { backgroundColor: activeColors.listIconBg }]}>
                   <Icon color={c} size={22} />
                   {badge && (
                     <View style={styles.badge}>
-                      <Text style={styles.badgeText}>{badge}</Text>
+                      <Text style={styles.badgeText}>{badge > 99 ? '99+' : badge}</Text>
                     </View>
                   )}
                   {dot && <View style={styles.badgeDot} />}
@@ -306,10 +322,10 @@ export default function ProfileScreen({ navigation, route }) {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </GlassCard>
 
         {}
-        <View style={[styles.block, blockBg]}>
+        <GlassCard style={styles.block} contentStyle={{ padding: 0 }}>
           <Text style={[styles.blockTitle, { color: activeColors.text }]}>
             TRẠNG THÁI BẢO DƯỠNG
           </Text>
@@ -330,18 +346,21 @@ export default function ProfileScreen({ navigation, route }) {
               {
                 I: Sparkles,
                 l: 'Chờ nhận',
-                badge: '1',
+                badge: null,
                 c: '#10B981',
                 m: 'Xe đã hoàn thành & rửa bọt tuyết bóng loáng!',
               },
               {
                 I: Star,
-                l: 'Đánh giá',
+                l: 'Hoàn thành',
+                badge: personalRepairs.length || null,
                 c: '#EC4899',
-                m: 'Đánh giá chất lượng kỹ thuật viên & phục vụ.',
+                m: 'Phiếu bảo dưỡng đã hoàn tất.',
               },
             ].map(({ I: Icon, l, badge, c, m }) => (
-              <TouchableOpacity key={l} style={styles.iconCol} onPress={() => Alert.alert(l, m)}>
+              <TouchableOpacity key={l} style={styles.iconCol} onPress={() => {
+                navigation.navigate('StatusList', { title: l, items: personalRepairs, type: 'repairs' });
+              }}>
                 <View style={[styles.iconCircle, { backgroundColor: activeColors.listIconBg }]}>
                   <Icon color={c} size={22} />
                   {badge && (
@@ -354,10 +373,10 @@ export default function ProfileScreen({ navigation, route }) {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </GlassCard>
 
         {}
-        <View style={[styles.block, blockBg]}>
+        <GlassCard style={styles.block} contentStyle={{ padding: 0 }}>
           <Text style={[styles.blockTitle, { color: activeColors.text }]}>ĐÁNH GIÁ</Text>
           <View style={styles.ratingRow}>
             {[
@@ -381,7 +400,7 @@ export default function ProfileScreen({ navigation, route }) {
               </View>
             ))}
           </View>
-        </View>
+        </GlassCard>
 
         <View style={{ height: 20 }} />
       </ScrollView>
@@ -417,7 +436,7 @@ export default function ProfileScreen({ navigation, route }) {
             <View style={{ width: 50 }} />
           </View>
           <ScrollView style={{ flex: 1, padding: 16 }}>
-            <View style={[styles.block, blockBg, { marginBottom: 12 }]}>
+            <GlassCard style={[styles.block, { marginBottom: 12 }]}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -437,18 +456,18 @@ export default function ProfileScreen({ navigation, route }) {
                   style={[
                     styles.toggleTrack,
                     {
-                      backgroundColor: profile.settings.debugMode
+                      backgroundColor: profile.settings?.debugMode
                         ? Theme.staticColors.primary
                         : activeColors.subtext + '44',
                     },
                   ]}
                 >
                   <View
-                    style={[styles.toggleThumb, profile.settings.debugMode ? styles.thumbOn : {}]}
+                    style={[styles.toggleThumb, profile.settings?.debugMode ? styles.thumbOn : {}]}
                   />
                 </View>
               </View>
-            </View>
+            </GlassCard>
             <Text style={{ color: activeColors.subtext, fontSize: 12, marginTop: 8 }}>
               Mock Mode: <Text style={{ color: activeColors.primary, fontWeight: '600' }}>ON</Text>{' '}
               — Sửa máy thủ công để kiểm thử

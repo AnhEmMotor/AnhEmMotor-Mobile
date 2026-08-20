@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
 
   tabBarScroll: {
     marginBottom: verticalScale(12),
-    height: 64,
+    minHeight: 64,
     marginHorizontal: horizontalScale(8),
   },
   tabBarContent: {
@@ -70,12 +70,12 @@ export const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 6,
     alignItems: 'center',
-    height: '100%',
+    minHeight: '100%',
   },
   tab: {
     flexDirection: 'row',
     paddingHorizontal: horizontalScale(18),
-    height: '100%',
+    paddingVertical: verticalScale(10),
     alignItems: 'center',
     borderRadius: 14,
     marginHorizontal: 4,
