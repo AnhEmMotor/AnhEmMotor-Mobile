@@ -1164,18 +1164,27 @@ export default function NotificationScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
         {logic.activeTab === 'service' ? (
           <View style={{ paddingVertical: 8 }}>
-            {/* Header */}
-            <Animated.View entering={FadeInDown.duration(400)} style={{
-              flexDirection: 'row', alignItems: 'center', paddingHorizontal: 4,
-              marginBottom: 16,
-            }}>
-              <Newspaper color={isDark ? '#60A5FA' : '#2563EB'} size={20} style={{ marginRight: 8 }} />
+            {}
+            <Animated.View
+              entering={FadeInDown.duration(400)}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 4,
+                marginBottom: 16,
+              }}
+            >
+              <Newspaper
+                color={isDark ? '#60A5FA' : '#2563EB'}
+                size={20}
+                style={{ marginRight: 8 }}
+              />
               <Text style={{ fontSize: 16, fontWeight: '700', color: activeColors.text }}>
                 Tin tức & Khuyến mãi mới nhất
               </Text>
             </Animated.View>
 
-            {/* Loading indicator */}
+            {}
             {logic.newsLoading && (
               <View style={{ alignItems: 'center', paddingVertical: 40 }}>
                 <ActivityIndicator size="large" color={isDark ? '#60A5FA' : '#2563EB'} />
@@ -1185,105 +1194,209 @@ export default function NotificationScreen({ navigation }) {
               </View>
             )}
 
-            {/* Empty state */}
+            {}
             {!logic.newsLoading && logic.newsList.length === 0 && (
-              <Animated.View entering={FadeInDown.duration(500)} style={{
-                alignItems: 'center', paddingVertical: 60,
-                backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                borderRadius: 16, marginHorizontal: 4,
-              }}>
+              <Animated.View
+                entering={FadeInDown.duration(500)}
+                style={{
+                  alignItems: 'center',
+                  paddingVertical: 60,
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                  borderRadius: 16,
+                  marginHorizontal: 4,
+                }}
+              >
                 <Newspaper color={activeColors.subtext} size={44} />
-                <Text style={{ marginTop: 16, fontSize: 15, fontWeight: '600', color: activeColors.text }}>
+                <Text
+                  style={{
+                    marginTop: 16,
+                    fontSize: 15,
+                    fontWeight: '600',
+                    color: activeColors.text,
+                  }}
+                >
                   Chưa có tin tức nào
                 </Text>
-                <Text style={{ marginTop: 6, fontSize: 13, color: activeColors.subtext, textAlign: 'center', paddingHorizontal: 32 }}>
+                <Text
+                  style={{
+                    marginTop: 6,
+                    fontSize: 13,
+                    color: activeColors.subtext,
+                    textAlign: 'center',
+                    paddingHorizontal: 32,
+                  }}
+                >
                   Hãy quay lại sau để xem các tin tức và chương trình khuyến mãi mới nhất.
                 </Text>
               </Animated.View>
             )}
 
-            {/* News list */}
-            {!logic.newsLoading && logic.newsList.map((item, index) => (
-              <Animated.View
-                key={item.id?.toString() || index.toString()}
-                entering={FadeInDown.duration(400 + index * 80)}
-                style={{
-                  backgroundColor: activeColors.card,
-                  borderRadius: 16,
-                  marginBottom: 14,
-                  marginHorizontal: 4,
-                  overflow: 'hidden',
-                  borderWidth: 1,
-                  borderColor: activeColors.border,
-                  boxShadow: isDark ? '0px 2px 8px rgba(0,0,0,0.3)' : '0px 2px 8px rgba(0,0,0,0.06)',
-                  elevation: 3,
-                }}
-              >
-                {/* Cover image */}
-                {!!item.coverImageUrl && (
-                  <Image
-                    source={{ uri: item.coverImageUrl.startsWith('http') ? item.coverImageUrl : API_BASE_URL + '/uploads/' + item.coverImageUrl.replace(/^[\\\/]+/, '') }}
-                    style={{ width: '100%', height: 180, backgroundColor: activeColors.border }}
-                    resizeMode="cover"
-                  />
-                )}
-                {/* No image placeholder */}
-                {!item.coverImageUrl && (
-                  <View style={{
-                    width: '100%', height: 100,
-                    backgroundColor: isDark ? 'rgba(96,165,250,0.08)' : 'rgba(37,99,235,0.05)',
-                    alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Newspaper color={isDark ? '#60A5FA' : '#2563EB'} size={32} />
-                  </View>
-                )}
+            {}
+            {!logic.newsLoading &&
+              logic.newsList.map((item, index) => {
+                let resolvedLogo = item.coverImageUrl;
+                if (
+                  resolvedLogo &&
+                  !resolvedLogo.startsWith('http') &&
+                  !resolvedLogo.startsWith('data:')
+                ) {
+                  const baseUrl = API_BASE_URL.endsWith('/')
+                    ? API_BASE_URL.slice(0, -1)
+                    : API_BASE_URL;
+                  const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
+                  let normalizedUrl = resolvedLogo.replace(/^[\\\\\\/]+/, '');
+                  if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
+                    normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
+                  }
+                  resolvedLogo = `${baseUrl}/${normalizedUrl}`;
+                }
+                if (
+                  resolvedLogo &&
+                  resolvedLogo.includes('placehold.co') &&
+                  !resolvedLogo.includes('/png') &&
+                  !resolvedLogo.includes('/jpg')
+                ) {
+                  resolvedLogo = resolvedLogo.replace('placehold.co/', 'placehold.co/png/');
+                }
+                return (
+                  <ScalePress
+                    key={item.id?.toString() || index.toString()}
+                    onPress={() =>
+                      navigation.navigate('NewsDetail', {
+                        newsSlug: item.urlSlug || item.slug,
+                        newsId: item.id,
+                      })
+                    }
+                  >
+                    <Animated.View
+                      entering={FadeInDown.duration(400 + index * 80)}
+                      style={{
+                        backgroundColor: activeColors.card,
+                        borderRadius: 16,
+                        marginBottom: 14,
+                        marginHorizontal: 4,
+                        overflow: 'hidden',
+                        borderWidth: 1,
+                        borderColor: activeColors.border,
+                        boxShadow: isDark
+                          ? '0px 2px 8px rgba(0,0,0,0.3)'
+                          : '0px 2px 8px rgba(0,0,0,0.06)',
+                        elevation: 3,
+                      }}
+                    >
+                      {}
+                      {!!resolvedLogo && (
+                        <Image
+                          source={{ uri: resolvedLogo }}
+                          style={{
+                            width: '100%',
+                            height: 180,
+                            backgroundColor: activeColors.border,
+                          }}
+                          resizeMode="cover"
+                        />
+                      )}
+                      {}
+                      {!resolvedLogo && (
+                        <View
+                          style={{
+                            width: '100%',
+                            height: 100,
+                            backgroundColor: isDark
+                              ? 'rgba(96,165,250,0.08)'
+                              : 'rgba(37,99,235,0.05)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Newspaper color={isDark ? '#60A5FA' : '#2563EB'} size={32} />
+                        </View>
+                      )}
 
-                {/* Content */}
-                <View style={{ padding: 14 }}>
-                  {/* Category badge */}
-                  {!!item.categoryName && (
-                    <View style={{
-                      alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 3,
-                      backgroundColor: isDark ? 'rgba(96,165,250,0.15)' : 'rgba(37,99,235,0.08)',
-                      borderRadius: 20, marginBottom: 8,
-                    }}>
-                      <Text style={{ fontSize: 11, fontWeight: '600', color: isDark ? '#60A5FA' : '#2563EB' }}>
-                        {item.categoryName}
-                      </Text>
-                    </View>
-                  )}
+                      {}
+                      <View style={{ padding: 14 }}>
+                        {}
+                        {!!item.categoryName && (
+                          <View
+                            style={{
+                              alignSelf: 'flex-start',
+                              paddingHorizontal: 10,
+                              paddingVertical: 3,
+                              backgroundColor: isDark
+                                ? 'rgba(96,165,250,0.15)'
+                                : 'rgba(37,99,235,0.08)',
+                              borderRadius: 20,
+                              marginBottom: 8,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                fontWeight: '600',
+                                color: isDark ? '#60A5FA' : '#2563EB',
+                              }}
+                            >
+                              {item.categoryName}
+                            </Text>
+                          </View>
+                        )}
 
-                  {/* Title */}
-                  <Text style={{
-                    fontSize: 15, fontWeight: '700', color: activeColors.text,
-                    lineHeight: 22, marginBottom: 6,
-                  }} numberOfLines={2}>
-                    {item.title}
-                  </Text>
+                        {}
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontWeight: '700',
+                            color: activeColors.text,
+                            lineHeight: 22,
+                            marginBottom: 6,
+                          }}
+                          numberOfLines={2}
+                        >
+                          {item.title}
+                        </Text>
 
-                  {/* Excerpt / description */}
-                  {!!item.metaDescription && (
-                    <Text style={{
-                      fontSize: 13, color: activeColors.subtext, lineHeight: 19, marginBottom: 10,
-                    }} numberOfLines={3}>
-                      {item.metaDescription}
-                    </Text>
-                  )}
+                        {}
+                        {!!item.metaDescription && (
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              color: activeColors.subtext,
+                              lineHeight: 19,
+                              marginBottom: 10,
+                            }}
+                            numberOfLines={3}
+                          >
+                            {item.metaDescription}
+                          </Text>
+                        )}
 
-                  {/* Footer: author + date */}
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 12, color: activeColors.subtext }}>
-                      {item.authorName ? `✍️ ${item.authorName}` : '✍️ AnhEmMotor'}
-                    </Text>
-                    <Text style={{ fontSize: 12, color: activeColors.subtext }}>
-                      🕐 {item.publishedDate
-                        ? new Date(item.publishedDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
-                        : '—'}
-                    </Text>
-                  </View>
-                </View>
-              </Animated.View>
-            ))}
+                        {}
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <Text style={{ fontSize: 12, color: activeColors.subtext }}>
+                            {item.authorName ? `✍️ ${item.authorName}` : '✍️ AnhEmMotor'}
+                          </Text>
+                          <Text style={{ fontSize: 12, color: activeColors.subtext }}>
+                            🕐{' '}
+                            {item.publishedDate
+                              ? new Date(item.publishedDate).toLocaleDateString('vi-VN', {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  year: 'numeric',
+                                })
+                              : '—'}
+                          </Text>
+                        </View>
+                      </View>
+                    </Animated.View>
+                  </ScalePress>
+                );
+              })}
 
             <View style={{ height: 24 }} />
           </View>
@@ -1338,48 +1451,126 @@ export default function NotificationScreen({ navigation }) {
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Voucher List */}
+            {}
             {logic.vouchersLoading ? (
-              <Text style={{ textAlign: 'center', marginTop: 20, color: activeColors.subtext }}>Đang tải dữ liệu voucher...</Text>
+              <Text style={{ textAlign: 'center', marginTop: 20, color: activeColors.subtext }}>
+                Đang tải dữ liệu voucher...
+              </Text>
             ) : logic.vouchers && logic.vouchers.length > 0 ? (
               logic.vouchers.map((voucher, index) => {
                 const formatValue = (v) => {
-                  if ((v.discountType === 0 || v.DiscountType === 0 || v.discountType === 'PERCENT' || v.DiscountType === 'PERCENT')) return (v.discountValue ?? v.DiscountValue) + '%';
-                  if ((v.discountValue ?? v.DiscountValue) >= 1000000) return ((v.discountValue ?? v.DiscountValue) / 1000000) + 'M';
-                  if ((v.discountValue ?? v.DiscountValue) >= 1000) return ((v.discountValue ?? v.DiscountValue) / 1000) + 'K';
-                  return (v.discountValue ?? v.DiscountValue);
+                  if (
+                    v.discountType === 0 ||
+                    v.DiscountType === 0 ||
+                    v.discountType === 'PERCENT' ||
+                    v.DiscountType === 'PERCENT'
+                  )
+                    return (v.discountValue ?? v.DiscountValue) + '%';
+                  if ((v.discountValue ?? v.DiscountValue) >= 1000000)
+                    return (v.discountValue ?? v.DiscountValue) / 1000000 + 'M';
+                  if ((v.discountValue ?? v.DiscountValue) >= 1000)
+                    return (v.discountValue ?? v.DiscountValue) / 1000 + 'K';
+                  return v.discountValue ?? v.DiscountValue;
                 };
-                const isExpiringSoon = new Date(voucher.validTo).getTime() - new Date().getTime() < 3 * 24 * 60 * 60 * 1000;
+                const isExpiringSoon =
+                  new Date(voucher.validTo).getTime() - new Date().getTime() <
+                  3 * 24 * 60 * 60 * 1000;
                 return (
-                  <Animated.View key={voucher.id} entering={FadeInDown.duration(500).delay(100 + index * 100)} style={[styles.loyaltyVoucherCard, { marginTop: index > 0 ? 16 : 0 }]}>
+                  <Animated.View
+                    key={voucher.id}
+                    entering={FadeInDown.duration(500).delay(100 + index * 100)}
+                    style={[styles.loyaltyVoucherCard, { marginTop: index > 0 ? 16 : 0 }]}
+                  >
                     <View style={styles.loyaltyVoucherHeader}>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 10 }}>
-                        <Gift color={Theme.staticColors.primary} size={18} style={{ marginRight: 6, flexShrink: 0 }} />
-                        <Text style={[styles.loyaltyVoucherTitle, { flex: 1 }]} numberOfLines={1} ellipsizeMode="tail">Voucher Đang Kích Hoạt</Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          flex: 1,
+                          marginRight: 10,
+                        }}
+                      >
+                        <Gift
+                          color={Theme.staticColors.primary}
+                          size={18}
+                          style={{ marginRight: 6, flexShrink: 0 }}
+                        />
+                        <Text
+                          style={[styles.loyaltyVoucherTitle, { flex: 1 }]}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          Voucher Đang Kích Hoạt
+                        </Text>
                       </View>
                       {isExpiringSoon && (
-                        <View style={styles.voucherUrgentBadge}><Text style={styles.voucherUrgentBadgeText}>SẮP HẾT HẠN</Text></View>
+                        <View style={styles.voucherUrgentBadge}>
+                          <Text style={styles.voucherUrgentBadgeText}>SẮP HẾT HẠN</Text>
+                        </View>
                       )}
                     </View>
-                    <View style={[styles.dashedVoucherBody, { backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)', borderColor: activeColors.border }]}>
-                      <View style={[styles.dashedVoucherLeft, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)', borderRightColor: activeColors.border }]}>
+                    <View
+                      style={[
+                        styles.dashedVoucherBody,
+                        {
+                          backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.03)',
+                          borderColor: activeColors.border,
+                        },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.dashedVoucherLeft,
+                          {
+                            backgroundColor: isDark
+                              ? 'rgba(59, 130, 246, 0.1)'
+                              : 'rgba(59, 130, 246, 0.05)',
+                            borderRightColor: activeColors.border,
+                          },
+                        ]}
+                      >
                         <Text style={styles.voucherValBig}>{formatValue(voucher)}</Text>
-                        <Text style={styles.voucherValLabel}>{(voucher.discountType === 0 || voucher.DiscountType === 0 || voucher.discountType === 'PERCENT' || voucher.DiscountType === 'PERCENT') ? 'GIẢM' : 'ĐỒNG'}</Text>
+                        <Text style={styles.voucherValLabel}>
+                          {voucher.discountType === 0 ||
+                          voucher.DiscountType === 0 ||
+                          voucher.discountType === 'PERCENT' ||
+                          voucher.DiscountType === 'PERCENT'
+                            ? 'GIẢM'
+                            : 'ĐỒNG'}
+                        </Text>
                       </View>
                       <View style={styles.dashedVoucherRight}>
-                        <Text style={[styles.voucherNameTitle, { color: activeColors.text }]}>{voucher.name}</Text>
+                        <Text style={[styles.voucherNameTitle, { color: activeColors.text }]}>
+                          {voucher.name}
+                        </Text>
                         <Text style={styles.voucherCodeLabel}>MÃ: {voucher.code}</Text>
                       </View>
                     </View>
-                    <Text style={[styles.loyaltyVoucherDesc, { color: activeColors.text }]}>Voucher [{voucher.name}] có hiệu lực đến ngày {new Date(voucher.validTo).toLocaleDateString('vi-VN')}. Đừng bỏ lỡ!</Text>
-                    <TouchableOpacity style={styles.loyaltyCtaButton} onPress={() => { logic.setSelectedNotif({ ...voucher, type: 'voucher', voucherCode: voucher.code, voucherName: voucher.name }); logic.setActiveModal('voucher'); }}>
+                    <Text style={[styles.loyaltyVoucherDesc, { color: activeColors.text }]}>
+                      Voucher [{voucher.name}] có hiệu lực đến ngày{' '}
+                      {new Date(voucher.validTo).toLocaleDateString('vi-VN')}. Đừng bỏ lỡ!
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.loyaltyCtaButton}
+                      onPress={() => {
+                        logic.setSelectedNotif({
+                          ...voucher,
+                          type: 'voucher',
+                          voucherCode: voucher.code,
+                          voucherName: voucher.name,
+                        });
+                        logic.setActiveModal('voucher');
+                      }}
+                    >
                       <Text style={styles.loyaltyCtaText}>Sử dụng ngay 🎟️</Text>
                     </TouchableOpacity>
                   </Animated.View>
                 );
               })
             ) : (
-              <Text style={{ textAlign: 'center', marginTop: 20, color: activeColors.subtext }}>Bạn chưa có voucher nào.</Text>
+              <Text style={{ textAlign: 'center', marginTop: 20, color: activeColors.subtext }}>
+                Bạn chưa có voucher nào.
+              </Text>
             )}
 
             {}
@@ -1850,4 +2041,3 @@ export default function NotificationScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-

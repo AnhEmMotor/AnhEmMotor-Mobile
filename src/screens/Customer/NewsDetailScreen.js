@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Image, useWindowDimensions, useColorScheme } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  Image,
+  useWindowDimensions,
+  useColorScheme,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import RenderHTML from 'react-native-render-html';
@@ -13,7 +23,7 @@ export default function NewsDetailScreen({ route, navigation }) {
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
-  
+
   const { themeMode } = useGlobalState();
   const systemScheme = useColorScheme();
   const isDark = themeMode === 'system' ? systemScheme === 'dark' : themeMode === 'dark';
@@ -41,7 +51,13 @@ export default function NewsDetailScreen({ route, navigation }) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]}>
         <View style={styles.header}>
-          <TouchableOpacity style={[styles.backBtn, { backgroundColor: activeColors.cardBg, borderColor: activeColors.border }]} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={[
+              styles.backBtn,
+              { backgroundColor: activeColors.cardBg, borderColor: activeColors.border },
+            ]}
+            onPress={() => navigation.goBack()}
+          >
             <ChevronLeft color={activeColors.text} size={24} />
           </TouchableOpacity>
         </View>
@@ -56,7 +72,13 @@ export default function NewsDetailScreen({ route, navigation }) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]}>
         <View style={styles.header}>
-          <TouchableOpacity style={[styles.backBtn, { backgroundColor: activeColors.cardBg, borderColor: activeColors.border }]} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={[
+              styles.backBtn,
+              { backgroundColor: activeColors.cardBg, borderColor: activeColors.border },
+            ]}
+            onPress={() => navigation.goBack()}
+          >
             <ChevronLeft color={activeColors.text} size={24} />
           </TouchableOpacity>
         </View>
@@ -89,7 +111,8 @@ export default function NewsDetailScreen({ route, navigation }) {
     if (!normalizedUrl.startsWith('uploads/')) {
       normalizedUrl = `uploads/${normalizedUrl}`;
     }
-    return `${API_BASE_URL}/${normalizedUrl}`;
+    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    return `${baseUrl}/${normalizedUrl}`;
   };
 
   const coverImage = getFullImageUrl(news.coverImageUrl);
@@ -98,7 +121,10 @@ export default function NewsDetailScreen({ route, navigation }) {
     if (!news || !news.content) return '';
     let html = news.content;
     // Fix absolute URLs that are missing uploads/
-    html = html.replace(/src="(http:\/\/[^"]+?\/)articles\/covers\/([^"]+)"/g, 'src="$1uploads/articles/covers/$2"');
+    html = html.replace(
+      /src="(http:\/\/[^"]+?\/)articles\/covers\/([^"]+)"/g,
+      'src="$1uploads/articles/covers/$2"'
+    );
     // Fix relative URLs
     html = html.replace(/src="(?!\w+:\/\/)([^"]+)"/g, (match, url) => {
       return `src="${getFullImageUrl(url)}"`;
@@ -107,15 +133,24 @@ export default function NewsDetailScreen({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+      edges={['top']}
+    >
       <View style={styles.header}>
-        <TouchableOpacity style={[styles.backBtn, { backgroundColor: activeColors.cardBg, borderColor: activeColors.border }]} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={[
+            styles.backBtn,
+            { backgroundColor: activeColors.cardBg, borderColor: activeColors.border },
+          ]}
+          onPress={() => navigation.goBack()}
+        >
           <ChevronLeft color={activeColors.text} size={24} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: activeColors.text }]}>Chi tiết bài viết</Text>
         <View style={{ width: 44 }} />
       </View>
-      
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {coverImage && (
           <Image source={{ uri: coverImage }} style={styles.coverImage} resizeMode="cover" />

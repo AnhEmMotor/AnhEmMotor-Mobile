@@ -10,7 +10,6 @@ export const useHome = () => {
   const [userName, setUserName] = useState('');
   const [personalVouchers, setPersonalVouchers] = useState([]);
 
-
   useEffect(() => {
     const fetchProfile = async () => {
       const dataSource = new ProfileLocalDataSource();
@@ -22,19 +21,19 @@ export const useHome = () => {
       }
     };
     fetchProfile();
-    
+
     const fetchPersonalVouchers = async () => {
       try {
         const { getPersonalVouchersApi } = require('../../../api/customerApi');
         const vouchers = await getPersonalVouchersApi();
         if (vouchers && Array.isArray(vouchers)) {
-            const formattedVouchers = vouchers.map(v => ({
-                id: v.id || v.Id,
-                title: v.name || v.Name || v.code || v.Code,
-                desc: `Giảm ${v.discountValue || v.DiscountValue}${v.discountType === 1 || v.DiscountType === 1 ? 'đ' : '%'} - Áp dụng cho đơn từ ${(v.minOrderValue || v.MinOrderValue || 0).toLocaleString('vi-VN')}đ`,
-                code: v.code || v.Code,
-            }));
-            setPersonalVouchers(formattedVouchers);
+          const formattedVouchers = vouchers.map((v) => ({
+            id: v.id || v.Id,
+            title: v.name || v.Name || v.code || v.Code,
+            desc: `Giảm ${v.discountValue || v.DiscountValue}${v.discountType === 1 || v.DiscountType === 1 ? 'đ' : '%'} - Áp dụng cho đơn từ ${(v.minOrderValue || v.MinOrderValue || 0).toLocaleString('vi-VN')}đ`,
+            code: v.code || v.Code,
+          }));
+          setPersonalVouchers(formattedVouchers);
         }
       } catch (error) {
         console.error('Lỗi tải voucher cá nhân:', error);
@@ -46,7 +45,7 @@ export const useHome = () => {
   const handleOpenVoucher = (voucher) => {
     setSelectedVoucher(voucher);
 
-        setTimeout(() => {
+    setTimeout(() => {
       bottomSheetRef.current?.show();
     }, 50);
   };
@@ -72,11 +71,11 @@ export const useHome = () => {
           if (!cleanUrl.startsWith('uploads/')) {
             cleanUrl = `uploads/${cleanUrl}`;
           }
-          return `${API_BASE_URL}/${cleanUrl}`;
+          const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+          return `${baseUrl}/${cleanUrl}`;
         };
 
-
-                const formattedNews = (news || []).map((item) => ({
+        const formattedNews = (news || []).map((item) => ({
           id: item.id || item.Id,
           title: item.title || item.Title,
           desc:
@@ -121,7 +120,4 @@ export const useHome = () => {
   };
 };
 
-export const shortcuts = [
-
-
-    ];
+export const shortcuts = [];

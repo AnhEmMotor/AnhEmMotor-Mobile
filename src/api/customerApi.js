@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiPut, apiPatch, apiPostFormData, tokenService } from './httpClient';
+import { API_BASE_URL } from '../config';
 
 export async function loginApi(usernameOrEmail, password) {
   await tokenService.clearTokens();
@@ -160,11 +161,15 @@ export async function getMyVehiclesApi() {
   const data = await response.json();
 
   if (data?.value?.items) return data.value.items;
+  if (data?.value?.Items) return data.value.Items;
   if (data?.value?.data) return data.value.data;
+  if (data?.value?.Data) return data.value.Data;
   if (data?.items) return data.items;
+  if (data?.Items) return data.Items;
   if (data?.data) return data.data;
+  if (data?.Data) return data.Data;
 
-  return Array.isArray(data) ? data : data.value || [];
+  return Array.isArray(data) ? data : data.value || data.Value || [];
 }
 
 export async function getCustomerVehicleDetailApi(vehicleId) {
@@ -271,6 +276,28 @@ function formatPrice(value) {
   return `${numericValue.toLocaleString('vi-VN')}đ`;
 }
 
+function resolveImageUrl(rawUrl) {
+  if (!rawUrl || typeof rawUrl !== 'string') return '';
+  let resolvedUrl = rawUrl;
+  const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+  if (!rawUrl.startsWith('http') && !rawUrl.startsWith('data:')) {
+    const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
+    let normalizedUrl = rawUrl.replace(/^[\\\\\\/]+/, '');
+    if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
+      normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
+    }
+    resolvedUrl = `${baseUrl}/${normalizedUrl}`;
+  }
+  if (
+    resolvedUrl.includes('placehold.co') &&
+    !resolvedUrl.includes('/png') &&
+    !resolvedUrl.includes('/jpg')
+  ) {
+    resolvedUrl = resolvedUrl.replace('placehold.co/', 'placehold.co/png/');
+  }
+  return resolvedUrl;
+}
+
 function normalizeProductItem(item) {
   if (!item || typeof item !== 'object') return null;
 
@@ -286,15 +313,17 @@ function normalizeProductItem(item) {
           coverImageUrl: v.coverImageUrl ?? v.CoverImageUrl ?? '',
           variantName: v.variantName ?? v.VariantName ?? '',
           optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
-          photos: Array.isArray(v.photos ?? v.Photos) ? (v.photos ?? v.Photos) : [],
+          photos: Array.isArray(v.photos ?? v.Photos)
+            ? (v.photos ?? v.Photos).map(resolveImageUrl)
+            : [],
           colors: (v.colors ?? v.Colors ?? []).map((c) => ({
             id: c.id ?? c.Id ?? null,
             name: c.name ?? c.ColorName ?? c.Name ?? '',
             colorName: c.colorName ?? c.ColorName ?? c.name ?? '',
             colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
             code: c.code ?? c.ColorCode ?? '#ccc',
-            coverImageUrl: c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
-            image: c.image ?? c.CoverImageUrl ?? '',
+            coverImageUrl: resolveImageUrl(c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? ''),
+            image: resolveImageUrl(c.image ?? c.CoverImageUrl ?? ''),
           })),
         })
       )
@@ -316,12 +345,14 @@ function normalizeProductItem(item) {
         title: t.title ?? t.Title ?? t.customTitle ?? t.CustomTitle ?? '',
         description:
           t.description ?? t.Description ?? t.customDescription ?? t.CustomDescription ?? '',
-        imageUrl: t.imageUrl ?? t.ImageUrl ?? t.customImageUrl ?? t.CustomImageUrl ?? '',
+        imageUrl: resolveImageUrl(
+          t.imageUrl ?? t.ImageUrl ?? t.customImageUrl ?? t.CustomImageUrl ?? ''
+        ),
       }))
     : [];
 
   const firstVariant = variants[0];
-  const imageUrl =
+  let rawImg =
     item?.imageUrl ||
     item?.ImageUrl ||
     item?.img ||
@@ -330,6 +361,7 @@ function normalizeProductItem(item) {
     firstVariant?.coverImageUrl ||
     firstVariant?.imageUrl ||
     '';
+  const imageUrl = resolveImageUrl(rawImg);
 
   const priceValue =
     item?.referencePrice ??
@@ -409,8 +441,9 @@ export async function getProductsApi(search = '', categoryId = null) {
     throw new Error('Không thể tải danh sách sản phẩm');
   }
   const data = await response.json();
-  const payload = data?.value ?? data?.data ?? data;
-  const list = Array.isArray(payload) ? payload : [];
+  const payload = data?.value ?? data?.Value ?? data?.data ?? data?.Data ?? data;
+  const items = payload?.items ?? payload?.Items ?? payload;
+  const list = Array.isArray(items) ? items : [];
   return list.map(normalizeProductItem);
 }
 
@@ -419,16 +452,41 @@ export async function getBrandsApi() {
     const response = await apiGet('/api/v1/Brand?Page=1&PageSize=100');
     if (!response.ok) throw new Error('load_brand_fail');
     const data = await response.json();
-    const payload = data?.value ?? data?.items ?? data?.data ?? data;
-    const items = Array.isArray(payload) ? payload : (payload?.items ?? []);
+    const payload =
+      data?.value ?? data?.Value ?? data?.items ?? data?.Items ?? data?.data ?? data?.Data ?? data;
+    const items = Array.isArray(payload)
+      ? payload
+      : (payload?.items ?? payload?.Items ?? payload?.data ?? payload?.Data ?? []);
+
+    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+
     return items
-      .filter((b) => !b.deletedAt)
-      .map((b) => ({
-        id: b.id ?? b.Id,
-        name: b.name ?? b.Name ?? '',
-        logoUrl: b.logoUrl ?? b.LogoUrl ?? '',
-        origin: b.origin ?? b.Origin ?? '',
-      }));
+      .filter((b) => !b.deletedAt && !b.DeletedAt)
+      .map((b) => {
+        let rawLogo = b.logoUrl ?? b.LogoUrl ?? '';
+        let resolvedLogo = rawLogo;
+        if (rawLogo && !rawLogo.startsWith('http') && !rawLogo.startsWith('data:')) {
+          const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
+          let normalizedUrl = rawLogo.replace(/^[\\\\\\/]+/, '');
+          if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
+            normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
+          }
+          resolvedLogo = `${baseUrl}/${normalizedUrl}`;
+        }
+        if (
+          resolvedLogo.includes('placehold.co') &&
+          !resolvedLogo.includes('/png') &&
+          !resolvedLogo.includes('/jpg')
+        ) {
+          resolvedLogo = resolvedLogo.replace('placehold.co/', 'placehold.co/png/');
+        }
+        return {
+          id: b.id ?? b.Id,
+          name: b.name ?? b.Name ?? '',
+          logoUrl: resolvedLogo,
+          origin: b.origin ?? b.Origin ?? '',
+        };
+      });
   } catch {
     return [];
   }

@@ -37,7 +37,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
   const [submittingConsultation, setSubmittingConsultation] = useState(false);
   const { addToCart } = useCart();
   const toastRef = useRef(null);
-  
+
   const isMotorcycle = motor?.categoryId === 8 || motor?.categoryName === 'Xe máy';
 
   const handleRequestConsultation = async () => {
@@ -100,7 +100,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
                     <View style={styles.featureIcon}>
                       <ShieldCheck color={activeColors.primary} size={20} />
                     </View>
-                    <Text style={[styles.featureTitle, { color: activeColors.text }]} numberOfLines={1}>
+                    <Text
+                      style={[styles.featureTitle, { color: activeColors.text }]}
+                      numberOfLines={1}
+                    >
                       {tech.title || 'Công nghệ'}
                     </Text>
                     <Text
@@ -141,8 +144,12 @@ export default function VehicleDetailScreen({ navigation, route }) {
                     ]}
                   >
                     <View style={styles.featureIcon}>{f.icon}</View>
-                    <Text style={[styles.featureTitle, { color: activeColors.text }]}>{f.title}</Text>
-                    <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>{f.desc}</Text>
+                    <Text style={[styles.featureTitle, { color: activeColors.text }]}>
+                      {f.title}
+                    </Text>
+                    <Text style={[styles.featureDesc, { color: activeColors.subtext }]}>
+                      {f.desc}
+                    </Text>
                   </View>
                 ))}
           </View>
@@ -151,7 +158,11 @@ export default function VehicleDetailScreen({ navigation, route }) {
           <TouchableOpacity
             style={[
               styles.financeTeaser,
-              { backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' },
+              {
+                backgroundColor: activeColors.isDark
+                  ? 'rgba(255,255,255,0.03)'
+                  : 'rgba(0,0,0,0.02)',
+              },
             ]}
             onPress={() => logic.setActiveTab('finance')}
           >
@@ -570,7 +581,11 @@ export default function VehicleDetailScreen({ navigation, route }) {
           >
             <Animated.Image
               entering={FadeIn.duration(800)}
-              source={logic.currentImage}
+              source={
+                typeof logic.currentImage === 'string'
+                  ? { uri: logic.currentImage }
+                  : logic.currentImage
+              }
               style={styles.mainImage}
               resizeMode="contain"
             />
@@ -654,32 +669,34 @@ export default function VehicleDetailScreen({ navigation, route }) {
               { id: 'gallery', label: 'Thư viện' },
               { id: 'finance', label: 'Trả góp', isMotorcycleOnly: true },
               { id: 'reviews', label: 'Đánh giá' },
-            ].filter(t => isMotorcycle || !t.isMotorcycleOnly).map((tab) => (
-              <TouchableOpacity
-                key={tab.id}
-                style={[
-                  styles.tab,
-                  logic.activeTab === tab.id && [
-                    styles.activeTab,
-                    { backgroundColor: activeColors.card },
-                  ],
-                ]}
-                onPress={() => logic.setActiveTab(tab.id)}
-              >
-                <Text
+            ]
+              .filter((t) => isMotorcycle || !t.isMotorcycleOnly)
+              .map((tab) => (
+                <TouchableOpacity
+                  key={tab.id}
                   style={[
-                    styles.tabText,
-                    { color: activeColors.subtext },
+                    styles.tab,
                     logic.activeTab === tab.id && [
-                      styles.activeTabText,
-                      { color: activeColors.primary },
+                      styles.activeTab,
+                      { backgroundColor: activeColors.card },
                     ],
                   ]}
+                  onPress={() => logic.setActiveTab(tab.id)}
                 >
-                  {tab.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={[
+                      styles.tabText,
+                      { color: activeColors.subtext },
+                      logic.activeTab === tab.id && [
+                        styles.activeTabText,
+                        { color: activeColors.primary },
+                      ],
+                    ]}
+                  >
+                    {tab.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </ScrollView>
 
           {}
@@ -706,7 +723,9 @@ export default function VehicleDetailScreen({ navigation, route }) {
               style={[
                 styles.secondaryBtn,
                 {
-                  backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                  backgroundColor: activeColors.isDark
+                    ? 'rgba(255,255,255,0.05)'
+                    : 'rgba(0,0,0,0.03)',
                 },
               ]}
               onPress={() => navigation.navigate('Booking')}
@@ -733,7 +752,9 @@ export default function VehicleDetailScreen({ navigation, route }) {
               style={[
                 styles.secondaryBtn,
                 {
-                  backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                  backgroundColor: activeColors.isDark
+                    ? 'rgba(255,255,255,0.05)'
+                    : 'rgba(0,0,0,0.03)',
                 },
               ]}
               onPress={() => {
@@ -743,7 +764,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
                 }
                 const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
                 if (!variantId) {
-                  Alert.alert('Lỗi', 'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!');
+                  Alert.alert(
+                    'Lỗi',
+                    'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!'
+                  );
                   return;
                 }
                 addToCart({
@@ -755,7 +779,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
                   price: motor?.price || motor?.referencePrice || 0,
                   image: motor?.img || motor?.imageUrl,
                 });
-                toastRef.current?.show(`Đã thêm ${motor?.name || 'sản phẩm'} vào giỏ hàng`, 'success');
+                toastRef.current?.show(
+                  `Đã thêm ${motor?.name || 'sản phẩm'} vào giỏ hàng`,
+                  'success'
+                );
               }}
             >
               <Text style={[styles.btnText, { color: activeColors.text }]}>Thêm vào giỏ</Text>
@@ -769,7 +796,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
                 }
                 const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
                 if (!variantId) {
-                  Alert.alert('Lỗi', 'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!');
+                  Alert.alert(
+                    'Lỗi',
+                    'Sản phẩm này chưa có phiên bản (variant) hợp lệ từ hệ thống!'
+                  );
                   return;
                 }
                 addToCart({

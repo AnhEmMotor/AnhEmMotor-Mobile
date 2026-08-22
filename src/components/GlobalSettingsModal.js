@@ -250,7 +250,10 @@ export default function GlobalSettingsModal() {
         <View
           style={[
             styles.modalSheet,
-            { backgroundColor: theme.colors.card, borderColor: theme.colors.border },
+            {
+              backgroundColor: theme.isDark ? theme.colors.background : theme.colors.card,
+              borderColor: theme.colors.border,
+            },
           ]}
         >
           <View
