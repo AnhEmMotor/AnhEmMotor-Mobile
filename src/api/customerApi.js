@@ -276,18 +276,19 @@ function formatPrice(value) {
   return `${numericValue.toLocaleString('vi-VN')}đ`;
 }
 
-function resolveImageUrl(rawUrl) {
+export function resolveImageUrl(rawUrl) {
   if (!rawUrl || typeof rawUrl !== 'string') return '';
   let resolvedUrl = rawUrl;
   const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
   if (!rawUrl.startsWith('http') && !rawUrl.startsWith('data:')) {
     const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
-    let normalizedUrl = rawUrl.replace(/^[\\\\\\/]+/, '');
+    let normalizedUrl = rawUrl.replace(/^[\\\/]+/, '');
     if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
       normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
     }
     resolvedUrl = `${baseUrl}/${normalizedUrl}`;
   }
+
   if (
     resolvedUrl.includes('placehold.co') &&
     !resolvedUrl.includes('/png') &&

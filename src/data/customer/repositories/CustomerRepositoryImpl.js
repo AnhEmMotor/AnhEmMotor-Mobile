@@ -4,6 +4,7 @@ import { VehicleDetail } from '../../../domain/customer/entities/VehicleDetail';
 import { ServiceHistoryEntry } from '../../../domain/customer/entities/ServiceHistoryEntry';
 import { ServiceReminder } from '../../../domain/customer/entities/ServiceReminder';
 import { API_BASE_URL } from '../../../config';
+import { resolveImageUrl } from '../../../api/customerApi';
 
 export class CustomerRepositoryImpl extends ICustomerRepository {
   constructor(customerDataSource) {
@@ -15,7 +16,7 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
     const rawVehicles = await this.customerDataSource.getVehicles();
     return rawVehicles.map((vehicle) => {
       const img = vehicle.imageUrl || vehicle.ImageUrl || vehicle.image || vehicle.Image;
-      const parsedImage = img ? (img.startsWith('http') ? img : `${API_BASE_URL}${img}`) : null;
+      const parsedImage = img ? resolveImageUrl(img) : null;
 
       return new CustomerVehicle({
         ...vehicle,
@@ -54,10 +55,22 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
       version: rawVehicle.version ?? rawVehicle.warrantyPeriod ?? rawVehicle.variantName ?? '',
       capacity: rawVehicle.capacity,
       purchaseDate: rawVehicle.purchaseDate || rawVehicle.PurchaseDate,
-      regDate: rawVehicle.purchaseDate || rawVehicle.PurchaseDate || rawVehicle.regDate || rawVehicle.RegDate,
+      regDate:
+        rawVehicle.purchaseDate ||
+        rawVehicle.PurchaseDate ||
+        rawVehicle.regDate ||
+        rawVehicle.RegDate,
       warrantyDate: rawVehicle.warrantyDate || rawVehicle.WarrantyDate,
-      warrantyFrom: rawVehicle.warrantyFrom || rawVehicle.WarrantyFrom || rawVehicle.purchaseDate || rawVehicle.PurchaseDate,
-      warrantyUntil: rawVehicle.warrantyDate || rawVehicle.WarrantyDate || rawVehicle.warrantyUntil || rawVehicle.WarrantyUntil,
+      warrantyFrom:
+        rawVehicle.warrantyFrom ||
+        rawVehicle.WarrantyFrom ||
+        rawVehicle.purchaseDate ||
+        rawVehicle.PurchaseDate,
+      warrantyUntil:
+        rawVehicle.warrantyDate ||
+        rawVehicle.WarrantyDate ||
+        rawVehicle.warrantyUntil ||
+        rawVehicle.WarrantyUntil,
       warrantyRemainingDays: rawVehicle.warrantyRemainingDays || rawVehicle.WarrantyRemainingDays,
       warrantyPeriod: rawVehicle.warrantyPeriod || rawVehicle.WarrantyPeriod,
       insuranceUntil: rawVehicle.insuranceUntil,
@@ -83,26 +96,32 @@ export class CustomerRepositoryImpl extends ICustomerRepository {
             }
           : {}),
       operatingSpecs: rawVehicle.operatingSpecs,
-      timeline: (Array.isArray(rawVehicle.timeline) ? rawVehicle.timeline : Array.isArray(rawVehicle.Timeline) ? rawVehicle.Timeline : []).map(t => ({
+      timeline: (Array.isArray(rawVehicle.timeline)
+        ? rawVehicle.timeline
+        : Array.isArray(rawVehicle.Timeline)
+          ? rawVehicle.Timeline
+          : []
+      ).map((t) => ({
         ...t,
         id: t.id ?? t.Id ?? Math.random().toString(),
         date: t.date ?? t.Date ?? '',
         type: t.type ?? t.Type ?? t.title ?? t.Title ?? 'Bảo dưỡng',
         desc: t.desc ?? t.Desc ?? t.description ?? t.Description ?? (t.items || t.Items)?.[2] ?? '',
         km: t.km ?? t.Km ?? (t.items || t.Items)?.[0]?.replace('Số km: ', '') ?? '0 km',
-        price: t.price ?? t.Price ?? t.cost ?? t.Cost ?? (t.items || t.Items)?.[1]?.replace('Chi phí: ', '') ?? '0 đ',
+        price:
+          t.price ??
+          t.Price ??
+          t.cost ??
+          t.Cost ??
+          (t.items || t.Items)?.[1]?.replace('Chi phí: ', '') ??
+          '0 đ',
       })),
       documents: rawVehicle.documents,
       image:
         rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image
-          ? (
-              rawVehicle.imageUrl ||
-              rawVehicle.ImageUrl ||
-              rawVehicle.image ||
-              rawVehicle.Image
-            ).startsWith('http')
-            ? rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image
-            : `${API_BASE_URL}${rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image}`
+          ? resolveImageUrl(
+              rawVehicle.imageUrl || rawVehicle.ImageUrl || rawVehicle.image || rawVehicle.Image
+            )
           : null,
     });
   }
