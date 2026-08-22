@@ -215,6 +215,7 @@ export default function CatalogScreen({ navigation }) {
               return (
                 <ScalePress
                   key={brand.id}
+                  onPress={() => setActiveBrandId(brand.id)}
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',

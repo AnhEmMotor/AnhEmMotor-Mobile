@@ -49,7 +49,7 @@ export function useAppointmentBooking(navigation) {
 
       const requestData = {
         fullName: formData.fullName,
-        email: formData.email,
+        email: formData.email || `${formData.phoneNumber}@no-email.local`,
         phoneNumber: formData.phoneNumber,
         subject: `Đặt lịch dịch vụ: ${formData.serviceType}`,
         category: 'Lịch hẹn',
