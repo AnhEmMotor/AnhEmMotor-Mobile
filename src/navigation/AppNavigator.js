@@ -42,6 +42,7 @@ import StatusListScreen from '../screens/Customer/Profile/StatusListScreen';
 
 import GlobalSettingsModal from '../components/GlobalSettingsModal';
 import { navigationRef } from './RootNavigation';
+import { initScreenTracking } from '../utils/analytics';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -152,6 +153,8 @@ export default function AppNavigator() {
     };
     checkAuthStatus();
   }, []);
+
+  useEffect(() => initScreenTracking(navigationRef), []);
 
   if (initialRoute === null) {
     return (
