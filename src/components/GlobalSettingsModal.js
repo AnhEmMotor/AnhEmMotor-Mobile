@@ -26,7 +26,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { resetRoot, navigationRef } from '../navigation/RootNavigation';
 import { useGlobalState } from '../context/GlobalState';
 import { useTheme } from '../theme/Theme';
-import GlassCard from './GlassCard';
 
 const STORAGE_KEY = '@AEM_Customer_Profile';
 
