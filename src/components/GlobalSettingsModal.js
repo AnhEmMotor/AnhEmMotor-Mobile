@@ -281,13 +281,12 @@ export default function GlobalSettingsModal() {
               contentContainerStyle={{ paddingBottom: 20 }}
             >
               {}
-              <GlassCard
+              <View
                 style={{
                   padding: 6,
                   borderRadius: theme.radius.lg,
                   backgroundColor: theme.colors.card,
                 }}
-                intensity={theme.isDark ? 8 : 0}
               >
                 {}
                 <View style={[styles.settingRow, { borderBottomColor: theme.colors.border }]}>
@@ -455,7 +454,7 @@ export default function GlobalSettingsModal() {
                     />
                   </TouchableOpacity>
                 </View>
-              </GlassCard>
+              </View>
 
               {}
               <View style={{ marginTop: 25 }}>
