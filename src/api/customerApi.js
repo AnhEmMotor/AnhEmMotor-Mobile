@@ -1,5 +1,7 @@
 import { apiGet, apiPost, apiPut, apiPatch, apiPostFormData, tokenService } from './httpClient';
-import { API_BASE_URL } from '../config';
+import { resolveMediaUrl as resolveImageUrl } from '../utils/imageHelpers';
+
+export { resolveImageUrl };
 
 export async function loginApi(usernameOrEmail, password) {
   await tokenService.clearTokens();
@@ -276,29 +278,6 @@ function formatPrice(value) {
   return `${numericValue.toLocaleString('vi-VN')}đ`;
 }
 
-export function resolveImageUrl(rawUrl) {
-  if (!rawUrl || typeof rawUrl !== 'string') return '';
-  let resolvedUrl = rawUrl;
-  const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-  if (!rawUrl.startsWith('http') && !rawUrl.startsWith('data:')) {
-    const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
-    let normalizedUrl = rawUrl.replace(/^[\\\/]+/, '');
-    if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
-      normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
-    }
-    resolvedUrl = `${baseUrl}/${normalizedUrl}`;
-  }
-
-  if (
-    resolvedUrl.includes('placehold.co') &&
-    !resolvedUrl.includes('/png') &&
-    !resolvedUrl.includes('/jpg')
-  ) {
-    resolvedUrl = resolvedUrl.replace('placehold.co/', 'placehold.co/png/');
-  }
-  return resolvedUrl;
-}
-
 function normalizeProductItem(item) {
   if (!item || typeof item !== 'object') return null;
 
@@ -459,28 +438,11 @@ export async function getBrandsApi() {
       ? payload
       : (payload?.items ?? payload?.Items ?? payload?.data ?? payload?.Data ?? []);
 
-    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-
     return items
       .filter((b) => !b.deletedAt && !b.DeletedAt)
       .map((b) => {
-        let rawLogo = b.logoUrl ?? b.LogoUrl ?? '';
-        let resolvedLogo = rawLogo;
-        if (rawLogo && !rawLogo.startsWith('http') && !rawLogo.startsWith('data:')) {
-          const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
-          let normalizedUrl = rawLogo.replace(/^[\\\\\\/]+/, '');
-          if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
-            normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
-          }
-          resolvedLogo = `${baseUrl}/${normalizedUrl}`;
-        }
-        if (
-          resolvedLogo.includes('placehold.co') &&
-          !resolvedLogo.includes('/png') &&
-          !resolvedLogo.includes('/jpg')
-        ) {
-          resolvedLogo = resolvedLogo.replace('placehold.co/', 'placehold.co/png/');
-        }
+        const rawLogo = b.logoUrl ?? b.LogoUrl ?? '';
+        const resolvedLogo = resolveImageUrl(rawLogo);
         return {
           id: b.id ?? b.Id,
           name: b.name ?? b.Name ?? '',

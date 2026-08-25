@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalState } from '../../../context/GlobalState';
 import { Theme } from '../../../theme/Theme';
-import { API_BASE_URL } from '../../../config';
+import { resolveMediaUrl } from '../../../utils/imageHelpers';
 import {
   ChevronLeft,
   CalendarClock,
@@ -1123,9 +1123,9 @@ export default function NotificationScreen({ navigation }) {
         ]}
       >
         {[
-          { id: 'service', label: '📰 Tin tức mới nhất' },
-          { id: 'loyalty', label: '🎟️ Đặc quyền & Ưu đãi' },
-          { id: 'feedback', label: '💬 Ý kiến đóng góp' },
+          { id: 'service', label: 'Tin tức mới nhất' },
+          { id: 'loyalty', label: 'Đặc quyền & Ưu đãi' },
+          { id: 'feedback', label: 'Ý kiến đóng góp' },
         ].map((tab) => {
           const count = logic.tabUnreadCounts[tab.id];
           const isSelected = logic.activeTab === tab.id;
@@ -1139,6 +1139,8 @@ export default function NotificationScreen({ navigation }) {
               onPress={() => logic.setActiveTab(tab.id)}
             >
               <Text
+                numberOfLines={1}
+                maxFontSizeMultiplier={1.2}
                 style={[
                   styles.tabText,
                   { color: activeColors.subtext },
@@ -1234,36 +1236,13 @@ export default function NotificationScreen({ navigation }) {
             {}
             {!logic.newsLoading &&
               logic.newsList.map((item, index) => {
-                let resolvedLogo = item.coverImageUrl;
-                if (
-                  resolvedLogo &&
-                  !resolvedLogo.startsWith('http') &&
-                  !resolvedLogo.startsWith('data:')
-                ) {
-                  const baseUrl = API_BASE_URL.endsWith('/')
-                    ? API_BASE_URL.slice(0, -1)
-                    : API_BASE_URL;
-                  const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
-                  let normalizedUrl = resolvedLogo.replace(/^[\\\\\\/]+/, '');
-                  if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
-                    normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
-                  }
-                  resolvedLogo = `${baseUrl}/${normalizedUrl}`;
-                }
-                if (
-                  resolvedLogo &&
-                  resolvedLogo.includes('placehold.co') &&
-                  !resolvedLogo.includes('/png') &&
-                  !resolvedLogo.includes('/jpg')
-                ) {
-                  resolvedLogo = resolvedLogo.replace('placehold.co/', 'placehold.co/png/');
-                }
+                const resolvedLogo = resolveMediaUrl(item.coverImageUrl);
                 return (
                   <ScalePress
                     key={item.id?.toString() || index.toString()}
                     onPress={() =>
                       navigation.navigate('NewsDetail', {
-                        newsSlug: item.urlSlug || item.slug,
+                        slug: item.urlSlug || item.slug || item.UrlSlug || item.Slug,
                         newsId: item.id,
                       })
                     }

@@ -60,8 +60,8 @@ export const styles = StyleSheet.create({
   filterBadgeTextActive: { color: Theme.staticColors.primary, fontWeight: 'bold' },
 
   tabBarScroll: {
+    minHeight: 48,
     marginBottom: verticalScale(12),
-    minHeight: 64,
     marginHorizontal: horizontalScale(8),
   },
   tabBarContent: {
@@ -70,16 +70,14 @@ export const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 6,
     alignItems: 'center',
-    minHeight: '100%',
   },
   tab: {
     flexDirection: 'row',
-    paddingHorizontal: horizontalScale(18),
-    paddingVertical: verticalScale(10),
+    paddingHorizontal: horizontalScale(14),
+    paddingVertical: 8,
     alignItems: 'center',
     borderRadius: 14,
-    marginHorizontal: 4,
-    flexShrink: 0,
+    marginHorizontal: 3,
   },
   activeTab: { backgroundColor: Theme.staticColors.card },
   tabText: {
@@ -87,16 +85,14 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: moderateScale(12),
     letterSpacing: 0.2,
-    flexShrink: 0,
   },
   activeTabText: { color: Theme.staticColors.primary },
   tabBadge: {
     backgroundColor: Theme.staticColors.primary,
     borderRadius: 10,
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 3,
     marginLeft: 8,
-    flexShrink: 0,
   },
   tabBadgeText: { color: '#fff', fontSize: moderateScale(10), fontWeight: '900' },
 
