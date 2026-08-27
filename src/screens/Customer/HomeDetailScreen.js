@@ -50,8 +50,7 @@ const MOCK_RELATED_NEWS = [
     desc: 'Lọc gió, dầu máy, nước làm mát là những thứ tuyệt đối không được quên...',
     author: 'Khánh AEM',
     date: '16/05/2026',
-    image:
-      'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070',
   },
   {
     id: 'n2',
@@ -1625,6 +1624,7 @@ const getStyles = (theme) =>
     headerTitle: {
       fontSize: moderateScale(16),
       fontWeight: 'bold',
+      color: theme.colors.text,
       flex: 1,
       textAlign: 'center',
       marginHorizontal: 15,
@@ -1660,6 +1660,7 @@ const getStyles = (theme) =>
     detailTitle: {
       fontSize: moderateScale(18),
       fontWeight: 'bold',
+      color: theme.colors.text,
       textAlign: 'center',
       lineHeight: 24,
       marginBottom: 8,
@@ -1674,6 +1675,7 @@ const getStyles = (theme) =>
     },
     bodyText: {
       fontSize: moderateScale(14),
+      color: theme.colors.text,
     },
     metaRow: {
       flexDirection: 'row',
@@ -1681,6 +1683,7 @@ const getStyles = (theme) =>
     },
     metaText: {
       fontSize: moderateScale(12),
+      color: theme.colors.subtext,
       marginLeft: 8,
     },
     actionBtn: {
@@ -1711,6 +1714,7 @@ const getStyles = (theme) =>
     },
     voucherSubtitle: {
       fontSize: moderateScale(12),
+      color: theme.colors.subtext,
       marginTop: 4,
     },
     voucherBody: {
@@ -1741,6 +1745,7 @@ const getStyles = (theme) =>
     codeVal: {
       fontSize: moderateScale(18),
       fontWeight: 'bold',
+      color: theme.colors.text,
       letterSpacing: 2,
     },
     copyBtn: {
@@ -1754,10 +1759,12 @@ const getStyles = (theme) =>
     sectionHeading: {
       fontSize: moderateScale(14),
       fontWeight: 'bold',
+      color: theme.colors.text,
       marginBottom: 10,
     },
     ruleItem: {
       fontSize: moderateScale(12),
+      color: theme.colors.subtext,
       lineHeight: 18,
       marginBottom: 6,
     },

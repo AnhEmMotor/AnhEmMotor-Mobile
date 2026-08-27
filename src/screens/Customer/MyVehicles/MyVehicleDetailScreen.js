@@ -48,40 +48,22 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
     saveVehicle,
   } = useMyVehicleDetail(bike);
 
-  const fallbackBike = {
-    id: '1',
-    name: 'Honda SH 125i',
-    plate: '60-A1 555.55',
-    vin: 'SH125-2024-VNBK888',
-    engine: 'ESP-PLUS-9999',
-    color: 'Xám Xi Măng',
-    type: 'Xe ga',
-    version: 'Cao cấp (ABS)',
-    capacity: '124.8 cc',
-    regDate: '15/05/2024',
-    status: 'Hoạt động tốt',
-    odo: '5.200 km',
-    warrantyUntil: '15/05/2027',
-    warrantyFrom: '15/05/2024',
-    insuranceUntil: '20/05/2026',
-    nextService: { odo: '6.500 km', date: '12/08/2026', items: ['Thay nhớt', 'Kiểm tra phanh'] },
-  };
-
   const formatDate = (value) => {
     if (!value) return 'N/A';
     const parsed = new Date(value);
     return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleDateString('vi-VN');
   };
 
-  const activeBike = loadedBike || bike || fallbackBike;
+  const activeBike = loadedBike || bike || {};
   const plateParts = (activeBike.plate || '').split(' ');
   const plateHeader = plateParts[0] || '---';
   const plateBody = plateParts.slice(1).join(' ') || activeBike.plate || '---';
   const warrantyLabel =
     activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
   const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
+  const brandText = (activeBike.brandName || activeBike.type || 'THÔNG TIN XE').toUpperCase();
 
-  const [nickname, setNickname] = useState('Chiến mã của Khôi 🏍️');
+  const [nickname, setNickname] = useState('Chiến mã 🏍️');
   const [isEditingNickname, setIsEditingNickname] = useState(false);
   const [tempNickname, setTempNickname] = useState(nickname);
   const [manualVisible, setManualVisible] = useState(false);
@@ -207,10 +189,10 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           {}
           <View style={styles.titleRow}>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.brandText, { color: activeColors.primary }]}>
-                HONDA MOTORCYCLE
+              <Text style={[styles.brandText, { color: activeColors.primary }]}>{brandText}</Text>
+              <Text style={[styles.nameText, { color: activeColors.text }]}>
+                {activeBike.name || 'Xe của tôi'}
               </Text>
-              <Text style={[styles.nameText, { color: activeColors.text }]}>{activeBike.name}</Text>
 
               {}
               {isEditingNickname ? (
@@ -291,13 +273,15 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
             <View style={styles.idRow}>
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Số khung</Text>
-                <Text style={[styles.idValue, { color: activeColors.text }]}>{activeBike.vin}</Text>
+                <Text style={[styles.idValue, { color: activeColors.text }]}>
+                  {activeBike.vin || '---'}
+                </Text>
               </View>
               <View style={styles.divider} />
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Số máy</Text>
                 <Text style={[styles.idValue, { color: activeColors.text }]}>
-                  {activeBike.engine}
+                  {activeBike.engine || '---'}
                 </Text>
               </View>
             </View>
@@ -315,14 +299,14 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Phiên bản</Text>
                 <Text style={[styles.idValue, { color: activeColors.text }]}>
-                  {activeBike.version}
+                  {activeBike.version || 'Tiêu chuẩn'}
                 </Text>
               </View>
               <View style={styles.divider} />
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Màu sắc</Text>
                 <Text style={[styles.idValue, { color: activeColors.text }]}>
-                  {activeBike.color}
+                  {activeBike.color || '---'}
                 </Text>
               </View>
             </View>
@@ -758,7 +742,12 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setManualVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
+          <BlurView
+            intensity={40}
+            tint="dark"
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
           <View style={[styles.modalContent, { backgroundColor: activeColors.card }]}>
             <View style={styles.modalHeader}>
               <BookOpen color={activeColors.primary} size={24} />
@@ -831,7 +820,12 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setInvoiceVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <BlurView intensity={45} tint="dark" style={StyleSheet.absoluteFill} />
+          <BlurView
+            intensity={45}
+            tint="dark"
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
           <View
             style={[
               styles.modalContent,
@@ -867,47 +861,65 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
                 </Text>
               </View>
 
-              <View style={styles.invoiceDivider} />
+              <View style={[styles.invoiceDivider, { backgroundColor: activeColors.border }]} />
 
               <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Người mua hàng:</Text>
-                <Text style={styles.invVal}>Nguyễn Văn Khôi</Text>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>
+                  Người mua hàng:
+                </Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>Nguyễn Văn Khôi</Text>
               </View>
               <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Số điện thoại:</Text>
-                <Text style={styles.invVal}>0901 234 567</Text>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>
+                  Số điện thoại:
+                </Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>0901 234 567</Text>
               </View>
               <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Địa chỉ:</Text>
-                <Text style={styles.invVal}>Thành phố Biên Hòa, Đồng Nai</Text>
-              </View>
-
-              <View style={styles.invoiceDivider} />
-
-              <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Tên xe:</Text>
-                <Text style={styles.invVal}>Honda SH 125i (Phiên bản ABS)</Text>
-              </View>
-              <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Số khung / Số máy:</Text>
-                <Text style={styles.invVal}>{activeBike.vin}</Text>
-              </View>
-              <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Màu sắc:</Text>
-                <Text style={styles.invVal}>Xám Xi Măng</Text>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>Địa chỉ:</Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>
+                  Thành phố Biên Hòa, Đồng Nai
+                </Text>
               </View>
 
-              <View style={styles.invoiceDivider} />
+              <View style={[styles.invoiceDivider, { backgroundColor: activeColors.border }]} />
 
               <View style={styles.invoiceRow}>
-                <Text style={[styles.invLabel, { fontWeight: 'bold' }]}>Thành tiền (đã thuế):</Text>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>Tên xe:</Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>
+                  Honda SH 125i (Phiên bản ABS)
+                </Text>
+              </View>
+              <View style={styles.invoiceRow}>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>
+                  Số khung / Số máy:
+                </Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>{activeBike.vin}</Text>
+              </View>
+              <View style={styles.invoiceRow}>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>Màu sắc:</Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>Xám Xi Măng</Text>
+              </View>
+
+              <View style={[styles.invoiceDivider, { backgroundColor: activeColors.border }]} />
+
+              <View style={styles.invoiceRow}>
+                <Text
+                  style={[styles.invLabel, { fontWeight: 'bold', color: activeColors.subtext }]}
+                >
+                  Thành tiền (đã thuế):
+                </Text>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#EF4444' }}>
                   89.500.000 đ
                 </Text>
               </View>
               <View style={styles.invoiceRow}>
-                <Text style={styles.invLabel}>Hình thức TT:</Text>
-                <Text style={styles.invVal}>Chuyển khoản Ngân hàng</Text>
+                <Text style={[styles.invLabel, { color: activeColors.subtext }]}>
+                  Hình thức TT:
+                </Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>
+                  Chuyển khoản Ngân hàng
+                </Text>
               </View>
 
               <View

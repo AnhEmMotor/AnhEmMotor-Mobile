@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -17,8 +16,10 @@ import { Theme, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { forgotPasswordApi, resetPasswordApi } from '../../api/customerApi';
+import Toast from '../../components/Toast';
 
 export default function ForgotPasswordScreen({ navigation }) {
+  const toastRef = useRef(null);
   const theme = useTheme();
   const colors = theme.colors;
 
@@ -35,18 +36,19 @@ export default function ForgotPasswordScreen({ navigation }) {
   const canReset = newPass && newPass === confirmPass;
 
   const handleSendOtp = async () => {
-    if (!canSendOtp) return;
+    if (!canSendOtp) {
+      toastRef.current?.show('Vui lòng nhập đúng định dạng email', 'warning');
+      return;
+    }
 
     setLoading(true);
     try {
       await forgotPasswordApi(email.trim());
-      Alert.alert(
-        'Thành công',
-        'Đã gửi yêu cầu đặt lại mật khẩu. Vui lòng kiểm tra email của bạn.'
-      );
+      toastRef.current?.show('Đã gửi yêu cầu đặt lại mật khẩu đến email', 'success');
       setStep(2);
     } catch (error) {
-      Alert.alert('Lỗi', error.message || 'Không thể gửi yêu cầu đặt lại mật khẩu.');
+      console.error('Forgot password error:', error);
+      toastRef.current?.show(error.message || 'Không thể gửi yêu cầu đặt lại mật khẩu.', 'error');
     } finally {
       setLoading(false);
     }
@@ -56,21 +58,26 @@ export default function ForgotPasswordScreen({ navigation }) {
     if (otp.length === 6) {
       setStep(3);
     } else {
-      Alert.alert('Lỗi', 'Vui lòng nhập mã OTP gồm 6 chữ số.');
+      toastRef.current?.show('Vui lòng nhập mã OTP gồm 6 chữ số.', 'warning');
     }
   };
 
   const handleResetPassword = async () => {
-    if (!canReset) return;
+    if (!canReset) {
+      toastRef.current?.show('Mật khẩu xác nhận không khớp', 'warning');
+      return;
+    }
 
     setLoading(true);
     try {
       await resetPasswordApi(email.trim(), otp.trim(), newPass);
-      Alert.alert('Thành công', 'Mật khẩu đã được cập nhật. Vui lòng đăng nhập lại.', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') },
-      ]);
+      toastRef.current?.show('Mật khẩu đã được cập nhật thành công!', 'success');
+      setTimeout(() => {
+        navigation.navigate('Login');
+      }, 1000);
     } catch (error) {
-      Alert.alert('Lỗi', error.message || 'Không thể đặt lại mật khẩu.');
+      console.error('Reset password error:', error);
+      toastRef.current?.show(error.message || 'Đặt lại mật khẩu thất bại.', 'error');
     } finally {
       setLoading(false);
     }
@@ -83,6 +90,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']
         }
         style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
       <View style={[styles.glowTop, { backgroundColor: theme.staticColors.primary + '18' }]} />
       <View style={[styles.glowBottom, { backgroundColor: theme.staticColors.secondary + '14' }]} />
@@ -99,6 +107,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               intensity={theme.isDark ? 25 : 50}
               tint={theme.isDark ? 'dark' : 'light'}
               style={StyleSheet.absoluteFill}
+              pointerEvents="none"
             />
             <View style={[styles.cardInner, { backgroundColor: colors.glassBg }]}>
               <Text style={[styles.formTitle, { color: colors.text }]}>Quên mật khẩu</Text>
@@ -296,6 +305,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Toast ref={toastRef} />
     </View>
   );
 }

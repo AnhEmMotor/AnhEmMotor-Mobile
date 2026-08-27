@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -18,8 +17,10 @@ import { Theme, useTheme } from '../../theme/Theme';
 import { horizontalScale, verticalScale, moderateScale } from '../../utils/responsive';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { registerApi } from '../../api/customerApi';
+import Toast from '../../components/Toast';
 
 export default function RegisterScreen({ navigation }) {
+  const toastRef = useRef(null);
   const theme = useTheme();
   const colors = theme.colors;
 
@@ -35,7 +36,18 @@ export default function RegisterScreen({ navigation }) {
   const canSubmit = name && email && password && password === confirmPassword && termsAccepted;
 
   const handleRegister = async () => {
-    if (!canSubmit) return;
+    if (!name.trim() || !email.trim() || !password) {
+      toastRef.current?.show('Vui lòng điền đầy đủ thông tin đăng ký', 'warning');
+      return;
+    }
+    if (password !== confirmPassword) {
+      toastRef.current?.show('Mật khẩu xác nhận không khớp', 'warning');
+      return;
+    }
+    if (!termsAccepted) {
+      toastRef.current?.show('Vui lòng đồng ý với Điều khoản dịch vụ', 'warning');
+      return;
+    }
 
     setLoading(true);
 
@@ -46,14 +58,14 @@ export default function RegisterScreen({ navigation }) {
         password,
       });
 
-      Alert.alert('Thành công', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') },
-      ]);
+      toastRef.current?.show('Đăng ký thành công! Đang chuyển hướng...', 'success');
+      setTimeout(() => {
+        navigation.navigate('Login');
+      }, 1000);
     } catch (error) {
-      Alert.alert(
-        'Lỗi đăng ký',
-        error.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.'
-      );
+      console.error('Register error:', error);
+      const msg = error.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.';
+      toastRef.current?.show(msg, 'error');
     } finally {
       setLoading(false);
     }
@@ -67,6 +79,7 @@ export default function RegisterScreen({ navigation }) {
           theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']
         }
         style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
 
       {}
@@ -86,6 +99,7 @@ export default function RegisterScreen({ navigation }) {
               intensity={theme.isDark ? 25 : 50}
               tint={theme.isDark ? 'dark' : 'light'}
               style={StyleSheet.absoluteFill}
+              pointerEvents="none"
             />
             <View style={[styles.cardInner, { backgroundColor: colors.glassBg }]}>
               <Text style={[styles.formTitle, { color: colors.text }]}>Tạo tài khoản</Text>
@@ -274,6 +288,7 @@ export default function RegisterScreen({ navigation }) {
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Toast ref={toastRef} />
     </View>
   );
 }

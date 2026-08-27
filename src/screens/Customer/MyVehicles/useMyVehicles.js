@@ -90,9 +90,17 @@ export const useMyVehicles = () => {
         throw new Error('Không nhận được dữ liệu xe sau khi đăng ký.');
       }
 
+      let detailBike = null;
+      try {
+        detailBike = await getCustomerVehicleDetailUseCase.execute(createdBike.id);
+      } catch (err) {
+        console.warn('Could not fetch immediate detail after registration:', err);
+      }
+
       const registeredBike = {
         ...createdBike,
-        name: newBike.name?.trim() || createdBike.name,
+        ...(detailBike || {}),
+        name: newBike.name?.trim() || detailBike?.name || createdBike.name,
       };
 
       const updatedBikes = [...bikes, registeredBike];

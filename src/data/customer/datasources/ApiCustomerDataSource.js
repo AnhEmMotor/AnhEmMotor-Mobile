@@ -147,48 +147,52 @@ export class ApiCustomerDataSource {
       }
     };
 
-    const mappedPurchaseHistory = purchaseHistory.map((entry) => ({
-      id: String(entry.id || entry.Id),
-      date:
-        entry.purchaseDate || entry.PurchaseDate
-          ? safeFormatDate(entry.purchaseDate || entry.PurchaseDate)
-          : '',
-      title: `Mua xe - ${entry.invoiceNumber || entry.InvoiceNumber || ''}`,
-      items: [
-        `Người bán: ${entry.sellerName || entry.SellerName || 'AnhEmMotor Showroom'}`,
-        `Số tiền: ${(entry.amount || entry.Amount)?.toLocaleString?.() ?? (entry.amount || entry.Amount)} đ`,
-        entry.notes || entry.Notes || 'Không có ghi chú',
-      ],
-      cost:
-        entry.amount || entry.Amount ? `${(entry.amount || entry.Amount).toLocaleString()} đ` : '',
-      technician: entry.sellerName || entry.SellerName,
-      status: 'completed',
-    }));
+    const mappedPurchaseHistory = purchaseHistory.map((entry) => {
+      const rawDate = entry.purchaseDate || entry.PurchaseDate || '';
+      return {
+        id: String(entry.id || entry.Id || Math.random()),
+        rawDate,
+        date: rawDate ? safeFormatDate(rawDate) : '',
+        title: `Mua xe - ${entry.invoiceNumber || entry.InvoiceNumber || ''}`,
+        items: [
+          `Người bán: ${entry.sellerName || entry.SellerName || 'AnhEmMotor Showroom'}`,
+          `Số tiền: ${(entry.amount || entry.Amount)?.toLocaleString?.() ?? (entry.amount || entry.Amount)} đ`,
+          entry.notes || entry.Notes || 'Không có ghi chú',
+        ],
+        cost:
+          entry.amount || entry.Amount
+            ? `${(entry.amount || entry.Amount).toLocaleString()} đ`
+            : '',
+        technician: entry.sellerName || entry.SellerName || 'Kỹ thuật viên',
+        status: 'completed',
+      };
+    });
 
-    const mappedWarrantyHistory = warrantyHistory.map((entry) => ({
-      id: String(entry.id || entry.Id),
-      date:
-        entry.startDate || entry.StartDate
-          ? safeFormatDate(entry.startDate || entry.StartDate)
-          : '',
-      title: `Bảo dưỡng - ${entry.providerName || entry.ProviderName || ''}`,
-      items: [
-        `Mã phiếu: ${entry.policyNumber || entry.PolicyNumber || ''}`,
-        entry.description || entry.Description || 'Không có mô tả',
-        `Chi phí: ${(entry.coverageAmount || entry.CoverageAmount)?.toLocaleString?.() ?? (entry.coverageAmount || entry.CoverageAmount)} đ`,
-      ],
-      cost:
-        entry.coverageAmount || entry.CoverageAmount
-          ? `${(entry.coverageAmount || entry.CoverageAmount).toLocaleString()} đ`
-          : '',
-      technician: entry.providerName || entry.ProviderName,
-      status: entry.status || entry.Status || 'completed',
-    }));
+    const mappedWarrantyHistory = warrantyHistory.map((entry) => {
+      const rawDate = entry.startDate || entry.StartDate || '';
+      return {
+        id: String(entry.id || entry.Id || Math.random()),
+        rawDate,
+        date: rawDate ? safeFormatDate(rawDate) : '',
+        title: `Bảo dưỡng - ${entry.providerName || entry.ProviderName || ''}`,
+        items: [
+          `Mã phiếu: ${entry.policyNumber || entry.PolicyNumber || ''}`,
+          entry.description || entry.Description || 'Không có mô tả',
+          `Chi phí: ${(entry.coverageAmount || entry.CoverageAmount)?.toLocaleString?.() ?? (entry.coverageAmount || entry.CoverageAmount)} đ`,
+        ],
+        cost:
+          entry.coverageAmount || entry.CoverageAmount
+            ? `${(entry.coverageAmount || entry.CoverageAmount).toLocaleString()} đ`
+            : '',
+        technician: entry.providerName || entry.ProviderName || 'Kỹ thuật viên',
+        status: entry.status || entry.Status || 'completed',
+      };
+    });
 
     return [...mappedPurchaseHistory, ...mappedWarrantyHistory].sort((a, b) => {
-      const aDate = new Date(a.date).getTime();
-      const bDate = new Date(b.date).getTime();
-      return bDate - aDate;
+      const aDate = a.rawDate ? new Date(a.rawDate).getTime() : 0;
+      const bDate = b.rawDate ? new Date(b.rawDate).getTime() : 0;
+      return (isNaN(bDate) ? 0 : bDate) - (isNaN(aDate) ? 0 : aDate);
     });
   }
 
