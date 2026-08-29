@@ -448,7 +448,11 @@ export default function VehicleDetailScreen({ navigation, route }) {
         </View>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ flexGrow: 0, marginBottom: 20 }}
+      >
         {['Tất cả (128)', 'Có ảnh (45)', '5 ★ (112)', 'Dịch vụ (18)'].map((f, i) => (
           <View
             key={i}

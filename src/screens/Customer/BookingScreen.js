@@ -204,7 +204,7 @@ export default function BookingScreen({ navigation, route }) {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ marginBottom: theme.spacing.lg }}
+        style={{ flexGrow: 0, marginBottom: theme.spacing.lg }}
       >
         {upcomingDates.map((d) => (
           <ScalePress

@@ -53,6 +53,7 @@ export default function ProfileScreen({ navigation, route }) {
     isLoading,
     isSaving,
     activeField,
+    setActiveField,
     tempData,
     setTempData,
     passwordForm,
@@ -508,417 +509,154 @@ export default function ProfileScreen({ navigation, route }) {
       </Modal>
 
       {}
-      <CustomBottomSheet
-        ref={bottomSheetRef}
-        apiResponse={null}
-        loading={false}
-        activeField={activeField}
-      >
-        {isSaving && (
-          <View
-            style={{
-              ...StyleSheet.absoluteFillObject,
-              backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 20,
-            }}
-          >
-            <ActivityIndicator size="large" color={activeColors.primary} />
-          </View>
-        )}
-
-        {activeField === 'profile' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>
-              Thông tin cá nhân
-            </Text>
-            <TextInput
-              value={tempData?.name || ''}
-              onChangeText={(t) => setTempData((p) => ({ ...p, name: t }))}
-              placeholder="Họ và tên"
-              placeholderTextColor={activeColors.subtext}
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <TextInput
-              value={tempData?.email || ''}
-              onChangeText={(t) => setTempData((p) => ({ ...p, email: t }))}
-              placeholder="Email"
-              placeholderTextColor={activeColors.subtext}
-              keyboardType="email-address"
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <Text
+      {activeField && (
+        <CustomBottomSheet
+          ref={bottomSheetRef}
+          apiResponse={null}
+          loading={false}
+          activeField={activeField}
+          autoOpen
+          onClose={() => setActiveField(null)}
+        >
+          {isSaving && (
+            <View
               style={{
-                color: activeColors.subtext,
-                fontSize: 12,
-                fontWeight: '600',
-                marginTop: 10,
+                ...StyleSheet.absoluteFillObject,
+                backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 20,
               }}
             >
-              Địa chỉ
-            </Text>
-            {tempData?.province || tempData?.district || tempData?.ward ? (
-              <Text
-                style={{
-                  color: activeColors.text,
-                  fontSize: 14,
-                  fontWeight: '600',
-                  marginBottom: 8,
-                }}
-              >
-                {[tempData.province, tempData.district, tempData.ward].filter(Boolean).join(', ')}
-              </Text>
-            ) : (
-              <Text style={{ color: activeColors.subtext, fontSize: 13, marginBottom: 8 }}>
-                Chưa chọn địa chỉ — bấm để chọn
-              </Text>
-            )}
-            <View style={{ flexDirection: 'row', gap: 8 }}>
-              {['province', 'district', 'ward'].map((field) => (
-                <TouchableOpacity
-                  key={field}
-                  style={[
-                    styles.chip,
-                    { borderColor: activeColors.border, backgroundColor: activeColors.cardBg },
-                  ]}
-                  onPress={() => setActiveRegionList(field)}
-                >
-                  <Text style={{ color: activeColors.text, fontSize: 12 }}>
-                    {field === 'province'
-                      ? 'Tỉnh/TP'
-                      : field === 'district'
-                        ? 'Quận/Huyện'
-                        : 'Phường/Xã'}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              <ActivityIndicator size="large" color={activeColors.primary} />
             </View>
-            {regionList.length > 0 && (
-              <ScrollView style={{ maxHeight: 160, marginTop: 6 }} nestedScrollEnabled>
-                {regionList.map((item) => {
-                  const cur =
-                    activeRegionList === 'provinces'
-                      ? tempData?.province
-                      : activeRegionList === 'districts'
-                        ? tempData?.district
-                        : tempData?.ward;
-                  return (
-                    <TouchableOpacity
-                      key={item}
-                      onPress={() => handleRegionSelect(item)}
-                      style={{
-                        paddingVertical: 10,
-                        paddingHorizontal: 10,
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'rgba(255,255,255,0.04)',
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: cur === item ? activeColors.primary : activeColors.text,
-                          fontSize: 14,
-                        }}
-                      >
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            )}
-            <Text
-              style={{
-                color: activeColors.subtext,
-                fontSize: 12,
-                fontWeight: '600',
-                marginTop: 10,
-              }}
-            >
-              Giấy phép lái xe
-            </Text>
-            <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
-              {['A1', 'A2', 'B1', 'B2'].map((tier) => (
-                <TouchableOpacity
-                  key={tier}
-                  onPress={() => setTempData((p) => ({ ...p, licenseTier: tier }))}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor:
-                        tempData?.licenseTier === tier ? activeColors.primary : activeColors.cardBg,
-                      borderColor: activeColors.border,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: tempData?.licenseTier === tier ? '#fff' : activeColors.text,
-                      fontSize: 13,
-                      fontWeight: '600',
-                    }}
-                  >
-                    {tier}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
+          )}
 
-        {activeField === 'address' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Địa chỉ</Text>
-            {['province', 'district', 'ward'].map((field, idx) => (
-              <TouchableOpacity
-                key={field}
-                onPress={() => setActiveRegionList(field)}
+          {activeField === 'profile' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>
+                Thông tin cá nhân
+              </Text>
+              <TextInput
+                value={tempData?.name || ''}
+                onChangeText={(t) => setTempData((p) => ({ ...p, name: t }))}
+                placeholder="Họ và tên"
+                placeholderTextColor={activeColors.subtext}
                 style={[
                   styles.bottomInput,
-                  {
-                    justifyContent: 'center',
-                    borderColor: activeColors.border,
-                    height: 42,
-                    marginTop: idx === 0 ? 0 : 8,
-                  },
+                  { color: activeColors.text, borderColor: activeColors.border },
                 ]}
+              />
+              <TextInput
+                value={tempData?.email || ''}
+                onChangeText={(t) => setTempData((p) => ({ ...p, email: t }))}
+                placeholder="Email"
+                placeholderTextColor={activeColors.subtext}
+                keyboardType="email-address"
+                style={[
+                  styles.bottomInput,
+                  { color: activeColors.text, borderColor: activeColors.border },
+                ]}
+              />
+              <Text
+                style={{
+                  color: activeColors.subtext,
+                  fontSize: 12,
+                  fontWeight: '600',
+                  marginTop: 10,
+                }}
               >
+                Địa chỉ
+              </Text>
+              {tempData?.province || tempData?.district || tempData?.ward ? (
                 <Text
-                  style={{ color: regionVal(field, '') ? activeColors.text : activeColors.subtext }}
+                  style={{
+                    color: activeColors.text,
+                    fontSize: 14,
+                    fontWeight: '600',
+                    marginBottom: 8,
+                  }}
                 >
-                  {regionVal(field, '') || ['Tỉnh/thành', 'Quận/huyện', 'Phường/xã'][idx]}
+                  {[tempData.province, tempData.district, tempData.ward].filter(Boolean).join(', ')}
                 </Text>
-                <ChevronRight
-                  color={activeColors.subtext}
-                  size={18}
-                  style={{ position: 'absolute', right: 12 }}
-                />
-              </TouchableOpacity>
-            ))}
-            {regionList.length > 0 && (
-              <ScrollView style={{ maxHeight: 160, marginTop: 4 }} nestedScrollEnabled>
-                {regionList.map((item) => {
-                  const cur =
-                    activeRegionList === 'provinces'
-                      ? tempData?.province
-                      : activeRegionList === 'districts'
-                        ? tempData?.district
-                        : tempData?.ward;
-                  return (
-                    <TouchableOpacity
-                      key={item}
-                      onPress={() => handleRegionSelect(item)}
-                      style={{
-                        paddingVertical: 10,
-                        paddingHorizontal: 10,
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'rgba(255,255,255,0.04)',
-                      }}
-                    >
-                      <Text
+              ) : (
+                <Text style={{ color: activeColors.subtext, fontSize: 13, marginBottom: 8 }}>
+                  Chưa chọn địa chỉ — bấm để chọn
+                </Text>
+              )}
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                {['province', 'district', 'ward'].map((field) => (
+                  <TouchableOpacity
+                    key={field}
+                    style={[
+                      styles.chip,
+                      { borderColor: activeColors.border, backgroundColor: activeColors.cardBg },
+                    ]}
+                    onPress={() => setActiveRegionList(field)}
+                  >
+                    <Text style={{ color: activeColors.text, fontSize: 12 }}>
+                      {field === 'province'
+                        ? 'Tỉnh/TP'
+                        : field === 'district'
+                          ? 'Quận/Huyện'
+                          : 'Phường/Xã'}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {regionList.length > 0 && (
+                <ScrollView style={{ maxHeight: 160, marginTop: 6 }} nestedScrollEnabled>
+                  {regionList.map((item) => {
+                    const cur =
+                      activeRegionList === 'provinces'
+                        ? tempData?.province
+                        : activeRegionList === 'districts'
+                          ? tempData?.district
+                          : tempData?.ward;
+                    return (
+                      <TouchableOpacity
+                        key={item}
+                        onPress={() => handleRegionSelect(item)}
                         style={{
-                          color: cur === item ? activeColors.primary : activeColors.text,
-                          fontSize: 14,
+                          paddingVertical: 10,
+                          paddingHorizontal: 10,
+                          borderBottomWidth: 1,
+                          borderBottomColor: 'rgba(255,255,255,0.04)',
                         }}
                       >
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            )}
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
+                        <Text
+                          style={{
+                            color: cur === item ? activeColors.primary : activeColors.text,
+                            fontSize: 14,
+                          }}
+                        >
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              )}
+              <Text
+                style={{
+                  color: activeColors.subtext,
+                  fontSize: 12,
+                  fontWeight: '600',
+                  marginTop: 10,
+                }}
               >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
-
-        {activeField === 'license' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Giấy phép lái xe</Text>
-            <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
-              {['A1', 'A2', 'B1', 'B2'].map((tier) => (
-                <TouchableOpacity
-                  key={tier}
-                  onPress={() => setTempData((p) => ({ ...p, licenseTier: tier }))}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor:
-                        tempData?.licenseTier === tier ? activeColors.primary : activeColors.cardBg,
-                      borderColor: activeColors.border,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: tempData?.licenseTier === tier ? '#fff' : activeColors.text,
-                      fontSize: 13,
-                      fontWeight: '600',
-                    }}
-                  >
-                    {tier}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
-
-        {activeField === 'name' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Tên hiển thị</Text>
-            <TextInput
-              value={tempData?.name || ''}
-              onChangeText={(t) => setTempData((p) => ({ ...p, name: t }))}
-              placeholder="Nhập tên"
-              placeholderTextColor={activeColors.subtext}
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
-
-        {activeField === 'email' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Email</Text>
-            <TextInput
-              value={tempData?.email || ''}
-              onChangeText={(t) => setTempData((p) => ({ ...p, email: t }))}
-              placeholder="Nhập email"
-              placeholderTextColor={activeColors.subtext}
-              keyboardType="email-address"
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
-
-        {activeField === 'password' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Đổi mật khẩu</Text>
-            <TextInput
-              value={passwordForm.oldPassword}
-              onChangeText={(t) => setPasswordForm((p) => ({ ...p, oldPassword: t }))}
-              placeholder="Mật khẩu cũ"
-              placeholderTextColor={activeColors.subtext}
-              secureTextEntry
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <TextInput
-              value={passwordForm.newPassword}
-              onChangeText={(t) => setPasswordForm((p) => ({ ...p, newPassword: t }))}
-              placeholder="Mật khẩu mới"
-              placeholderTextColor={activeColors.subtext}
-              secureTextEntry
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <TextInput
-              value={passwordForm.confirmPassword}
-              onChangeText={(t) => setPasswordForm((p) => ({ ...p, confirmPassword: t }))}
-              placeholder="Xác nhận mật khẩu"
-              placeholderTextColor={activeColors.subtext}
-              secureTextEntry
-              style={[
-                styles.bottomInput,
-                { color: activeColors.text, borderColor: activeColors.border },
-              ]}
-            />
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Đổi mật khẩu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
-
-        {activeField === 'language' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Ngôn ngữ</Text>
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              {[
-                { c: 'vi', l: '🇻🇳 Tiếng Việt' },
-                { c: 'en', l: '🇬🇧 English' },
-              ].map((lang) => (
-                <TouchableOpacity
-                  key={lang.c}
-                  onPress={() => setTempData((p) => ({ ...p, language: lang.c }))}
-                >
-                  <View
+                Giấy phép lái xe
+              </Text>
+              <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
+                {['A1', 'A2', 'B1', 'B2'].map((tier) => (
+                  <TouchableOpacity
+                    key={tier}
+                    onPress={() => setTempData((p) => ({ ...p, licenseTier: tier }))}
                     style={[
                       styles.chip,
                       {
                         backgroundColor:
-                          tempData?.language === lang.c
+                          tempData?.licenseTier === tier
                             ? activeColors.primary
                             : activeColors.cardBg,
                         borderColor: activeColors.border,
@@ -927,79 +665,354 @@ export default function ProfileScreen({ navigation, route }) {
                   >
                     <Text
                       style={{
-                        color: tempData?.language === lang.c ? '#fff' : activeColors.text,
+                        color: tempData?.licenseTier === tier ? '#fff' : activeColors.text,
                         fontSize: 13,
                         fontWeight: '600',
                       }}
                     >
-                      {lang.l}
+                      {tier}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'address' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Địa chỉ</Text>
+              {['province', 'district', 'ward'].map((field, idx) => (
+                <TouchableOpacity
+                  key={field}
+                  onPress={() => setActiveRegionList(field)}
+                  style={[
+                    styles.bottomInput,
+                    {
+                      justifyContent: 'center',
+                      borderColor: activeColors.border,
+                      height: 42,
+                      marginTop: idx === 0 ? 0 : 8,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: regionVal(field, '') ? activeColors.text : activeColors.subtext,
+                    }}
+                  >
+                    {regionVal(field, '') || ['Tỉnh/thành', 'Quận/huyện', 'Phường/xã'][idx]}
+                  </Text>
+                  <ChevronRight
+                    color={activeColors.subtext}
+                    size={18}
+                    style={{ position: 'absolute', right: 12 }}
+                  />
                 </TouchableOpacity>
               ))}
-            </View>
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
-              </View>
-            </ScalePress>
-          </View>
-        )}
-
-        {activeField === 'theme' && (
-          <View>
-            <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Giao diện</Text>
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              {[
-                { c: 'light', l: '☀️ Sáng' },
-                { c: 'dark', l: '🌙 Tối' },
-                { c: 'system', l: '💻 Tự động' },
-              ].map((th) => (
-                <TouchableOpacity
-                  key={th.c}
-                  onPress={() => setTempData((p) => ({ ...p, theme: th.c }))}
+              {regionList.length > 0 && (
+                <ScrollView style={{ maxHeight: 160, marginTop: 4 }} nestedScrollEnabled>
+                  {regionList.map((item) => {
+                    const cur =
+                      activeRegionList === 'provinces'
+                        ? tempData?.province
+                        : activeRegionList === 'districts'
+                          ? tempData?.district
+                          : tempData?.ward;
+                    return (
+                      <TouchableOpacity
+                        key={item}
+                        onPress={() => handleRegionSelect(item)}
+                        style={{
+                          paddingVertical: 10,
+                          paddingHorizontal: 10,
+                          borderBottomWidth: 1,
+                          borderBottomColor: 'rgba(255,255,255,0.04)',
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: cur === item ? activeColors.primary : activeColors.text,
+                            fontSize: 14,
+                          }}
+                        >
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              )}
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
                 >
-                  <View
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'license' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>
+                Giấy phép lái xe
+              </Text>
+              <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
+                {['A1', 'A2', 'B1', 'B2'].map((tier) => (
+                  <TouchableOpacity
+                    key={tier}
+                    onPress={() => setTempData((p) => ({ ...p, licenseTier: tier }))}
                     style={[
                       styles.chip,
                       {
                         backgroundColor:
-                          tempData?.theme === th.c ? activeColors.primary : activeColors.cardBg,
+                          tempData?.licenseTier === tier
+                            ? activeColors.primary
+                            : activeColors.cardBg,
                         borderColor: activeColors.border,
                       },
                     ]}
                   >
                     <Text
                       style={{
-                        color: tempData?.theme === th.c ? '#fff' : activeColors.text,
+                        color: tempData?.licenseTier === tier ? '#fff' : activeColors.text,
                         fontSize: 13,
                         fontWeight: '600',
                       }}
                     >
-                      {th.l}
+                      {tier}
                     </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <ScalePress onPress={handleSaveField}>
-              <View
-                style={[
-                  styles.bottomSaveBtn,
-                  { backgroundColor: activeColors.primary, marginTop: 18 },
-                ]}
-              >
-                <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-            </ScalePress>
-          </View>
-        )}
-      </CustomBottomSheet>
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'name' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Tên hiển thị</Text>
+              <TextInput
+                value={tempData?.name || ''}
+                onChangeText={(t) => setTempData((p) => ({ ...p, name: t }))}
+                placeholder="Nhập tên"
+                placeholderTextColor={activeColors.subtext}
+                style={[
+                  styles.bottomInput,
+                  { color: activeColors.text, borderColor: activeColors.border },
+                ]}
+              />
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'email' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Email</Text>
+              <TextInput
+                value={tempData?.email || ''}
+                onChangeText={(t) => setTempData((p) => ({ ...p, email: t }))}
+                placeholder="Nhập email"
+                placeholderTextColor={activeColors.subtext}
+                keyboardType="email-address"
+                style={[
+                  styles.bottomInput,
+                  { color: activeColors.text, borderColor: activeColors.border },
+                ]}
+              />
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'password' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Đổi mật khẩu</Text>
+              <TextInput
+                value={passwordForm.oldPassword}
+                onChangeText={(t) => setPasswordForm((p) => ({ ...p, oldPassword: t }))}
+                placeholder="Mật khẩu cũ"
+                placeholderTextColor={activeColors.subtext}
+                secureTextEntry
+                style={[
+                  styles.bottomInput,
+                  { color: activeColors.text, borderColor: activeColors.border },
+                ]}
+              />
+              <TextInput
+                value={passwordForm.newPassword}
+                onChangeText={(t) => setPasswordForm((p) => ({ ...p, newPassword: t }))}
+                placeholder="Mật khẩu mới"
+                placeholderTextColor={activeColors.subtext}
+                secureTextEntry
+                style={[
+                  styles.bottomInput,
+                  { color: activeColors.text, borderColor: activeColors.border },
+                ]}
+              />
+              <TextInput
+                value={passwordForm.confirmPassword}
+                onChangeText={(t) => setPasswordForm((p) => ({ ...p, confirmPassword: t }))}
+                placeholder="Xác nhận mật khẩu"
+                placeholderTextColor={activeColors.subtext}
+                secureTextEntry
+                style={[
+                  styles.bottomInput,
+                  { color: activeColors.text, borderColor: activeColors.border },
+                ]}
+              />
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Đổi mật khẩu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'language' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Ngôn ngữ</Text>
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                {[
+                  { c: 'vi', l: '🇻🇳 Tiếng Việt' },
+                  { c: 'en', l: '🇬🇧 English' },
+                ].map((lang) => (
+                  <TouchableOpacity
+                    key={lang.c}
+                    onPress={() => setTempData((p) => ({ ...p, language: lang.c }))}
+                  >
+                    <View
+                      style={[
+                        styles.chip,
+                        {
+                          backgroundColor:
+                            tempData?.language === lang.c
+                              ? activeColors.primary
+                              : activeColors.cardBg,
+                          borderColor: activeColors.border,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          color: tempData?.language === lang.c ? '#fff' : activeColors.text,
+                          fontSize: 13,
+                          fontWeight: '600',
+                        }}
+                      >
+                        {lang.l}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+
+          {activeField === 'theme' && (
+            <View>
+              <Text style={[styles.bottomTitle, { color: activeColors.text }]}>Giao diện</Text>
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                {[
+                  { c: 'light', l: '☀️ Sáng' },
+                  { c: 'dark', l: '🌙 Tối' },
+                  { c: 'system', l: '💻 Tự động' },
+                ].map((th) => (
+                  <TouchableOpacity
+                    key={th.c}
+                    onPress={() => setTempData((p) => ({ ...p, theme: th.c }))}
+                  >
+                    <View
+                      style={[
+                        styles.chip,
+                        {
+                          backgroundColor:
+                            tempData?.theme === th.c ? activeColors.primary : activeColors.cardBg,
+                          borderColor: activeColors.border,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          color: tempData?.theme === th.c ? '#fff' : activeColors.text,
+                          fontSize: 13,
+                          fontWeight: '600',
+                        }}
+                      >
+                        {th.l}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <ScalePress onPress={handleSaveField}>
+                <View
+                  style={[
+                    styles.bottomSaveBtn,
+                    { backgroundColor: activeColors.primary, marginTop: 18 },
+                  ]}
+                >
+                  <Text style={styles.bottomSaveBtnText}>Lưu</Text>
+                </View>
+              </ScalePress>
+            </View>
+          )}
+        </CustomBottomSheet>
+      )}
     </SafeAreaView>
   );
 }

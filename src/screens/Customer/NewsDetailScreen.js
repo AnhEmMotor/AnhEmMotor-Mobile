@@ -16,7 +16,7 @@ import RenderHTML from 'react-native-render-html';
 import { getNewsBySlug } from '../../api/newsApi';
 import { Theme } from '../../theme/Theme';
 import { useGlobalState } from '../../context/GlobalState';
-import { getFullImageUrl } from '../../utils/imageHelpers';
+import { resolveMediaUrl, processHtmlImages } from '../../utils/imageHelpers';
 
 export default function NewsDetailScreen({ route, navigation }) {
   const params = route.params ?? {};
@@ -106,21 +106,16 @@ export default function NewsDetailScreen({ route, navigation }) {
     a: { color: Theme.staticColors.primary, textDecorationLine: 'underline' },
   };
 
-  const coverImage = getFullImageUrl(news.coverImageUrl, { basePath: 'uploads/' });
+  const DEFAULT_NEWS_IMAGE =
+    'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
+
+  const coverImage = news.coverImageUrl
+    ? resolveMediaUrl(news.coverImageUrl) || DEFAULT_NEWS_IMAGE
+    : DEFAULT_NEWS_IMAGE;
 
   const getProcessedHtml = () => {
     if (!news || !news.content) return '';
-    let html = news.content;
-    // Fix absolute URLs that are missing uploads/
-    html = html.replace(
-      /src="(http:\/\/[^"]+?\/)articles\/covers\/([^"]+)"/g,
-      'src="$1uploads/articles/covers/$2"'
-    );
-    // Fix relative URLs
-    html = html.replace(/src="(?!\w+:\/\/)([^"]+)"/g, (match, url) => {
-      return `src="${getFullImageUrl(url, { basePath: 'uploads/' })}"`;
-    });
-    return html;
+    return processHtmlImages(news.content);
   };
 
   return (

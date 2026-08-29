@@ -136,7 +136,7 @@ export default function CatalogScreen({ navigation }) {
           >
             Danh mục
           </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}>
             {CATEGORIES.map((cat) => (
               <ScalePress
                 key={cat.id ?? 'all'}
@@ -178,7 +178,7 @@ export default function CatalogScreen({ navigation }) {
           >
             Thương hiệu
           </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}>
             <ScalePress
               style={{
                 paddingHorizontal: moderateScale(14),

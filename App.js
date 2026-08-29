@@ -17,6 +17,8 @@ LogBox.ignoreLogs([
   'An error occurred in the <NativeSafeAreaProvider> component',
   'An error occurred in the <ModalPortal> component',
   '[Reanimated] Failed to create CSS stylesheet',
+  '[Reanimated] Reduced motion setting is enabled',
+  'InteractionManager has been deprecated',
   'An iframe which has both allow-scripts and allow-same-origin',
 ]);
 

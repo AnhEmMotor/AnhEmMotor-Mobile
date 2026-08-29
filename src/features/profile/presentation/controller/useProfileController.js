@@ -260,7 +260,6 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       }
 
       bottomSheetRef.current?.hide();
-      setActiveField(null);
     } catch (error) {
       Alert.alert('Lỗi', error.message || 'Không thể lưu thông tin');
     } finally {

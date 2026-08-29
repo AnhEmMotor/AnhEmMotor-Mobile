@@ -60,6 +60,7 @@ export const styles = StyleSheet.create({
   filterBadgeTextActive: { color: Theme.staticColors.primary, fontWeight: 'bold' },
 
   tabBarScroll: {
+    flexGrow: 0,
     minHeight: 48,
     marginBottom: verticalScale(12),
     marginHorizontal: horizontalScale(8),
