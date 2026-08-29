@@ -40,6 +40,7 @@ import { useActiveColors, Theme, useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
 import { verticalScale, moderateScale } from '../../utils/responsive';
+import { resolveMediaUrl, processHtmlImages } from '../../utils/imageHelpers';
 
 const { width } = Dimensions.get('window');
 
@@ -84,8 +85,20 @@ export default function HomeDetailScreen({ route, navigation }) {
         try {
           const { getNewsDetailApi } = require('../../api/customerApi');
           const detail = await getNewsDetailApi(activeItem.slug);
-          if (detail && detail.content) {
-            setNewsContent(detail.content);
+          if (detail) {
+            if (detail.content) {
+              setNewsContent(processHtmlImages(detail.content));
+            }
+            if (
+              detail.coverImageUrl &&
+              (!activeItem.image || activeItem.image.includes('unsplash'))
+            ) {
+              setActiveItem((prev) => ({
+                ...prev,
+                image: resolveMediaUrl(detail.coverImageUrl),
+                coverImageUrl: detail.coverImageUrl,
+              }));
+            }
           }
         } catch (error) {
           console.error('Lỗi lấy chi tiết tin tức:', error);
@@ -93,7 +106,7 @@ export default function HomeDetailScreen({ route, navigation }) {
       };
       fetchNewsDetail();
     }
-  }, [activeType, activeItem]);
+  }, [activeType, activeItem?.slug, activeItem?.image]);
 
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('18/05/2026');
@@ -980,9 +993,17 @@ export default function HomeDetailScreen({ route, navigation }) {
         >
           {' '}
           {}
-          {!!activeItem.image && (
+          {!!(activeItem.image || activeItem.coverImageUrl) && (
             <View style={styles.heroContainer}>
-              <Image source={{ uri: activeItem.image }} style={styles.heroImage} />
+              <Image
+                source={{
+                  uri:
+                    resolveMediaUrl(activeItem.image || activeItem.coverImageUrl) ||
+                    'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070',
+                }}
+                style={styles.heroImage}
+                resizeMode="cover"
+              />
             </View>
           )}
           <View style={styles.detailsBody}>
@@ -1324,6 +1345,7 @@ export default function HomeDetailScreen({ route, navigation }) {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                style={{ flexGrow: 0 }}
                 contentContainerStyle={styles.relatedCarousel}
               >
                 {MOCK_RELATED_NEWS.map((item) => (

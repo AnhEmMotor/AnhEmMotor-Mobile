@@ -111,7 +111,7 @@ export const styles = StyleSheet.create({
   rewardText: { color: '#fff', fontSize: moderateScale(13), marginLeft: 10, flex: 1 },
   rewardHighlight: { color: Theme.staticColors.primary, fontWeight: 'bold' },
 
-  tabBarScroll: { marginBottom: verticalScale(20) },
+  tabBarScroll: { flexGrow: 0, marginBottom: verticalScale(20) },
   tabBarContent: {
     flexDirection: 'row',
     backgroundColor: 'rgba(255,255,255,0.03)',

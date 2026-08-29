@@ -193,7 +193,7 @@ export default function AIChatScreen({ navigation }) {
           { paddingHorizontal: theme.spacing.md, marginBottom: theme.spacing.sm },
         ]}
       >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}>
           {FAQ_SUGGESTIONS.map((q, i) => (
             <ScalePress
               key={i}

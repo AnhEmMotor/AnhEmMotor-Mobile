@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useGlobalState } from '../../../context/GlobalState';
 import { ProfileLocalDataSource } from '../../../features/profile/data/datasources/ProfileLocalDataSource';
-import { getFullImageUrl } from '../../../utils/imageHelpers';
+import { resolveMediaUrl } from '../../../utils/imageHelpers';
 
 export const useHome = () => {
   const { unreadNotifications } = useGlobalState();
@@ -63,9 +63,12 @@ export const useHome = () => {
         const { getLatestNewsApi } = require('../../../api/customerApi');
         const news = await getLatestNewsApi();
 
+        const DEFAULT_NEWS_IMAGE =
+          'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
+
         const getImageUrl = (url) => {
-          if (!url) return 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
-          return getFullImageUrl(url, { basePath: 'uploads/' });
+          if (!url) return DEFAULT_NEWS_IMAGE;
+          return resolveMediaUrl(url) || DEFAULT_NEWS_IMAGE;
         };
 
         const formattedNews = (news || []).map((item) => ({
@@ -80,6 +83,7 @@ export const useHome = () => {
             item.Content ||
             'Tin tức nóng hổi luôn được cập nhật.',
           image: getImageUrl(item.coverImageUrl || item.CoverImageUrl),
+          coverImageUrl: item.coverImageUrl || item.CoverImageUrl || '',
           author:
             item.authorName || item.AuthorName || item.author || item.Author || 'AE Motor News',
           date:
