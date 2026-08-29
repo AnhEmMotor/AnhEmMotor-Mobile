@@ -19,18 +19,14 @@ export const getFullImageUrl = (rawUrl, { basePath } = {}) => {
   if (/^(data:|blob:)/i.test(url)) return url;
 
   if (/^https?:\/\//i.test(url)) {
-    let resolved = url;
-    if (resolved.includes('/articles/covers/') && !resolved.includes('/uploads/articles/covers/')) {
-      resolved = resolved.replace('/articles/covers/', '/uploads/articles/covers/');
-    }
-    return resolved.replace(LOOPBACK_BACKEND_PATTERN, () => cleanBaseUrl());
+    return ensurePngPlaceholder(url.replace(LOOPBACK_BACKEND_PATTERN, () => cleanBaseUrl()));
   }
 
   let cleanUrl = url.replace(/^\/+/, '');
-  if (basePath && !cleanUrl.startsWith(basePath)) {
+  if (basePath && !cleanUrl.startsWith(basePath) && !cleanUrl.startsWith('api/')) {
     cleanUrl = `${basePath}${cleanUrl}`;
   }
-  return `${cleanBaseUrl()}/${cleanUrl}`;
+  return ensurePngPlaceholder(`${cleanBaseUrl()}/${cleanUrl}`);
 };
 
 export const resolveMediaUrl = (rawUrl) => {
@@ -40,12 +36,27 @@ export const resolveMediaUrl = (rawUrl) => {
   if (/^(data:|blob:)/i.test(url)) return url;
 
   if (/^https?:\/\//i.test(url)) {
-    return ensurePngPlaceholder(getFullImageUrl(url));
+    return ensurePngPlaceholder(url.replace(LOOPBACK_BACKEND_PATTERN, () => cleanBaseUrl()));
   }
 
   let normalizedUrl = url.replace(/^\/+/, '');
   if (!normalizedUrl.startsWith(MEDIA_ROUTE_PREFIX)) {
-    normalizedUrl = `${MEDIA_ROUTE_PREFIX}${normalizedUrl}`;
+    if (normalizedUrl.startsWith('uploads/')) {
+      normalizedUrl = `${MEDIA_ROUTE_PREFIX}${normalizedUrl.replace(/^uploads\//, '')}`;
+    } else if (normalizedUrl.startsWith('api/')) {
+    } else {
+      normalizedUrl = `${MEDIA_ROUTE_PREFIX}${normalizedUrl}`;
+    }
   }
   return ensurePngPlaceholder(`${cleanBaseUrl()}/${normalizedUrl}`);
+};
+
+export const processHtmlImages = (html) => {
+  if (!html || typeof html !== 'string') return '';
+  return html.replace(/<img[^>]+src=["']([^"']+)["'][^>]*>/gi, (match, src) => {
+    const resolvedSrc = resolveMediaUrl(src) || getFullImageUrl(src);
+    return match
+      .replace(`src="${src}"`, `src="${resolvedSrc}"`)
+      .replace(`src='${src}'`, `src='${resolvedSrc}'`);
+  });
 };

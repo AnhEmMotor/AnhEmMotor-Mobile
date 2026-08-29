@@ -246,6 +246,7 @@ export default function MyVehiclesScreen({ navigation, route }) {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                style={{ flexGrow: 0 }}
                 contentContainerStyle={{ alignItems: 'center' }}
               >
                 {bikes.map((bike) => {

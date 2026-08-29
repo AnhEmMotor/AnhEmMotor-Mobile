@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+
 globalThis._REANIMATED_IS_REDUCED_MOTION = false;
 
 if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {

@@ -298,6 +298,7 @@ export default function SupportScreen({ navigation }) {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
+              style={{ flexGrow: 0 }}
               contentContainerStyle={styles.ticketScroll}
             >
               {tickets.map((ticket) => (

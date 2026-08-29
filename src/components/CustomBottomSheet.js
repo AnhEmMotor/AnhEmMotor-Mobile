@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useActiveColors } from '../theme/Theme';
 
-const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
+const CustomBottomSheet = forwardRef(({ children, title, onClose, autoOpen = false }, ref) => {
   const bottomSheetRef = useRef(null);
   const activeColors = useActiveColors();
 
@@ -12,11 +12,10 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
   const activeIndicator = activeColors.isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
   const activeBorder = activeColors.border;
 
-  
   const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
 
   const show = useCallback(() => {
-    bottomSheetRef.current?.expand(); 
+    bottomSheetRef.current?.expand();
   }, []);
 
   const hide = useCallback(() => {
@@ -28,7 +27,6 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
     hide,
   }));
 
-  
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />
@@ -39,7 +37,7 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={-1} 
+      index={autoOpen ? snapPoints.length - 1 : -1}
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       backdropComponent={renderBackdrop}
@@ -48,8 +46,8 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
         { backgroundColor: activeBg, borderColor: activeBorder },
       ]}
       handleIndicatorStyle={[styles.handleIndicator, { backgroundColor: activeIndicator }]}
-      enableContentPanningGesture={true}
-      enableOverdrag={false} 
+      enableContentPanningGesture={false}
+      enableOverdrag={false}
       onChange={(index) => {
         if (index === -1 && onClose) {
           onClose();
@@ -73,12 +71,9 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose }, ref) => {
 
 const styles = StyleSheet.create({
   background: {
-    
-    
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderWidth: 1,
-    
   },
   handleIndicator: {
     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -91,7 +86,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    
     fontSize: 18,
     fontWeight: 'bold',
   },

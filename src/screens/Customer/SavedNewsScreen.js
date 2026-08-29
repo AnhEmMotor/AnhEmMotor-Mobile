@@ -6,11 +6,14 @@ import { useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { resolveMediaUrl } from '../../utils/imageHelpers';
 
 export default function SavedNewsScreen({ navigation }) {
   const [savedItems, setSavedItems] = useState([]);
   const { theme, getStyles } = useTheme();
   const styles = getStyles(theme);
+  const DEFAULT_NEWS_IMAGE =
+    'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
 
   const loadSavedNews = async () => {
     try {
@@ -88,38 +91,46 @@ export default function SavedNewsScreen({ navigation }) {
         ) : (
           savedItems.map((item, index) => (
             <Animated.View key={item.id} entering={FadeInDown.delay(index * 100)}>
-              <GlassCard
-                style={[
-                  getStyles(theme).newsCard,
-                  {
-                    borderColor: theme.colors.border,
-                    backgroundColor: theme.colors.card,
-                  },
-                ]}
-                intensity={10}
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={() => navigation.navigate('HomeDetail', { type: 'news', item })}
               >
-                <Image source={{ uri: item.image }} style={styles.newsImage} />
-                <View style={styles.newsContent}>
-                  <Text style={[getStyles(theme).newsTitle, { color: theme.colors.text }]}>
-                    {item.title}
-                  </Text>
-                  <View
-                    style={[getStyles(theme).newsFooter, { borderTopColor: theme.colors.border }]}
-                  >
-                    <TouchableOpacity
-                      onPress={() => removeNews(item.id)}
-                      style={getStyles(theme).removeBtn}
+                <GlassCard
+                  style={[
+                    getStyles(theme).newsCard,
+                    {
+                      borderColor: theme.colors.border,
+                      backgroundColor: theme.colors.card,
+                    },
+                  ]}
+                  intensity={10}
+                >
+                  <Image
+                    source={{ uri: resolveMediaUrl(item.image) || DEFAULT_NEWS_IMAGE }}
+                    style={styles.newsImage}
+                  />
+                  <View style={styles.newsContent}>
+                    <Text style={[getStyles(theme).newsTitle, { color: theme.colors.text }]}>
+                      {item.title}
+                    </Text>
+                    <View
+                      style={[getStyles(theme).newsFooter, { borderTopColor: theme.colors.border }]}
                     >
-                      <Trash2 color={theme.colors.secondary} size={18} />
-                      <Text
-                        style={[getStyles(theme).removeText, { color: theme.colors.secondary }]}
+                      <TouchableOpacity
+                        onPress={() => removeNews(item.id)}
+                        style={getStyles(theme).removeBtn}
                       >
-                        Gỡ bỏ
-                      </Text>
-                    </TouchableOpacity>
+                        <Trash2 color={theme.colors.secondary} size={18} />
+                        <Text
+                          style={[getStyles(theme).removeText, { color: theme.colors.secondary }]}
+                        >
+                          Gỡ bỏ
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              </GlassCard>
+                </GlassCard>
+              </TouchableOpacity>
             </Animated.View>
           ))
         )}
