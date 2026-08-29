@@ -1,5 +1,4 @@
 import { getProductsApi, getBrandsApi, getProductDetailApi } from '../../../api/customerApi';
-import { API_BASE_URL } from '../../../config';
 import { getFullImageUrl } from '../../../utils/imageHelpers';
 
 function normalizeProductItem(item) {
@@ -12,15 +11,14 @@ function normalizeProductItem(item) {
         urlSlug: v.urlSlug ?? v.UrlSlug ?? '',
         price: v.price ?? v.Price,
         coverImageUrl: getFullImageUrl(
-          v.cover_image_url ?? v.coverImageUrl ?? v.CoverImageUrl ?? '',
-          API_BASE_URL
+          v.cover_image_url ?? v.coverImageUrl ?? v.CoverImageUrl ?? ''
         ),
         variantName: v.variantName ?? v.VariantName ?? '',
         optionValuesText: v.optionValuesText ?? v.OptionValuesText ?? '',
         photos: Array.isArray(v.photos ?? v.Photos)
           ? (v.photos ?? v.Photos).map((p) => ({
               ...p,
-              image: getFullImageUrl(p.image, API_BASE_URL),
+              image: getFullImageUrl(p.image),
             }))
           : [],
         colors: (v.colors ?? v.Colors ?? []).map((c) => ({
@@ -30,13 +28,9 @@ function normalizeProductItem(item) {
           colorCode: c.colorCode ?? c.ColorCode ?? c.code ?? '#ccc',
           code: c.code ?? c.ColorCode ?? '#ccc',
           coverImageUrl: getFullImageUrl(
-            c.cover_image_url ?? c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? '',
-            API_BASE_URL
+            c.cover_image_url ?? c.coverImageUrl ?? c.CoverImageUrl ?? c.image ?? ''
           ),
-          image: getFullImageUrl(
-            c.cover_image_url ?? c.image ?? c.CoverImageUrl ?? '',
-            API_BASE_URL
-          ),
+          image: getFullImageUrl(c.cover_image_url ?? c.image ?? c.CoverImageUrl ?? ''),
           maxPurchaseQuantity: c.maxPurchaseQuantity ?? c.MaxPurchaseQuantity ?? null,
           effectiveMax: c.effectiveMax ?? c.EffectiveMax ?? null,
         })),
@@ -54,7 +48,7 @@ function normalizeProductItem(item) {
         displayOrder: t.displayOrder ?? t.DisplayOrder ?? 0,
         title: t.title ?? t.Title ?? '',
         description: t.description ?? t.Description ?? '',
-        imageUrl: getFullImageUrl(t.imageUrl ?? t.ImageUrl ?? '', API_BASE_URL),
+        imageUrl: getFullImageUrl(t.imageUrl ?? t.ImageUrl ?? ''),
         defaultTitle: t.defaultTitle ?? t.DefaultTitle ?? '',
         defaultDescription: t.defaultDescription ?? t.DefaultDescription ?? '',
         categoryName: t.categoryName ?? t.CategoryName ?? '',
@@ -70,7 +64,7 @@ function normalizeProductItem(item) {
     item.CoverImageUrl ??
     variants[0]?.coverImageUrl ??
     '';
-  const resolvedImgUrl = getFullImageUrl(rawImgUrl, API_BASE_URL);
+  const resolvedImgUrl = getFullImageUrl(rawImgUrl);
 
   return {
     ...item,

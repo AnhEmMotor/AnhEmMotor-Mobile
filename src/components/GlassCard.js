@@ -31,6 +31,7 @@ export default function GlassCard({ children, style, contentStyle, intensity = 2
         intensity={intensity}
         tint={tint || (activeColors.isDark ? 'dark' : 'light')}
         style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
       <LinearGradient
         colors={
@@ -41,6 +42,7 @@ export default function GlassCard({ children, style, contentStyle, intensity = 2
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
       <View style={[styles.content, contentStyle, layoutStyle]}>{children}</View>
     </View>

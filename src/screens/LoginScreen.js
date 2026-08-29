@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,8 +21,10 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginApi, getCurrentUserApi } from '../api/customerApi';
 import { tokenService } from '../api/httpClient';
+import Toast from '../components/Toast';
 
 export default function LoginScreen({ navigation }) {
+  const toastRef = useRef(null);
   const theme = useTheme();
   const colors = theme.colors;
   const { themeMode, setThemeMode } = useGlobalState();
@@ -55,8 +56,8 @@ export default function LoginScreen({ navigation }) {
   }, []);
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Lỗi', 'Vui lòng nhập email và mật khẩu');
+    if (!email.trim() || !password) {
+      toastRef.current?.show('Vui lòng nhập email và mật khẩu', 'warning');
       return;
     }
 
@@ -103,10 +104,14 @@ export default function LoginScreen({ navigation }) {
         console.warn('Failed to fetch user profile after login', userError);
       }
 
-      navigation.navigate('CustomerHome');
+      toastRef.current?.show('Đăng nhập thành công!', 'success');
+      setTimeout(() => {
+        navigation.navigate('CustomerHome');
+      }, 400);
     } catch (error) {
       console.error('Login error:', error);
-      Alert.alert('Lỗi đăng nhập', error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại.');
+      const errorMsg = error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại.';
+      toastRef.current?.show(errorMsg, 'error');
     } finally {
       setLoading(false);
     }
@@ -119,6 +124,7 @@ export default function LoginScreen({ navigation }) {
           theme.isDark ? ['#050505', '#0B0B0B', '#191919'] : ['#FFFFFF', '#F8FAFC', '#E5E7EB']
         }
         style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
       <View style={[styles.glowTop, { backgroundColor: theme.staticColors.primary + '18' }]} />
       <View style={[styles.glowBottom, { backgroundColor: theme.staticColors.secondary + '14' }]} />
@@ -172,6 +178,7 @@ export default function LoginScreen({ navigation }) {
               intensity={theme.isDark ? 25 : 50}
               tint={theme.isDark ? 'dark' : 'light'}
               style={StyleSheet.absoluteFill}
+              pointerEvents="none"
             />
             <View style={[styles.cardInner, { backgroundColor: colors.glassBg }]}>
               <Text style={[styles.formTitle, { color: colors.text }]}>Chào mừng trở lại</Text>
@@ -312,6 +319,7 @@ export default function LoginScreen({ navigation }) {
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Toast ref={toastRef} />
     </View>
   );
 }

@@ -67,7 +67,7 @@ export default function VehicleDetailScreen({ navigation, route }) {
               ? {
                   onMoveShouldSetResponder: (evt) => {
                     const { dx, dy } = evt.nativeEvent;
-                    // For Web where dx/dy might be undefined, this will safely return false
+
                     return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10;
                   },
                   onResponderGrant: handleTouchStart,
@@ -91,7 +91,12 @@ export default function VehicleDetailScreen({ navigation, route }) {
           </View>
 
           <TouchableOpacity style={getStyles(theme).backBtn} onPress={() => navigation.goBack()}>
-            <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
+            <BlurView
+              intensity={30}
+              tint="dark"
+              style={StyleSheet.absoluteFill}
+              pointerEvents="none"
+            />
             <ChevronLeft color="#fff" size={24} />
           </TouchableOpacity>
         </View>
@@ -223,10 +228,22 @@ export default function VehicleDetailScreen({ navigation, route }) {
 
           {}
           <View style={getStyles(theme).actionArea}>
-            {(motor?.category === 'Phụ tùng' || motor?.category === 'Phụ kiện' || motor?.categoryName === 'Phụ tùng' || motor?.categoryName === 'Phụ kiện') ? (
+            {motor?.category === 'Phụ tùng' ||
+            motor?.category === 'Phụ kiện' ||
+            motor?.categoryName === 'Phụ tùng' ||
+            motor?.categoryName === 'Phụ kiện' ? (
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <ScalePress
-                  style={[getStyles(theme).mainBtn, { flex: 1, marginRight: 10, backgroundColor: theme.colors.card, borderWidth: 1, borderColor: theme.colors.primary }]}
+                  style={[
+                    getStyles(theme).mainBtn,
+                    {
+                      flex: 1,
+                      marginRight: 10,
+                      backgroundColor: theme.colors.card,
+                      borderWidth: 1,
+                      borderColor: theme.colors.primary,
+                    },
+                  ]}
                   onPress={() => {
                     addToCart({
                       id: motor.id,

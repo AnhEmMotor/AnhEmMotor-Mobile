@@ -8,7 +8,6 @@ import { resetRoot } from '../../../../navigation/RootNavigation';
 import { tokenService } from '../../../../api/httpClient';
 import { getPersonalOutputsApi } from '../../../../api/orderApi';
 import { getPersonalRepairsApi } from '../../../../api/repairApi';
-import { API_BASE_URL } from '../../../../config';
 import { getFullImageUrl } from '../../../../utils/imageHelpers';
 
 export const MOCK_REGIONS = {
@@ -80,45 +79,57 @@ export const useProfileController = (navigation, bottomSheetRef) => {
       try {
         const [outputsRes, repairsRes] = await Promise.all([
           getPersonalOutputsApi(),
-          getPersonalRepairsApi()
+          getPersonalRepairsApi(),
         ]);
-        const outData = outputsRes?.data || outputsRes?.value || (Array.isArray(outputsRes) ? outputsRes : []);
-        const repData = repairsRes?.data || repairsRes?.value || (Array.isArray(repairsRes) ? repairsRes : []);
-        
+        const outData =
+          outputsRes?.data || outputsRes?.value || (Array.isArray(outputsRes) ? outputsRes : []);
+        const repData =
+          repairsRes?.data || repairsRes?.value || (Array.isArray(repairsRes) ? repairsRes : []);
+
         if (Array.isArray(outData)) {
-          setPersonalOutputs(outData.map(o => ({
-            id: o.id || o.Id,
-            statusId: o.statusId || o.StatusId,
-            total: o.total || o.Total,
-            paymentMethod: o.paymentMethod || o.PaymentMethod,
-            createdAt: o.createdAt || o.CreatedAt,
-            notes: o.notes || o.Notes,
-            productName: o.productName || o.ProductName,
-            productImage: getFullImageUrl(o.productImage || o.ProductImage, API_BASE_URL),
-            quantity: o.quantity || o.Quantity,
-            expectedDeliveryDate: o.expectedDeliveryDate || o.ExpectedDeliveryDate,
-          })));
+          setPersonalOutputs(
+            outData.map((o) => ({
+              id: o.id || o.Id,
+              statusId: o.statusId || o.StatusId,
+              total: o.total || o.Total,
+              paymentMethod: o.paymentMethod || o.PaymentMethod,
+              createdAt: o.createdAt || o.CreatedAt,
+              notes: o.notes || o.Notes,
+              productName: o.productName || o.ProductName,
+              productImage: getFullImageUrl(o.productImage || o.ProductImage),
+              quantity: o.quantity || o.Quantity,
+              expectedDeliveryDate: o.expectedDeliveryDate || o.ExpectedDeliveryDate,
+            }))
+          );
         }
         if (Array.isArray(repData)) {
-          setPersonalRepairs(repData.map(r => ({
-            id: r.id || r.Id,
-            statusId: r.statusId || r.StatusId,
-            maintenanceNumber: r.maintenanceNumber || r.MaintenanceNumber,
-            vehicleInfo: r.vehicleInfo || r.VehicleInfo,
-            vehicleName: r.vehicleName || r.VehicleName,
-            description: r.description || r.Description,
-            technicianName: r.technicianName || r.TechnicianName,
-            totalCost: r.totalCost || r.TotalCost,
-            serviceType: r.serviceType || r.ServiceType,
-            notes: r.notes || r.Notes,
-            date: r.maintenanceDate || r.MaintenanceDate || r.date || r.Date || r.createdAt || r.CreatedAt,
-            productImage: getFullImageUrl(r.productImage || r.ProductImage, API_BASE_URL),
-            categoryName: r.categoryName || r.CategoryName,
-            variantName: r.variantName || r.VariantName,
-            colorName: r.colorName || r.ColorName,
-            vinNumber: r.vinNumber || r.VinNumber,
-            expectedCompletionDate: r.expectedCompletionDate || r.ExpectedCompletionDate,
-          })));
+          setPersonalRepairs(
+            repData.map((r) => ({
+              id: r.id || r.Id,
+              statusId: r.statusId || r.StatusId,
+              maintenanceNumber: r.maintenanceNumber || r.MaintenanceNumber,
+              vehicleInfo: r.vehicleInfo || r.VehicleInfo,
+              vehicleName: r.vehicleName || r.VehicleName,
+              description: r.description || r.Description,
+              technicianName: r.technicianName || r.TechnicianName,
+              totalCost: r.totalCost || r.TotalCost,
+              serviceType: r.serviceType || r.ServiceType,
+              notes: r.notes || r.Notes,
+              date:
+                r.maintenanceDate ||
+                r.MaintenanceDate ||
+                r.date ||
+                r.Date ||
+                r.createdAt ||
+                r.CreatedAt,
+              productImage: getFullImageUrl(r.productImage || r.ProductImage),
+              categoryName: r.categoryName || r.CategoryName,
+              variantName: r.variantName || r.VariantName,
+              colorName: r.colorName || r.ColorName,
+              vinNumber: r.vinNumber || r.VinNumber,
+              expectedCompletionDate: r.expectedCompletionDate || r.ExpectedCompletionDate,
+            }))
+          );
         }
       } catch (err) {
         console.log('Error fetching order/repair data:', err);

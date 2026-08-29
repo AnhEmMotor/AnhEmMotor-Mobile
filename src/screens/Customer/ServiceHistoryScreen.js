@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import { ChevronLeft, Wrench, CheckCircle2 } from 'lucide-react-native'; 
+import { ChevronLeft, Wrench, CheckCircle2 } from 'lucide-react-native';
 import { useTheme } from '../../theme/Theme';
 import GlassCard from '../../components/GlassCard';
 import ScalePress from '../../components/ScalePress';
@@ -19,9 +19,8 @@ export default function ServiceHistoryScreen({ navigation, route }) {
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const { history, reminders, loading, error, refreshData, activeVehicle } = useServiceHistoryController(
-    passedVehicle?.id || null
-  );
+  const { history, reminders, loading, error, refreshData, activeVehicle } =
+    useServiceHistoryController(passedVehicle?.id || null);
 
   const displayVehicle = passedVehicle || activeVehicle || { name: 'Chưa có xe', plate: '---' };
 
@@ -231,8 +230,8 @@ const getStyles = (theme) =>
       alignItems: 'center',
       marginRight: theme.spacing.md,
     },
-    headerTitle: { fontSize: 20, fontWeight: 'bold' },
-    headerSub: { fontSize: 13, marginTop: 2 },
+    headerTitle: { fontSize: 20, fontWeight: 'bold', color: theme.colors.text },
+    headerSub: { fontSize: 13, marginTop: 2, color: theme.colors.subtext },
 
     content: { paddingHorizontal: theme.spacing.md },
     sectionTitle: {
@@ -259,7 +258,7 @@ const getStyles = (theme) =>
     reminderTask: { fontSize: 14, fontWeight: 'bold' },
     reminderDue: { fontSize: 12, marginTop: 2 },
 
-    timeline: { paddingLeft: 4 }, 
+    timeline: { paddingLeft: 4 },
     timelineItem: { flexDirection: 'row', marginBottom: theme.spacing.md },
     timelineSide: { alignItems: 'center', width: 36 },
     timelineDot: {

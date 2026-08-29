@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useGlobalState } from '../../../context/GlobalState';
 import { ProfileLocalDataSource } from '../../../features/profile/data/datasources/ProfileLocalDataSource';
+import { getFullImageUrl } from '../../../utils/imageHelpers';
 
 export const useHome = () => {
   const { unreadNotifications } = useGlobalState();
@@ -60,19 +61,11 @@ export const useHome = () => {
     const fetchNews = async () => {
       try {
         const { getLatestNewsApi } = require('../../../api/customerApi');
-        const { API_BASE_URL } = require('../../../config');
         const news = await getLatestNewsApi();
 
         const getImageUrl = (url) => {
           if (!url) return 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070';
-          if (url.startsWith('http')) return url;
-          const normalized = url.replace(/\\/g, '/');
-          let cleanUrl = normalized.startsWith('/') ? normalized.substring(1) : normalized;
-          if (!cleanUrl.startsWith('uploads/')) {
-            cleanUrl = `uploads/${cleanUrl}`;
-          }
-          const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-          return `${baseUrl}/${cleanUrl}`;
+          return getFullImageUrl(url, { basePath: 'uploads/' });
         };
 
         const formattedNews = (news || []).map((item) => ({

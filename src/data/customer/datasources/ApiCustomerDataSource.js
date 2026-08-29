@@ -5,7 +5,7 @@ import {
   registerVehicleApi,
   updateVehicleApi,
 } from '../../../api/customerApi';
-import { API_BASE_URL } from '../../../config';
+import { getFullImageUrl } from '../../../utils/imageHelpers';
 
 export function mapBackendVehicleToMobile(b) {
   if (!b) return null;
@@ -76,21 +76,27 @@ export function mapBackendVehicleToMobile(b) {
     warrantyUntil: b.warrantyUntil ?? b.WarrantyUntil ?? b.warrantyDate ?? b.WarrantyDate ?? '',
     warrantyFrom: b.warrantyFrom ?? b.WarrantyFrom ?? '',
     insuranceUntil: b.insuranceUntil ?? b.InsuranceUntil ?? '',
-    timeline: (Array.isArray(b.timeline) ? b.timeline : Array.isArray(b.Timeline) ? b.Timeline : []).map((t) => ({
+    timeline: (Array.isArray(b.timeline)
+      ? b.timeline
+      : Array.isArray(b.Timeline)
+        ? b.Timeline
+        : []
+    ).map((t) => ({
       ...t,
       id: t.id ?? t.Id ?? Math.random().toString(),
       date: t.date ?? t.Date ?? '',
       type: t.type ?? t.Type ?? t.title ?? t.Title ?? 'Bảo dưỡng',
       desc: t.desc ?? t.Desc ?? t.description ?? t.Description ?? (t.items || t.Items)?.[2] ?? '',
       km: t.km ?? t.Km ?? (t.items || t.Items)?.[0]?.replace('Số km: ', '') ?? '0 km',
-      price: t.price ?? t.Price ?? t.cost ?? t.Cost ?? (t.items || t.Items)?.[1]?.replace('Chi phí: ', '') ?? '0 đ',
+      price:
+        t.price ??
+        t.Price ??
+        t.cost ??
+        t.Cost ??
+        (t.items || t.Items)?.[1]?.replace('Chi phí: ', '') ??
+        '0 đ',
     })),
-    image:
-      b.imageUrl || b.ImageUrl || b.image || b.Image
-        ? (b.imageUrl || b.ImageUrl || b.image || b.Image).startsWith('http')
-          ? b.imageUrl || b.ImageUrl || b.image || b.Image
-          : `${API_BASE_URL}${b.imageUrl || b.ImageUrl || b.image || b.Image}`
-        : null,
+    image: getFullImageUrl(b.imageUrl || b.ImageUrl || b.image || b.Image) || null,
   };
 }
 
@@ -116,8 +122,16 @@ export class ApiCustomerDataSource {
 
   async getServiceHistory(vehicleId) {
     const raw = await getCustomerVehicleHistoryApi(vehicleId);
-    const purchaseHistory = Array.isArray(raw.purchaseHistory) ? raw.purchaseHistory : (Array.isArray(raw.PurchaseHistory) ? raw.PurchaseHistory : []);
-    const warrantyHistory = Array.isArray(raw.warrantyHistory) ? raw.warrantyHistory : (Array.isArray(raw.WarrantyHistory) ? raw.WarrantyHistory : []);
+    const purchaseHistory = Array.isArray(raw.purchaseHistory)
+      ? raw.purchaseHistory
+      : Array.isArray(raw.PurchaseHistory)
+        ? raw.PurchaseHistory
+        : [];
+    const warrantyHistory = Array.isArray(raw.warrantyHistory)
+      ? raw.warrantyHistory
+      : Array.isArray(raw.WarrantyHistory)
+        ? raw.WarrantyHistory
+        : [];
 
     const safeFormatDate = (dateStr) => {
       if (!dateStr) return '';
@@ -133,42 +147,56 @@ export class ApiCustomerDataSource {
       }
     };
 
-    const mappedPurchaseHistory = purchaseHistory.map((entry) => ({
-      id: String(entry.id || entry.Id),
-      date: (entry.purchaseDate || entry.PurchaseDate) ? safeFormatDate(entry.purchaseDate || entry.PurchaseDate) : '',
-      title: `Mua xe - ${entry.invoiceNumber || entry.InvoiceNumber || ''}`,
-      items: [
-        `Người bán: ${entry.sellerName || entry.SellerName || 'AnhEmMotor Showroom'}`,
-        `Số tiền: ${(entry.amount || entry.Amount)?.toLocaleString?.() ?? (entry.amount || entry.Amount)} đ`,
-        entry.notes || entry.Notes || 'Không có ghi chú',
-      ],
-      cost: (entry.amount || entry.Amount) ? `${(entry.amount || entry.Amount).toLocaleString()} đ` : '',
-      technician: entry.sellerName || entry.SellerName,
-      status: 'completed',
-    }));
+    const mappedPurchaseHistory = purchaseHistory.map((entry) => {
+      const rawDate = entry.purchaseDate || entry.PurchaseDate || '';
+      return {
+        id: String(entry.id || entry.Id || Math.random()),
+        rawDate,
+        date: rawDate ? safeFormatDate(rawDate) : '',
+        title: `Mua xe - ${entry.invoiceNumber || entry.InvoiceNumber || ''}`,
+        items: [
+          `Người bán: ${entry.sellerName || entry.SellerName || 'AnhEmMotor Showroom'}`,
+          `Số tiền: ${(entry.amount || entry.Amount)?.toLocaleString?.() ?? (entry.amount || entry.Amount)} đ`,
+          entry.notes || entry.Notes || 'Không có ghi chú',
+        ],
+        cost:
+          entry.amount || entry.Amount
+            ? `${(entry.amount || entry.Amount).toLocaleString()} đ`
+            : '',
+        technician: entry.sellerName || entry.SellerName || 'Kỹ thuật viên',
+        status: 'completed',
+      };
+    });
 
-    const mappedWarrantyHistory = warrantyHistory.map((entry) => ({
-      id: String(entry.id || entry.Id),
-      date: (entry.startDate || entry.StartDate) ? safeFormatDate(entry.startDate || entry.StartDate) : '',
-      title: `Bảo dưỡng - ${entry.providerName || entry.ProviderName || ''}`,
-      items: [
-        `Mã phiếu: ${entry.policyNumber || entry.PolicyNumber || ''}`,
-        entry.description || entry.Description || 'Không có mô tả',
-        `Chi phí: ${(entry.coverageAmount || entry.CoverageAmount)?.toLocaleString?.() ?? (entry.coverageAmount || entry.CoverageAmount)} đ`,
-      ],
-      cost: (entry.coverageAmount || entry.CoverageAmount) ? `${(entry.coverageAmount || entry.CoverageAmount).toLocaleString()} đ` : '',
-      technician: entry.providerName || entry.ProviderName,
-      status: entry.status || entry.Status || 'completed',
-    }));
+    const mappedWarrantyHistory = warrantyHistory.map((entry) => {
+      const rawDate = entry.startDate || entry.StartDate || '';
+      return {
+        id: String(entry.id || entry.Id || Math.random()),
+        rawDate,
+        date: rawDate ? safeFormatDate(rawDate) : '',
+        title: `Bảo dưỡng - ${entry.providerName || entry.ProviderName || ''}`,
+        items: [
+          `Mã phiếu: ${entry.policyNumber || entry.PolicyNumber || ''}`,
+          entry.description || entry.Description || 'Không có mô tả',
+          `Chi phí: ${(entry.coverageAmount || entry.CoverageAmount)?.toLocaleString?.() ?? (entry.coverageAmount || entry.CoverageAmount)} đ`,
+        ],
+        cost:
+          entry.coverageAmount || entry.CoverageAmount
+            ? `${(entry.coverageAmount || entry.CoverageAmount).toLocaleString()} đ`
+            : '',
+        technician: entry.providerName || entry.ProviderName || 'Kỹ thuật viên',
+        status: entry.status || entry.Status || 'completed',
+      };
+    });
 
     return [...mappedPurchaseHistory, ...mappedWarrantyHistory].sort((a, b) => {
-      const aDate = new Date(a.date).getTime();
-      const bDate = new Date(b.date).getTime();
-      return bDate - aDate;
+      const aDate = a.rawDate ? new Date(a.rawDate).getTime() : 0;
+      const bDate = b.rawDate ? new Date(b.rawDate).getTime() : 0;
+      return (isNaN(bDate) ? 0 : bDate) - (isNaN(aDate) ? 0 : aDate);
     });
   }
 
   async getUpcomingReminders(_vehicleId) {
-        return [];
+    return [];
   }
 }

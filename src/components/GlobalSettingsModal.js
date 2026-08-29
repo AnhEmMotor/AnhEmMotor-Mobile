@@ -5,11 +5,13 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Pressable,
   Alert,
   Platform,
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import {
   LogOut,
@@ -26,12 +28,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { resetRoot, navigationRef } from '../navigation/RootNavigation';
 import { useGlobalState } from '../context/GlobalState';
 import { useTheme } from '../theme/Theme';
-import GlassCard from './GlassCard';
 
 const STORAGE_KEY = '@AEM_Customer_Profile';
 
 export default function GlobalSettingsModal() {
   const Haptics = require('expo-haptics');
+  const insets = useSafeAreaInsets();
 
   const { isSettingsOpen, setSettingsOpen, setThemeMode } = useGlobalState();
   const theme = useTheme();
@@ -241,10 +243,11 @@ export default function GlobalSettingsModal() {
           intensity={35}
           tint={theme.isDark ? 'dark' : 'light'}
           style={StyleSheet.absoluteFill}
+          pointerEvents="none"
         />
 
         {}
-        <TouchableOpacity style={styles.modalBackdrop} onPress={() => setSettingsOpen(false)} />
+        <Pressable style={styles.modalBackdrop} onPress={() => setSettingsOpen(false)} />
 
         {}
         <View
@@ -278,16 +281,15 @@ export default function GlobalSettingsModal() {
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
-              contentContainerStyle={{ paddingBottom: 20 }}
+              contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 20) + 50 }}
             >
               {}
-              <GlassCard
+              <View
                 style={{
                   padding: 6,
                   borderRadius: theme.radius.lg,
                   backgroundColor: theme.colors.card,
                 }}
-                intensity={theme.isDark ? 8 : 0}
               >
                 {}
                 <View style={[styles.settingRow, { borderBottomColor: theme.colors.border }]}>
@@ -455,7 +457,7 @@ export default function GlobalSettingsModal() {
                     />
                   </TouchableOpacity>
                 </View>
-              </GlassCard>
+              </View>
 
               {}
               <View style={{ marginTop: 25 }}>
@@ -544,7 +546,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   modalSheet: {
-    height: '62%',
+    height: '75%',
+    maxHeight: '85%',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,

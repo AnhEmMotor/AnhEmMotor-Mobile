@@ -122,6 +122,7 @@ export default function ProfileScreen({ navigation, route }) {
       <LinearGradient
         colors={[activeColors.gradientStart, activeColors.gradientEnd]}
         style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -129,8 +130,8 @@ export default function ProfileScreen({ navigation, route }) {
       >
         {}
         <View style={styles.headerBlock}>
-          <TouchableOpacity 
-            style={styles.settingsBtn} 
+          <TouchableOpacity
+            style={styles.settingsBtn}
             onPress={() => setSettingsModalVisible(true)}
           >
             <Settings color={activeColors.text} size={24} />
@@ -254,29 +255,35 @@ export default function ProfileScreen({ navigation, route }) {
               {
                 I: Clock,
                 l: 'Chờ XN',
-                badge: personalOutputs.filter(o => ['pending', 'waiting_deposit', 'waiting_installment'].includes(o.statusId)).length || null,
+                badge:
+                  personalOutputs.filter((o) =>
+                    ['pending', 'waiting_deposit', 'waiting_installment'].includes(o.statusId)
+                  ).length || null,
                 c: '#94A3B8',
                 m: 'Đơn hàng đang chờ xác nhận.',
               },
               {
                 I: Package,
                 l: 'Chuẩn bị',
-                badge: personalOutputs.filter(o => ['paid_processing', 'confirmed_cod', 'deposit_paid'].includes(o.statusId)).length || null,
+                badge:
+                  personalOutputs.filter((o) =>
+                    ['paid_processing', 'confirmed_cod', 'deposit_paid'].includes(o.statusId)
+                  ).length || null,
                 c: '#A855F7',
                 m: 'Đơn hàng đang được chuẩn bị.',
               },
               {
                 I: Truck,
                 l: 'Đang giao',
-                badge: personalOutputs.filter(o => o.statusId === 'delivering').length || null,
+                badge: personalOutputs.filter((o) => o.statusId === 'delivering').length || null,
                 c: '#E31B23',
-                dot: personalOutputs.some(o => o.statusId === 'delivering'),
+                dot: personalOutputs.some((o) => o.statusId === 'delivering'),
                 m: 'Đơn hàng đang được giao đến bạn.',
               },
               {
                 I: CheckCircle,
                 l: 'Hoàn thành',
-                badge: personalOutputs.filter(o => o.statusId === 'completed').length || null,
+                badge: personalOutputs.filter((o) => o.statusId === 'completed').length || null,
                 c: '#10B981',
                 m: 'Lịch sử đơn hàng đã hoàn thành.',
               },
@@ -285,9 +292,15 @@ export default function ProfileScreen({ navigation, route }) {
                 key={l}
                 style={styles.iconCol}
                 onPress={() => {
-                  const items = personalOutputs.filter(o => {
-                    if (l === 'Chờ XN') return ['pending', 'waiting_deposit', 'waiting_installment'].includes(o.statusId);
-                    if (l === 'Chuẩn bị') return ['paid_processing', 'confirmed_cod', 'deposit_paid'].includes(o.statusId);
+                  const items = personalOutputs.filter((o) => {
+                    if (l === 'Chờ XN')
+                      return ['pending', 'waiting_deposit', 'waiting_installment'].includes(
+                        o.statusId
+                      );
+                    if (l === 'Chuẩn bị')
+                      return ['paid_processing', 'confirmed_cod', 'deposit_paid'].includes(
+                        o.statusId
+                      );
                     if (l === 'Đang giao') return o.statusId === 'delivering';
                     if (l === 'Hoàn thành') return o.statusId === 'completed';
                     return false;
@@ -358,9 +371,17 @@ export default function ProfileScreen({ navigation, route }) {
                 m: 'Phiếu bảo dưỡng đã hoàn tất.',
               },
             ].map(({ I: Icon, l, badge, c, m }) => (
-              <TouchableOpacity key={l} style={styles.iconCol} onPress={() => {
-                navigation.navigate('StatusList', { title: l, items: personalRepairs, type: 'repairs' });
-              }}>
+              <TouchableOpacity
+                key={l}
+                style={styles.iconCol}
+                onPress={() => {
+                  navigation.navigate('StatusList', {
+                    title: l,
+                    items: personalRepairs,
+                    type: 'repairs',
+                  });
+                }}
+              >
                 <View style={[styles.iconCircle, { backgroundColor: activeColors.listIconBg }]}>
                   <Icon color={c} size={22} />
                   {badge && (
@@ -422,8 +443,6 @@ export default function ProfileScreen({ navigation, route }) {
           <Text style={[styles.actionBtnText, { color: '#E31B23' }]}>Xóa TK</Text>
         </TouchableOpacity>
       </View>
-
-
 
       {}
       <Modal visible={settingsModalVisible} animationType="slide" presentationStyle="pageSheet">

@@ -1,5 +1,63 @@
-import { apiGet, apiPost, apiPut, apiPatch, apiPostFormData, tokenService } from './httpClient';
-import { API_BASE_URL } from '../config';
+import { apiGet, apiPost, apiPut, apiPostFormData, tokenService } from './httpClient';
+import { resolveMediaUrl as resolveImageUrl } from '../utils/imageHelpers';
+
+export { resolveImageUrl };
+
+export function extractApiErrorMessage(data, fallback = 'Có lỗi xảy ra. Vui lòng thử lại.') {
+  if (!data) return fallback;
+  if (typeof data === 'string') return data;
+
+  if (Array.isArray(data.errors) && data.errors.length > 0) {
+    const msgs = data.errors
+      .map((e) => {
+        if (typeof e === 'string') return e;
+        if (typeof e === 'object' && e !== null)
+          return e.message || e.description || e.errorMessage || e.detail || JSON.stringify(e);
+        return String(e);
+      })
+      .filter(Boolean);
+    if (msgs.length > 0) return msgs.join(', ');
+  }
+
+  if (data.errors && typeof data.errors === 'object') {
+    const msgs = Object.values(data.errors)
+      .flat()
+      .map((e) => {
+        if (typeof e === 'string') return e;
+        if (typeof e === 'object' && e !== null)
+          return e.message || e.description || JSON.stringify(e);
+        return String(e);
+      })
+      .filter(Boolean);
+    if (msgs.length > 0) return msgs.join(', ');
+  }
+
+  if (data.error) {
+    if (typeof data.error === 'string') return data.error;
+    if (typeof data.error === 'object' && data.error !== null) {
+      const em = data.error.message || data.error.description || data.error.detail;
+      if (em) return em;
+    }
+  }
+
+  if (data.message && typeof data.message === 'string') return data.message;
+  if (data.detail && typeof data.detail === 'string') return data.detail;
+  if (
+    data.title &&
+    typeof data.title === 'string' &&
+    data.title !== 'One or more validation errors occurred.'
+  )
+    return data.title;
+  if (
+    data.type &&
+    typeof data.type === 'string' &&
+    data.type !== 'Unauthorized' &&
+    !data.type.startsWith('http')
+  )
+    return data.type;
+
+  return fallback;
+}
 
 export async function loginApi(usernameOrEmail, password) {
   await tokenService.clearTokens();
@@ -9,9 +67,18 @@ export async function loginApi(usernameOrEmail, password) {
     undefined,
     false
   );
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (_e) {
+    data = {};
+  }
   if (!response.ok) {
-    throw new Error(data.error?.message || data.title || 'Đăng nhập thất bại');
+    const errorMsg = extractApiErrorMessage(
+      data,
+      `Đăng nhập thất bại (Mã lỗi: ${response.status})`
+    );
+    throw new Error(errorMsg);
   }
   const payload = data.value || data;
   return {
@@ -23,18 +90,33 @@ export async function loginApi(usernameOrEmail, password) {
 
 export async function registerApi(registerData) {
   const response = await apiPost('/api/v1/Auth/register', registerData, undefined, false);
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (_e) {
+    data = {};
+  }
   if (!response.ok) {
-    throw new Error(data.error?.message || data.title || 'Đăng ký thất bại');
+    const errorMsg = extractApiErrorMessage(data, `Đăng ký thất bại (Mã lỗi: ${response.status})`);
+    throw new Error(errorMsg);
   }
   return data.value || data;
 }
 
 export async function forgotPasswordApi(email) {
   const response = await apiPost('/api/v1/Auth/forgot-password', { email }, undefined, false);
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (_e) {
+    data = {};
+  }
   if (!response.ok) {
-    throw new Error(data.error?.message || data.title || 'Gửi yêu cầu thất bại');
+    const errorMsg = extractApiErrorMessage(
+      data,
+      `Gửi yêu cầu thất bại (Mã lỗi: ${response.status})`
+    );
+    throw new Error(errorMsg);
   }
   return data.value || data;
 }
@@ -46,9 +128,18 @@ export async function resetPasswordApi(email, token, newPassword) {
     undefined,
     false
   );
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (_e) {
+    data = {};
+  }
   if (!response.ok) {
-    throw new Error(data.error?.message || data.title || 'Đặt lại mật khẩu thất bại');
+    const errorMsg = extractApiErrorMessage(
+      data,
+      `Đặt lại mật khẩu thất bại (Mã lỗi: ${response.status})`
+    );
+    throw new Error(errorMsg);
   }
   return data.value || data;
 }
@@ -256,7 +347,7 @@ export async function getBookingHistoryApi() {
 }
 
 export async function cancelBookingApi(bookingId, reason) {
-  const response = await apiPatch('/api/v1/client/bookings/' + bookingId + '/cancel', { reason });
+  const response = await apiPut('/api/v1/client/bookings/' + bookingId + '/cancel', { reason });
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.error?.message || 'Hủy lịch thất bại');
@@ -274,29 +365,6 @@ function formatPrice(value) {
   if (!Number.isFinite(numericValue)) return 'Liên hệ';
 
   return `${numericValue.toLocaleString('vi-VN')}đ`;
-}
-
-export function resolveImageUrl(rawUrl) {
-  if (!rawUrl || typeof rawUrl !== 'string') return '';
-  let resolvedUrl = rawUrl;
-  const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-  if (!rawUrl.startsWith('http') && !rawUrl.startsWith('data:')) {
-    const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
-    let normalizedUrl = rawUrl.replace(/^[\\\/]+/, '');
-    if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
-      normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
-    }
-    resolvedUrl = `${baseUrl}/${normalizedUrl}`;
-  }
-
-  if (
-    resolvedUrl.includes('placehold.co') &&
-    !resolvedUrl.includes('/png') &&
-    !resolvedUrl.includes('/jpg')
-  ) {
-    resolvedUrl = resolvedUrl.replace('placehold.co/', 'placehold.co/png/');
-  }
-  return resolvedUrl;
 }
 
 function normalizeProductItem(item) {
@@ -459,28 +527,11 @@ export async function getBrandsApi() {
       ? payload
       : (payload?.items ?? payload?.Items ?? payload?.data ?? payload?.Data ?? []);
 
-    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-
     return items
       .filter((b) => !b.deletedAt && !b.DeletedAt)
       .map((b) => {
-        let rawLogo = b.logoUrl ?? b.LogoUrl ?? '';
-        let resolvedLogo = rawLogo;
-        if (rawLogo && !rawLogo.startsWith('http') && !rawLogo.startsWith('data:')) {
-          const mediaRoutePrefix = 'api/v1/MediaFile/view-image/';
-          let normalizedUrl = rawLogo.replace(/^[\\\\\\/]+/, '');
-          if (!normalizedUrl.startsWith(mediaRoutePrefix)) {
-            normalizedUrl = `${mediaRoutePrefix}${normalizedUrl}`;
-          }
-          resolvedLogo = `${baseUrl}/${normalizedUrl}`;
-        }
-        if (
-          resolvedLogo.includes('placehold.co') &&
-          !resolvedLogo.includes('/png') &&
-          !resolvedLogo.includes('/jpg')
-        ) {
-          resolvedLogo = resolvedLogo.replace('placehold.co/', 'placehold.co/png/');
-        }
+        const rawLogo = b.logoUrl ?? b.LogoUrl ?? '';
+        const resolvedLogo = resolveImageUrl(rawLogo);
         return {
           id: b.id ?? b.Id,
           name: b.name ?? b.Name ?? '',
@@ -618,10 +669,12 @@ export async function getShipmentTrackingApi(searchQuery) {
 }
 
 export async function createSupportRequestApi(body) {
-  const response = await apiPost('/api/v1/Contacts/support-request', body, undefined, false);
+  const payload = body?.request ? body : { request: body };
+  const response = await apiPost('/api/v1/Contacts/support-request', payload, undefined, false);
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.error?.message || data.title || 'Gửi yêu cầu thất bại');
+    const errorMsg = extractApiErrorMessage(data, 'Gửi yêu cầu thất bại');
+    throw new Error(errorMsg);
   }
   return data.value || data;
 }

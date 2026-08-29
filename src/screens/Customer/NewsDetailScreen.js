@@ -15,13 +15,15 @@ import { ChevronLeft } from 'lucide-react-native';
 import RenderHTML from 'react-native-render-html';
 import { getNewsBySlug } from '../../api/newsApi';
 import { Theme } from '../../theme/Theme';
-import { API_BASE_URL } from '../../config';
 import { useGlobalState } from '../../context/GlobalState';
+import { getFullImageUrl } from '../../utils/imageHelpers';
 
 export default function NewsDetailScreen({ route, navigation }) {
-  const { slug } = route.params;
+  const params = route.params ?? {};
+  const slug = params.slug ?? params.newsSlug;
+  const hasSlug = Boolean(slug);
   const [news, setNews] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(hasSlug);
   const { width } = useWindowDimensions();
 
   const { themeMode } = useGlobalState();
@@ -38,14 +40,19 @@ export default function NewsDetailScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    const fetchNewsDetail = async () => {
-      setLoading(true);
+    if (!hasSlug) return undefined;
+    let mounted = true;
+    (async () => {
       const data = await getNewsBySlug(slug);
-      setNews(data);
-      setLoading(false);
+      if (mounted) {
+        setNews(data);
+        setLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
     };
-    fetchNewsDetail();
-  }, [slug]);
+  }, [hasSlug, slug]);
 
   if (loading) {
     return (
@@ -99,23 +106,7 @@ export default function NewsDetailScreen({ route, navigation }) {
     a: { color: Theme.staticColors.primary, textDecorationLine: 'underline' },
   };
 
-  const getFullImageUrl = (url) => {
-    if (!url) return null;
-    if (url.startsWith('http')) {
-      if (url.includes('/articles/covers/') && !url.includes('/uploads/articles/covers/')) {
-        return url.replace('/articles/covers/', '/uploads/articles/covers/');
-      }
-      return url;
-    }
-    let normalizedUrl = url.replace(/^\//, '');
-    if (!normalizedUrl.startsWith('uploads/')) {
-      normalizedUrl = `uploads/${normalizedUrl}`;
-    }
-    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-    return `${baseUrl}/${normalizedUrl}`;
-  };
-
-  const coverImage = getFullImageUrl(news.coverImageUrl);
+  const coverImage = getFullImageUrl(news.coverImageUrl, { basePath: 'uploads/' });
 
   const getProcessedHtml = () => {
     if (!news || !news.content) return '';
@@ -127,7 +118,7 @@ export default function NewsDetailScreen({ route, navigation }) {
     );
     // Fix relative URLs
     html = html.replace(/src="(?!\w+:\/\/)([^"]+)"/g, (match, url) => {
-      return `src="${getFullImageUrl(url)}"`;
+      return `src="${getFullImageUrl(url, { basePath: 'uploads/' })}"`;
     });
     return html;
   };
