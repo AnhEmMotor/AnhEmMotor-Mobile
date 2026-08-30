@@ -4,10 +4,12 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Pressable,
   Modal,
   TextInput,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import { QrCode, ArrowLeft, Settings, Plus } from 'lucide-react-native';
 import { Theme, useActiveColors } from '../../../theme/Theme';
@@ -352,11 +354,12 @@ export default function MyVehiclesScreen({ navigation, route }) {
       {}
       <Modal visible={showQR} transparent animationType="fade">
         <BlurView intensity={80} tint="dark" style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={closeQR} />
           <Animated.View
             entering={FadeInDown}
             style={[
               styles.modalContent,
-              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+              { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
             <Text style={[styles.modalTitle, { color: activeColors.text }]}>Mã định danh xe</Text>
@@ -376,12 +379,13 @@ export default function MyVehiclesScreen({ navigation, route }) {
       {}
       <Modal visible={formVisible} transparent animationType="slide">
         <BlurView intensity={85} tint="dark" style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setFormVisible(false)} />
           <Animated.View
             entering={FadeInDown}
             style={[
               styles.modalContent,
               {
-                backgroundColor: activeColors.card,
+                backgroundColor: activeColors.sheetBg,
                 borderColor: activeColors.border,
                 width: '90%',
                 padding: 24,

@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { ProductDataSource } from '../../../data/product/datasources/ProductDataSource';
 
 export const useVehicleDetail = (motorSummary, initialColor) => {
@@ -7,18 +7,37 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
   const [error, setError] = useState(null);
 
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedColor, setSelectedColor] = useState(
-    initialColor || motorSummary?.colors?.[0]?.id || 'default'
-  );
+  const [selectedVariantId, setSelectedVariantId] = useState(null);
+  const [selectedColorId, setSelectedColorId] = useState('default');
   const [rotationIndex, setRotationIndex] = useState(0);
 
-
-    const [downPaymentPercent, setDownPaymentPercent] = useState(30);
+  const [downPaymentPercent, setDownPaymentPercent] = useState(30);
   const [loanTerm, setLoanTerm] = useState(12);
 
   const lastX = useRef(0);
 
-  const motor = motorDetail || motorSummary; 
+  const motor = motorDetail || motorSummary;
+
+  const variants = useMemo(() => (Array.isArray(motor?.variants) ? motor.variants : []), [motor]);
+
+  const selectedVariant = useMemo(() => {
+    if (variants.length === 0) return null;
+    return variants.find((v) => String(v.id) === String(selectedVariantId)) || variants[0] || null;
+  }, [variants, selectedVariantId]);
+
+  const selectedVariantColors = useMemo(
+    () => (Array.isArray(selectedVariant?.colors) ? selectedVariant.colors : []),
+    [selectedVariant]
+  );
+
+  const selectedColor = useMemo(() => {
+    if (selectedVariantColors.length === 0) return null;
+    return (
+      selectedVariantColors.find((c) => String(c.id) === String(selectedColorId)) ||
+      selectedVariantColors[0] ||
+      null
+    );
+  }, [selectedVariantColors, selectedColorId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -30,8 +49,9 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
         const data = await ProductDataSource.fetchProductDetail(motorSummary.id);
         if (isMounted) {
           setMotorDetail(data);
-          if (data?.colors?.length > 0) {
-            setSelectedColor((prev) => (prev === 'default' ? data.colors[0].id : prev));
+          const vs = Array.isArray(data?.variants) ? data.variants : [];
+          if (vs.length > 0) {
+            setSelectedVariantId((prev) => prev ?? vs[0].id);
           }
         }
       } catch (err) {
@@ -45,6 +65,26 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
       isMounted = false;
     };
   }, [motorSummary?.id]);
+
+  const handleSelectVariant = useCallback(
+    (variantId) => {
+      setSelectedVariantId(variantId);
+      const vs = Array.isArray(motor?.variants) ? motor.variants : [];
+      const variant = vs.find((v) => String(v.id) === String(variantId));
+      const colors = Array.isArray(variant?.colors) ? variant.colors : [];
+      setSelectedColorId(colors.length > 0 ? colors[0].id : 'default');
+    },
+    [motor]
+  );
+
+  const handleSelectColor = useCallback((colorId) => {
+    setSelectedColorId(colorId);
+  }, []);
+
+  const displayPrice = useMemo(() => {
+    if (selectedVariant?.price != null) return selectedVariant.price;
+    return motor?.price ?? motor?.referencePrice ?? null;
+  }, [selectedVariant, motor]);
 
   const motorFrames = useMemo(
     () =>
@@ -76,19 +116,15 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
 
   const currentImage = useMemo(() => {
     if (Array.isArray(motor?.frames) && motor.frames.length > 0) return motorFrames[rotationIndex];
-    return (
-      motor?.colors?.find((c) => c.id === selectedColor)?.image ||
-      motor?.colors?.find((c) => c.id === selectedColor)?.coverImageUrl ||
-      motor?.img ||
-      motor?.imageUrl ||
-      motor?.coverImageUrl
-    );
-  }, [rotationIndex, selectedColor, motor, motorFrames]);
+    const colorImage = selectedColor?.image || selectedColor?.coverImageUrl;
+    if (colorImage) return colorImage;
+    if (selectedVariant?.coverImageUrl) return selectedVariant.coverImageUrl;
+    return motor?.img || motor?.imageUrl || motor?.coverImageUrl;
+  }, [rotationIndex, selectedColor, selectedVariant, motor, motorFrames]);
 
-
-    const financeResults = useMemo(() => {
+  const financeResults = useMemo(() => {
     const priceValue =
-      motor?.price ?? motor?.referencePrice ?? motor?.Price ?? motor?.ReferencePrice;
+      displayPrice ?? motor?.referencePrice ?? motor?.Price ?? motor?.ReferencePrice;
     const priceRaw =
       typeof priceValue === 'number'
         ? priceValue
@@ -99,7 +135,7 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
           );
     const downPayment = Math.floor(priceRaw * (downPaymentPercent / 100));
     const loanAmount = priceRaw - downPayment;
-    const monthlyRate = 0.015; 
+    const monthlyRate = 0.015;
     const monthlyPayment = Math.floor(
       (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, loanTerm)) /
         (Math.pow(1 + monthlyRate, loanTerm) - 1)
@@ -110,16 +146,22 @@ export const useVehicleDetail = (motorSummary, initialColor) => {
       loanAmount,
       monthlyPayment,
     };
-  }, [downPaymentPercent, loanTerm, motor]);
+  }, [downPaymentPercent, loanTerm, displayPrice, motor]);
 
   return {
-    motor, 
+    motor,
     loading,
     error,
     activeTab,
     setActiveTab,
+    variants,
+    selectedVariant,
+    selectedVariantColors,
     selectedColor,
-    setSelectedColor,
+    selectedColorId,
+    handleSelectVariant,
+    handleSelectColor,
+    displayPrice,
     rotationIndex,
     currentImage,
     handleTouchStart,

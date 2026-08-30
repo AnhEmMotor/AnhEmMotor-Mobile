@@ -12,7 +12,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BlurView } from 'expo-blur';
 import {
   LogOut,
   Trash2,
@@ -239,22 +238,23 @@ export default function GlobalSettingsModal() {
       onRequestClose={() => setSettingsOpen(false)}
     >
       <View style={styles.modalOverlay}>
-        <BlurView
-          intensity={35}
-          tint={theme.isDark ? 'dark' : 'light'}
-          style={StyleSheet.absoluteFill}
-          pointerEvents="none"
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          activeOpacity={1}
+          onPress={() => {
+            if (logoutModalVisible) {
+              setLogoutModalVisible(false);
+            } else {
+              setSettingsOpen(false);
+            }
+          }}
         />
 
-        {}
-        <Pressable style={styles.modalBackdrop} onPress={() => setSettingsOpen(false)} />
-
-        {}
         <View
           style={[
             styles.modalSheet,
             {
-              backgroundColor: theme.isDark ? theme.colors.background : theme.colors.card,
+              backgroundColor: theme.colors.sheetBg,
               borderColor: theme.colors.border,
             },
           ]}
@@ -288,7 +288,7 @@ export default function GlobalSettingsModal() {
                 style={{
                   padding: 6,
                   borderRadius: theme.radius.lg,
-                  backgroundColor: theme.colors.card,
+                  backgroundColor: theme.colors.cardBg,
                 }}
               >
                 {}
@@ -490,12 +490,13 @@ export default function GlobalSettingsModal() {
         </View>
 
         {logoutModalVisible && (
-          <View style={styles.logoutModalOverlay}>
-            <View
+          <Pressable style={[styles.logoutModalOverlay, { zIndex: 30 }]} onPress={cancelLogout}>
+            <Pressable
               style={[
                 styles.logoutModalCard,
-                { backgroundColor: theme.colors.card, borderColor: theme.colors.border },
+                { backgroundColor: theme.colors.sheetBg, borderColor: theme.colors.border },
               ]}
+              onPress={() => {}}
             >
               <Text style={[styles.logoutModalTitle, { color: theme.colors.text }]}>
                 Xác nhận đăng xuất
@@ -528,8 +529,8 @@ export default function GlobalSettingsModal() {
                   <Text style={[styles.logoutModalConfirmText, { color: '#FFF' }]}>Đăng xuất</Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </View>
+            </Pressable>
+          </Pressable>
         )}
       </View>
     </Modal>
@@ -544,8 +545,10 @@ const styles = StyleSheet.create({
   modalBackdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    zIndex: 1,
   },
   modalSheet: {
+    zIndex: 2,
     height: '75%',
     maxHeight: '85%',
     borderTopLeftRadius: 30,
@@ -660,11 +663,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   logoutModalOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.35)',
     padding: 24,
+    zIndex: 3,
   },
   logoutModalCard: {
     width: '100%',

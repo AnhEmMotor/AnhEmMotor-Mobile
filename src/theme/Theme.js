@@ -3,12 +3,11 @@ import { useColorScheme } from 'react-native';
 import { useGlobalState } from '../context/GlobalState';
 
 export const Theme = {
+  staticColors: {
+    primary: '#E31B23',
+    secondary: '#FFFFFF',
 
-    staticColors: {
-    primary: '#E31B23', 
-    secondary: '#FFFFFF', 
-
-        success: '#22C55E',
+    success: '#22C55E',
     warning: '#F59E0B',
     error: '#DC2626',
     info: '#F8FAFC',
@@ -88,10 +87,12 @@ export const Theme = {
   },
 };
 
-
 const darkPalette = {
-  background: '#0B0F19', 
+  background: '#0B0F19',
   card: 'rgba(255, 255, 255, 0.03)',
+  cardBg: '#1E293B',
+  listIconBg: 'rgba(255, 255, 255, 0.08)',
+  sheetBg: '#161E30',
   surface: 'rgba(255, 255, 255, 0.05)',
   text: '#F8FAFC',
   subtext: '#94A3B8',
@@ -106,8 +107,11 @@ const darkPalette = {
 };
 
 const lightPalette = {
-  background: '#F8FAFC', 
+  background: '#F8FAFC',
   card: '#FFFFFF',
+  cardBg: '#FFFFFF',
+  listIconBg: 'rgba(0, 0, 0, 0.06)',
+  sheetBg: '#FFFFFF',
   surface: '#F1F5F9',
   text: '#0F172A',
   subtext: '#64748B',
@@ -120,7 +124,6 @@ const lightPalette = {
   gradientEnd: '#F1F5F9',
   glassGlow: 'rgba(0, 0, 0, 0.05)',
 };
-
 
 export const useActiveColors = () => {
   const globalState = useGlobalState();
@@ -137,13 +140,12 @@ export const useActiveColors = () => {
   };
 };
 
-
 export const useTheme = () => {
   const activeDynamicColors = useActiveColors();
 
   return {
-    ...Theme, 
-    colors: { ...Theme.staticColors, ...activeDynamicColors }, 
-    isDark: activeDynamicColors.isDark, 
+    ...Theme,
+    colors: { ...Theme.staticColors, ...activeDynamicColors },
+    isDark: activeDynamicColors.isDark,
   };
 };

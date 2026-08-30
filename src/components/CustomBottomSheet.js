@@ -7,7 +7,7 @@ const CustomBottomSheet = forwardRef(({ children, title, onClose, autoOpen = fal
   const bottomSheetRef = useRef(null);
   const activeColors = useActiveColors();
 
-  const activeBg = activeColors.card;
+  const activeBg = activeColors.sheetBg;
   const activeTitle = activeColors.text;
   const activeIndicator = activeColors.isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
   const activeBorder = activeColors.border;

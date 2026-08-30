@@ -20,6 +20,7 @@ import {
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import ScalePress from '../../../components/ScalePress';
+import CartButton from '../../../components/CartButton';
 import CustomBottomSheet from '../../../components/CustomBottomSheet';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -239,6 +240,9 @@ export default function HomeScreen({ navigation }) {
             >
               <Settings color={colors.text} size={moderateScale(20)} />
             </ScalePress>
+            <ScalePress style={[styles.iconBtn, { backgroundColor: colors.surface }]}>
+              <CartButton onPress={() => navigation.navigate('Cart')} />
+            </ScalePress>
             <ScalePress
               style={[styles.iconBtn, { backgroundColor: colors.surface }]}
               onPress={() => navigation.navigate('Notification')}
@@ -435,7 +439,10 @@ export default function HomeScreen({ navigation }) {
         )}
 
         {personalVouchers && personalVouchers.length > 0 && (
-          <Animated.View entering={FadeInDown.duration(600).delay(600)} style={styles.voucherModule}>
+          <Animated.View
+            entering={FadeInDown.duration(600).delay(600)}
+            style={styles.voucherModule}
+          >
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Voucher dành riêng cho bạn
             </Text>
@@ -464,7 +471,10 @@ export default function HomeScreen({ navigation }) {
                       <Text style={[styles.voucherTitle, { color: colors.text }]} numberOfLines={2}>
                         {voucher.title}
                       </Text>
-                      <Text style={[styles.voucherDesc, { color: colors.subtext }]} numberOfLines={2}>
+                      <Text
+                        style={[styles.voucherDesc, { color: colors.subtext }]}
+                        numberOfLines={2}
+                      >
                         {voucher.desc}
                       </Text>
                     </View>

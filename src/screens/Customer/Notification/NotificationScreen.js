@@ -29,6 +29,7 @@ import {
   MessageSquare,
   Settings,
   Newspaper,
+  X,
 } from 'lucide-react-native';
 import GlassCard from '../../../components/GlassCard';
 import ScalePress from '../../../components/ScalePress';
@@ -1819,7 +1820,7 @@ export default function NotificationScreen({ navigation }) {
             entering={FadeInDown.duration(400)}
             style={[
               styles.modalSheet,
-              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+              { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
             <View
@@ -1848,9 +1849,7 @@ export default function NotificationScreen({ navigation }) {
               </Text>
 
               <TouchableOpacity style={styles.closeBtn} onPress={() => logic.setActiveModal(null)}>
-                <Text style={{ color: activeColors.subtext, fontSize: 13, fontWeight: 'bold' }}>
-                  Đóng
-                </Text>
+                <X size={18} color={activeColors.subtext} />
               </TouchableOpacity>
             </View>
 
@@ -1887,7 +1886,7 @@ export default function NotificationScreen({ navigation }) {
             entering={FadeInDown.duration(400)}
             style={[
               styles.modalSheet,
-              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+              { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
             <View
@@ -1905,9 +1904,7 @@ export default function NotificationScreen({ navigation }) {
                 style={styles.closeBtn}
                 onPress={() => logic.setBookingModalVisible(false)}
               >
-                <Text style={{ color: activeColors.subtext, fontSize: 13, fontWeight: 'bold' }}>
-                  Đóng
-                </Text>
+                <X size={18} color={activeColors.subtext} />
               </TouchableOpacity>
             </View>
 

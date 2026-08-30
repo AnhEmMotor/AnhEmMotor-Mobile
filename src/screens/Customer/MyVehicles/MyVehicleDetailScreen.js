@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Pressable,
   StatusBar,
   StyleSheet,
   Modal,
@@ -643,10 +644,11 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setEditVehicleVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setEditVehicleVisible(false)} />
           <View
             style={[
               styles.modalCard,
-              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+              { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
             <Text style={[styles.modalTitle, { color: activeColors.text }]}>
@@ -742,13 +744,14 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setManualVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setManualVisible(false)} />
           <BlurView
             intensity={40}
             tint="dark"
             style={StyleSheet.absoluteFill}
             pointerEvents="none"
           />
-          <View style={[styles.modalContent, { backgroundColor: activeColors.card }]}>
+          <View style={[styles.modalContent, { backgroundColor: activeColors.sheetBg }]}>
             <View style={styles.modalHeader}>
               <BookOpen color={activeColors.primary} size={24} />
               <Text style={[styles.modalTitle, { color: activeColors.text }]}>
@@ -820,6 +823,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setInvoiceVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setInvoiceVisible(false)} />
           <BlurView
             intensity={45}
             tint="dark"
@@ -829,7 +833,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           <View
             style={[
               styles.modalContent,
-              { backgroundColor: activeColors.card, width: '90%', maxHeight: '75%' },
+              { backgroundColor: activeColors.sheetBg, width: '90%', maxHeight: '75%' },
             ]}
           >
             <View style={styles.modalHeader}>

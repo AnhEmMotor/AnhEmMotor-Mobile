@@ -34,6 +34,7 @@ import {
   Bike,
   CalendarClock,
   ShieldAlert,
+  X,
 } from 'lucide-react-native';
 import RenderHtml from 'react-native-render-html';
 import { useActiveColors, Theme, useTheme } from '../../theme/Theme';
@@ -1474,7 +1475,7 @@ export default function HomeDetailScreen({ route, navigation }) {
             style={[
               getStyles(theme).modalSheet,
               {
-                backgroundColor: isDark ? theme.colors.card : '#FFFFFF',
+                backgroundColor: theme.colors.sheetBg,
                 borderColor: colors.border,
               },
             ]}
@@ -1494,7 +1495,7 @@ export default function HomeDetailScreen({ route, navigation }) {
                 style={[getStyles(theme).closeBtn, { backgroundColor: theme.colors.border + '33' }]}
                 onPress={() => setBookingModalVisible(false)}
               >
-                <Text style={[getStyles(theme).closeBtnText, { color: colors.subtext }]}>Đóng</Text>
+                <X size={18} color={colors.subtext} />
               </TouchableOpacity>
             </View>
 
