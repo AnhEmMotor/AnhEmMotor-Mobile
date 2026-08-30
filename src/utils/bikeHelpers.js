@@ -23,6 +23,15 @@ export const formatDate = (dateString) => {
       year: 'numeric',
     });
   }
-  // fallback: try simple dd-mm-yyyy split
   return dateString.split('-').reverse().join('/');
 };
+
+export const DEFAULT_VIN = 'RLHHC2041RY123456';
+export const DEFAULT_ENGINE = 'MD375ABC123456';
+export const DEFAULT_COLOR = 'Đỏ';
+
+export const displayVin = (vin) => (vin && vin.trim()) || DEFAULT_VIN;
+export const displayEngine = (engine) => (engine && engine.trim()) || DEFAULT_ENGINE;
+export const displayColor = (color) => (color && color.trim()) || DEFAULT_COLOR;
+
+export const DEFAULT_BIKE = require('../../assets/motors/default_bike.webp');

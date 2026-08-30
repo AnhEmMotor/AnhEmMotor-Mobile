@@ -282,7 +282,7 @@ export default function MyVehiclesScreen({ navigation, route }) {
                           fontSize: 13,
                         }}
                       >
-                        {bike.name || bike.plate}
+                        {bike.plate || bike.name}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -326,19 +326,12 @@ export default function MyVehiclesScreen({ navigation, route }) {
               marginTop: 25,
               height: 52,
               borderRadius: 14,
-              backgroundColor: activeColors.isDark
-                ? 'rgba(16,185,129,0.15)'
-                : 'rgba(16,185,129,0.08)',
+              backgroundColor: 'transparent',
               borderWidth: 1,
-              borderColor: activeColors.isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.15)',
+              borderColor: activeColors.border,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              shadowColor: '#10B981',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-              elevation: 2,
             }}
           >
             <Plus color="#10B981" size={20} style={{ marginRight: 8 }} />
