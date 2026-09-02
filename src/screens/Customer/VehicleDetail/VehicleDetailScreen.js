@@ -20,13 +20,16 @@ import {
   Key,
   Droplet,
   Star,
+  Check,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Slider from '@react-native-community/slider';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import ScalePress from '../../../components/ScalePress';
 import Toast from '../../../components/Toast';
+import CartButton from '../../../components/CartButton';
 import { useCart } from '../../../context/CartContext';
+import { formatCurrency } from '../../../utils/stringHelpers';
 import { styles } from './styles';
 import { useVehicleDetail } from './useVehicleDetail';
 
@@ -612,6 +615,17 @@ export default function VehicleDetailScreen({ navigation, route }) {
           >
             <ChevronLeft color={activeColors.text} size={24} />
           </TouchableOpacity>
+
+          <View
+            style={[
+              styles.cartBtn,
+              {
+                backgroundColor: activeColors.isDark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.8)',
+              },
+            ]}
+          >
+            <CartButton onPress={() => navigation.navigate('Cart')} iconSize={22} />
+          </View>
         </View>
 
         <View style={styles.content}>
@@ -628,29 +642,105 @@ export default function VehicleDetailScreen({ navigation, route }) {
             </View>
             <View style={styles.priceContainer}>
               <Text style={[styles.price, { color: activeColors.primary }]}>
-                {motor?.price || motor?.referencePrice || 'Liên hệ'}
+                {typeof logic.displayPrice === 'number'
+                  ? `${formatCurrency(logic.displayPrice)}đ`
+                  : logic.displayPrice || motor?.price || motor?.referencePrice || 'Liên hệ'}
               </Text>
               <Text style={[styles.msrp, { color: activeColors.subtext }]}>105.000.000đ</Text>
             </View>
           </View>
 
           {}
-          <View style={styles.colorSection}>
-            <View style={styles.colorGrid}>
-              {motor?.colors?.map((c) => (
-                <TouchableOpacity
-                  key={c.id}
-                  style={[
-                    styles.colorCircle,
-                    logic.selectedColor === c.id && styles.activeColorCircle,
-                  ]}
-                  onPress={() => logic.setSelectedColor(c.id)}
-                >
-                  <View style={[styles.colorInner, { backgroundColor: c.hex }]} />
-                </TouchableOpacity>
-              ))}
+          {logic.variants.length > 1 && (
+            <View style={styles.variantSection}>
+              <Text style={[styles.variantLabel, { color: activeColors.subtext }]}>
+                Chọn phiên bản
+              </Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ flexGrow: 0 }}
+                contentContainerStyle={{ gap: 8 }}
+              >
+                {logic.variants.map((v) => {
+                  const isSelected = String(logic.selectedVariant?.id) === String(v.id);
+                  const vName = v.variantName || v.optionValuesText || v.displayName || 'Phiên bản';
+                  return (
+                    <ScalePress
+                      key={v.id}
+                      onPress={() => logic.handleSelectVariant(v.id)}
+                      style={[
+                        styles.variantChip,
+                        {
+                          backgroundColor: isSelected ? activeColors.primary : activeColors.card,
+                          borderColor: isSelected ? activeColors.primary : activeColors.border,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.variantChipText,
+                          { color: isSelected ? '#fff' : activeColors.text },
+                        ]}
+                        numberOfLines={1}
+                      >
+                        {vName}
+                      </Text>
+                      {v.price != null && (
+                        <Text
+                          style={[
+                            styles.variantChipPrice,
+                            { color: isSelected ? 'rgba(255,255,255,0.85)' : activeColors.subtext },
+                          ]}
+                        >
+                          {formatCurrency(v.price)}đ
+                        </Text>
+                      )}
+                    </ScalePress>
+                  );
+                })}
+              </ScrollView>
             </View>
-          </View>
+          )}
+
+          {}
+          {logic.selectedVariantColors.length > 0 && (
+            <View style={styles.colorSection}>
+              <Text style={[styles.variantLabel, { color: activeColors.subtext }]}>
+                Màu sắc:
+                {logic.selectedColor?.name ? ` ${logic.selectedColor.name}` : ''}
+              </Text>
+              <View style={styles.colorGrid}>
+                {logic.selectedVariantColors.map((c) => {
+                  const isSelected = String(logic.selectedColor?.id) === String(c.id);
+                  return (
+                    <TouchableOpacity
+                      key={c.id}
+                      style={[styles.colorCircle, isSelected && styles.activeColorCircle]}
+                      onPress={() => logic.handleSelectColor(c.id)}
+                    >
+                      {c.image || c.coverImageUrl ? (
+                        <Image
+                          source={{ uri: c.image || c.coverImageUrl }}
+                          style={[styles.colorInner, { borderRadius: 12 }]}
+                          resizeMode="cover"
+                        />
+                      ) : (
+                        <View
+                          style={[styles.colorInner, { backgroundColor: c.colorCode || '#ccc' }]}
+                        />
+                      )}
+                      {isSelected && (
+                        <View style={styles.colorCheck}>
+                          <Check color="#fff" size={12} strokeWidth={3} />
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+          )}
 
           {}
           <ScrollView
@@ -766,7 +856,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
                   Alert.alert('Thông báo', 'Đang tải dữ liệu sản phẩm, vui lòng đợi...');
                   return;
                 }
-                const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
+                const variantId = logic.selectedVariant?.id;
+                const colorId = logic.selectedColor?.id ?? null;
+                const colorName =
+                  logic.selectedColor?.name || logic.selectedColor?.colorName || null;
                 if (!variantId) {
                   Alert.alert(
                     'Lỗi',
@@ -774,14 +867,16 @@ export default function VehicleDetailScreen({ navigation, route }) {
                   );
                   return;
                 }
+                const itemId = `${motor?.id}:${variantId}:${colorId ?? 'none'}`;
                 addToCart({
-                  id: motor?.id,
+                  id: itemId,
                   productId: motor?.id,
                   variantId: variantId,
-                  colorId: logic.motor?.colors?.[0]?.id || motor?.colors?.[0]?.id || null,
+                  colorId: colorId,
+                  colorName: colorName,
                   name: motor?.name || motor?.productName,
-                  price: motor?.price || motor?.referencePrice || 0,
-                  image: motor?.img || motor?.imageUrl,
+                  price: logic.displayPrice ?? motor?.price ?? motor?.referencePrice ?? 0,
+                  image: logic.currentImage || motor?.img || motor?.imageUrl,
                 });
                 toastRef.current?.show(
                   `Đã thêm ${motor?.name || 'sản phẩm'} vào giỏ hàng`,
@@ -798,7 +893,10 @@ export default function VehicleDetailScreen({ navigation, route }) {
                   Alert.alert('Thông báo', 'Đang tải dữ liệu sản phẩm, vui lòng đợi...');
                   return;
                 }
-                const variantId = logic.motor?.variants?.[0]?.id || motor?.variants?.[0]?.id;
+                const variantId = logic.selectedVariant?.id;
+                const colorId = logic.selectedColor?.id ?? null;
+                const colorName =
+                  logic.selectedColor?.name || logic.selectedColor?.colorName || null;
                 if (!variantId) {
                   Alert.alert(
                     'Lỗi',
@@ -806,14 +904,16 @@ export default function VehicleDetailScreen({ navigation, route }) {
                   );
                   return;
                 }
+                const itemId = `${motor?.id}:${variantId}:${colorId ?? 'none'}`;
                 addToCart({
-                  id: motor?.id,
+                  id: itemId,
                   productId: motor?.id,
                   variantId: variantId,
-                  colorId: logic.motor?.colors?.[0]?.id || motor?.colors?.[0]?.id || null,
+                  colorId: colorId,
+                  colorName: colorName,
                   name: motor?.name || motor?.productName,
-                  price: motor?.price || motor?.referencePrice || 0,
-                  image: motor?.img || motor?.imageUrl,
+                  price: logic.displayPrice ?? motor?.price ?? motor?.referencePrice ?? 0,
+                  image: logic.currentImage || motor?.img || motor?.imageUrl,
                 });
                 navigation.navigate('Cart');
               }}

@@ -1,37 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { QrCode, Copy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useActiveColors } from '../../../../theme/Theme';
-import { copyToClipboard, formatDate } from '../../../../utils/bikeHelpers';
+import {
+  copyToClipboard,
+  formatDate,
+  displayVin,
+  displayEngine,
+  displayColor,
+  DEFAULT_BIKE,
+} from '../../../../utils/bikeHelpers';
 import { styles } from '../styles';
 
-const getBikeImage = (bikeName) => {
-  const name = bikeName ? bikeName.toLowerCase() : '';
-  if (
-    name.includes('sh') ||
-    name.includes('vario') ||
-    name.includes('scooter') ||
-    name.includes('vespa') ||
-    name.includes('vision') ||
-    name.includes('lead')
-  ) {
-    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362029.png' };
-  }
-  if (
-    name.includes('exciter') ||
-    name.includes('winner') ||
-    name.includes('côn tay') ||
-    name.includes('underbone') ||
-    name.includes('raider')
-  ) {
-    return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362025.png' };
-  }
-  return { uri: 'https://cdn-icons-png.flaticon.com/512/3362/3362024.png' };
-};
+const getBikeImage = () => DEFAULT_BIKE;
 
 export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
   const activeColors = useActiveColors();
+  const [imgFailed, setImgFailed] = useState(false);
+  const [prevImage, setPrevImage] = useState(bike?.image);
+
+  if (prevImage !== bike?.image) {
+    setPrevImage(bike?.image);
+    setImgFailed(false);
+  }
+
+  const resolvedImageSource =
+    !imgFailed && bike.image ? { uri: bike.image } : getBikeImage(bike.name);
+  const vinDisplay = displayVin(bike.vin);
+  const engineDisplay = displayEngine(bike.engine);
+  const colorDisplay = displayColor(bike.color);
 
   return (
     <Animated.View entering={FadeInDown.delay(200)} style={styles.profileSection}>
@@ -55,9 +53,10 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
         </View>
         <View style={styles.bikeImageContainer}>
           <Image
-            source={bike.image ? { uri: bike.image } : getBikeImage(bike.name)}
+            source={resolvedImageSource}
             style={styles.bikeThumb}
             resizeMode="contain"
+            onError={() => setImgFailed(true)}
           />
           <TouchableOpacity
             onPress={onShowQR}
@@ -72,21 +71,23 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
         <View style={styles.detailRow}>
           <TouchableOpacity
             style={styles.detailItem}
-            onPress={() => copyToClipboard(bike.vin, 'số khung')}
+            onPress={() => copyToClipboard(vinDisplay, 'số khung')}
           >
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Số khung</Text>
             <View style={styles.detailValueRow}>
-              <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.vin}</Text>
+              <Text style={[styles.detailValue, { color: activeColors.text }]}>{vinDisplay}</Text>
               <Copy color={activeColors.subtext} size={10} style={{ marginLeft: 4 }} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.detailItem, { marginLeft: 20 }]}
-            onPress={() => copyToClipboard(bike.engine, 'số máy')}
+            onPress={() => copyToClipboard(engineDisplay, 'số máy')}
           >
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Số máy</Text>
             <View style={styles.detailValueRow}>
-              <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.engine}</Text>
+              <Text style={[styles.detailValue, { color: activeColors.text }]}>
+                {engineDisplay}
+              </Text>
               <Copy color={activeColors.subtext} size={10} style={{ marginLeft: 4 }} />
             </View>
           </TouchableOpacity>
@@ -97,7 +98,7 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
         <View style={styles.detailRow}>
           <View style={styles.detailItem}>
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Màu sắc</Text>
-            <Text style={[styles.detailValue, { color: activeColors.text }]}>{bike.color}</Text>
+            <Text style={[styles.detailValue, { color: activeColors.text }]}>{colorDisplay}</Text>
           </View>
           <View style={styles.detailItem}>
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Loại xe</Text>
@@ -112,7 +113,9 @@ export const VehicleProfile = ({ bike, onShowQR, onPress }) => {
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>
               Đăng ký lần đầu
             </Text>
-            <Text style={[styles.detailValue, { color: activeColors.text }]}>{formatDate(bike.regDate)}</Text>
+            <Text style={[styles.detailValue, { color: activeColors.text }]}>
+              {formatDate(bike.regDate)}
+            </Text>
           </View>
           <View style={styles.detailItem}>
             <Text style={[styles.detailLabel, { color: activeColors.subtext }]}>Phiên bản</Text>

@@ -12,12 +12,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useActiveColors } from '../../../theme/Theme';
 import { moderateScale } from '../../../utils/responsive';
 import { Search, Filter } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import ScalePress from '../../../components/ScalePress';
 import ProductMotorCard from '../../../components/ProductMotorCard';
 import Skeleton from '../../../components/Skeleton';
 import EmptyState from '../../../components/EmptyState';
+import CartButton from '../../../components/CartButton';
 import { PackageOpen } from 'lucide-react-native';
 import { useCatalog } from './useCatalog';
 
@@ -40,6 +41,8 @@ export default function CatalogScreen({ navigation }) {
   } = useCatalog();
 
   const activeColors = useActiveColors();
+  const insets = useSafeAreaInsets();
+  const tabBarClearance = 55 + Math.max(insets.bottom, 20);
 
   useFocusEffect(
     useCallback(() => {
@@ -112,11 +115,24 @@ export default function CatalogScreen({ navigation }) {
             </Text>
           </View>
         </TouchableOpacity>
+        <CartButton
+          onPress={() => navigation.navigate('Cart')}
+          iconSize={moderateScale(20)}
+          style={{
+            backgroundColor: activeColors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)',
+            padding: moderateScale(10),
+            borderRadius: moderateScale(10),
+          }}
+        />
       </Animated.View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: moderateScale(16), gap: moderateScale(14) }}
+        contentContainerStyle={{
+          padding: moderateScale(16),
+          paddingBottom: moderateScale(16) + tabBarClearance,
+          gap: moderateScale(14),
+        }}
         refreshControl={
           <RefreshControl
             refreshing={loading}

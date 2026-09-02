@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, ActivityIndicator, Modal, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  ActivityIndicator,
+  Modal,
+  FlatList,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useActiveColors } from '../../theme/Theme';
 import { ArrowLeft, MapPin, Phone, User, CreditCard } from 'lucide-react-native';
@@ -62,7 +73,7 @@ export default function CheckoutScreen({ navigation }) {
         const storedProfile = await AsyncStorage.getItem('@AEM_Customer_Profile');
         if (storedProfile) {
           const profile = JSON.parse(storedProfile);
-          setFormData(f => ({
+          setFormData((f) => ({
             ...f,
             name: profile.name || profile.fullName || '',
             phone: profile.phone || profile.phoneNumber || '',
@@ -76,7 +87,13 @@ export default function CheckoutScreen({ navigation }) {
 
   const handleCheckout = async () => {
     setErrorMessage('');
-    if (!formData.name || !formData.phone || !formData.address || !formData.ProvinceId || !formData.WardCode) {
+    if (
+      !formData.name ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.ProvinceId ||
+      !formData.WardCode
+    ) {
       setErrorMessage('Vui lòng nhập đầy đủ thông tin giao hàng, bao gồm Tỉnh và Phường.');
       Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ thông tin giao hàng, bao gồm Tỉnh và Phường.');
       return;
@@ -90,7 +107,7 @@ export default function CheckoutScreen({ navigation }) {
 
     setLoading(true);
     try {
-      const invalidItems = cartItems.filter(item => !item.variantId);
+      const invalidItems = cartItems.filter((item) => !item.variantId);
       if (invalidItems.length > 0) {
         Alert.alert(
           'Giỏ hàng không hợp lệ',
@@ -104,18 +121,18 @@ export default function CheckoutScreen({ navigation }) {
         CustomerPhone: formData.phone,
         CustomerAddress: formData.address,
         Notes: formData.notes,
-        PaymentMethod: 'COD', // Default to COD for now
+        PaymentMethod: 'COD',
         ProvinceId: formData.ProvinceId,
         WardCode: formData.WardCode,
-        products: cartItems.map(item => ({
+        products: cartItems.map((item) => ({
           ProductVariantId: item.variantId || null,
           ProductVariantColorId: item.colorId || null,
-          Count: item.quantity
-        }))
+          Count: item.quantity,
+        })),
       };
 
       await createSalesOrderApi(payload);
-      
+
       clearCart();
       navigation.reset({
         index: 1,
@@ -131,7 +148,10 @@ export default function CheckoutScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeColors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+      edges={['top']}
+    >
       <View style={[styles.header, { borderBottomColor: activeColors.border }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <ArrowLeft color={activeColors.text} size={24} />
@@ -153,7 +173,9 @@ export default function CheckoutScreen({ navigation }) {
               onChangeText={(text) => setFormData({ ...formData, name: text })}
             />
           </View>
-          <View style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]}>
+          <View
+            style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]}
+          >
             <Phone color={activeColors.subtext} size={20} />
             <TextInput
               style={[styles.input, { color: activeColors.text }]}
@@ -164,7 +186,9 @@ export default function CheckoutScreen({ navigation }) {
               onChangeText={(text) => setFormData({ ...formData, phone: text })}
             />
           </View>
-          <View style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]}>
+          <View
+            style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]}
+          >
             <MapPin color={activeColors.subtext} size={20} />
             <TextInput
               style={[styles.input, { color: activeColors.text }]}
@@ -174,27 +198,51 @@ export default function CheckoutScreen({ navigation }) {
               onChangeText={(text) => setFormData({ ...formData, address: text })}
             />
           </View>
-          <TouchableOpacity style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]} onPress={() => setShowProvinceModal(true)}>
+          <TouchableOpacity
+            style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]}
+            onPress={() => setShowProvinceModal(true)}
+          >
             <MapPin color={activeColors.subtext} size={20} />
-            <Text style={[styles.input, { color: formData.ProvinceName ? activeColors.text : activeColors.subtext, paddingTop: 14 }]}>
+            <Text
+              style={[
+                styles.input,
+                {
+                  color: formData.ProvinceName ? activeColors.text : activeColors.subtext,
+                  paddingTop: 14,
+                },
+              ]}
+            >
               {formData.ProvinceName || 'Chọn Tỉnh/Thành phố'}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]} onPress={() => {
-            if (!formData.ProvinceId) {
-              Alert.alert('Lỗi', 'Vui lòng chọn Tỉnh/Thành phố trước');
-            } else {
-              setShowWardModal(true);
-            }
-          }}>
+          <TouchableOpacity
+            style={[styles.inputGroup, { borderTopWidth: 1, borderTopColor: activeColors.border }]}
+            onPress={() => {
+              if (!formData.ProvinceId) {
+                Alert.alert('Lỗi', 'Vui lòng chọn Tỉnh/Thành phố trước');
+              } else {
+                setShowWardModal(true);
+              }
+            }}
+          >
             <MapPin color={activeColors.subtext} size={20} />
-            <Text style={[styles.input, { color: formData.WardName ? activeColors.text : activeColors.subtext, paddingTop: 14 }]}>
+            <Text
+              style={[
+                styles.input,
+                {
+                  color: formData.WardName ? activeColors.text : activeColors.subtext,
+                  paddingTop: 14,
+                },
+              ]}
+            >
               {formData.WardName || 'Chọn Phường/Xã'}
             </Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Ghi chú đơn hàng (Tùy chọn)</Text>
+        <Text style={[styles.sectionTitle, { color: activeColors.text }]}>
+          Ghi chú đơn hàng (Tùy chọn)
+        </Text>
         <View style={[styles.card, { backgroundColor: activeColors.card }]}>
           <TextInput
             style={[styles.textArea, { color: activeColors.text }]}
@@ -207,7 +255,9 @@ export default function CheckoutScreen({ navigation }) {
           />
         </View>
 
-        <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Phương thức thanh toán</Text>
+        <Text style={[styles.sectionTitle, { color: activeColors.text }]}>
+          Phương thức thanh toán
+        </Text>
         <View style={[styles.card, { backgroundColor: activeColors.card }]}>
           <View style={styles.paymentMethod}>
             <CreditCard color={activeColors.primary} size={24} />
@@ -220,17 +270,38 @@ export default function CheckoutScreen({ navigation }) {
         <Text style={[styles.sectionTitle, { color: activeColors.text }]}>Tóm tắt đơn hàng</Text>
         <View style={[styles.card, { backgroundColor: activeColors.card }]}>
           {cartItems.map((item, index) => (
-            <View key={item.id} style={[styles.summaryItem, index > 0 && { borderTopWidth: 1, borderTopColor: activeColors.border }]}>
-              <Text style={[styles.summaryItemName, { color: activeColors.text }]} numberOfLines={1}>
+            <View
+              key={item.id}
+              style={[
+                styles.summaryItem,
+                index > 0 && { borderTopWidth: 1, borderTopColor: activeColors.border },
+              ]}
+            >
+              <Text
+                style={[styles.summaryItemName, { color: activeColors.text }]}
+                numberOfLines={1}
+              >
                 {item.quantity}x {item.name}
               </Text>
               <Text style={[styles.summaryItemPrice, { color: activeColors.text }]}>
-                {formatCurrency((typeof item.price === 'string' ? parseInt(item.price.replace(/[^\d]/g, ''), 10) || 0 : (item.price || 0)) * item.quantity)} đ
+                {formatCurrency(
+                  (typeof item.price === 'string'
+                    ? parseInt(item.price.replace(/[^\d]/g, ''), 10) || 0
+                    : item.price || 0) * item.quantity
+                )}{' '}
+                đ
               </Text>
             </View>
           ))}
-          <View style={[styles.summaryTotal, { borderTopWidth: 1, borderTopColor: activeColors.border }]}>
-            <Text style={[styles.summaryTotalLabel, { color: activeColors.text }]}>Tổng thanh toán:</Text>
+          <View
+            style={[
+              styles.summaryTotal,
+              { borderTopWidth: 1, borderTopColor: activeColors.border },
+            ]}
+          >
+            <Text style={[styles.summaryTotalLabel, { color: activeColors.text }]}>
+              Tổng thanh toán:
+            </Text>
             <Text style={[styles.summaryTotalPrice, { color: activeColors.primary }]}>
               {formatCurrency(getCartTotal())} đ
             </Text>
@@ -238,14 +309,23 @@ export default function CheckoutScreen({ navigation }) {
         </View>
       </ScrollView>
 
-      <View style={[styles.footer, { backgroundColor: activeColors.card, borderTopColor: activeColors.border }]}>
+      <View
+        style={[
+          styles.footer,
+          { backgroundColor: activeColors.card, borderTopColor: activeColors.border },
+        ]}
+      >
         {!!errorMessage && (
           <Text style={{ color: '#EF4444', fontSize: 14, marginBottom: 10, textAlign: 'center' }}>
             {errorMessage}
           </Text>
         )}
         <TouchableOpacity
-          style={[styles.submitBtn, { backgroundColor: activeColors.primary }, loading && { opacity: 0.7 }]}
+          style={[
+            styles.submitBtn,
+            { backgroundColor: activeColors.primary },
+            loading && { opacity: 0.7 },
+          ]}
           onPress={handleCheckout}
           disabled={loading}
         >
@@ -257,12 +337,24 @@ export default function CheckoutScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Province Modal */}
-      <Modal visible={showProvinceModal} animationType="slide" transparent={true}>
+      {}
+      <Modal
+        visible={showProvinceModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowProvinceModal(false)}
+      >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: activeColors.card }]}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowProvinceModal(false)}
+          />
+          <View style={[styles.modalContent, { backgroundColor: activeColors.sheetBg }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: activeColors.text }]}>Chọn Tỉnh/Thành phố</Text>
+              <Text style={[styles.modalTitle, { color: activeColors.text }]}>
+                Chọn Tỉnh/Thành phố
+              </Text>
               <TouchableOpacity onPress={() => setShowProvinceModal(false)}>
                 <Text style={{ color: activeColors.primary, fontSize: 16 }}>Đóng</Text>
               </TouchableOpacity>
@@ -274,11 +366,19 @@ export default function CheckoutScreen({ navigation }) {
                 <TouchableOpacity
                   style={[styles.modalItem, { borderBottomColor: activeColors.border }]}
                   onPress={() => {
-                    setFormData({ ...formData, ProvinceId: item.provinceId, ProvinceName: item.provinceName, WardCode: null, WardName: '' });
+                    setFormData({
+                      ...formData,
+                      ProvinceId: item.provinceId,
+                      ProvinceName: item.provinceName,
+                      WardCode: null,
+                      WardName: '',
+                    });
                     setShowProvinceModal(false);
                   }}
                 >
-                  <Text style={{ color: activeColors.text, fontSize: 16 }}>{item.provinceName}</Text>
+                  <Text style={{ color: activeColors.text, fontSize: 16 }}>
+                    {item.provinceName}
+                  </Text>
                 </TouchableOpacity>
               )}
             />
@@ -287,9 +387,19 @@ export default function CheckoutScreen({ navigation }) {
       </Modal>
 
       {/* Ward Modal */}
-      <Modal visible={showWardModal} animationType="slide" transparent={true}>
+      <Modal
+        visible={showWardModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowWardModal(false)}
+      >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: activeColors.card }]}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowWardModal(false)}
+          />
+          <View style={[styles.modalContent, { backgroundColor: activeColors.sheetBg }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: activeColors.text }]}>Chọn Phường/Xã</Text>
               <TouchableOpacity onPress={() => setShowWardModal(false)}>
@@ -426,31 +536,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  modalOverlay: { 
-    flex: 1, 
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    justifyContent: 'flex-end' 
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
-  modalContent: { 
-    height: '60%', 
-    borderTopLeftRadius: 20, 
-    borderTopRightRadius: 20, 
-    padding: 16 
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
   },
-  modalHeader: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: 16, 
-    borderBottomWidth: 1, 
-    paddingBottom: 10 
+  modalContent: {
+    height: '60%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 16,
   },
-  modalTitle: { 
-    fontSize: 18, 
-    fontWeight: 'bold' 
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    paddingBottom: 10,
   },
-  modalItem: { 
-    paddingVertical: 16, 
-    borderBottomWidth: 0.5 
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalItem: {
+    paddingVertical: 16,
+    borderBottomWidth: 0.5,
   },
 });

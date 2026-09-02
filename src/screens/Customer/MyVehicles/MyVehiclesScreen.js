@@ -4,10 +4,12 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Pressable,
   Modal,
   TextInput,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import { QrCode, ArrowLeft, Settings, Plus } from 'lucide-react-native';
 import { Theme, useActiveColors } from '../../../theme/Theme';
@@ -280,7 +282,7 @@ export default function MyVehiclesScreen({ navigation, route }) {
                           fontSize: 13,
                         }}
                       >
-                        {bike.name || bike.plate}
+                        {bike.plate || bike.name}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -324,19 +326,12 @@ export default function MyVehiclesScreen({ navigation, route }) {
               marginTop: 25,
               height: 52,
               borderRadius: 14,
-              backgroundColor: activeColors.isDark
-                ? 'rgba(16,185,129,0.15)'
-                : 'rgba(16,185,129,0.08)',
+              backgroundColor: 'transparent',
               borderWidth: 1,
-              borderColor: activeColors.isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.15)',
+              borderColor: activeColors.border,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              shadowColor: '#10B981',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-              elevation: 2,
             }}
           >
             <Plus color="#10B981" size={20} style={{ marginRight: 8 }} />
@@ -352,11 +347,12 @@ export default function MyVehiclesScreen({ navigation, route }) {
       {}
       <Modal visible={showQR} transparent animationType="fade">
         <BlurView intensity={80} tint="dark" style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={closeQR} />
           <Animated.View
             entering={FadeInDown}
             style={[
               styles.modalContent,
-              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+              { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
             <Text style={[styles.modalTitle, { color: activeColors.text }]}>Mã định danh xe</Text>
@@ -376,12 +372,13 @@ export default function MyVehiclesScreen({ navigation, route }) {
       {}
       <Modal visible={formVisible} transparent animationType="slide">
         <BlurView intensity={85} tint="dark" style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setFormVisible(false)} />
           <Animated.View
             entering={FadeInDown}
             style={[
               styles.modalContent,
               {
-                backgroundColor: activeColors.card,
+                backgroundColor: activeColors.sheetBg,
                 borderColor: activeColors.border,
                 width: '90%',
                 padding: 24,

@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Pressable,
   StatusBar,
   StyleSheet,
   Modal,
@@ -32,10 +33,12 @@ import GlassCard from '../../../components/GlassCard';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
 import { useMyVehicleDetail } from './hooks/useMyVehicleDetail';
+import { displayVin, displayEngine, displayColor, DEFAULT_BIKE } from '../../../utils/bikeHelpers';
 
 export default function MyVehicleDetailScreen({ navigation, route }) {
   const activeColors = useActiveColors();
   const toastRef = useRef(null);
+  const [imgFailed, setImgFailed] = useState(false);
 
   const { bike } = route.params || {};
   const {
@@ -62,6 +65,12 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
     activeBike.warrantyRemainingDays != null ? `${activeBike.warrantyRemainingDays} ngày` : 'N/A';
   const warrantyUntilLabel = formatDate(activeBike.warrantyUntil);
   const brandText = (activeBike.brandName || activeBike.type || 'THÔNG TIN XE').toUpperCase();
+
+  const [prevDetailImage, setPrevDetailImage] = useState(activeBike?.image);
+  if (prevDetailImage !== activeBike?.image) {
+    setPrevDetailImage(activeBike?.image);
+    setImgFailed(false);
+  }
 
   const [nickname, setNickname] = useState('Chiến mã 🏍️');
   const [isEditingNickname, setIsEditingNickname] = useState(false);
@@ -166,15 +175,10 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         {}
         <Animated.View entering={FadeInUp.duration(600)} style={styles.imageContainer}>
           <Image
-            source={
-              activeBike.image
-                ? { uri: activeBike.image }
-                : {
-                    uri: 'https://images.unsplash.com/photo-1620939511593-299312d1666c?q=80&w=1070',
-                  }
-            }
+            source={activeBike.image && !imgFailed ? { uri: activeBike.image } : DEFAULT_BIKE}
             style={styles.vehicleImage}
             resizeMode="cover"
+            onError={() => setImgFailed(true)}
           />
           <LinearGradient
             colors={['transparent', activeColors.background]}
@@ -274,14 +278,14 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Số khung</Text>
                 <Text style={[styles.idValue, { color: activeColors.text }]}>
-                  {activeBike.vin || '---'}
+                  {displayVin(activeBike.vin)}
                 </Text>
               </View>
               <View style={styles.divider} />
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Số máy</Text>
                 <Text style={[styles.idValue, { color: activeColors.text }]}>
-                  {activeBike.engine || '---'}
+                  {displayEngine(activeBike.engine)}
                 </Text>
               </View>
             </View>
@@ -306,7 +310,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
               <View style={styles.idCol}>
                 <Text style={[styles.idLabel, { color: activeColors.subtext }]}>Màu sắc</Text>
                 <Text style={[styles.idValue, { color: activeColors.text }]}>
-                  {activeBike.color || '---'}
+                  {displayColor(activeBike.color)}
                 </Text>
               </View>
             </View>
@@ -643,10 +647,11 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setEditVehicleVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setEditVehicleVisible(false)} />
           <View
             style={[
               styles.modalCard,
-              { backgroundColor: activeColors.card, borderColor: activeColors.border },
+              { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
             <Text style={[styles.modalTitle, { color: activeColors.text }]}>
@@ -742,13 +747,14 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setManualVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setManualVisible(false)} />
           <BlurView
             intensity={40}
             tint="dark"
             style={StyleSheet.absoluteFill}
             pointerEvents="none"
           />
-          <View style={[styles.modalContent, { backgroundColor: activeColors.card }]}>
+          <View style={[styles.modalContent, { backgroundColor: activeColors.sheetBg }]}>
             <View style={styles.modalHeader}>
               <BookOpen color={activeColors.primary} size={24} />
               <Text style={[styles.modalTitle, { color: activeColors.text }]}>
@@ -820,6 +826,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
         onRequestClose={() => setInvoiceVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setInvoiceVisible(false)} />
           <BlurView
             intensity={45}
             tint="dark"
@@ -829,7 +836,7 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
           <View
             style={[
               styles.modalContent,
-              { backgroundColor: activeColors.card, width: '90%', maxHeight: '75%' },
+              { backgroundColor: activeColors.sheetBg, width: '90%', maxHeight: '75%' },
             ]}
           >
             <View style={styles.modalHeader}>
@@ -894,7 +901,9 @@ export default function MyVehicleDetailScreen({ navigation, route }) {
                 <Text style={[styles.invLabel, { color: activeColors.subtext }]}>
                   Số khung / Số máy:
                 </Text>
-                <Text style={[styles.invVal, { color: activeColors.text }]}>{activeBike.vin}</Text>
+                <Text style={[styles.invVal, { color: activeColors.text }]}>
+                  {displayVin(activeBike.vin)}
+                </Text>
               </View>
               <View style={styles.invoiceRow}>
                 <Text style={[styles.invLabel, { color: activeColors.subtext }]}>Màu sắc:</Text>

@@ -221,7 +221,7 @@ export default function FinanceContractScreen({ navigation }) {
             onPress={() => setSelected(null)}
             activeOpacity={1}
           />
-          <View style={[s.modalSheet, { backgroundColor: colors.card }]}>
+          <View style={[s.modalSheet, { backgroundColor: colors.sheetBg }]}>
             <View style={[s.handle, { backgroundColor: colors.border }]} />
             <Text style={[s.modalTitle, { color: colors.text }]}>Chi tiết hợp đồng</Text>
             <Text style={[s.modalSub, { color: colors.subtext }]}>

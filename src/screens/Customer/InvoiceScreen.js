@@ -165,7 +165,7 @@ export default function InvoiceScreen({ navigation }) {
           />
           <Animated.View
             entering={FadeInDown.duration(400)}
-            style={[styles.modalSheet, { backgroundColor: activeColors.card }]}
+            style={[styles.modalSheet, { backgroundColor: activeColors.sheetBg }]}
           >
             <View style={styles.modalHandle} />
             <Text style={[styles.modalTitle, { color: activeColors.text }]}>Chi tiết hóa đơn</Text>
