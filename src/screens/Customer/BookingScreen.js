@@ -273,8 +273,8 @@ export default function BookingScreen({ navigation, route }) {
             {canSubmit
               ? 'Xác nhận & Gửi yêu cầu'
               : selectedDate
-                ? 'Chọn khung giờ để tiếp tục'
-                : 'Chọn ngày & khung giờ để tiếp tục'}
+              ? 'Chọn khung giờ để tiếp tục'
+              : 'Chọn ngày & khung giờ để tiếp tục'}
           </Text>
         )}
       </TouchableOpacity>
@@ -295,10 +295,6 @@ export default function BookingScreen({ navigation, route }) {
       toastRef.current?.show('Đặt lịch thành công!');
       setSelectedDate(null);
       setSelectedTime(null);
-      setTimeout(() => {
-        setStep(1);
-        setActiveView('status');
-      }, 1200);
     } catch (bookingError) {
       console.error('Error creating booking:', bookingError);
       toastRef.current?.show(bookingError?.message || 'Không thể đặt lịch. Vui lòng thử lại.');
@@ -355,22 +351,8 @@ export default function BookingScreen({ navigation, route }) {
               Đặt lịch
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveView('status')}
-            style={[
-              styles.tab,
-              activeView === 'status' && [styles.activeTab, { backgroundColor: activeColors.card }],
-            ]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                { color: activeColors.subtext },
-                activeView === 'status' && { color: activeColors.primary },
-              ]}
-            >
-              Đang sửa chữa
-            </Text>
+          <TouchableOpacity disabled style={[styles.tab, styles.disabledTab]}>
+            <Text style={[styles.tabText, styles.disabledTabText]}>Đang sửa chữa</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -439,6 +421,8 @@ const getStyles = (theme, activeColors) =>
       padding: 4,
     },
     tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 12 },
+    disabledTab: { opacity: 0.45 },
+    disabledTabText: { color: activeColors.subtext },
     activeTab: { backgroundColor: activeColors.card },
     tabText: { fontWeight: 'bold', fontSize: 14 },
     activeTabText: { color: activeColors.primary },
