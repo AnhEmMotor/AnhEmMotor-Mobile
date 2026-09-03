@@ -47,6 +47,7 @@ export default function NotificationScreen({ navigation }) {
     background: isDark ? '#0B0F19' : '#F8FAFC',
     card: isDark ? '#111111' : '#FFFFFF',
     cardBg: isDark ? '#111111' : '#FFFFFF',
+    sheetBg: isDark ? '#111111' : '#FFFFFF',
     text: isDark ? '#F8FAFC' : '#050505',
     subtext: isDark ? '#94A3B8' : '#64748B',
     border: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
@@ -54,6 +55,9 @@ export default function NotificationScreen({ navigation }) {
 
   const logic = useNotification(navigation);
   const [copied, setCopied] = useState(false);
+  const feedbackNotifications = logic.notifications.filter(
+    (notification) => notification.category === 'feedback'
+  );
 
   const handleCopy = (_text) => {
     setCopied(true);
@@ -1719,7 +1723,7 @@ export default function NotificationScreen({ navigation }) {
 
               <TouchableOpacity
                 style={[styles.systemCtaButton, { backgroundColor: '#E31B23' }]}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'sys4'))}
+                onPress={() => logic.handleAction(feedbackNotifications[0])}
               >
                 <Text style={styles.systemCtaText}>Xem nội dung giải quyết 💬</Text>
               </TouchableOpacity>
@@ -1794,7 +1798,9 @@ export default function NotificationScreen({ navigation }) {
 
               <TouchableOpacity
                 style={[styles.systemCtaButton, { backgroundColor: '#10B981' }]}
-                onPress={() => logic.handleAction(logic.notifications.find((n) => n.id === 'fb2'))}
+                onPress={() =>
+                  logic.handleAction(feedbackNotifications[1] || feedbackNotifications[0])
+                }
               >
                 <Text style={styles.systemCtaText}>Xem phản hồi & Tặng quà 🧼</Text>
               </TouchableOpacity>
@@ -1820,6 +1826,7 @@ export default function NotificationScreen({ navigation }) {
             entering={FadeInDown.duration(400)}
             style={[
               styles.modalSheet,
+              styles.modalSheetWithContent,
               { backgroundColor: activeColors.sheetBg, borderColor: activeColors.border },
             ]}
           >
@@ -1835,17 +1842,17 @@ export default function NotificationScreen({ navigation }) {
                 {logic.selectedNotif?.type === 'delivery'
                   ? 'Bản đồ trung chuyển 🚚'
                   : logic.selectedNotif?.type === 'workshop'
-                    ? 'Live Workshop ⚙️'
-                    : logic.selectedNotif?.type === 'referral'
-                      ? 'Giới thiệu bạn bè 🎁'
-                      : logic.selectedNotif?.type === 'voucher_expiry' ||
-                          logic.selectedNotif?.type === 'birthday'
-                        ? 'Ví Voucher 🎟️'
-                        : logic.selectedNotif?.type === 'invoice'
-                          ? 'Hóa đơn e-Invoice 🧾'
-                          : logic.selectedNotif?.type === 'feedback'
-                            ? 'Ý kiến đóng góp 💬'
-                            : 'Chi tiết thông báo'}
+                  ? 'Live Workshop ⚙️'
+                  : logic.selectedNotif?.type === 'referral'
+                  ? 'Giới thiệu bạn bè 🎁'
+                  : logic.selectedNotif?.type === 'voucher_expiry' ||
+                    logic.selectedNotif?.type === 'birthday'
+                  ? 'Ví Voucher 🎟️'
+                  : logic.selectedNotif?.type === 'invoice'
+                  ? 'Hóa đơn e-Invoice 🧾'
+                  : logic.selectedNotif?.type === 'feedback'
+                  ? 'Ý kiến đóng góp 💬'
+                  : 'Chi tiết thông báo'}
               </Text>
 
               <TouchableOpacity style={styles.closeBtn} onPress={() => logic.setActiveModal(null)}>
@@ -1857,7 +1864,14 @@ export default function NotificationScreen({ navigation }) {
               {logic.selectedNotif?.time} • Khách hàng Uyên
             </Text>
 
-            {renderActiveModalContent()}
+            <ScrollView
+              style={styles.modalContent}
+              contentContainerStyle={styles.modalContentContainer}
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled
+            >
+              {renderActiveModalContent()}
+            </ScrollView>
 
             <TouchableOpacity
               style={styles.modalActionBtn}

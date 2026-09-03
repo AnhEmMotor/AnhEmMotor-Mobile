@@ -3,8 +3,7 @@ import { contactApi } from '../../../api/contactApi';
 import { getLatestNews } from '../../../api/newsApi';
 
 const INITIAL_NOTIFICATIONS = [
-
-    {
+  {
     id: 's1',
     category: 'service',
     type: 'delivery',
@@ -60,8 +59,7 @@ const INITIAL_NOTIFICATIONS = [
     deepLink: 'CleanCarLog',
   },
 
-
-    {
+  {
     id: 'l1',
     category: 'loyalty',
     type: 'loyalty_level',
@@ -111,8 +109,7 @@ const INITIAL_NOTIFICATIONS = [
     voucherName: 'Miễn phí thay nhớt máy tháng sinh nhật',
   },
 
-
-    {
+  {
     id: 'sys1',
     category: 'system',
     type: 'recall',
@@ -188,14 +185,12 @@ const INITIAL_NOTIFICATIONS = [
 
 export const useNotification = (_navigation) => {
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
-  const [activeTab, setActiveTab] = useState('service'); 
+  const [activeTab, setActiveTab] = useState('service');
   const [unreadOnly, setUnreadOnly] = useState(false);
 
-  // State for news tab
   const [newsList, setNewsList] = useState([]);
   const [newsLoading, setNewsLoading] = useState(false);
 
-  // Fetch tin tức mới nhất từ DB
   useEffect(() => {
     const fetchNews = async () => {
       setNewsLoading(true);
@@ -238,25 +233,25 @@ export const useNotification = (_navigation) => {
       try {
         const response = await contactApi.getMyFeedbacks();
         if (response && Array.isArray(response)) {
-          // Format API response into notification format
-          const feedbackNotifs = response.map(fb => ({
+          const feedbackNotifs = response.map((fb) => ({
             id: `fb_${fb.id}`,
             category: 'feedback',
             type: 'feedback',
             title: fb.contact?.subject || 'Ý kiến đóng góp',
             desc: fb.content,
             time: new Date(fb.createdAt).toLocaleDateString('vi-VN'),
-            isRead: true, // or check if there is unread reply
+            isRead: true,
             actionLabel: 'Xem nội dung',
             deepLink: 'FeedbackReply',
-            feedbackContent: fb.contact?.replies?.[0]?.message || 'Chưa có phản hồi từ cửa hàng.'
+            feedbackContent: fb.contact?.replies?.[0]?.message || 'Chưa có phản hồi từ cửa hàng.',
           }));
 
-          // Replace hardcoded feedbacks with real ones
-          setNotifications(prev => [
-            ...prev.filter(n => n.category !== 'feedback'),
-            ...feedbackNotifs
-          ]);
+          if (feedbackNotifs.length > 0) {
+            setNotifications((prev) => [
+              ...prev.filter((n) => n.category !== 'feedback'),
+              ...feedbackNotifs,
+            ]);
+          }
         }
       } catch (error) {
         console.error('Error fetching feedbacks:', error);
@@ -266,8 +261,8 @@ export const useNotification = (_navigation) => {
     fetchFeedbacks();
   }, []);
 
-    const [hasActiveWorkshop, setHasActiveWorkshop] = useState(true);
-  const [workshopStep, setWorkshopStep] = useState(2); 
+  const [hasActiveWorkshop, setHasActiveWorkshop] = useState(true);
+  const [workshopStep, setWorkshopStep] = useState(2);
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('18/05/2026');
   const [selectedTime, setSelectedTime] = useState('08:00');
@@ -305,12 +300,10 @@ export const useNotification = (_navigation) => {
     },
   ];
 
-
-    const [activeModal, setActiveModal] = useState(null); 
+  const [activeModal, setActiveModal] = useState(null);
   const [selectedNotif, setSelectedNotif] = useState(null);
 
-
-    const totalUnreadCount = useMemo(() => {
+  const totalUnreadCount = useMemo(() => {
     return notifications.filter((n) => !n.isRead).length;
   }, [notifications]);
 
@@ -323,8 +316,7 @@ export const useNotification = (_navigation) => {
     };
   }, [notifications]);
 
-
-    const filteredNotifications = useMemo(() => {
+  const filteredNotifications = useMemo(() => {
     return notifications.filter((n) => {
       if (n.category !== activeTab) return false;
       if (unreadOnly && n.isRead) return false;
@@ -340,8 +332,9 @@ export const useNotification = (_navigation) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
+  const handleAction = (notif) => {
+    if (!notif) return;
 
-    const handleAction = (notif) => {
     markAsRead(notif.id);
     setSelectedNotif(notif);
 
@@ -418,4 +411,3 @@ export const useNotification = (_navigation) => {
     vouchersLoading,
   };
 };
-
