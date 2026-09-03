@@ -188,6 +188,15 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.05)',
     borderBottomWidth: 0,
   },
+  modalSheetWithContent: {
+    maxHeight: '90%',
+  },
+  modalContent: {
+    flexShrink: 1,
+  },
+  modalContentContainer: {
+    paddingBottom: 4,
+  },
   modalHandle: {
     width: 40,
     height: 4,

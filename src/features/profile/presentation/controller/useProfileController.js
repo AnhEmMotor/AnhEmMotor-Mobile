@@ -8,7 +8,7 @@ import { resetRoot } from '../../../../navigation/RootNavigation';
 import { tokenService } from '../../../../api/httpClient';
 import { getPersonalOutputsApi } from '../../../../api/orderApi';
 import { getPersonalRepairsApi } from '../../../../api/repairApi';
-import { getFullImageUrl } from '../../../../utils/imageHelpers';
+import { resolveMediaUrl } from '../../../../utils/imageHelpers';
 
 export const MOCK_REGIONS = {
   provinces: ['Hồ Chí Minh', 'Đồng Nai', 'Hà Nội', 'Bình Dương'],
@@ -92,11 +92,13 @@ export const useProfileController = (navigation, bottomSheetRef) => {
               id: o.id || o.Id,
               statusId: o.statusId || o.StatusId,
               total: o.total || o.Total,
+              subtotal: o.subtotal ?? o.Subtotal,
+              shippingFee: o.shippingFee ?? o.ShippingFee,
               paymentMethod: o.paymentMethod || o.PaymentMethod,
               createdAt: o.createdAt || o.CreatedAt,
               notes: o.notes || o.Notes,
               productName: o.productName || o.ProductName,
-              productImage: getFullImageUrl(o.productImage || o.ProductImage),
+              productImage: resolveMediaUrl(o.productImage || o.ProductImage),
               quantity: o.quantity || o.Quantity,
               expectedDeliveryDate: o.expectedDeliveryDate || o.ExpectedDeliveryDate,
             }))
@@ -122,7 +124,7 @@ export const useProfileController = (navigation, bottomSheetRef) => {
                 r.Date ||
                 r.createdAt ||
                 r.CreatedAt,
-              productImage: getFullImageUrl(r.productImage || r.ProductImage),
+              productImage: resolveMediaUrl(r.productImage || r.ProductImage),
               categoryName: r.categoryName || r.CategoryName,
               variantName: r.variantName || r.VariantName,
               colorName: r.colorName || r.ColorName,
