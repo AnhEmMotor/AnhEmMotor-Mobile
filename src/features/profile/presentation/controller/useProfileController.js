@@ -92,6 +92,8 @@ export const useProfileController = (navigation, bottomSheetRef) => {
               id: o.id || o.Id,
               statusId: o.statusId || o.StatusId,
               total: o.total || o.Total,
+              subtotal: o.subtotal ?? o.Subtotal,
+              shippingFee: o.shippingFee ?? o.ShippingFee,
               paymentMethod: o.paymentMethod || o.PaymentMethod,
               createdAt: o.createdAt || o.CreatedAt,
               notes: o.notes || o.Notes,
